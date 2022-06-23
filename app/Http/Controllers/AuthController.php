@@ -21,7 +21,7 @@ class AuthController extends Controller
         if($authValid){
             User::where('email', $request->email)->update($update_token);
 
-            return response()->json(['access_token' => $update_token['access_token'], 'token_expires_in' => $update_token['token_expires_in']]);
+            return response()->json(['access_token' => base64_encode($request->email.':'.$update_token['access_token']), 'token_expires_in' => $update_token['token_expires_in']]);
         }else{
             return response()->json('Email ou Senha incorretos!', 422);
         }
@@ -38,6 +38,6 @@ class AuthController extends Controller
 
         User::create($create_user);
 
-        return response()->json(['access_token' => $create_user['access_token'], 'token_expires_in' => $create_user['token_expires_in']]);
+        return response()->json(['access_token' => base64_encode($create_user['email'].':'.$create_user['access_token']), 'token_expires_in' => $create_user['token_expires_in']]);
     }
 }
