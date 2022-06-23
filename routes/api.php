@@ -17,10 +17,10 @@ use App\Http\Controllers\AnimalController;
 */
 
 Route::middleware(['auth.token'])->group(function(){
-    Route::get('animal', [AnimalController::class, 'animalGet'])->name('animalGet');
+    Route::get('animal/{id?}', [AnimalController::class, 'animalGet'])->name('animalGet');
     Route::post('animal', [AnimalController::class, 'animalPost'])->name('animalPost');
-    Route::put('animal', [AnimalController::class, 'animalPut'])->name('animalPut');
-    Route::delete('animal', [AnimalController::class, 'animalDelete'])->name('animalDelete');
+    Route::put('animal/{id}', [AnimalController::class, 'animalPut'])->name('animalPut');
+    Route::delete('animal/{id}', [AnimalController::class, 'animalDelete'])->name('animalDelete');
 });
 
 // Login e Registro

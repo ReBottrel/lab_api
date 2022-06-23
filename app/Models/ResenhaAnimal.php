@@ -17,10 +17,11 @@ class ResenhaAnimal extends Model
     protected $fillable = [
         'user_id',
         'animal_id',
-        'position',
+        'resenha',
         'photo_path',
         'brand_id',
         'localization',
         'description',
+        'status',
     ];
 }
