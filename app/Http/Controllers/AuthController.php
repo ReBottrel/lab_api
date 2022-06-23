@@ -40,4 +40,9 @@ class AuthController extends Controller
 
         return response()->json(['access_token' => base64_encode($create_user['email'].':'.$create_user['access_token']), 'token_expires_in' => $create_user['token_expires_in']]);
     }
+
+    public function getUser()
+    {
+        return response()->json(user_token());
+    }
 }

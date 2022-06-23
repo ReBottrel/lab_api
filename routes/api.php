@@ -24,5 +24,6 @@ Route::middleware(['auth.token'])->group(function(){
 });
 
 // Login e Registro
+Route::middleware(['auth.token'])->get('auth/user', [AuthController::class, 'getUser'])->name('getUser');
 Route::post('auth/login', [AuthController::class, 'login'])->name('login');
 Route::post('register', [AuthController::class, 'register'])->name('register');
