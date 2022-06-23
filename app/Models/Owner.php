@@ -27,9 +27,4 @@ class Owner extends Model
         'state',
         'status',
     ];
-
-    public function animals()
-    {
-        return $this->hasMany(Animal::class, 'id', 'animal_id');
-    }
 }
