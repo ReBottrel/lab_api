@@ -19,7 +19,6 @@ class CreateResenhaAnimalsTable extends Migration
             $table->integer('animal_id')->nullable();
             $table->enum('resenha', ['right_side', 'left_side', 'snout', 'top_line_of_eyes', 'neck_bottom_view', 'hind_limbs_and_rear_view', 'forelimbs_rear_view'])->nullable();
             $table->string('photo_path')->nullable();
-            $table->string('brand_id')->nullable();
             $table->longText('localization')->nullable();
             $table->longText('description')->nullable();
             $table->integer('status')->default(1);

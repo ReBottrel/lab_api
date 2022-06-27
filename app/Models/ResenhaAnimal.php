@@ -20,7 +20,6 @@ class ResenhaAnimal extends Model
         'animal_id',
         'resenha',
         'photo_path',
-        'brand_id',
         'localization',
         'description',
         'status',

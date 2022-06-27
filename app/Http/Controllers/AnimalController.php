@@ -12,8 +12,18 @@ class AnimalController extends Controller
     public function animalGet(Request $request, $id = null)
     {
         $user = user_token();
-        $data = Animal::with('owner', 'resenhas')->where('user_id', $user->id)->paginate($request->per_page ?? 20);
-        if($id) $data = Animal::with('owner', 'resenhas')->where('id',$id)->where('user_id', $user->id)->first();
+        if($id){
+            $data = Animal::with('owner', 'resenhas')->where('id',$id)->where('user_id', $user->id)->first();
+        }else{
+            $data = Animal::with('owner', 'resenhas')->where('user_id', $user->id)->paginate($request->per_page ?? 20);
+            $data->map(function($query){
+                $query->resenhas = $query->resenhas->map(function($query){
+                    $query->photo_path = asset($query->photo_path);
+                    return $query;
+                });
+                return $query;
+            });
+        }
         return response()->json($data, 200);
     }
 

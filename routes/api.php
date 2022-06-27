@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ExamController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\AnimalController;
+use App\Http\Controllers\MarkingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,6 +26,12 @@ Route::middleware(['auth.token'])->group(function(){
     Route::put('animal', [AnimalController::class, 'animalPut'])->name('animalPut');
     Route::delete('animal/{id}', [AnimalController::class, 'animalDelete'])->name('animalDelete');
     // ---------------------------
+
+    // Registro de Marcas
+    Route::get('lab/marca/{id?}', [MarkingController::class, 'markGet'])->name('markGet');
+    Route::post('lab/marca', [MarkingController::class, 'markPost'])->name('markPost');
+    Route::put('lab/marca', [MarkingController::class, 'markPut'])->name('markPut');
+    Route::delete('lab/marca/{id}', [MarkingController::class, 'markDelete'])->name('markDelete');
 
     // Registro de exames
     Route::get('lab/exame/{id?}', [ExamController::class, 'examGet'])->name('examGet');
