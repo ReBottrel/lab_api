@@ -17,7 +17,8 @@ class AuthToken
      */
     public function handle(Request $request, Closure $next)
     {
-        $access_token = $request->header()['access-token'][0];
+        $access_token = $request->header()['access-token'][0] ?? null;
+        if(!$access_token) return response()->json('"access-token" não presente!',422);
         $access_token = explode(':', base64_decode($access_token));
         $user = User::where('email', ($access_token[0]??null))->where('access_token', ($access_token[1]??null))->where('token_expires_in', '>=', date('Y-m-d H:i:s'))->first();
 

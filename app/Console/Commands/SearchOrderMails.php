@@ -3,9 +3,10 @@
 namespace App\Console\Commands;
 
 use Webklex\PHPIMAP\Folder;
+use App\Models\OrderRequest;
+use Illuminate\Console\Command;
 use Webklex\IMAP\Facades\Client;
 use Webklex\PHPIMAP\Support\FolderCollection;
-use Illuminate\Console\Command;
 
 class SearchOrderMails extends Command
 {
@@ -93,11 +94,30 @@ class SearchOrderMails extends Command
                     }
                 }
 
-                if($get_data_message->count() > 0) $get_data_messages->add(['uid' => $message->getUid(), 'data_table' => $get_data_message->all(), 'data_g' => $dados_gerais->toArray()]);
+                if($get_data_message->count() > 0) $get_data_messages->add([
+                    'uid' => $message->getUid(),
+                    'data_table' => $get_data_message->all(),
+                    'data_g' => $dados_gerais->toArray(),
+                    'email' => [
+                        'subject' => (string)$message->getSubject(),
+                        'html_body' => $message->getHTMLBody(),
+                    ]
+                ]);
             }
         }
 
-        // \Log::info($get_data_messages->toArray());
+        $get_data_messages->map(function($query){
+            if(OrderRequest::where('data_g->uid', $query['uid'])->get()->count() == 0){
+                $order_request['origin'] = 'email';
+                $order_request['creator'] = $query['data_g']['criador'][1] ?? null;
+                $order_request['creator_number'] = $query['data_g']['criador'][0] ?? null;
+                $order_request['technical_manager'] = $query['data_g']['responsavel_tecnico'] ?? null;
+                $order_request['collection_date'] = date('Y-m-d', strtotime($query['data_g']['data'])) ?? null;
+                $order_request['collection_number'] = $query['data_g']['numero_do_atendimento'] ?? null;
+                $order_request['data_g'] = $query ?? null;
+                OrderRequest::create($order_request);
+            }
+        });
         return true;
     }
 }
