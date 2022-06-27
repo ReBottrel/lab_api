@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Exam;
 use Illuminate\Http\Request;
 
 class ExamController extends Controller
 {
     public function examGet(Request $request, $id = null)
     {
-        $user = user_token();
-        $data = Animal::with('owner', 'resenhas')->where('user_id', $user->id)->paginate($request->per_page ?? 20);
-        if($id) $data = Animal::with('owner', 'resenhas')->where('id',$id)->where('user_id', $user->id)->first();
+        $data = Exam::paginate($request->per_page ?? 20);
+        if($id) $data = Exam::where('id',$id)->first();
         return response()->json($data, 200);
     }
 
@@ -28,7 +28,7 @@ class ExamController extends Controller
             return response()->json($e->getMessage(),422);
         }
 
-        return response()->json(Exam::find($animal->id), 200);
+        return response()->json(Exam::find($exame->id), 200);
     }
 
     public function examPut(Request $request)
