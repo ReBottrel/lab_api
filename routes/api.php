@@ -43,8 +43,7 @@ Route::middleware(['auth.token'])->group(function(){
     // Pedidos
     Route::get('lab/order/request/{id?}', [OrderController::class, 'orderRequestGet'])->name('orderRequestGet');
     Route::post('lab/order/request', [OrderController::class, 'orderRequestPost'])->name('orderRequestPost');
-    Route::get('lab/order/{id?}', [OrderController::class, 'labOrderGet'])->name('labOrderGet');
-    Route::post('lab/order', [OrderController::class, 'labOrderPost'])->name('labOrderPost');
+    Route::put('lab/order/request', [OrderController::class, 'labOrderPut'])->name('labOrderPut');
 });
 
 // Login e Registro

@@ -7,11 +7,30 @@ use Illuminate\Http\Request;
 
 class OrderController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth.padmin', ['except' => ['orderRequestGet', 'orderRequestPost']]);
+    }
+
     public function orderRequestGet(Request $request, $id = null)
     {
         $user = user_token();
-        $data = OrderRequest::with('user')->paginate($request->per_page ?? 20);
-        if($id) $data = OrderRequest::with('user')->where('id',$id)->first();
+        $data = OrderRequest::with('user')->where(function($query) use($user, $request){
+            if(isset($request->filter)){
+                foreach($request->filter as $filter){
+                    $query = $query->where($filter['column'], ($filter['condition'] ?? '='), $filter['value']);
+                }
+            }
+            if($user->permission !== 10) $query = $query->where('user_id', $user->id);
+            return $query;
+        });
+
+        if($id) {
+            $data = $data->where('id',$id)->first();
+        }else{
+            $data = $data->paginate($request->per_page ?? 20);
+        }
+        
         return response()->json($data, 200);
     }
 

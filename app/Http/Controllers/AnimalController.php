@@ -13,9 +13,15 @@ class AnimalController extends Controller
     {
         $user = user_token();
         if($id){
-            $data = Animal::with('owner', 'resenhas')->where('id',$id)->where('user_id', $user->id)->first();
+            $data = Animal::with('owner', 'resenhas')->where('id',$id)->where(function($query) use($user){
+                if($user->permission !== 10) $query = $query->where('user_id', $user->id);
+                return $query;
+            })->first();
         }else{
-            $data = Animal::with('owner', 'resenhas')->where('user_id', $user->id)->paginate($request->per_page ?? 20);
+            $data = Animal::with('owner', 'resenhas')->where(function($query) use($user){
+                if($user->permission !== 10) $query = $query->where('user_id', $user->id);
+                return $query;
+            })->paginate($request->per_page ?? 20);
             $data->map(function($query){
                 $query->resenhas = $query->resenhas->map(function($query){
                     $query->photo_path = asset($query->photo_path);
@@ -24,7 +30,7 @@ class AnimalController extends Controller
                 return $query;
             });
         }
-        return response()->json($data, 200);
+        return response()->json(($data ?? 'nenhum registro encontrado'), 200);
     }
 
     public function animalPost(Request $request)

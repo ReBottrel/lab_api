@@ -7,6 +7,11 @@ use Illuminate\Http\Request;
 
 class MarkingController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth.padmin', ['except' => ['markGet']]);
+    }
+
     public function markGet(Request $request, $id = null)
     {
         if($id){

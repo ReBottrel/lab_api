@@ -7,6 +7,11 @@ use Illuminate\Http\Request;
 
 class ExamController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth.padmin', ['except' => ['examGet']]);
+    }
+
     public function examGet(Request $request, $id = null)
     {
         $data = Exam::paginate($request->per_page ?? 20);
