@@ -17,7 +17,7 @@ class AuthPermissionAdmin
     public function handle(Request $request, Closure $next)
     {
         $user = user_token();
-        if($user !== 10) return response()->json('voce não possui permissão!');
+        if($user->permission !== 10) return response()->json('voce não possui permissão!');
         return $next($request);
     }
 }
