@@ -29,4 +29,9 @@ class OrderRequest extends Model
     {
         return $this->hasOne(User::class, 'id', 'user_id');
     }
+
+    public function orderRequestPayment()
+    {
+        return $this->hasMany(OrderRequestPayment::class, 'order_request_id');
+    }
 }

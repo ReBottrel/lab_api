@@ -6,6 +6,7 @@ use App\Models\Exam;
 use App\Models\Animal;
 use App\Models\OrderRequest;
 use Illuminate\Http\Request;
+use App\Models\OrderRequestPayment;
 
 class OrderController extends Controller
 {
@@ -44,13 +45,29 @@ class OrderController extends Controller
     public function orderRequestPost(Request $request)
     {
         $user = user_token();
-        $order_request = collect($request->all())->put('origin', 'site')->put('user_id', $user->id)->map(function($query){
-            if(isset($query['exam_id'])) $query['exam'] = collect(Exam::find($query['exam_id']))->forget(['created_at', 'updated_at'])->toArray();
-            return $query;
-        });
+        $order_request = collect($request->all())->put('origin', 'site')->put('user_id', $user->id);
         $order_request = OrderRequest::create($order_request->toArray());
+        foreach(($request->data_g['exam_id'] ?? []) as $exam_id){
+            $animal = Animal::find($request->data_g['animal_id'] ?? 0);
 
-        return response()->json(OrderRequest::with('user')->find($order_request->id));
+            $exam = Exam::find($exam_id);
+            $create_orp['order_request_id'] = $order_request->id;
+            $create_orp['owner_name'] = $animal->owner->owner_name;
+            $create_orp['email'] = $animal->owner->email;
+            $create_orp['location'] = $animal->animal_location;
+            $create_orp['exam_id'] = $exam_id;
+            $create_orp['category'] = $exam->category;
+            $create_orp['animal'] = $exam->animal;
+            $create_orp['title'] = $exam->title;
+            $create_orp['short_description'] = $exam->short_description;
+            $create_orp['value'] = $exam->value;
+            $create_orp['requests'] = $exam->requests;
+            $create_orp['extra_value'] = $exam->extra_value;
+            $create_orp['extra_requests'] = $request->extra_requests ?? 0;
+            OrderRequestPayment::create($create_orp);
+        }
+
+        return response()->json(OrderRequest::with('user', 'orderRequestPayment')->find($order_request->id));
     }
 
     public function labOrderPut(Request $request)
