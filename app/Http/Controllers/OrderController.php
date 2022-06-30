@@ -4,12 +4,23 @@ namespace App\Http\Controllers;
 
 use App\Models\Exam;
 use App\Models\Animal;
+use App\Mail\ORPayment;
 use App\Models\OrderRequest;
 use Illuminate\Http\Request;
 use App\Models\OrderRequestPayment;
+use Illuminate\Support\Facades\Mail;
 
 class OrderController extends Controller
 {
+    ###STATUS DO ORDER REQUEST###
+    ###0-ACEITAR DO PEDIDO#######
+    ###1-PEDIDO REJEITADO########
+    ###2-PEDIDO CANCELADO########
+    ###3-PENDETE DE ANALISE######
+    ###4-AGUARDANDO PAGAMENTO####
+    ###5-PEDIDO FINALIZADO#######
+    #############################
+
     public function __construct()
     {
         $this->middleware('auth.padmin', ['except' => ['orderRequestGet', 'orderRequestPost']]);
@@ -18,7 +29,7 @@ class OrderController extends Controller
     public function orderRequestGet(Request $request, $id = null)
     {
         $user = user_token();
-        $data = OrderRequest::with('user')->where(function($query) use($user, $request){
+        $data = OrderRequest::with('user', 'orderRequestPayment')->where(function($query) use($user, $request){
             if(isset($request->filter)){
                 foreach($request->filter as $filter){
                     $query = $query->where($filter['column'], ($filter['condition'] ?? '='), $filter['value']);
@@ -74,6 +85,29 @@ class OrderController extends Controller
     {
         if(isset($request->id)){
             if(isset($request->update_status)) OrderRequest::find($request->id)->update(['status' => $request->update_status]);
+
+            if(isset($request->generate_charge)) {
+                $order_request = OrderRequest::find($request->id);
+                OrderRequest::find($request->id)->update(['status' => 4]);
+                $total_exams = 0;
+                foreach(($request->or_payment_id ?? []) as $or_payment_id){
+                    $or_payment = OrderRequestPayment::find($or_payment_id);
+                    if($or_payment->payment_status == 0) $total_exams++;
+                    OrderRequestPayment::find($or_payment_id)->update(['payment_status' => 1]);
+                }
+
+                if($total_exams > 0) Mail::to($order_request->owner->email ?? ($order_request->data_g['data_g']['email'] ?? 'zednetinformatica@gmail.com'))->send(new ORPayment($order_request, $total_exams, 'generate_charge'));
+            }
+            if(isset($request->resend_charge)) {
+                $order_request = OrderRequest::find($request->id);
+                $total_exams = 0;
+                foreach(($request->or_payment_id ?? []) as $or_payment_id){
+                    $or_payment = OrderRequestPayment::find($or_payment_id);
+                    if($or_payment->payment_status == 1) $total_exams++;
+                }
+
+                if($total_exams > 0) Mail::to($order_request->owner->email ?? ($order_request->data_g['data_g']['email'] ?? 'zednetinformatica@gmail.com'))->send(new ORPayment($order_request, $total_exams, 'resend_charge'));
+            }
 
             return response()->json(OrderRequest::find($request->id));
         }
