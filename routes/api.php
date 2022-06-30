@@ -58,7 +58,7 @@ Route::post('auth/login', [AuthController::class, 'login'])->name('login');
 Route::post('register', [AuthController::class, 'register'])->name('register');
 
 // callbacks
-Route::get('callback/{callback}', function(\Request $request, $callback = null){
+Route::get('callback/{callback}', function(Request $request, $callback = null){
     dd(collect([
         $callback,
         $request->all()
