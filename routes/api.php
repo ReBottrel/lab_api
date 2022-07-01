@@ -48,7 +48,9 @@ Route::middleware(['auth.token'])->group(function(){
 
 
     #########CONTROLE DE GATEWAY#########
-    Route::get('gateway/token', [GatewayController::class, 'generateToken'])->name('generateToken');
+    Route::get('gateway/payment/{id?}', [GatewayController::class, 'listPayment'])->name('listPayment');
+    Route::post('gateway/payment', [GatewayController::class, 'payment'])->name('payment');
+    Route::post('gateway/reverse', [GatewayController::class, 'reverse'])->name('reverse');
     #####################################
 });
 
@@ -56,6 +58,9 @@ Route::middleware(['auth.token'])->group(function(){
 Route::middleware(['auth.token'])->get('auth/user', [AuthController::class, 'getUser'])->name('getUser');
 Route::post('auth/login', [AuthController::class, 'login'])->name('login');
 Route::post('register', [AuthController::class, 'register'])->name('register');
+
+// Callback de gateway
+Route::post('gateway/callback-notify', [GatewayController::class, 'callbackNotify'])->name('callbackNotify');
 
 // callbacks
 Route::get('callback/{callback}', function(Request $request, $callback = null){
