@@ -68,7 +68,8 @@ class GatewayController extends Controller
         $id_customer = $this->buyer($request->info_add ?? null);
 
         $response = Http::withHeaders(['Authorization' => $this->bearer_token])->post(env('IOPAY_URL').'v1/transaction/new/'.$id_customer, $data)->object();
-        \Log::info(collect($response)->toArray());
+        // \Log::info(collect($response)->toArray());
+        \Log::channel('iopay_response_payment')->info(collect($response)->toArray());
         if(isset($response->error)) return response()->json($response, 402);
         OrderRequestPayment::whereIn('id', ($request->or_payment_id ?? []))->update(['payment_id' => $response->success->id ?? null]);
         return response()->json($response->success);
@@ -96,7 +97,8 @@ class GatewayController extends Controller
     {
         $response = Http::withHeaders(['Authorization' => $this->bearer_token])->get(env('IOPAY_URL').'v1/transaction/get/'.$request->id)->object();
         // \Log::info($request->all());
-        \Log::info(collect($response)->toArray());
+        // \Log::info(collect($response)->toArray());
+        \Log::channel('iopay_notify_payment')->info(collect($response)->toArray());
 
         if($response->success->status == 'succeeded'){
             if(OrderRequestPayment::where('payment_id', $response->success->id)->get()->count() > 0){

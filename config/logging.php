@@ -54,6 +54,17 @@ return [
             'ignore_exceptions' => false,
         ],
 
+        'iopay_response_payment' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/iopay_response_payment.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+        ],
+        'iopay_notify_payment' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/iopay_notify_payment.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+        ],
+
         'single' => [
             'driver' => 'single',
             'path' => storage_path('logs/laravel.log'),
