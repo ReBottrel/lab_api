@@ -68,6 +68,7 @@ class GatewayController extends Controller
         $id_customer = $this->buyer($request->info_add ?? null);
 
         $response = Http::withHeaders(['Authorization' => $this->bearer_token])->post(env('IOPAY_URL').'v1/transaction/new/'.$id_customer, $data)->object();
+        \Log::info(collect($response)->toArray());
         if(isset($response->error)) return response()->json($response, 402);
         OrderRequestPayment::whereIn('id', $or_payment_id)->update(['payment_id' => $response->success->id ?? null, 'payment_status' => isset($response->success->id) ? 2 : 1]);
     }
@@ -92,7 +93,9 @@ class GatewayController extends Controller
     // Callback de notify
     public function callbackNotify(Request $request)
     {
-        # code...
+        $response = $response = Http::withHeaders(['Authorization' => $this->bearer_token])->get(env('IOPAY_URL').'v1/transaction/get/'.$request->id)->object();
+        // \Log::info($request->all());
+        \Log::info(collect($response)->toArray());
     }
 
     ##########FUNÇÕES INTERNAS##########
