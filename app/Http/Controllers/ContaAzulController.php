@@ -15,8 +15,8 @@ class ContaAzulController extends Controller
             "redirect_uri" => env('CA_REDIRECT_URI'),
             "code" => $request->code
         ];
-        // $response = Http::withHeaders(['Authorization' => base64_encode(env('CA_CLIENT_ID').':'.env('CA_CLIENT_SECRET'))])->post('https://api.contaazul.com/oauth2/token', $data)->object();
-        // Storage::disk('local')->put('conta_azul_T.json', collect($response)->toJson());
+        $response = Http::withHeaders(['Authorization' => 'Basic '.base64_encode(env('CA_CLIENT_ID').':'.env('CA_CLIENT_SECRET'))])->post('https://api.contaazul.com/oauth2/token', $data)->object();
+        Storage::disk('local')->put('conta_azul_T.json', collect($response)->toJson());
     }
 
     public function getUrlCode(Request $request)
