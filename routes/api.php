@@ -8,6 +8,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\AnimalController;
 use App\Http\Controllers\GatewayController;
 use App\Http\Controllers\MarkingController;
+use App\Http\Controllers\ContaAzulController;
 
 /*
 |--------------------------------------------------------------------------
@@ -52,6 +53,11 @@ Route::middleware(['auth.token'])->group(function(){
     Route::post('gateway/payment', [GatewayController::class, 'payment'])->name('payment');
     Route::post('gateway/reverse', [GatewayController::class, 'reverse'])->name('reverse');
     #####################################
+
+
+    ###############CONTROLE DE FIJANCAS NO CONTA AZUL###############
+    Route::get('conta-azul/get-url', [ContaAzulController::class, 'getUrlCode'])->name('getUrlCode');
+    ################################################################
 });
 
 // Login e Registro
@@ -62,10 +68,5 @@ Route::post('register', [AuthController::class, 'register'])->name('register');
 // Callback de gateway
 Route::post('gateway/callback-notify', [GatewayController::class, 'callbackNotify'])->name('callbackNotify');
 
-// callbacks
-Route::get('callback/{callback}', function(Request $request, $callback = null){
-    dd(collect([
-        $callback,
-        $request->all()
-    ]));
-});
+// callback Conta Azul
+Route::get('callback/auth-conta-azul', [ContaAzulController::class, 'callbackContaAzul'])->name('callbackContaAzul');
