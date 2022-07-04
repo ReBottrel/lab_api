@@ -94,9 +94,15 @@ class GatewayController extends Controller
     // Callback de notify
     public function callbackNotify(Request $request)
     {
-        $response = $response = Http::withHeaders(['Authorization' => $this->bearer_token])->get(env('IOPAY_URL').'v1/transaction/get/'.$request->id)->object();
+        $response = Http::withHeaders(['Authorization' => $this->bearer_token])->get(env('IOPAY_URL').'v1/transaction/get/'.$request->id)->object();
         // \Log::info($request->all());
         \Log::info(collect($response)->toArray());
+
+        if($response->success->status == 'succeeded'){
+            if(OrderRequestPayment::where('payment_id', $response->success->id)->get()->count() > 0){
+                OrderRequestPayment::where('payment_id', $response->success->id)->update(['status' => 2]);
+            }
+        }
     }
 
     ##########FUNÇÕES INTERNAS##########
