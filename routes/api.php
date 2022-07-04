@@ -57,6 +57,7 @@ Route::middleware(['auth.token'])->group(function(){
 
     ###############CONTROLE DE FIJANCAS NO CONTA AZUL###############
     Route::get('conta-azul/get-url', [ContaAzulController::class, 'getUrlCode'])->name('getUrlCode');
+    Route::post('conta-azul/send-sales', [ContaAzulController::class, 'sendSales'])->name('sendSales');
     ################################################################
 });
 

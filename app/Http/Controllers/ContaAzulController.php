@@ -16,7 +16,8 @@ class ContaAzulController extends Controller
             "code" => $request->code
         ];
         $response = Http::withHeaders(['Authorization' => 'Basic '.base64_encode(env('CA_CLIENT_ID').':'.env('CA_CLIENT_SECRET'))])->post('https://api.contaazul.com/oauth2/token', $data)->object();
-        Storage::disk('local')->put('conta_azul_T.json', collect($response)->toJson());
+        $response = collect($response)->put('expires_at', date('Y-m-d H:i:s', strtotime('+ '.$response->expires_in.' seconds')));
+        if(isset($request->code)) Storage::disk('local')->put('conta_azul_T.json', $response->toJson());
     }
 
     public function getUrlCode(Request $request)
@@ -27,5 +28,15 @@ class ContaAzulController extends Controller
         $state = \Str::random(20);
         $return_url = "https://api.contaazul.com/auth/authorize?redirect_uri=$redirect_uri&client_id=$client_id&scope=$scope&state=$state";
         return response()->json($return_url);
+    }
+
+    ############ENVIO DE DADOS############
+
+    public function sendSales(Request $request)
+    {
+        $ca_token = json_decode(Storage::disk('local')->get('conta_azul_T.json'));
+        // $ca_token = collect($ca_token)->toArray();
+
+        return response()->json(date('Y-m-d H:i:s', strtotime('+ '.$ca_token->expires_in.' seconds')));
     }
 }
