@@ -70,7 +70,7 @@ class GatewayController extends Controller
         $response = Http::withHeaders(['Authorization' => $this->bearer_token])->post(env('IOPAY_URL').'v1/transaction/new/'.$id_customer, $data)->object();
         \Log::info(collect($response)->toArray());
         if(isset($response->error)) return response()->json($response, 402);
-        OrderRequestPayment::whereIn('id', $or_payment_id)->update(['payment_id' => $response->success->id ?? null, 'payment_status' => isset($response->success->id) ? 2 : 1]);
+        // OrderRequestPayment::whereIn('id', $or_payment_id)->update(['payment_id' => $response->success->id ?? null, 'payment_status' => isset($response->success->id) ? 2 : 1]);
     }
 
     public function reverse(Request $request)
