@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Exam;
 use App\Models\Animal;
 use App\Mail\ORPayment;
+use App\Models\TabelaGeral;
 use App\Models\OrderRequest;
 use Illuminate\Http\Request;
 use App\Models\OrderRequestPayment;
@@ -42,6 +43,7 @@ class OrderController extends Controller
         if($id) {
             $data = $data->where('id',$id)->first();
             if(isset($data->data_g['animal_id'])) $data->animal = Animal::with('owner', 'resenhas')->find($data->data_g['animal_id']);
+            $data->order_request_conta_azul = TabelaGeral::where('tabela', 'OrderRequest-ContaAzul')->where('coluna', 'order_request_id')->where('valor', $data->id)->first();
         }else{
             $data = $data->paginate($request->per_page ?? 20);
             $data->map(function($query){

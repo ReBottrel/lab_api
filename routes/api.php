@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ExamController;
+use App\Http\Controllers\GeralController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\AnimalController;
 use App\Http\Controllers\GatewayController;
@@ -57,8 +58,18 @@ Route::middleware(['auth.token'])->group(function(){
 
     ###############CONTROLE DE FIJANCAS NO CONTA AZUL###############
     Route::get('conta-azul/get-url', [ContaAzulController::class, 'getUrlCode'])->name('getUrlCode');
+    Route::get('conta-azul/get-categories', [ContaAzulController::class, 'getCategories'])->name('getCategories');
+    Route::get('conta-azul/get-sellers', [ContaAzulController::class, 'getSellers'])->name('getSellers');
     Route::post('conta-azul/send-sales', [ContaAzulController::class, 'sendSales'])->name('sendSales');
     ################################################################
+
+
+
+
+    ######################CONTROLES GERAIS######################
+    Route::get('tabela-geral', [GeralController::class, 'getTabela'])->name('getTabela');
+    Route::post('tabela-geral', [GeralController::class, 'postTabela'])->name('postTabela');
+    ############################################################
 });
 
 // Login e Registro
