@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 
 class GeralController extends Controller
 {
+    ##############################################################
+    ####################GERAÇÂO DE TABELAS########################
     public function getTabela(Request $request)
     {
         $data = TabelaGeral::where(function($query) use($request){
@@ -28,5 +30,12 @@ class GeralController extends Controller
         $tabela_geral = TabelaGeral::create($request->all());
 
         return response()->json($tabela_geral);
+    }
+    ####################GERAÇÂO DE TABELAS########################
+    ##############################################################
+
+    public function FunctionName(Type $var = null)
+    {
+        # code...
     }
 }

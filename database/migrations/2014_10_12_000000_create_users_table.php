@@ -22,6 +22,7 @@ class CreateUsersTable extends Migration
             $table->integer('permission');
             $table->string('access_token')->nullable();
             $table->dateTime('token_expires_in')->nullable();
+            $table->integer('status')->default(0);
             $table->rememberToken();
             $table->timestamps();
         });

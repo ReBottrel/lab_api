@@ -211,6 +211,10 @@ class OrderController extends Controller
             $encrypt_token = Crypt::encryptString($token_generate->toJson());
             Storage::disk('local')->put('user_tokens/'.$token_generate['file'].'.txt', $encrypt_token);
         }
+        ############################################################################################################
+                        ######################AINDA PRECISA ACERTAR A URL##########################
         return ['https://lab-ecommerce.simetriastudio.dev.br/url-teste?token='.$token_generate['file'], $userEmail];
+                        ######################AINDA PRECISA ACERTAR A URL##########################
+        ############################################################################################################
     }
 }

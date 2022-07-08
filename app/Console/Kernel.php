@@ -17,6 +17,7 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')->hourly();
         $schedule->command('order:searchmail')->hourly();
+        $schedule->command('order:resend_charge')->hourly();
     }
 
     /**

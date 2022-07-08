@@ -48,13 +48,11 @@ Route::middleware(['auth.token'])->group(function(){
     Route::post('lab/order/request', [OrderController::class, 'orderRequestPost'])->name('orderRequestPost');
     Route::put('lab/order/request', [OrderController::class, 'labOrderPut'])->name('labOrderPut');
 
-
     #########CONTROLE DE GATEWAY#########
     Route::get('gateway/payment/{id?}', [GatewayController::class, 'listPayment'])->name('listPayment');
     Route::post('gateway/payment', [GatewayController::class, 'payment'])->name('payment');
     Route::post('gateway/reverse', [GatewayController::class, 'reverse'])->name('reverse');
     #####################################
-
 
     ###############CONTROLE DE FIJANCAS NO CONTA AZUL###############
     Route::get('conta-azul/get-url', [ContaAzulController::class, 'getUrlCode'])->name('getUrlCode');
@@ -63,17 +61,21 @@ Route::middleware(['auth.token'])->group(function(){
     Route::post('conta-azul/send-sales', [ContaAzulController::class, 'sendSales'])->name('sendSales');
     ################################################################
 
-
-
-
     ######################CONTROLES GERAIS######################
     Route::get('tabela-geral', [GeralController::class, 'getTabela'])->name('getTabela');
     Route::post('tabela-geral', [GeralController::class, 'postTabela'])->name('postTabela');
     ############################################################
+
+    ###########################CONTROLE DE INFORMAÇÃO DE USUARIO###########################
+    Route::get('auth/users/{user}', [AuthController::class, 'getUsers'])->name('getUsers');
+    Route::get('auth/user', [AuthController::class, 'getUser'])->name('getUser');
+    // Update user
+    Route::put('auth/update-users', [AuthController::class, 'updateUsers'])->name('updateUsers');
+    Route::put('auth/update-user', [AuthController::class, 'updateUser'])->name('updateUser');
+    #######################################################################################
 });
 
 // Login e Registro
-Route::middleware(['auth.token'])->get('auth/user', [AuthController::class, 'getUser'])->name('getUser');
 Route::post('auth/login', [AuthController::class, 'login'])->name('login');
 Route::post('register', [AuthController::class, 'register'])->name('register');
 
