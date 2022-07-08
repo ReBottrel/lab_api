@@ -77,6 +77,9 @@ Route::middleware(['auth.token'])->get('auth/user', [AuthController::class, 'get
 Route::post('auth/login', [AuthController::class, 'login'])->name('login');
 Route::post('register', [AuthController::class, 'register'])->name('register');
 
+// Auto Login
+Route::post('auth/auto-login', [AuthController::class, 'autoLogin'])->name('autoLogin');
+
 // Callback de gateway
 Route::post('gateway/callback-notify', [GatewayController::class, 'callbackNotify'])->name('callbackNotify');
 

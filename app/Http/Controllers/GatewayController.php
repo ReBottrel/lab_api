@@ -89,7 +89,7 @@ class GatewayController extends Controller
 
         $response = Http::withHeaders(['Authorization' => $this->bearer_token])->post(env('IOPAY_URL').'v1/transaction/void/'.$payment_id, $data)->object();
         if(isset($response->error)) return response()->json($response, 402);
-        OrderRequestPayment::whereIn('id', $or_payment_id)->update(['payment_status' => isset($response->success->id) ? 3 : 2]);
+        OrderRequestPayment::whereIn('id', $or_payment_id)->update(['payment_status' => isset($response->success->id) ? 3 : (OrderRequestPayment::whereIn('id', $or_payment_id)->first()->status)]);
     }
 
     // Callback de notify
@@ -102,7 +102,15 @@ class GatewayController extends Controller
 
         if($response->success->status == 'succeeded'){
             if(OrderRequestPayment::where('payment_id', $response->success->id)->get()->count() > 0){
-                OrderRequestPayment::where('payment_id', $response->success->id)->update(['status' => 2]);
+                OrderRequestPayment::where('payment_id', $response->success->id)->get()->each(function($query){
+                    HistoryStatus::create([
+                        'reference_type' => 'OrderRequestPayment',
+                        'reference_id' => $query->id,
+                        'type' => 'STATUS',
+                        'reason' => '2-Pagamento Efetuado',
+                        'description' => 'Alterado o status',
+                    ]);
+                });
             }
         }
     }

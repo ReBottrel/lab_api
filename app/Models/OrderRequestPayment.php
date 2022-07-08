@@ -26,4 +26,9 @@ class OrderRequestPayment extends Model
         'payment_id',
         'payment_status',
     ];
+
+    public function historyStatus()
+    {
+        return $this->hasMany(HistoryStatus::class, 'reference_id')->where('reference_type', 'OrderRequestPayment');
+    }
 }

@@ -2,6 +2,12 @@
 
 {{$msg}}
 
-Thanks,<br>
-{{ config('app.name') }}
+Clique nesse botão ou copie o link de pagaemnto com login.
+
+@component('mail::button', ['url' => $link])
+Botão de redirecionamento
+@endcomponent
+
+    {{$link}}
+
 @endcomponent

@@ -17,11 +17,13 @@ class ORPayment extends Mailable
      * @return void
      */
     public $order_request;
+    public $userClient;
     public $total_exams;
     public $charge;
-    public function __construct($order_request, $total_exams, $charge)
+    public function __construct($order_request, $userClient, $total_exams, $charge)
     {
         $this->order_request = $order_request;
+        $this->userClient = $userClient;
         $this->total_exams = $total_exams;
         $this->charge = $charge;
     }
@@ -33,6 +35,9 @@ class ORPayment extends Mailable
      */
     public function build()
     {
-        return $this->with(['msg' => 'A exames liberados para serem pagos'])->markdown('mails.orpayment')->subject(($this->charge == 'generate_charge' ? 'Liberado para pagar' : 'Exames não pago'))->from('naoresponder@labloci.com.br', 'Lab Loci');
+        return $this->with([
+            'msg' => 'Você está recebendo por email um link de pagamento com auto-login.',
+            'link' => $this->userClient[0],
+            ])->markdown('mails.orpayment')->subject(($this->charge == 'generate_charge' ? 'Liberado para pagar' : 'Exames não pago'))->from('naoresponder@labloci.com.br', 'Lab Loci');
     }
 }
