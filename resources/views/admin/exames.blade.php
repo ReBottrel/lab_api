@@ -14,7 +14,7 @@
                 @foreach ($exames as $exame)
                     <div class="text-secondary border rounded shadow orders"
                         style="background: var(--bs-gray-300);margin-top: 15px;margin-bottom: 15px;" title="teste">
-                        <div class="row justify-content-center align-items-center" style="height: 70px;padding: 0;">
+                        <div class="row justify-content-center align-items-center" style="height: auto;padding: 5px 5px;">
                             <div class="col-xl-10 col-xxl-9 offset-xxl-0">
                                 <div class="row" style="height: 25px;">
                                     <div class="col" style="height: 20px;">
@@ -30,8 +30,8 @@
                                         <p>Preço:</p>
                                     </div>
                                 </div>
-                                <div class="row fw-bold text-dark" style="height: 25px;">
-                                    <div class="col" style="height: 20px;">
+                                <div class="row fw-bold text-dark" style="">
+                                    <div class="col" style="height: auto;">
                                         <p class="text-capitalize">{{ $exame->title }}</p>
                                     </div>
                                     <div class="col" style="height: 20px;">
