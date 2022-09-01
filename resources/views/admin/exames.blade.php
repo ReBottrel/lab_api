@@ -125,7 +125,7 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">Adicionar Exame</h4><button type="button" class="btn-close"
+                    <h4 class="modal-title">Editar Exame</h4><button type="button" class="btn-close"
                         data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form action="{{ route('exame.update') }}" method="post">
