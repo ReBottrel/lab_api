@@ -66,6 +66,9 @@
                         </div>
                     </div>
                 @endforeach
+                <div>
+                    {{ $exames->links() }}
+                </div>
             </div>
         </div>
     </div>

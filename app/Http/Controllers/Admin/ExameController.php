@@ -15,7 +15,7 @@ class ExameController extends Controller
      */
     public function index()
     {
-        $exames = Exam::get();
+        $exames = Exam::paginate(8);
         return view('admin.exames', get_defined_vars());
     }
 
