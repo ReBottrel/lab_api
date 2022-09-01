@@ -57,7 +57,7 @@
                                         class="btn btn-sm dropdown-toggle dropdown-toggle-split link-light"
                                         data-bs-toggle="dropdown" aria-expanded="false" type="button"></button>
                                     <div class="dropdown-menu">
-                                        <a class="dropdown-item" href="#">Editar</a>
+                                        <a class="dropdown-item" data-id="{{ $exame->id }}" data-bs-target="#edit-exame" data-bs-toggle="modal">Editar</a>
                                         {{-- <a class="dropdown-item" href="#">Ver</a> --}}
                                         <a class="dropdown-item" href="{{ route('exame.delete', $exame->id) }}">Excluir</a>
                                     </div>
@@ -80,6 +80,58 @@
                 <form action="{{ route('exame.store') }}" method="post">
                     @csrf
                     <div class="modal-body">
+                        <div>
+                            <div style="margin: 0;margin-top: 10px;margin-bottom: 10px;"><label class="form-label">Categoria
+                                    do Exame</label><select class="form-select" name="category">
+                                    <option value="dna">DNA</option>
+                                    <option value="sorologia">SOROLOGIA</option>
+                                </select></div>
+                            <div style="margin: 0;margin-top: 10px;margin-bottom: 10px;">
+                                <label class="form-label">Espécie</label>
+                                <select class="form-select" name="animal">
+                                    <option value="equinos">EQUINOS</option>
+                                    <option value="bovinos">BOVINOS</option>
+                                    <option value="asininos_muares">ASININOS E MUARES</option>
+                                </select>
+                            </div>
+                            <div style="margin: 0;margin-top: 10px;margin-bottom: 10px;"><label class="form-label">Titulo do
+                                    exame</label><input class="form-control" type="text" name="title"></div>
+                            <div style="margin: 0;margin-top: 10px;margin-bottom: 10px;">
+                                <label class="form-label">Preço do
+                                    exame</label>
+                                <input class="form-control" type="text" name="value" id="preco">
+                            </div>
+                            <div style="margin: 0;margin-top: 10px;margin-bottom: 10px;">
+                                <label class="form-label">Verificação Extra</label>
+                                <input class="form-control" type="text" name="extra_value" id="extrapreco">
+                            </div>
+                            <div style="margin: 0;margin-top: 10px;margin-bottom: 10px;"><label
+                                    class="form-label">Descrição</label>
+                                <textarea class="form-control" name="short_description"></textarea>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-light" type="button" data-bs-dismiss="modal">Fechar</button>
+                        <button class="btn btn-success" type="submit">Salvar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" role="dialog" tabindex="-1" id="edit-exame">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Adicionar Exame</h4><button type="button" class="btn-close"
+                        data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{{ route('exame.update') }}" method="post">
+                    @csrf
+                    <div class="modal-body">
+                        <input type="hidden" name="id">
                         <div>
                             <div style="margin: 0;margin-top: 10px;margin-bottom: 10px;"><label class="form-label">Categoria
                                     do Exame</label><select class="form-select" name="category">

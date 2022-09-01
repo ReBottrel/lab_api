@@ -39,3 +39,20 @@ $("#extrapreco").maskMoney({
     decimal: ",",
     thousands: "."
 });
+
+
+$(document).on('click', '[data-bs-target="#edit-exame"]', function() {
+    $.ajax({
+        url: `exame-show/${$(this).data('id')}`,
+        // headers: {
+        //     'Authorization': 'Bearer ' + localStorage.getItem('session'),
+        // },
+        type: 'GET',
+        success: (data) => {
+            console.log(data);
+            for (i in data) {
+                $('#edit-exame').find(`[name="${i}"]`).val(data[i]);
+            }
+        }
+    });
+});

@@ -58,7 +58,9 @@ class ExameController extends Controller
      */
     public function show($id)
     {
-        //
+        $exames = Exam::find($id);
+
+        return response()->json($exames);
     }
 
     /**
@@ -79,9 +81,19 @@ class ExameController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        //
+        $exame = Exam::find($request->id);
+        $exame->update([
+            'category' => $request->category,
+            'animal' => $request->animal,
+            'title' => $request->title,
+            'short_description' => $request->short_description,
+            'value' => str_replace(['.', ','], ['', '.'], $request->value),
+            'extra_value' => str_replace(['.', ','], ['', '.'], $request->extra_value),
+        ]);
+
+        return redirect()->back()->with('success', 'Exame alterado com sucesso!');
     }
 
     /**
