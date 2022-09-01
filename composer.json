@@ -11,6 +11,7 @@
         "laravel/framework": "^8.75",
         "laravel/sanctum": "^2.11",
         "laravel/tinker": "^2.5",
+        "laravel/ui": "3.4.6",
         "php-imap/php-imap": "^2.0",
         "webklex/laravel-imap": "^2.4"
     },

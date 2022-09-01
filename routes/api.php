@@ -10,6 +10,7 @@ use App\Http\Controllers\AnimalController;
 use App\Http\Controllers\GatewayController;
 use App\Http\Controllers\MarkingController;
 use App\Http\Controllers\ContaAzulController;
+use App\Http\Controllers\Admin\Auth\AdminAuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,6 +22,7 @@ use App\Http\Controllers\ContaAzulController;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+Route::post('admin-post', [AdminAuthController::class, 'store'])->name('admin.login.store');
 
 Route::middleware(['auth.token'])->group(function(){
     // Registro de dados do animal
