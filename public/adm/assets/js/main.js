@@ -41,7 +41,7 @@ $("#extrapreco").maskMoney({
 });
 
 
-$(document).on('click', '[data-bs-target="#edit-exame"]', function() {
+$(document).on('click', '[data-bs-target="#edit-exame"]', function () {
     $.ajax({
         url: `exame-show/${$(this).data('id')}`,
         // headers: {
@@ -53,6 +53,24 @@ $(document).on('click', '[data-bs-target="#edit-exame"]', function() {
             for (i in data) {
                 $('#edit-exame').find(`[name="${i}"]`).val(data[i]);
             }
+        }
+    });
+});
+
+$(document).on('click', '.btn-delete', function (e) {
+    e.preventDefault();
+
+    var btn = $(this);
+
+    Swal.fire({
+        icon: 'info',
+        title: 'Gostaria de apagar esse exame?',
+        showCancelButton: true,
+        confirmButtonText: 'SIM',
+        cancelButtonText: 'NÃO',
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = btn.attr('href');
         }
     });
 });

@@ -59,7 +59,7 @@
                                     <div class="dropdown-menu">
                                         <a class="dropdown-item" data-id="{{ $exame->id }}" data-bs-target="#edit-exame" data-bs-toggle="modal">Editar</a>
                                         {{-- <a class="dropdown-item" href="#">Ver</a> --}}
-                                        <a class="dropdown-item" href="{{ route('exame.delete', $exame->id) }}">Excluir</a>
+                                        <a class="dropdown-item btn-delete"  href="{{ route('exame.delete', $exame->id) }}">Excluir</a>
                                     </div>
                                 </div>
                             </div>
