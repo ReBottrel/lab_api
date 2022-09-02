@@ -85,52 +85,55 @@
         </div>
     </div>
     <section style="height: 70px;">
-        <div class="container">
-            <div class="text-secondary border rounded shadow orders"
-                style="background: var(--bs-gray-300);margin-top: 15px;margin-bottom: 15px;" title="teste">
-                <div class="row justify-content-center align-items-center" style="height: 70px;padding: 0;">
-                    <div class="col-xl-10 col-xxl-9 offset-xxl-0">
-                        <div class="row" style="height: 25px;">
-                            <div class="col" style="height: 20px;">
-                                <p>Origem do pedido:</p>
+        @foreach ($orders as $order)
+            <div class="container">
+                <div class="text-secondary border rounded shadow orders"
+                    style="background: var(--bs-gray-300);margin-top: 15px;margin-bottom: 15px;" title="teste">
+                    <div class="row justify-content-center align-items-center" style="height: auto;padding: 5px ;">
+                        <div class="col-xl-10 col-xxl-9 offset-xxl-0">
+                            <div class="row" style="height: auto;">
+                                <div class="col" >
+                                    <p>Origem do pedido:</p>
+                                </div>
+                                <div class="col">
+                                    <p>Cliente:</p>
+                                </div>
+                                <div class="col">
+                                    <p>Atendimento:</p>
+                                </div>
+                                <div class="col">
+                                    <p>Data:</p>
+                                </div>
                             </div>
-                            <div class="col">
-                                <p>Cliente:</p>
-                            </div>
-                            <div class="col">
-                                <p>Animal:</p>
-                            </div>
-                            <div class="col">
-                                <p>Data:</p>
+                            <div class="row fw-bold text-dark" style="height: auto;">
+                                <div class="col" >
+                                    <p>{{ $order->origin }}</p>
+                                </div>
+                                <div class="col" >
+                                    <p>{{ $order->creator }}</p>
+                                </div>
+                                <div class="col">
+                                    <p>{{ $order->collection_number }}</p>
+                                </div>
+                                <div class="col" >
+                                    <p>{{ $order->collection_date }}</p>
+                                </div>
                             </div>
                         </div>
-                        <div class="row fw-bold text-dark" style="height: 25px;">
-                            <div class="col" style="height: 20px;">
-                                <p>Email</p>
+                        <div class="col-xl-1 col-xxl-3">
+                            <div class="btn-group border rounded" style="background: var(--bs-success);">
+                                <button class="btn link-light" type="button">Ações</button><button
+                                    class="btn btn-sm dropdown-toggle dropdown-toggle-split link-light"
+                                    data-bs-toggle="dropdown" aria-expanded="false" type="button"></button>
+                                <div class="dropdown-menu"><a class="dropdown-item" href="#">Aceitar</a><a
+                                        class="dropdown-item" href="order-detail.html">Ver</a><a class="dropdown-item"
+                                        href="#">Excluir</a></div>
                             </div>
-                            <div class="col" style="height: 20px;">
-                                <p>Felipe Da Cruz</p>
-                            </div>
-                            <div class="col" style="height: 20px;">
-                                <p>Nome do Animal</p>
-                            </div>
-                            <div class="col" style="height: 20px;">
-                                <p>31/08/2022</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-1 col-xxl-3">
-                        <div class="btn-group border rounded" style="background: var(--bs-success);">
-                            <button class="btn link-light" type="button">Ações</button><button
-                                class="btn btn-sm dropdown-toggle dropdown-toggle-split link-light"
-                                data-bs-toggle="dropdown" aria-expanded="false" type="button"></button>
-                            <div class="dropdown-menu"><a class="dropdown-item" href="#">Aceitar</a><a
-                                    class="dropdown-item" href="order-detail.html">Ver</a><a class="dropdown-item"
-                                    href="#">Excluir</a></div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        @endforeach
+
     </section>
 @endsection
