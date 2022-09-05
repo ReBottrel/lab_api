@@ -26,7 +26,7 @@ class SearchOrderMails extends Command
 
     // Posicionamentos
     public $collumns = ['id', 'produto', 'sexo', 'nascimento', 'pai', 'registro_pai', 'mae', 'registro_mae'];
-    public $collumns2 = ['n_coleta', 'id', 'produto', 'sexo', 'nascimento', 'registro_pai', 'pai', 'vivo_pai', 'dna_pai', 'mae', 'vivo_mae', 'dna_mae', 'registro_mae', 'obs'];
+    public $collumns2 = ['n_coleta', 'id', 'produto', 'sexo', 'nascimento', 'registro_pai', 'pai', 'vivo_pai', 'dna_pai', 'registro_mae', 'mae', 'vivo_mae', 'dna_mae',  'obs'];
 
     /**
      * Create a new command instance.
