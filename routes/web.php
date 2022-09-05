@@ -41,4 +41,6 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::post('exames-update', [ExameController::class, 'update'])->name('exame.update');
 
     Route::post('recived/{id}', [OrderController::class, 'recivedOrder'])->name('order.recived');
+
+    Route::get('orders', [OrderController::class, 'order'])->name('orders.all');
 });

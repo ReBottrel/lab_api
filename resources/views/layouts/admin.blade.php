@@ -27,7 +27,7 @@
                             style="background: var(--bs-gray-300);color: var(--bs-dark);"><i
                                 class="fas fa-tachometer-alt" style="color: var(--bs-dark);"></i><span>Home</span></a>
                     </li>
-                    <li class="nav-item"><a class="nav-link" href="#" style="color: var(--bs-dark);"><i
+                    <li class="nav-item"><a class="nav-link" href="{{ route('orders.all') }}" style="color: var(--bs-dark);"><i
                                 class="fas fa-table" style="color: var(--bs-dark);"></i><span>Pedidos</span></a><a
                             class="nav-link" href="#"
                             style="color: var(--bs-body-color);background: var(--bs-gray-300);"><i class="fas fa-user"
