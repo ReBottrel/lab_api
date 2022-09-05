@@ -26,6 +26,7 @@ class SearchOrderMails extends Command
 
     // Posicionamentos
     public $collumns = ['id', 'produto', 'sexo', 'nascimento', 'pai', 'registro_pai', 'mae', 'registro_mae'];
+    public $collumns2 = ['n_coleta', 'id', 'produto', 'sexo', 'nascimento', 'registro_pai', 'pai', 'vivo_pai', 'dna_pai', 'mae', 'vivo_mae', 'dna_mae', 'registro_mae', 'obs'];
 
     /**
      * Create a new command instance.
@@ -53,12 +54,13 @@ class SearchOrderMails extends Command
         $folders = $client->getFolders();
         $get_data_messages = collect();
         foreach ($folders as $folder) {
-            $messages = $folder->query()->text('Coleta')->get();
+            // $messages = $folder->query()->text('Coleta Material DNA')->get();
+            // \Log::info($messages);
+            $messages = $folder->query()->since(\Carbon\Carbon::now()->subDays(1))->get();
 
-            // $messages = $folder->query()->text('Coleta Material DNA')->since(\Carbon\Carbon::now()->subDays(1))->get();
-
-            foreach($messages as $message){
+            foreach ($messages as $message) {
                 $get_data_message = collect();
+
                 // $get_data_messages->add(['UID' => $message->getUid(), 'HTML' => $message->getHTMLBody()]);
                 $dom = new \DOMDocument(); // abrindo DOMDoumento para ler os dados
                 $dom->loadHTML($message->getHTMLBody()); // lendo em html
@@ -67,34 +69,46 @@ class SearchOrderMails extends Command
 
                 $table = $xPath->query('.//table')[0];
                 $table = $xPath->query('.//tbody/tr', $table);
-                for($i=1; count($table) > $i; $i++){
+                for ($i = 1; count($table) > $i; $i++) {
                     $get_data_table = collect([]);
                     $table_td = $xPath->query('.//td', $table[$i]);
-                    if(count($table_td) > 0){
-                        for($itd = 0; count($table_td) > $itd; $itd++){
-                            $get_data_table->put($this->collumns[$itd],trim(utf8_decode($table_td[$itd]->textContent)));
+                    // \Log::info($table_td);
+                    if (count($table_td) > 0) {
+                        if(count($table_td) > 8){
+                            $collumns = $this->collumns2;
+                        }else{
+                            $collumns = $this->collumns;
+                        }
+                        for ($itd = 0; count($table_td) > $itd; $itd++) {
+                            $get_data_table->put($collumns[$itd],trim(utf8_decode($table_td[$itd]->textContent)));
+                            // $get_data_table->put($itd, trim(utf8_decode($table_td[$itd]->textContent)));
                         }
                     }
 
-                    if($get_data_table->count() > 0) $get_data_message->add($get_data_table->all());
+                    if ($get_data_table->count() > 0) $get_data_message->add($get_data_table->all());
                 }
 
                 $dados_g = $xPath->query('.//font');
                 $dados_gerais = collect();
-                for($i = 0; count($dados_g) > $i; $i++){
+                for ($i = 0; count($dados_g) > $i; $i++) {
                     $dados_content = utf8_decode($dados_g[$i]->textContent);
-                    if(str_contains($dados_content, 'Número do atendimento:') || str_contains($dados_content, 'Responsável Técnico:') || str_contains($dados_content, 'Data:')){
+                    if (str_contains($dados_content, 'Número do atendimento:') || str_contains($dados_content, 'Responsável Técnico:') || str_contains($dados_content, 'Data:')) {
                         $dados_search = explode(':', $dados_content);
-                        $dados_gerais->put(\Str::slug(trim($dados_search[0]),'_'), trim($dados_search[1]));
+                        $dados_gerais->put(\Str::slug(trim($dados_search[0]), '_'), trim($dados_search[1]));
                     }
-                    if(str_contains($dados_content, 'Criador:')){
+                    if (str_contains($dados_content, 'Criador:')) {
+                        \Log::info($dados_content);
                         $dados_search = explode(':', $dados_content);
                         $dados_ss = explode('-', $dados_search[1]);
-                        $dados_gerais->put(\Str::slug(trim($dados_search[0]),'_'), [trim($dados_ss[0]).'-'.trim($dados_ss[1]),trim($dados_ss[2])]);
+                        if (count($dados_ss) > 0) {
+                            $dados_gerais->put(\Str::slug(trim($dados_search[0]), '_'), [0, trim($dados_search[1])]);
+                        } else {
+                            $dados_gerais->put(\Str::slug(trim($dados_search[0]), '_'), [trim($dados_ss[0]) . '-' . trim($dados_ss[1]), trim($dados_ss[2])]);
+                        }
                     }
                 }
 
-                if($get_data_message->count() > 0) $get_data_messages->add([
+                if ($get_data_message->count() > 0) $get_data_messages->add([
                     'uid' => $message->getUid(),
                     'data_table' => $get_data_message->all(),
                     'data_g' => $dados_gerais->toArray(),
@@ -106,13 +120,13 @@ class SearchOrderMails extends Command
             }
         }
 
-        $get_data_messages->map(function($query){
-            if(OrderRequest::where('data_g->uid', $query['uid'])->get()->count() == 0){
+        $get_data_messages->map(function ($query) {
+            if (OrderRequest::where('data_g->uid', $query['uid'])->get()->count() == 0) {
                 $order_request['origin'] = 'email';
                 $order_request['creator'] = $query['data_g']['criador'][1] ?? null;
                 $order_request['creator_number'] = $query['data_g']['criador'][0] ?? null;
                 $order_request['technical_manager'] = $query['data_g']['responsavel_tecnico'] ?? null;
-                $order_request['collection_date'] = date('Y-m-d', strtotime($query['data_g']['data'])) ?? null;
+                $order_request['collection_date'] = date('Y-m-d', strtotime($query['data_g']['data'] ?? date('Y-m-d'))) ?? null;
                 $order_request['collection_number'] = $query['data_g']['numero_do_atendimento'] ?? null;
                 $order_request['data_g'] = $query ?? null;
                 OrderRequest::create($order_request);

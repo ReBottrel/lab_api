@@ -88,7 +88,7 @@
         @foreach ($orders as $order)
             <div class="container">
                 <div class="text-secondary border rounded shadow orders"
-                    style="background: var(--bs-gray-300);margin-top: 15px;margin-bottom: 15px;" title="teste">
+                    style="background: var(--bs-gray-300);margin-top: 15px;margin-bottom: 15px;">
                     <div class="row justify-content-center align-items-center" style="height: auto;padding: 5px ;">
                         <div class="col-xl-10 col-xxl-9 offset-xxl-0">
                             <div class="row" style="height: auto;">
