@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\Auth\AdminAuthController;
 use App\Http\Controllers\Admin\ExameController;
 use App\Http\Controllers\Admin\HomeController;
+use App\Http\Controllers\Admin\OrderController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -39,5 +40,5 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::get('exame-show/{id}', [ExameController::class, 'show'])->name('exame.show');
     Route::post('exames-update', [ExameController::class, 'update'])->name('exame.update');
 
-
+    Route::post('recived/{id}', [OrderController::class, 'recivedOrder'])->name('order.recived');
 });
