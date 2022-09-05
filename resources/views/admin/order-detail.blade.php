@@ -12,49 +12,62 @@
     <div class="container">
         <div class="card">
             <div class="card-header">
-                <h5 class="mb-0">Nome do usuario do pedido</h5>
+                <h5 class="mb-0">CRIADOR: {{ $order->data_g['data_g']['criador'][1] }} -
+                    {{ $order->data_g['data_g']['criador'][0] }}</h5>
             </div>
             <div class="card-body">
                 <div class="row">
                     <div class="col">
-                        <ul class="list-group">
-                            <li class="list-group-item"><span></span></li>
-                            <li class="list-group-item"><span>Item do pedido</span></li>
-                            <li class="list-group-item"><span>Item do pedido</span></li>
-                        </ul>
-                    </div>
-                    <div class="col">
-                        <ul class="list-group">
-                            <li class="list-group-item"><span>Nome do animal</span></li>
-                            <li class="list-group-item"><span></span><span>Pai do animal</span></li>
-                            <li class="list-group-item"><span>Mãe do animal</span></li>
-                        </ul>
+                        @foreach ($order->data_g['data_table'] as $item)
+                            <ul class="list-group">
+                                <li class="list-group-item"><span>ID: {{ $item['id'] }}</span></li>
+                                <li class="list-group-item"><span>PRODUTO: {{ $item['produto'] }}</span></li>
+                                <li class="list-group-item"><span>SEXO: {{ $item['sexo'] }}</span></li>
+                                <li class="list-group-item"><span>NASCIMENTO: {{ $item['nascimento'] }}</span></li>
+                                <li class="list-group-item"><span>PAI: {{ $item['pai'] }}</span></li>
+                                <li class="list-group-item"><span>REGISTRO DO PAI: {{ $item['registro_pai'] }}</span></li>
+                                <li class="list-group-item"><span>MÃE: {{ $item['mae'] }}</span></li>
+                                <li class="list-group-item"><span>REGISTRO DA MÃE: {{ $item['registro_mae'] }}</span></li>
+                            </ul>
+                        @endforeach
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    @php
+    $status = '';
+    if ($order->status == 0) {
+        $status = 'Aguardando';
+    }
+    if ($order->status == 1) {
+        $status = 'Pedido Aceito';
+    }
+    if ($order->status == 2) {
+        $status = 'Em produção';
+    }
+    if ($order->status == 3) {
+        $status = 'Finalizado';
+    }
+    if ($order->status == 4) {
+        $status = 'Cancelado';
+    }
+    @endphp
     <div class="container" style="margin-top: 20px;">
         <div class="card">
             <div class="card-header">
-                <h5 class="mb-0">Numero do criador&nbsp;</h5>
+                <h5 class="mb-0">RESPONSAVEL TÉCNICO: {{ $order->technical_manager ?? 'Não encontrado' }}</h5>
             </div>
             <div class="card-body">
                 <div class="row">
                     <div class="col">
                         <ul class="list-group">
-                            <li class="list-group-item"><span>Responsavel técnico</span></li>
-                            <li class="list-group-item"><span>Origem do pedido</span></li>
-                            <li class="list-group-item"><span>Status do pedido</span></li>
+                            <li class="list-group-item"><span>Data: {{ $order->collection_date }}</span></li>
+                            <li class="list-group-item"><span>Origem do pedido: {{ $order->origin }}</span></li>
+                            <li class="list-group-item"><span>Status do pedido: {{ $status }}</span></li>
                         </ul>
                     </div>
-                    <div class="col">
-                        <ul class="list-group">
-                            <li class="list-group-item"><span>Data do pedido</span></li>
-                            <li class="list-group-item"><span></span><span>Informações&nbsp;</span></li>
-                            <li class="list-group-item"><span>Informações</span></li>
-                        </ul>
-                    </div>
+
                 </div>
             </div>
         </div>

@@ -74,3 +74,7 @@ $(document).on('click', '.btn-delete', function (e) {
         }
     });
 });
+$(document).on('click', '#show-btn', function (e) {
+    var id = $(this).data('id');
+    console.log(id);
+});

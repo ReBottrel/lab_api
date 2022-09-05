@@ -19,6 +19,11 @@ class HomeController extends Controller
         $order = OrderRequest::find($id);
 
         return view('admin.order-detail', get_defined_vars());
+    }
+    public function orderJson($id)
+    {
+        $order = OrderRequest::find($id);
 
+        return response()->json($order);
     }
 }

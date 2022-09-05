@@ -29,6 +29,7 @@ Route::post('admin-login-entrar', [AdminAuthController::class, 'login'])->name('
 Route::middleware(['auth:admin'])->group(function () {
     Route::get('painel', [HomeController::class, 'index'])->name('admin');
     Route::get('order-detail/{id}', [HomeController::class, 'orderDetail'])->name('order.detail');
+    Route::get('order-json/{id}', [HomeController::class, 'orderJson'])->name('order.json');
 
 
     Route::get('exames', [ExameController::class, 'index'])->name('exames');
