@@ -53,7 +53,7 @@ class SearchOrderMails extends Command
         $folders = $client->getFolders();
         $get_data_messages = collect();
         foreach ($folders as $folder) {
-            $messages = $folder->query()->text('Coleta Material DNA')->get();
+            $messages = $folder->query()->text('Coleta')->get();
 
             // $messages = $folder->query()->text('Coleta Material DNA')->since(\Carbon\Carbon::now()->subDays(1))->get();
 
