@@ -19,7 +19,7 @@
                 <div class="row">
                     <div class="col">
                         @foreach ($order->data_g['data_table'] as $item)
-                            <ul class="list-group">
+                            <ul class="list-group m-3">
                                 <li class="list-group-item"><span>ID: {{ $item['id'] }}</span></li>
                                 <li class="list-group-item"><span>PRODUTO: {{ $item['produto'] }}</span></li>
                                 <li class="list-group-item"><span>SEXO: {{ $item['sexo'] }}</span></li>
