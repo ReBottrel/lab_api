@@ -48,7 +48,7 @@
                                 </div>
                                 <div class="row g-0 align-items-center">
                                     <div class="col-auto">
-                                        <div class="text-dark fw-bold h5 mb-0 me-3"><span>0</span></div>
+                                        <div class="text-dark fw-bold h5 mb-0 me-3"><span>{{ $orders->count() }}</span></div>
                                     </div>
                                 </div>
                             </div>
