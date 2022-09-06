@@ -39,6 +39,12 @@
                             <input type="text" class="form-control">
                         </div>
                     </div>
+                    <div class="col-md-12">
+                        <div class="mb-3">
+                            <label for="exampleFormControlInput1" class="form-label">Propriedade</label>
+                            <input type="text" class="form-control">
+                        </div>
+                    </div>
                     <div class="col-md-4">
                         <div class="mb-3">
                             <label for="exampleFormControlInput1" class="form-label">CEP</label>
