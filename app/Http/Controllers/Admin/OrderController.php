@@ -25,4 +25,11 @@ class OrderController extends Controller
 
         return response()->json($order);
     }
+
+
+    public function owner($id)
+    {
+        $order = OrderRequest::find($id);
+        return view('admin.owner', get_defined_vars());
+    }
 }

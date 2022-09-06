@@ -43,4 +43,6 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::post('recived/{id}', [OrderController::class, 'recivedOrder'])->name('order.recived');
 
     Route::get('orders', [OrderController::class, 'order'])->name('orders.all');
+
+    Route::get('owner/{id}', [OrderController::class, 'owner'])->name('orders.owner');
 });

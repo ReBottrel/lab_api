@@ -11,6 +11,7 @@
         href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
     <link rel="stylesheet" href="{{ asset('adm/assets/fonts/fontawesome-all.min.css') }}">
     <link rel="stylesheet" href="{{ asset('adm/assets/fonts/font-awesome.min.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="{{ asset('adm/assets/fonts/fontawesome5-overrides.min.css') }}">
 </head>
 
@@ -27,11 +28,11 @@
                             style="background: var(--bs-gray-300);color: var(--bs-dark);"><i
                                 class="fas fa-tachometer-alt" style="color: var(--bs-dark);"></i><span>Home</span></a>
                     </li>
-                    <li class="nav-item"><a class="nav-link" href="{{ route('orders.all') }}" style="color: var(--bs-dark);"><i
-                                class="fas fa-table" style="color: var(--bs-dark);"></i><span>Pedidos</span></a><a
-                            class="nav-link" href="#"
-                            style="color: var(--bs-body-color);background: var(--bs-gray-300);"><i class="fas fa-user"
-                                style="color: var(--bs-dark);"></i><span>Usuários</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('orders.all') }}"
+                            style="color: var(--bs-dark);"><i class="fas fa-table"
+                                style="color: var(--bs-dark);"></i><span>Pedidos</span></a><a class="nav-link"
+                            href="#" style="color: var(--bs-body-color);background: var(--bs-gray-300);"><i
+                                class="fas fa-user" style="color: var(--bs-dark);"></i><span>Usuários</span></a></li>
                     <li class="nav-item"></li>
                     <li class="nav-item"><a class="nav-link" href="{{ route('exames') }}"
                             style="color: var(--bs-dark);"><i class="far fa-list-alt"
@@ -119,10 +120,18 @@
     <script src="{{ asset('adm/assets/js/jquery.min.js') }}"></script>
     <script src="{{ asset('adm/assets/bootstrap/js/bootstrap.min.js') }}"></script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-maskmoney/3.0.2/jquery.maskMoney.min.js"></script>
     <script src="{{ asset('adm/assets/js/script.min.js') }}"></script>
     <script src="{{ asset('adm/assets/js/main.js') }}"></script>
-
+    <script>
+        // In your Javascript (external .js resource or <script> tag)
+        $(document).ready(function() {
+            $('.js-example-basic-single').select2({
+                width: '100%'
+            });
+        });
+    </script>
     @if (Session::has('success'))
         <script type="text/javascript">
             Swal.fire({
