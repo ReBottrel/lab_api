@@ -74,7 +74,7 @@ class OrderController extends Controller
                 return $query;
             });
         }
-        
+
         return response()->json($data, 200);
     }
 

@@ -26,5 +26,6 @@ class Owner extends Model
         'city',
         'state',
         'status',
+        'propriety',
     ];
 }

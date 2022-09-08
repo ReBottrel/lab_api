@@ -1,9 +1,11 @@
 <?php
 
+use App\Http\Controllers\Admin\AddressController;
 use App\Http\Controllers\Admin\Auth\AdminAuthController;
 use App\Http\Controllers\Admin\ExameController;
 use App\Http\Controllers\Admin\HomeController;
 use App\Http\Controllers\Admin\OrderController;
+use App\Http\Controllers\Admin\OwnerController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -45,4 +47,8 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::get('orders', [OrderController::class, 'order'])->name('orders.all');
 
     Route::get('owner/{id}', [OrderController::class, 'owner'])->name('orders.owner');
+
+    Route::get('cep-get', [AddressController::class, 'getCep'])->name('cep.get');
+
+    Route::post('owner-store', [OwnerController::class, 'store'])->name('owner.store');
 });

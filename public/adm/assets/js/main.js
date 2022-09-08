@@ -124,4 +124,65 @@ $(document).ready(function () {
         })
 
     });
+
+    $('.js-example-basic-single').select2({
+        width: '100%',
+    });
+    $('#cep').mask('99999-999');
+
+    $(document).on('blur keyup', '#cep', function () {
+        cep = $(this).val();
+        $.ajax({
+            type: 'get',
+            url: "/cep-get/",
+            data: { cep: cep },
+            success: function (data) {
+                console.log(data);
+                $('#address').val(data.logradouro);
+                $('#bairro').val(data.bairro);
+                $('#cidade').val(data.localidade);
+                $('#uf').val(data.uf);
+            }
+        });
+    });
+
+    $(document).on('click', '#owner-save', function () {
+        console.log('cliec');
+        var btn = $(this);
+        var form = $('#owner-form').serialize();
+        var url = $('#owner-form').attr('action');
+        btn.html('<div class="spinner-border text-light" role="status"></div>');
+        btn.prop('disabled', true);
+        $('#owner-form').find('input').prop('disabled', true);
+
+        $.ajax({
+            url: url,
+            type: 'POST',
+            data: form,
+            success: (data) => {
+                console.log(data);
+                Swal.fire(
+                    'Sucesso!',
+                    'Proprietario cadastrado com sucesso!',
+                    'success'
+                )
+                window.location.reload();
+
+                // window.location.href = data;
+            },
+            error: (err) => {
+                // console.log(err);
+                btn.html('Salvar');
+                btn.prop('disabled', false);
+                $('#owner-form').find('input').prop('disabled', false);
+
+                Swal.fire({
+                    icon: 'error',
+                    title: err.responseJSON.invalid
+                });
+            }
+        });
+    });
+
+
 });
