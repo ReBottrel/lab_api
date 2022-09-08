@@ -38,7 +38,7 @@
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="exampleFormControlInput1" class="form-label">CPF/CNPJ</label>
-                                <input type="text" name="document" class="form-control">
+                                <input type="text" name="document" id="cpfcnpj" class="form-control">
                             </div>
                         </div>
                         <div class="col-md-12">
@@ -92,7 +92,7 @@
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="exampleFormControlInput1" class="form-label">Telefone</label>
-                                <input type="text" name="fone" class="form-control">
+                                <input type="text" name="fone" id="fone" class="form-control">
                             </div>
                         </div>
                         <div class="col-md-6">
