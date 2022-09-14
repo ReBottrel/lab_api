@@ -1,0 +1,190 @@
+@extends('layouts.loja')
+
+@section('content')
+    <div class="container">
+        <h1 class="text-primary">Minha Conta</h1>
+        <div class="row gx-3">
+            <div class="col-4">
+                <div class="list-group">
+                    <a href="/cliente_dados.html" class="list-group-item list-group-item-action">
+                        <i class="bi-person fs-6"></i> Dados Pessoais
+                    </a>
+                    <a href="/cliente_contatos.html" class="list-group-item list-group-item-action">
+                        <i class="bi-mailbox fs-6"></i> Contatos
+                    </a>
+                    <a href="/cliente_endereco.html" class="list-group-item list-group-item-action">
+                        <i class="bi-house-door fs-6"></i> Endereço
+                    </a>
+                    <a href="/cliente_pedidos.html"
+                        class="list-group-item list-group-item-action text-bg-primary active text-light">
+                        <i class="bi-truck fs-6"></i> Pedidos
+                    </a>
+                    <a href="/cliente_favoritos.html" class="list-group-item list-group-item-action">
+                        <i class="bi-heart fs-6"></i> Favoritos
+                    </a>
+                    <a href="/cliente_senha.html" class="list-group-item list-group-item-action">
+                        <i class="bi-lock fs-6"></i> Alterar Senha
+                    </a>
+                    <a href="/index.html" class="list-group-item list-group-item-action">
+                        <i class="bi-door-open fs-6"></i> Sair
+                    </a>
+                </div>
+            </div>
+            <div class="col-8">
+                <form class="row mb-3">
+                    <div class="col-12 col-md-6 mb-3">
+                        <div class="form-floating">
+                            <select class="form-select">
+                                <option value="30">Últimos 30 dias</option>
+                                <option value="60">Últimos 60 dias</option>
+                                <option value="90">Últimos 90 dias</option>
+                                <option value="180">Últimos 180 dias</option>
+                                <option value="360" selected>Últimos 360 dias</option>
+                                <option value="9999">Todo o período</option>
+                            </select>
+                            <label>Período</label>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <div class="form-floating">
+                            <select class="form-select">
+                                <option value="1" selected>Mais novos primeiro</option>
+                                <option value="2">Mais antigos primeiro</option>
+                            </select>
+                            <label>Ordenação</label>
+                        </div>
+                    </div>
+                </form>
+                @php
+                    $total = 0;
+                @endphp
+                @foreach ($orders as $order)
+                    <div class="accordion my-4" id="divPedidos">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#pedido000010">
+                                    <b>Pedido {{ $order->id }}</b>
+                                    <span class="mx-1">(realizado em {{ $order->created_at }})</span>
+                                </button>
+                            </h2>
+                            <div id="pedido000010" class="accordion-collapse collapse" data-bs-parent="#divPedidos">
+                                <div class="accordion-body">
+                                    <div class="row px-2">
+                                        <div class="col-md-6 px-2 font-weight-bold">
+                                            <p class="font-weight-bold">Produto</p>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <p>R$ Unit. </p>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <p>Qtde</p>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <p>Subtotal</p>
+                                        </div>
+                                    </div>
+                                    @foreach ($order->orderRequestPayment as $item)
+                                        <div class="accordion my-3" id="accordionExample-{{ $item->id }}">
+                                            <div class="accordion-item">
+                                                <div class="accordion-header row px-2" id="headingOne"
+                                                    class="accordion-button" type="button" data-bs-toggle="collapse"
+                                                    data-bs-target="#collapseOne-{{ $item->id }}" aria-expanded="true"
+                                                    aria-controls="collapseOne">
+                                                    <div class="col-md-6">
+                                                        <p>{{ $item->title }}</p>
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        @foreach ($prices as $key => $p)
+                                                            <p class="prices preco @if ($key != 0) d-none @endif prices-{{ $key }}"
+                                                                data-price="{{ $p }}">
+                                                                {{ 'R$ ' . number_format($p, 2, ',', '.') }} </p>
+                                                        @endforeach
+                                                        {{-- <p>{{ 'R$ ' . number_format($item->value, 2, ',', '.') }} </p> --}}
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <p>1</p>
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        @foreach ($prices as $key => $p)
+                                                            <p
+                                                                class="prices @if ($key != 0) d-none @endif prices-{{ $key }}">
+                                                                {{ 'R$ ' . number_format($p, 2, ',', '.') }} </p>
+                                                        @endforeach
+                                                    </div>
+                                                </div>
+
+                                                <div id="collapseOne-{{ $item->id }}"
+                                                    class="accordion-collapse collapse" aria-labelledby="headingOne"
+                                                    data-bs-parent="#accordionExample-{{ $item->id }}">
+                                                    <div class="accordion-body">
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+                                                                <div class="mb-3">
+                                                                    <label for="exampleFormControlInput1"
+                                                                        class="form-label">Tempo de entrega</label>
+                                                                    <select class="form-select sel-price"
+                                                                        aria-label="Default select example">
+                                                                        <option value="0" selected>20 Dias (Padrão)
+                                                                        <option value="1">24 Horas</option>
+                                                                        <option value="2">2 Dias</option>
+                                                                        <option value="3">5 Dias</option>
+                                                                        <option value="4">15 Dias</option>
+
+                                                                        </option>
+                                                                    </select>
+                                                                </div>
+
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <div class="form-check">
+                                                                    <input class="form-check-input" type="checkbox"
+                                                                        value="" id="flexCheckChecked" checked>
+                                                                    <label class="form-check-label"
+                                                                        for="flexCheckChecked">
+                                                                        Pagar Agora
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <h4>TOTAL: <span
+                                                    class="total-price">  {{ 'R$ ' . number_format($order->orderRequestPayment->count() * $prices[0], 2, ',', '.') }}</span>
+                                            </h4>
+                                        </div>
+                                        <div class="col-md-6 text-end">
+                                            <button class="btn btn-primary">Formas de Pagamento</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+
+            </div>
+        </div>
+    </div>
+@endsection
+
+@section('scripts')
+    <script>
+        $(document).on('change', '.sel-price', function() {
+            $(this).closest('.accordion').find('.prices').addClass('d-none');
+            $(this).closest('.accordion').find(`.prices.prices-${$(this).val()}`).removeClass('d-none');
+            var totalPrice = 0;
+            $(this).closest('#divPedidos').find(`.preco`).each(function() {
+                if ($(this).is('.d-none') == false) {
+                    totalPrice += parseFloat($(this).data('price'));
+                }
+            });
+            $('.total-price').text(totalPrice.toFixed(2).replace('.', ','));
+        });
+    </script>
+@endsection

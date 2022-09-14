@@ -2,9 +2,16 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
+use App\Models\Exam;
+use App\Models\User;
 use App\Models\Owner;
+use App\Models\Animal;
+use App\Models\OrderRequest;
 use Illuminate\Http\Request;
+use App\Models\OrderRequestPayment;
+use App\Http\Controllers\Controller;
+use App\Models\UserInfo;
+use Illuminate\Support\Facades\Hash;
 
 class OwnerController extends Controller
 {
@@ -36,7 +43,46 @@ class OwnerController extends Controller
      */
     public function store(Request $request)
     {
-        $dados = Owner::create($request->all());
+        $order = OrderRequest::find($request->order_id);
+        $documents = str_replace(['.', '-', '/'], ['', '', ''],  $request->document);
+
+        $user = User::create([
+            'name' => $request->owner_name,
+            'email' => $request->email,
+            'password' => Hash::make($documents),
+            'permission' => 1,
+        ]);
+
+        $info = UserInfo::create([
+            'user_id' => $user->id,
+            'document' => $request->document,
+            'phone' => $request->fone,
+            'zip_code' => $request->zip_code,
+            'address' => $request->address,
+            'number' => $request->number,
+            'complement' => $request->complement,
+            'district' => $request->district,
+            'city' => $request->city,
+            'state' => $request->state,
+
+        ]);
+
+        $dados = Owner::create([
+            'user_id' => $user->id,
+            'document' => $request->document,
+            'owner_name' => $request->owner_name,
+            'email' => $request->email,
+            'fone' => $request->fone,
+            'zip_code' => $request->zip_code,
+            'address' => $request->address,
+            'number'  => $request->number,
+            'complement' => $request->complement,
+            'district' => $request->district,
+            'city'  => $request->city,
+            'state' => $request->state,
+            'propriety' => $request->propriety,
+        ]);
+
 
         return response()->json($dados);
     }

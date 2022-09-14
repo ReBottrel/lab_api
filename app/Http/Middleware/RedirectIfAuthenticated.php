@@ -23,7 +23,7 @@ class RedirectIfAuthenticated
             return redirect('painel');
         }
         if (Auth::guard($guard)->check()) {
-            return redirect('/admin/home');
+            return redirect('/user-dashboard');
         }
 
         return $next($request);

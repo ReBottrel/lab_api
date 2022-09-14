@@ -6,6 +6,8 @@ use App\Http\Controllers\Admin\ExameController;
 use App\Http\Controllers\Admin\HomeController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\OwnerController;
+use App\Http\Controllers\User\UserDashboardController;
+use App\Http\Controllers\User\UserOrderController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -22,11 +24,13 @@ use Illuminate\Support\Facades\Route;
 Auth::routes();
 
 
-
 Route::get('admin-login', [AdminAuthController::class, 'index'])->name('admin.login');
 Route::post('admin-login-entrar', [AdminAuthController::class, 'login'])->name('admin.entrar');
 
-
+Route::middleware(['auth:web'])->group(function (){
+    Route::get('user-orders', [UserOrderController::class, 'index'])->name('user.orders');
+    Route::get('user-dashboard', [UserDashboardController::class, 'index'])->name('user.dashboard');
+});
 
 
 Route::middleware(['auth:admin'])->group(function () {
@@ -51,4 +55,6 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::get('cep-get', [AddressController::class, 'getCep'])->name('cep.get');
 
     Route::post('owner-store', [OwnerController::class, 'store'])->name('owner.store');
+
+    Route::post('order-generate', [OrderController::class, 'orderRequestPost'])->name('order.generate');
 });

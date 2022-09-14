@@ -6,20 +6,23 @@
                 <div>
                     <h4>Buscar proprietario</h4>
                 </div>
-                <div class="row">
-                    <div class="col-md-8">
-                        <select class="js-example-basic-single" name="state">
-                            @foreach ($owners as $owner)
-                            <option value="{{ $owner->id }}">{{ $owner->owner_name }}</option>
-                            @endforeach
+                <form action="{{ route('order.generate') }}" method="post">
+                    @csrf
+                    <input type="hidden" name="id" value="{{ $order->id }}">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <select class="js-example-basic-single" name="owner">
+                                @foreach ($owners as $owner)
+                                    <option value="{{ $owner->id }}">{{ $owner->owner_name }}</option>
+                                @endforeach
 
-                        </select>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <button class="btn btn-primary">Continuar</button>
+                        </div>
                     </div>
-                    <div class="col-md-4">
-                        <button class="btn btn-primary">Continuar</button>
-
-                    </div>
-                </div>
+                </form>
             </div>
         </div>
         <div class="card my-4">
@@ -28,6 +31,7 @@
                     <h4>Cadastrar Proprietario</h4>
                 </div>
                 <form action="{{ route('owner.store') }}" id="owner-form" method="post">
+                    <input type="hidden" name="order_id" value="{{ $order->id }}">
                     <div class="row">
                         <div class="col-md-6">
                             <div class="mb-3">

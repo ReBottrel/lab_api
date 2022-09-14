@@ -1,0 +1,86 @@
+@import "../css/cores";
+.btn-secondary {
+  color: white;
+}
+.btn-secondary:hover {
+  color: white !important;
+}
+.filtros {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.submit-lente {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 10;
+  border: none;
+  background: transparent;
+  outline: none;
+  color: $secondary;
+  font-size: 20px;
+}
+
+.submit-line {
+  position: relative;
+}
+
+.submit-line input {
+  color: $primary;
+}
+.form-control {
+  border: 1px solid $secondary;
+}
+.form-control::placeholder {
+  color: $secondary;
+}
+.form-control:focus::placeholder {
+  color: $primary;
+}
+
+.submit-lente:focus {
+  color: $purple;
+}
+
+.dropdown-item:hover {
+  background-color: $primary;
+  color: white;
+}
+.drop-secondary:hover {
+  background-color: $secondary;
+}
+
+.card {
+  background-color: $gray-400;
+
+  border: none !important;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px !important;
+}
+.card-header {
+  background-color: $gray-400;
+  border: none !important;
+  color: $gray-600;
+}
+.card-header p {
+  border: none !important;
+}
+.price {
+  color: $gray-700;
+}
+.btn-xxl {
+  padding: 20px;
+  display: block;
+}
+.text-gray {
+  color: $gray-700;
+}
+.card-2 {
+  padding: 20px;
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 12px 28px 0px, rgba(0, 0, 0, 0.1) 0px 2px 4px 0px,
+    rgba(255, 255, 255, 0.05) 0px 0px 0px 1px inset;
+}
+li{
+  list-style: none;
+}
