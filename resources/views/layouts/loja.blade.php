@@ -81,7 +81,7 @@
     </footer>
     <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
     <script src="{{ asset('loja/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
-
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     @yield('scripts')
 </body>
 

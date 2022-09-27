@@ -1,14 +1,15 @@
 <?php
 
-use App\Http\Controllers\Admin\AddressController;
-use App\Http\Controllers\Admin\Auth\AdminAuthController;
-use App\Http\Controllers\Admin\ExameController;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\GatewayController;
 use App\Http\Controllers\Admin\HomeController;
+use App\Http\Controllers\Admin\ExameController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\OwnerController;
-use App\Http\Controllers\User\UserDashboardController;
+use App\Http\Controllers\Admin\AddressController;
 use App\Http\Controllers\User\UserOrderController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\User\UserDashboardController;
+use App\Http\Controllers\Admin\Auth\AdminAuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,12 +31,18 @@ Route::post('admin-login-entrar', [AdminAuthController::class, 'login'])->name('
 Route::middleware(['auth:web'])->group(function (){
     Route::get('user-orders', [UserOrderController::class, 'index'])->name('user.orders');
     Route::get('user-dashboard', [UserDashboardController::class, 'index'])->name('user.dashboard');
+
+    Route::post('user-payment', [UserDashboardController::class, 'paymentMethod'])->name('user.payment');
+
+    Route::post('gateway/payment', [GatewayController::class, 'payment'])->name('user.checkout');
+
+    Route::get('gateway/payment/success/{id?}', [GatewayController::class, 'success'])->name('user.success');
 });
 
 
 Route::middleware(['auth:admin'])->group(function () {
     Route::get('painel', [HomeController::class, 'index'])->name('admin');
-    Route::get('order-detail/{id}', [HomeController::class, 'orderDetail'])->name('order.detail');
+    Route::get('order-detail/{id}', [OrderController::class, 'orderDetail'])->name('order.detail');
     Route::get('order-json/{id}', [HomeController::class, 'orderJson'])->name('order.json');
 
 
@@ -55,6 +62,8 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::get('cep-get', [AddressController::class, 'getCep'])->name('cep.get');
 
     Route::post('owner-store', [OwnerController::class, 'store'])->name('owner.store');
+
+    Route::post('animal', [OrderController::class, 'animal'])->name('animal');
 
     Route::post('order-generate', [OrderController::class, 'orderRequestPost'])->name('order.generate');
 });

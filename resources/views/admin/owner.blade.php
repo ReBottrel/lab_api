@@ -6,7 +6,7 @@
                 <div>
                     <h4>Buscar proprietario</h4>
                 </div>
-                <form action="{{ route('order.generate') }}" method="post">
+                <form action="{{ route('animal') }}" method="post">
                     @csrf
                     <input type="hidden" name="id" value="{{ $order->id }}">
                     <div class="row">

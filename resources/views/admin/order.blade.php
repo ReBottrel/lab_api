@@ -61,9 +61,13 @@
                                         <button class="btn link-light" type="button">Ações</button><button
                                             class="btn btn-sm dropdown-toggle dropdown-toggle-split link-light"
                                             data-bs-toggle="dropdown" aria-expanded="false" type="button"></button>
-                                        <div class="dropdown-menu"><a class="dropdown-item" id="show-btn"
-                                                href="{{ route('order.detail', $order->id) }}">Ver</a><a
-                                                class="dropdown-item" href="#">Excluir</a></div>
+                                        <div class="dropdown-menu">
+                                            <a class="dropdown-item" id="show-btn"
+                                                href="{{ route('order.detail', $order->id) }}">Ver</a>
+                                            <a class="dropdown-item" id="show-btn"
+                                                href="{{ route('orders.owner', $order->id) }}">Proprietario</a>
+                                            <a class="dropdown-item" href="#">Excluir</a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

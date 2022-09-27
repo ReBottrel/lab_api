@@ -48,7 +48,8 @@
                                 </div>
                                 <div class="row g-0 align-items-center">
                                     <div class="col-auto">
-                                        <div class="text-dark fw-bold h5 mb-0 me-3"><span>{{ $orders->count() }}</span></div>
+                                        <div class="text-dark fw-bold h5 mb-0 me-3"><span>{{ $orders->count() }}</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -92,7 +93,7 @@
                     <div class="row justify-content-center align-items-center" style="height: auto;padding: 5px ;">
                         <div class="col-xl-10 col-xxl-9 offset-xxl-0">
                             <div class="row" style="height: auto;">
-                                <div class="col" >
+                                <div class="col">
                                     <p>Origem do pedido:</p>
                                 </div>
                                 <div class="col">
@@ -106,16 +107,16 @@
                                 </div>
                             </div>
                             <div class="row fw-bold text-dark" style="height: auto;">
-                                <div class="col" >
+                                <div class="col">
                                     <p>{{ $order->origin }}</p>
                                 </div>
-                                <div class="col" >
+                                <div class="col">
                                     <p>{{ $order->creator }}</p>
                                 </div>
                                 <div class="col">
                                     <p>{{ $order->collection_number }}</p>
                                 </div>
-                                <div class="col" >
+                                <div class="col">
                                     <p>{{ $order->collection_date }}</p>
                                 </div>
                             </div>
@@ -125,9 +126,13 @@
                                 <button class="btn link-light" type="button">Ações</button><button
                                     class="btn btn-sm dropdown-toggle dropdown-toggle-split link-light"
                                     data-bs-toggle="dropdown" aria-expanded="false" type="button"></button>
-                                <div class="dropdown-menu"><a class="dropdown-item" data-id="{{ $order->id }}" id="btn-aceitar">Aceitar</a><a
-                                        class="dropdown-item"  id="show-btn" href="{{ route('order.detail', $order->id) }}">Ver</a><a class="dropdown-item"
-                                        href="#">Excluir</a></div>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" data-id="{{ $order->id }}" id="btn-aceitar">Aceitar</a>
+                              
+                                    <a class="dropdown-item" id="show-btn"
+                                        href="{{ route('order.detail', $order->id) }}">Ver</a>
+                                    <a class="dropdown-item" href="#">Excluir</a>
+                                </div>
                             </div>
                         </div>
                     </div>

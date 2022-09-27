@@ -24,6 +24,7 @@ class OrderController extends Controller
     {
 
         $order = OrderRequest::find($id);
+
         $order->update([
             'status' => $request->value,
         ]);
@@ -31,6 +32,28 @@ class OrderController extends Controller
         return response()->json($order);
     }
 
+    public function animal(Request $request)
+    {
+        $order = OrderRequest::find($request->id);
+        foreach ($order->data_g['data_table'] as $data) {
+
+            Animal::create([
+                'user_id' => $request->owner,
+                'order_id' => $order->id,
+                'animal_name' => $data['produto'],
+                'register_number_brand' => $data['id'],
+                'sex' => $data['sexo'],
+                'birth_date' => $data['nascimento'],
+            ]);
+        }
+        return view('admin.order-detail', get_defined_vars());
+    }
+
+    public function orderDetail($id)
+    {
+        $order = OrderRequest::find($id);
+        return view('admin.order-detail', get_defined_vars());
+    }
 
     public function owner($id)
     {

@@ -15,6 +15,7 @@ class Animal extends Model
 
     protected $fillable = [
         'user_id',
+        'order_id',
         'register_number_brand',
         'animal_name',
         'classification',

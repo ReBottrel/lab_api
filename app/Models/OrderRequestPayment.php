@@ -25,6 +25,8 @@ class OrderRequestPayment extends Model
         'extra_requests',
         'payment_id',
         'payment_status',
+        'days',
+        'paynow',
     ];
 
     public function historyStatus()

@@ -23,6 +23,7 @@ class OrderRequest extends Model
         'collection_number',
         'data_g',
         'status',
+        'total',
     ];
 
     public function user()
