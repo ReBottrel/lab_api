@@ -32,6 +32,7 @@ class Animal extends Model
         'fur',
         'description',
         'status',
+        'chip_number',
     ];
 
     public function owner()

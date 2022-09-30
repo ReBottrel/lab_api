@@ -48,6 +48,18 @@
                                     @php
                                         $status = 'Resultado disponível';
                                     @endphp
+                                @elseif($animal->status == 6)
+                                    @php
+                                        $status = 'Análise reprovada';
+                                    @endphp
+                                @elseif($animal->status == 7)
+                                    @php
+                                        $status = 'Análise Aprovada';
+                                    @endphp
+                                @elseif($animal->status == 8)
+                                    @php
+                                        $status = 'Recoleta solicitada';
+                                    @endphp
                                 @endif
                             @endif
                             <ul class="list-group m-3">
@@ -59,17 +71,56 @@
                                 <li class="list-group-item"><span>REGISTRO DO PAI: {{ $item['registro_pai'] }}</span></li>
                                 <li class="list-group-item"><span>MÃE: {{ $item['mae'] }}</span></li>
                                 <li class="list-group-item"><span>REGISTRO DA MÃE: {{ $item['registro_mae'] }}</span></li>
-                                <li class="list-group-item text-uppercase"><span>STATUS: {{ $status }}</span></li>
-                                <li class="list-group-item">
-                                    <div class="row">
-                                        <div class="col-4">
-                                            <input type="text" class="form-control" placeholder="Numero do chip">
-                                        </div>
-                                        <div class="col-4">
-                                            <span>Insira o numero do chip do animal</span>
-                                        </div>
-                                    </div>
+                                <li
+                                    class="list-group-item text-uppercase @if ($status == 'Análise Aprovada') bg-success @elseif($status == 'Análise reprovada') bg-danger @elseif($status == 'Recoleta solicitada') bg-warning @else bg-primary @endif  text-white">
+                                    <span>STATUS:
+                                        {{ $status }}</span>
                                 </li>
+                                <li class="list-group-item">
+                                    @if ($status == 'Aguardando amostra')
+                                        <div>
+                                            <button class="btn btn-primary amostra" data-value="2"
+                                                data-id="{{ $animal->id }}">Amostra
+                                                Recebida</button>
+                                        </div>
+                                    @endif
+                                    @if ($status == 'Amostra recebida')
+                                        <div class="row">
+                                            <div class="col-3">
+                                                <button class="btn btn-success amostra-ok" data-value="7"
+                                                    data-id="{{ $animal->id }}">Amostra
+                                                    Aprovada</button>
+                                            </div>
+                                            <div class="col-3">
+                                                <button class="btn btn-danger amostra-reprovada" data-value="6"
+                                                    data-id="{{ $animal->id }}">Amostra
+                                                    Reprovada</button>
+                                            </div>
+                                        </div>
+                                    @endif
+                                    @if ($status == 'Análise reprovada')
+                                        <div>
+                                            <button class="btn btn-primary recoleta" data-value="8"
+                                                data-id="{{ $animal->id }}">Solicitar Recoleta</button>
+                                        </div>
+                                    @endif
+
+                                </li>
+                                @if ($status != 'Aguardando amostra' && $status != 'Aguardando cadastro')
+                                    <li class="list-group-item">
+                                        <div class="row">
+                                            <div class="col-4">
+                                                <input type="text" class="form-control chip"
+                                                    value="{{ $animal->chip_number ?? '' }}"
+                                                    data-id="{{ $animal->id ?? '' }}" placeholder="Numero do chip">
+                                            </div>
+                                            <div class="col-4">
+                                                <span>Insira o numero do chip do animal</span>
+                                            </div>
+                                        </div>
+                                    </li>
+                                @endif
+
                             </ul>
                         @endforeach
                     </div>
@@ -77,24 +128,7 @@
             </div>
         </div>
     </div>
-    @php
-        $status = '';
-        if ($order->status == 0) {
-            $status = 'Aguardando';
-        }
-        if ($order->status == 1) {
-            $status = 'Aguardando amostra';
-        }
-        if ($order->status == 2) {
-            $status = 'Em produção';
-        }
-        if ($order->status == 3) {
-            $status = 'Finalizado';
-        }
-        if ($order->status == 4) {
-            $status = 'Cancelado';
-        }
-    @endphp
+
     <div class="container" style="margin-top: 20px;">
         <div class="card">
             <div class="card-header">
@@ -106,7 +140,7 @@
                         <ul class="list-group">
                             <li class="list-group-item"><span>Data: {{ $order->collection_date }}</span></li>
                             <li class="list-group-item"><span>Origem do pedido: {{ $order->origin }}</span></li>
-                            <li class="list-group-item"><span>Status do pedido: {{ $status }}</span></li>
+                            {{-- <li class="list-group-item"><span>Status do pedido: {{ $status }}</span></li> --}}
                         </ul>
                     </div>
 
@@ -119,31 +153,141 @@
             <div class="card-body">
                 <div class="row align-items-baseline">
                     <div class="col align-self-center me-auto"></div>
-                    <div class="col text-center align-self-center"><button class="btn fw-bold link-light" type="button"
-                            style="background: var(--bs-info);">PDF</button><button class="btn fw-bold link-light"
-                            type="button" style="background: var(--bs-green);margin: 15px;">EXCEL</button></div>
+                    <div class="col text-center align-self-center">
+                        @if (isset($animal))
+                            @if ($order->status == 1)
+                                <button class="btn fw-bold link-light gerar" type="button"
+                                    data-order="{{ $order->id }}" style="background: var(--bs-info);">GERAR
+                                    PAGAMENTO</button>
+                            @else
+                                <div class="row">
+                                    <div class="col-6">
+                                        <button class="btn fw-bold link-light" type="button" disabled
+                                            style="background: var(--bs-info);">PAGAMENTO GERADO</button>
+                                    </div>
+                                    <div class="col-6">
+                                        <button class="btn fw-bold link-light" type="button"
+                                            style="background: var(--bs-success);">VER RELATÓRIO DE PEDIDO</button>
+                                    </div>
+                                </div>
+                            @endif
+                        @endif
+                    </div>
                     <div class="col"></div>
                 </div>
             </div>
         </div>
     </div>
+@endsection
 
-    <!-- Modal -->
-    {{-- <div class="modal fade" id="add-criador" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Cadastrar Criador</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    ...
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Salvar</button>
-                </div>
-            </div>
-        </div>
-    </div> --}}
+@section('js')
+    <script>
+        $(document).on('blur', '.chip', function() {
+            var id = $(this).data('id');
+            $.ajax({
+                url: `/chip/${id}`,
+                type: 'POST',
+
+                data: {
+                    chip: $(this).val()
+                },
+                success: function(data) {
+                    console.log(data);
+                }
+            });
+        });
+        $(document).on('click', '.amostra', function() {
+            var id = $(this).data('id');
+            var value = $(this).data('value');
+            $.ajax({
+                url: `/amostra/${id}`,
+                type: 'POST',
+                data: {
+                    value: value
+                },
+                success: function(data) {
+                    console.log(data);
+                    window.location.reload();
+                }
+            });
+        });
+        $(document).on('click', '.amostra-ok', function() {
+            var id = $(this).data('id');
+            var value = $(this).data('value');
+            $.ajax({
+                url: `/amostra/${id}`,
+                type: 'POST',
+                data: {
+                    value: value
+                },
+                success: function(data) {
+                    console.log(data);
+                    window.location.reload();
+                }
+            });
+        });
+        $(document).on('click', '.amostra-reprovada', function() {
+            var id = $(this).data('id');
+            var value = $(this).data('value');
+            $.ajax({
+                url: `/amostra/${id}`,
+                type: 'POST',
+                data: {
+                    value: value
+                },
+                success: function(data) {
+                    console.log(data);
+                    window.location.reload();
+                }
+            });
+        });
+        $(document).on('click', '.recoleta', function() {
+            var id = $(this).data('id');
+            var value = $(this).data('value');
+            $.ajax({
+                url: `/amostra/${id}`,
+                type: 'POST',
+                data: {
+                    value: value
+                },
+                success: function(data) {
+                    console.log(data);
+                    window.location.reload();
+                }
+            });
+        });
+        $(document).on('click', '.gerar', function() {
+            var id = $(this).data('id');
+            var order = $(this).data('order');
+            Swal.fire({
+                title: 'Confirmar envio de pagamento?',
+                text: "Essa ação não poderá ser desfeita!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sim, continuar'
+            }).then((result) => {
+                Swal.fire(
+                    $.ajax({
+                        url: `/order-generate`,
+                        type: 'POST',
+                        data: {
+                            order: order
+                        },
+                        success: function(data) {
+                            console.log(data);
+                        }
+                    }));
+                if (result.isConfirmed) {
+                    Swal.fire(
+                        'Confirmado!',
+                        'O pagamento foi gerado com sucesso.',
+                        'success'
+                    )
+                    window.location.reload();
+                }
+            });
+        });
+    </script>
 @endsection

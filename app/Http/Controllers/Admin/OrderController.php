@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\Exam;
+use App\Models\User;
 use App\Models\Owner;
 use App\Models\Animal;
 use App\Models\OrderRequest;
@@ -46,7 +47,33 @@ class OrderController extends Controller
                 'birth_date' => $data['nascimento'],
             ]);
         }
-        return view('admin.order-detail', get_defined_vars());
+
+        $order->update([
+            'user_id' => $request->owner
+        ]);
+
+
+        return redirect()->route('order.detail', $order->id);
+    }
+
+    public function amostra(Request $request, $id)
+    {
+        $animal = Animal::find($id);
+        $animal->update([
+            'status' => $request->value,
+        ]);
+
+        return response()->json($animal);
+    }
+
+    public function chip(Request $request, $id)
+    {
+        $animal = Animal::find($id);
+        $animal->update([
+            'chip_number' => $request->chip,
+
+        ]);
+        return response()->json($animal);
     }
 
     public function orderDetail($id)
@@ -66,24 +93,23 @@ class OrderController extends Controller
     {
         // $user = user_token();
         // $order_request = collect($request->all())->put('origin', 'site')->put('user_id', $user->id);
-        $order_request = OrderRequest::with('user')->find($request->id);
-        // dd($order_request->data_g['data_table']);
-        $owner = Owner::find($request->owner);
+        $order_request = OrderRequest::with('user')->find($request->order);
 
-        $order_request->update([
-            'user_id' => $owner->user_id,
-        ]);
+        $owner = Owner::find($order_request->user_id);
+
+
 
         foreach ($order_request->data_g['data_table'] as $exam_id) {
-            $exam = Exam::find(5);
+            $animal = Animal::where('register_number_brand', $exam_id['id'])->first();
+            $exam = Exam::find(1);
             $orderPay = OrderRequestPayment::create([
-                'order_request_id' => $request->id,
+                'order_request_id' => $request->order,
                 'owner_name' => $owner->owner_name,
                 'email' => $owner->email,
                 'location' => $owner->propriety,
                 'exam_id' => $exam->id,
                 'category' => $exam->category,
-                'animal' => $exam->animal,
+                'animal' => $animal->animal_name,
                 'title' => $exam->title,
                 'short_description' => $exam->short_description,
                 'value' => $exam->value,
@@ -92,6 +118,10 @@ class OrderController extends Controller
                 'extra_requests' => $request->extra_requests ?? 0,
             ]);
         }
+
+        $order_request->update([
+            'status' => 2,
+        ]);
         $ordernew = OrderRequest::with('user')->find($request->id);
         $data = [];
         $email = $owner->email;
@@ -100,5 +130,13 @@ class OrderController extends Controller
 
         Mail::to($email)->send(new \App\Mail\NewOrder($email, $senha));
         return view('admin.success-page', get_defined_vars());
+    }
+
+
+    public function orderRequestDetail($id)
+    {
+        $order = OrderRequest::with('user', 'orderRequestPayment')->find($id);
+        $userInfo = User::with('info')->find($order->user_id);
+        return view('admin.order-request-detail', get_defined_vars());
     }
 }

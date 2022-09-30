@@ -19,7 +19,7 @@
                             </select>
                         </div>
                         <div class="col-md-4">
-                            <button class="btn btn-primary">Continuar</button>
+                            <button type="submit" class="btn btn-primary">Continuar</button>
                         </div>
                     </div>
                 </form>

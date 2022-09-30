@@ -125,10 +125,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-maskmoney/3.0.2/jquery.maskMoney.min.js"></script>
     <script src="{{ asset('adm/assets/js/script.min.js') }}"></script>
     <script src="{{ asset('adm/assets/js/main.js') }}"></script>
-    <script>
-        // In your Javascript (external .js resource or <script> tag)
-    
-    </script>
+    @yield('js')
     @if (Session::has('success'))
         <script type="text/javascript">
             Swal.fire({

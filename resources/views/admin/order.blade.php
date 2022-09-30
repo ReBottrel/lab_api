@@ -66,7 +66,9 @@
                                                 href="{{ route('order.detail', $order->id) }}">Ver</a>
                                             <a class="dropdown-item" id="show-btn"
                                                 href="{{ route('orders.owner', $order->id) }}">Proprietario</a>
-                                            <a class="dropdown-item" href="#">Excluir</a>
+                                            @if ($order->status == 2)
+                                                <a class="dropdown-item" href="{{ route('order.request.detail', $order->id) }}">Detalhes do pedido</a>
+                                            @endif
                                         </div>
                                     </div>
                                 </div>

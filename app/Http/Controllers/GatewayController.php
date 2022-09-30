@@ -37,6 +37,9 @@ class GatewayController extends Controller
     {
         // \Log::info($request->all());
         // dd($request->all());
+
+       
+
         $order = OrderRequest::with('orderRequestPayment')->find($request->order_id);
         // \Log::info($order);
         // dd('die');
@@ -84,11 +87,12 @@ class GatewayController extends Controller
                     $or_payment->update([
                         'payment_id' => $response->success->id ?? null,
                         'payment_status' => 1 ?? null,
+                        // 'value' => $response->success->amount ?? null,
                     ]);
                 }
             }
         }
- 
+
         if ($request->payment_type == 'pix') {
             $datapix = PaymentReturn::create([
                 'order_request_id' => $request->order_id,

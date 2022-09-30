@@ -76,12 +76,13 @@
                                                         data-bs-target="#collapseOne-{{ $item->id }}"
                                                         aria-expanded="true" aria-controls="collapseOne">
                                                         <div class="col-md-4">
-                                                            <p>Nome do animal</p>
+                                                            <p>{{ $item->animal }}</p>
                                                         </div>
                                                         <div class="col-md-2">
                                                             @foreach ($prices as $key => $p)
                                                                 <p class="prices preco @if ($key != 0) d-none @endif prices-{{ $key }}"
                                                                     data-price="{{ $p }}">
+
                                                                     {{ 'R$ ' . number_format($p, 2, ',', '.') }} </p>
                                                             @endforeach
                                                             {{-- <p>{{ 'R$ ' . number_format($item->value, 2, ',', '.') }} </p> --}}
@@ -112,7 +113,7 @@
                                                     </div>
 
                                                     <div id="collapseOne-{{ $item->id }}"
-                                                        class="accordion-collapse collapse" aria-labelledby="headingOne"
+                                                        class="accordion-collapse collapse show" aria-labelledby="headingOne"
                                                         data-bs-parent="#accordionExample-{{ $item->id }}">
                                                         <div class="accordion-body">
                                                             <div class="row">
@@ -153,7 +154,7 @@
                                     @endforeach
                                     <div class="row">
                                         <div class="col-md-6">
-                                            <input type="hidden" name="totalprice"
+                                            <input type="hidden" class="price" name="totalprice"
                                                 value="{{ $order->orderRequestPayment->count() * $prices[0] }}">
                                             <h4>TOTAL: <span class="total-price">
                                                     {{ 'R$ ' . number_format($order->orderRequestPayment->count() * $prices[0], 2, ',', '.') }}</span>
@@ -190,6 +191,7 @@
                 }
             });
             $('.total-price').text(totalPrice.toFixed(2).replace('.', ','));
+            $('.price').val(totalPrice.toFixed(2).replace('.', ','));
 
         });
         $(document).on('click', '.paynow', function() {
@@ -202,7 +204,7 @@
                 }
             });
             $('.total-price').text(totalPrice.toFixed(2).replace('.', ','));
-
+            $('.price').val(totalPrice.toFixed(2).replace('.', ','));
         });
     </script>
 @endsection

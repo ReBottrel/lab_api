@@ -15,18 +15,28 @@ class UserDashboardController extends Controller
     {
         $prices = [55.00, 500.00, 400.00, 300.00, 200.00];
         $user = Auth::user()->id;
-        $orders = OrderRequest::with('user', 'orderRequestPayment')->where('user_id', 4)->get();
+        $orders = OrderRequest::with('user', 'orderRequestPayment')->where('user_id', $user)->where('status', 2)->get();
         // dd($orders);
         return view('user.dashboard', get_defined_vars());
     }
 
     public function paymentMethod(Request $request)
     {
+        $prices = [55.00, 500.00, 400.00, 300.00, 200.00];
 
         $order = OrderRequest::with('orderRequestPayment')->find($request->orderId);
         $order->update([
             'total' => $request->totalprice
         ]);
+        foreach ($order->orderRequestPayment as $payment) {
+            foreach ($prices as $key => $price) {
+                if ($payment->days == $key) {
+                    $payment->update([
+                        'value' => $price
+                    ]);
+                }
+            }
+        }
         foreach ($order->orderRequestPayment as $key => $payment) {
             foreach ($request->days as $key2 => $day) {
                 if ($key == $key2) {

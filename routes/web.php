@@ -45,6 +45,8 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::get('order-detail/{id}', [OrderController::class, 'orderDetail'])->name('order.detail');
     Route::get('order-json/{id}', [HomeController::class, 'orderJson'])->name('order.json');
 
+    Route::post('chip/{id}', [OrderController::class, 'chip'])->name('chip');
+    Route::post('amostra/{id}', [OrderController::class, 'amostra'])->name('amostra');
 
     Route::get('exames', [ExameController::class, 'index'])->name('exames');
     Route::post('exames-store', [ExameController::class, 'store'])->name('exame.store');
@@ -64,6 +66,8 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::post('owner-store', [OwnerController::class, 'store'])->name('owner.store');
 
     Route::post('animal', [OrderController::class, 'animal'])->name('animal');
+
+    Route::get('order-request-detail/{id}', [OrderController::class, 'orderRequestDetail'])->name('order.request.detail');
 
     Route::post('order-generate', [OrderController::class, 'orderRequestPost'])->name('order.generate');
 });
