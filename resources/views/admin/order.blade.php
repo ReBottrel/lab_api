@@ -52,7 +52,7 @@
                                             <p>{{ $order->collection_number }}</p>
                                         </div>
                                         <div class="col">
-                                            <p>{{ $order->collection_date }}</p>
+                                            <p>{{ date('d/m/Y', strtotime($order->created_at)) }}</p>
                                         </div>
                                     </div>
                                 </div>
