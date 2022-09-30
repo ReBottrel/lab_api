@@ -48,8 +48,10 @@ class OrderController extends Controller
             ]);
         }
 
+        $user = Owner::find($request->owner);
+
         $order->update([
-            'user_id' => $request->owner
+            'user_id' => $user->user_id
         ]);
 
 
