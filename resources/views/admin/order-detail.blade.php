@@ -277,6 +277,7 @@
                         },
                         success: function(data) {
                             console.log(data);
+                            // window.location.reload();
                         }
                     }));
                 if (result.isConfirmed) {
@@ -285,7 +286,7 @@
                         'O pagamento foi gerado com sucesso.',
                         'success'
                     )
-                    window.location.reload();
+
                 }
             });
         });
