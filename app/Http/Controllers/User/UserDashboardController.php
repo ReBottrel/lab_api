@@ -28,15 +28,7 @@ class UserDashboardController extends Controller
         $order->update([
             'total' => $request->totalprice
         ]);
-        foreach ($order->orderRequestPayment as $payment) {
-            foreach ($prices as $key => $price) {
-                if ($payment->days == $key) {
-                    $payment->update([
-                        'value' => $price
-                    ]);
-                }
-            }
-        }
+
         foreach ($order->orderRequestPayment as $key => $payment) {
             foreach ($request->days as $key2 => $day) {
                 if ($key == $key2) {
@@ -51,7 +43,33 @@ class UserDashboardController extends Controller
                 'paynow' => in_array($payment->id, $request->paynow) ? 1 : 0,
             ]);
         }
-
+        foreach ($order->orderRequestPayment as $payment) {
+            if ($payment->days == 0) {
+                $payment->update([
+                    'value' => 55.00,
+                ]);
+            }
+            if ($payment->days == 1) {
+                $payment->update([
+                    'value' => 500.00,
+                ]);
+            }
+            if ($payment->days == 2) {
+                $payment->update([
+                    'value' => 400.00,
+                ]);
+            }
+            if ($payment->days == 3) {
+                $payment->update([
+                    'value' => 300.00,
+                ]);
+            }
+            if ($payment->days == 4) {
+                $payment->update([
+                    'value' => 200.00,
+                ]);
+            }
+        }
 
         return view('user.payment', get_defined_vars());
     }

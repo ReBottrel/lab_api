@@ -38,7 +38,7 @@ class GatewayController extends Controller
         // \Log::info($request->all());
         // dd($request->all());
 
-       
+
 
         $order = OrderRequest::with('orderRequestPayment')->find($request->order_id);
         // \Log::info($order);
@@ -103,6 +103,26 @@ class GatewayController extends Controller
                 'pixqrcode' => $response->success->pix_qrcode_url ?? null,
                 'pixcode' => $response->success->payment_method->pix_link ?? null,
 
+            ]);
+        }
+        if ($request->payment_type == 'credit') {
+            $datapix = PaymentReturn::create([
+                'order_request_id' => $request->order_id,
+                'user_id' => auth()->user()->id,
+                'payment_id' => $response->success->id ?? null,
+                'payment_type' => $request->payment_type,
+                'pixqrcode' => $response->success->pix_qrcode_url ?? null,
+                'pixcode' => $response->success->payment_method->pix_link ?? null,
+            ]);
+        }
+        if ($request->payment_type == 'boleto') {
+            $datapix = PaymentReturn::create([
+                'order_request_id' => $request->order_id,
+                'user_id' => auth()->user()->id,
+                'payment_id' => $response->success->id ?? null,
+                'payment_type' => $request->payment_type,
+                'payment_status' => 1 ?? null,
+                'boleto' => $response->success->payment_method->boleto_url ?? null,
             ]);
         }
 

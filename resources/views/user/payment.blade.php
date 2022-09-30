@@ -14,6 +14,8 @@
                                 crédito</button>
                             <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile"
                                 type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Pix</button>
+                            <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-boleto"
+                                type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Boleto</button>
 
                         </div>
                     </nav>
@@ -80,6 +82,23 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="tab-pane fade" id="nav-boleto" role="tabpanel" aria-labelledby="nav-profile-tab"
+                            tabindex="0">
+
+                            <div class="container my-3">
+                                <div class="row justify-content-center">
+                                    <div class="col-8">
+                                        <div class="row">
+
+                                            <div class="col-12 text-center">
+                                                <button type="button"
+                                                    class="btn btn-secondary submitBoleto">Finalizar</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
                     </div>
                 </div>
@@ -137,6 +156,7 @@
                 }
             });
         });
+
         $(document).on('click', '.submitPix', function() {
             var order_id = $('input[name=order_id]').val();
             $.ajax({
@@ -173,5 +193,6 @@
                 }
             });
         });
+        
     </script>
 @endsection
