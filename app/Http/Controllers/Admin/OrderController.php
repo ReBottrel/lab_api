@@ -54,7 +54,6 @@ class OrderController extends Controller
             'user_id' => $user->user_id
         ]);
 
-
         return redirect()->route('order.detail', $order->id);
     }
 
