@@ -128,7 +128,7 @@
                                                                             <option value="1">24 Horas</option>
                                                                             <option value="2">2 Dias</option>
                                                                             <option value="3">5 Dias</option>
-                                                                            <option value="4">15 Dias</option>
+                                                                            <option value="4">10 Dias</option>
 
                                                                             </option>
                                                                         </select>

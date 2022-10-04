@@ -91,7 +91,7 @@
                                 @endphp
                             @elseif($item->days == 4)
                                 @php
-                                    $days = '15 Dias';
+                                    $days = '10 Dias';
                                 @endphp
                             @endif
 

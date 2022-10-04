@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="{{ asset('adm/assets/fonts/font-awesome.min.css') }}">
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="{{ asset('adm/assets/fonts/fontawesome5-overrides.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('adm/assets/css/style.min.css') }}">
 </head>
 
 <body id="page-top">
@@ -45,6 +46,7 @@
                         id="sidebarToggle" type="button"></button></div>
             </div>
         </nav>
+
         <div class="d-flex flex-column" id="content-wrapper">
             <div id="content" style="margin-top: 0;">
                 <nav class="navbar navbar-light navbar-expand bg-white shadow mb-4 topbar static-top">
@@ -105,18 +107,15 @@
                         </ul>
                     </div>
                 </nav>
-                <div>
+                <div class="content">
                     @yield('content')
                 </div>
             </div>
-            <footer class="bg-white sticky-footer">
-                <div class="container my-auto">
-                    <div class="text-center my-auto copyright"><span>Copyright © LOCI 2022</span></div>
-                </div>
-            </footer>
+
         </div><a class="border rounded d-inline scroll-to-top" href="#page-top"
             style="background: var(--bs-teal);"><i class="fas fa-angle-up"></i></a>
     </div>
+
     <script src="{{ asset('adm/assets/js/jquery.min.js') }}"></script>
     <script src="{{ asset('adm/assets/bootstrap/js/bootstrap.min.js') }}"></script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
@@ -140,6 +139,7 @@
             });
         </script>
     @endif
+
 </body>
 
 </html>

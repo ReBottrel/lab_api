@@ -138,7 +138,7 @@
                 <div class="row">
                     <div class="col">
                         <ul class="list-group">
-                            <li class="list-group-item"><span>Data: {{ $order->collection_date }}</span></li>
+                            <li class="list-group-item"><span>Data: {{ date('d/m/Y', strtotime($order->created_at)) }}</span></li>
                             <li class="list-group-item"><span>Origem do pedido: {{ $order->origin }}</span></li>
                             {{-- <li class="list-group-item"><span>Status do pedido: {{ $status }}</span></li> --}}
                         </ul>

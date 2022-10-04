@@ -11,14 +11,22 @@
                         <form><input class="form-control" type="search" placeholder="Buscar pelo nome..."></form>
                     </div>
                     <div class="col">
-                        <form><select class="form-select">
+                        <form>
+                            <select class="form-select">
                                 <optgroup label="Status">
-                                    <option value="1" selected="">Concluido</option>
-                                    <option value="2">Pendente</option>
-                                    <option value="3">Cancelado</option>
-                                    <option value="4">Produção</option>
+                                    <option value="1"> Aguardando Cadastro</option>
+                                    <option value="1"> Aguardando amostra</option>
+                                    <option value="1"> Amostra recebida</option>
+                                    <option value="1"> Amostra em inspeção</option>
+                                    <option value="1"> Amostra aprovada</option>
+                                    <option value="1"> Amostra reprovada</option>
+                                    <option value="1"> Aguardando pagamento</option>
+                                    <option value="1"> Pagamento confirmado</option>
+                                    <option value="1"> Pagamento Aprovado</option>
+                                    <option value="1"> Pedido exportado</option>
                                 </optgroup>
-                            </select></form>
+                            </select>
+                        </form>
                     </div>
                 </div>
                 @foreach ($orders as $order)
@@ -67,7 +75,9 @@
                                             <a class="dropdown-item" id="show-btn"
                                                 href="{{ route('orders.owner', $order->id) }}">Proprietario</a>
                                             @if ($order->status == 2)
-                                                <a class="dropdown-item" href="{{ route('order.request.detail', $order->id) }}">Detalhes do pedido</a>
+                                                <a class="dropdown-item"
+                                                    href="{{ route('order.request.detail', $order->id) }}">Detalhes do
+                                                    pedido</a>
                                             @endif
                                         </div>
                                     </div>

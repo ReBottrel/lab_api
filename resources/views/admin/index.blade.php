@@ -85,7 +85,7 @@
             </div>
         </div>
     </div>
-    <section style="height: 70px;">
+   
         @foreach ($orders as $order)
             <div class="container">
                 <div class="text-secondary border rounded shadow orders"
@@ -140,5 +140,5 @@
             </div>
         @endforeach
 
-    </section>
+   
 @endsection

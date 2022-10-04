@@ -5,8 +5,7 @@ namespace App\Http\Controllers\User;
 use App\Models\OrderRequest;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\OrderRequestPayment;
-use App\Models\paymentSet;
+
 use Illuminate\Support\Facades\Auth;
 
 class UserDashboardController extends Controller
@@ -38,6 +37,7 @@ class UserDashboardController extends Controller
                 }
             }
         }
+
         foreach ($order->orderRequestPayment as $key => $payment) {
             $payment->update([
                 'paynow' => in_array($payment->id, $request->paynow) ? 1 : 0,
@@ -70,6 +70,7 @@ class UserDashboardController extends Controller
                 ]);
             }
         }
+        
 
         return view('user.payment', get_defined_vars());
     }
