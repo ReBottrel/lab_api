@@ -17,6 +17,7 @@ class ExameController extends Controller
     {
         $exames = Exam::paginate(6);
         return view('admin.exames', get_defined_vars());
+        
     }
 
     /**
