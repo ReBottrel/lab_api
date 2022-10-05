@@ -70,4 +70,6 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::get('order-request-detail/{id}', [OrderController::class, 'orderRequestDetail'])->name('order.request.detail');
 
     Route::post('order-generate', [OrderController::class, 'orderRequestPost'])->name('order.generate');
+
+    Route::get('export' , [OrderController::class, 'exportExcel'])->name('export');
 });

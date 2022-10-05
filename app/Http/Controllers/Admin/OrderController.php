@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use App\Models\OrderRequestPayment;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Mail;
+use Rap2hpoutre\FastExcel\FastExcel;
 
 class OrderController extends Controller
 {
@@ -102,7 +103,7 @@ class OrderController extends Controller
 
         foreach ($order_request->data_g['data_table'] as $exam_id) {
             $animal = Animal::where('register_number_brand', $exam_id['id'])->first();
-            $exam = Exam::find(4);
+            $exam = Exam::find(1);
             $orderPay = OrderRequestPayment::create([
                 'order_request_id' => $request->order,
                 'owner_name' => $owner->owner_name,
@@ -139,5 +140,41 @@ class OrderController extends Controller
         $order = OrderRequest::with('user', 'orderRequestPayment')->find($id);
         $userInfo = User::with('info')->find($order->user_id);
         return view('admin.order-request-detail', get_defined_vars());
+    }
+
+    public function exportExcel(Request $request, $id)
+    {
+        $orders = collect([
+
+            [
+                'COD LAB' => 1,
+                'Nome' => 'Jane',
+                'RG' => '',
+                'ID' => 124484,
+                'Sexo' => 'F',
+                'Exame' => 'EQUTR',
+                'Data Nascimento' => '01/09/2022',
+                'Raça' => 'MANGALARGA MARCHADOR ',
+                'Cód Lab' => '',
+                'ID' => '',
+                'Registro Touro' => 58008,
+                'Nome touro' => 'Teste',
+                'Cód Lab' => '',
+                'ID' => '',
+                'Registro Doadora' => 149462,
+                'Nome matriz' => 'Teste doadora',
+                'Fazenda' => 'Teste',
+                'Proprietário' => 'TEste',
+                'Nº Pedido' => 722584,
+                'Data Cadastro' => '01/09/2022',
+                'Prioridade' => '',
+                'Responsável pela Coleta' => '093.921.299-47',
+                'Data da Coleta' => '10/09/2022',
+                'TECNICO' => 'TESTE',
+                'DATA RECEBIMENTO' => '25/09/2022',
+            ],
+
+        ]);
+        (new FastExcel($orders))->export('order.xlsx');
     }
 }
