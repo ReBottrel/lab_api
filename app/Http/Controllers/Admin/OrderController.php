@@ -112,7 +112,7 @@ class OrderController extends Controller
         // $order_request = collect($request->all())->put('origin', 'site')->put('user_id', $user->id);
         $order_request = OrderRequest::with('user')->find($request->order);
 
-        $owner = Owner::find($order_request->user_id);
+        $owner = Owner::where('user_id', $order_request->user_id)->first();
 
 
 
