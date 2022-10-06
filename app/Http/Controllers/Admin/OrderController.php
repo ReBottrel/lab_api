@@ -8,6 +8,7 @@ use App\Models\Owner;
 use App\Models\Animal;
 use App\Models\OrderRequest;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Excel;
 use App\Models\OrderRequestPayment;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Mail;
@@ -46,6 +47,10 @@ class OrderController extends Controller
                 'register_number_brand' => $data['id'],
                 'sex' => $data['sexo'],
                 'birth_date' => $data['nascimento'],
+                'registro_pai' => $data['registro_pai'],
+                'pai' => $data['pai'],
+                'registro_mae' => $data['registro_mae'],
+                'mae' => $data['mae'],
             ]);
         }
 
@@ -66,6 +71,16 @@ class OrderController extends Controller
         ]);
 
         return response()->json($animal);
+    }
+
+    public function cpfTechnical(Request $request, $id)
+    {
+        $order = OrderRequest::find($id);
+        $order->update([
+            'cpf_technical' => $request->cpf,
+        ]);
+
+        return response()->json($order);
     }
 
     public function chip(Request $request, $id)
@@ -118,6 +133,7 @@ class OrderController extends Controller
                 'requests' => $exam->requests,
                 'extra_value' => $exam->extra_value,
                 'extra_requests' => $request->extra_requests ?? 0,
+                'animal_id' => $exam_id['id'],
             ]);
         }
 
@@ -142,39 +158,55 @@ class OrderController extends Controller
         return view('admin.order-request-detail', get_defined_vars());
     }
 
-    public function exportExcel(Request $request, $id)
+    public function exportExcel(Request $request)
     {
-        $orders = collect([
+        $order = OrderRequest::with('user', 'orderRequestPayment')->find($request->id);
+        // $owner = Owner::find($order->user_id);
 
-            [
-                'COD LAB' => 1,
-                'Nome' => 'Jane',
+        $newdata = [];
+        foreach ($order->orderRequestPayment as $data) {
+            $animal = Animal::where('register_number_brand', $data->animal_id)->first();
+
+            $newdata[]  = [
+                'COD LAB' => '',
+                'Nome' => $data->animal,
                 'RG' => '',
-                'ID' => 124484,
-                'Sexo' => 'F',
+                'ID' => $data->animal_id,
+                'Sexo' => $animal->sex,
                 'Exame' => 'EQUTR',
-                'Data Nascimento' => '01/09/2022',
+                'Data Nascimento' => $animal->birth_date,
                 'Raça' => 'MANGALARGA MARCHADOR ',
                 'Cód Lab' => '',
                 'ID' => '',
-                'Registro Touro' => 58008,
-                'Nome touro' => 'Teste',
+                'Registro Touro' => $animal->registro_pai,
+                'Nome touro' => $animal->pai,
                 'Cód Lab' => '',
                 'ID' => '',
-                'Registro Doadora' => 149462,
-                'Nome matriz' => 'Teste doadora',
-                'Fazenda' => 'Teste',
-                'Proprietário' => 'TEste',
-                'Nº Pedido' => 722584,
+                'Registro Doadora' => $animal->registro_mae,
+                'Nome matriz' => $animal->mae,
+                'Fazenda' => $data->location,
+                'Proprietário' => $order->creator,
+                'Nº Pedido' => $order->collection_number,
                 'Data Cadastro' => '01/09/2022',
                 'Prioridade' => '',
                 'Responsável pela Coleta' => '093.921.299-47',
                 'Data da Coleta' => '10/09/2022',
-                'TECNICO' => 'TESTE',
+                'TECNICO' => $order->technical_manager,
                 'DATA RECEBIMENTO' => '25/09/2022',
-            ],
+            ];
+        }
 
-        ]);
-        (new FastExcel($orders))->export('order.xlsx');
+        $name = 'Pedido-' . $order->creator . '.xlsx';
+
+        $orders = collect($newdata);
+
+        $http_response_header = [
+            'Content-Type' => 'application/vnd.ms-excel',
+
+        ];
+
+        (new FastExcel($orders))->export('arquivos/'. $name);
+
+        return response()->download(public_path('arquivos/'. $name), $name, $http_response_header);
     }
 }

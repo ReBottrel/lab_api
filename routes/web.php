@@ -71,5 +71,7 @@ Route::middleware(['auth:admin'])->group(function () {
 
     Route::post('order-generate', [OrderController::class, 'orderRequestPost'])->name('order.generate');
 
-    Route::get('export' , [OrderController::class, 'exportExcel'])->name('export');
+    Route::post('export' , [OrderController::class, 'exportExcel'])->name('export');
+
+    Route::post('cpf-technical/{id}', [OrderController::class, 'cpfTechnical'])->name('cpf.technical');
 });

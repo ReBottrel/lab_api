@@ -24,6 +24,7 @@ class OrderRequest extends Model
         'data_g',
         'status',
         'total',
+        'cpf_technical'
     ];
 
     public function user()

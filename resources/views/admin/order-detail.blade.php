@@ -138,9 +138,14 @@
                 <div class="row">
                     <div class="col">
                         <ul class="list-group">
-                            <li class="list-group-item"><span>Data: {{ date('d/m/Y', strtotime($order->created_at)) }}</span></li>
+                            <li class="list-group-item"><span>Data:
+                                    {{ date('d/m/Y', strtotime($order->created_at)) }}</span></li>
                             <li class="list-group-item"><span>Origem do pedido: {{ $order->origin }}</span></li>
-                            {{-- <li class="list-group-item"><span>Status do pedido: {{ $status }}</span></li> --}}
+                            <li class="list-group-item">
+                                <div>
+                                    <input type="text" name="cpf_technical" value="{{ $order->cpf_technical ?? '' }}" data-id="{{ $order->id }}" class="form-control cpf-tech">
+                                </div>
+                            </li>
                         </ul>
                     </div>
 
@@ -182,6 +187,20 @@
 
 @section('js')
     <script>
+        $(document).on('blur', '.cpf-tech', function() {
+            var id = $(this).data('id');
+            $.ajax({
+                url: `/cpf-technical/${id}`,
+                type: 'POST',
+
+                data: {
+                    cpf: $(this).val()
+                },
+                success: function(data) {
+                    console.log(data);
+                }
+            });
+        });
         $(document).on('blur', '.chip', function() {
             var id = $(this).data('id');
             $.ajax({

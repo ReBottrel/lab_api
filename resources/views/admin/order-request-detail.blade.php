@@ -101,8 +101,11 @@
                                         {{ $item->category }}</span></li>
                                 <li class="list-group-item"><span>VALOR:
                                         {{ 'R$ ' . number_format($item->value, 2, ',', '.') }}</span></li>
-                                <li class="list-group-item text-white text-uppercase @if($status == 'Pagamento aprovado') bg-success @elseif($status == 'Pagamento cancelado' && $status == 'Pagamento recusado') bg-danger @else bg-primary @endif"><span>STATUS DE PAGAMENTO:
-                                        {{ $status }}</span></li>
+                                <li
+                                    class="list-group-item text-white text-uppercase @if ($status == 'Pagamento aprovado') bg-success @elseif($status == 'Pagamento cancelado' && $status == 'Pagamento recusado') bg-danger @else bg-primary @endif">
+                                    <span>STATUS DE PAGAMENTO:
+                                        {{ $status }}</span>
+                                </li>
                                 <li class="list-group-item"><span>TEMPO: {{ $days }}
                                     </span></li>
                                 <li class="list-group-item"><span>ID DE PAGAMENTO: {{ $item->payment_id }}
@@ -113,6 +116,13 @@
                     </div>
 
                 </div>
+            </div>
+            <div class="my-3 text-center">
+                <form action="{{ route('export') }}" method="post">
+                    @csrf
+                    <input type="hidden" name="id" value="{{ $order->id }}">
+                    <button type="submit" class="btn btn-success export">EXPORTAR EXCEL</button>
+                </form>
             </div>
         </div>
     </div>
@@ -129,4 +139,24 @@
             </div>
         </div>
     </div> --}}
+@endsection
+@section('js')
+    <script>
+        // $(document).ready(function() {
+        //     $('.export').click(function() {
+        //         var id = $(this).prev().val();
+        //         $.ajax({
+        //             url: '/export/',
+        //             type: 'POST',
+        //             data: {
+        //                 id: id,
+        //                 _token: '{{ csrf_token() }}'
+        //             },
+        //             success: function(data) {
+        //                 console.log(data);
+        //             }
+        //         });
+        //     });
+        // });
+    </script>
 @endsection
