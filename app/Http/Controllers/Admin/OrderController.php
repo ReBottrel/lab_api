@@ -113,7 +113,7 @@ class OrderController extends Controller
         $order_request = OrderRequest::with('user')->find($request->order);
 
         $owner = Owner::find($order_request->user_id);
-        dd($order_request);
+
 
 
         foreach ($order_request->data_g['data_table'] as $exam_id) {
@@ -121,8 +121,8 @@ class OrderController extends Controller
             $exam = Exam::find(4);
             $orderPay = OrderRequestPayment::create([
                 'order_request_id' => $request->order,
-                'owner_name' => $owner->owner_name,
-                'email' => $owner->email,
+                'owner_name' => $order_request->user->name,
+                'email' => $order_request->user->email,
                 'location' => $owner->propriety,
                 'exam_id' => $exam->id,
                 'category' => $exam->category,
