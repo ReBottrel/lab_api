@@ -28,7 +28,7 @@ class CreateAnimalsTable extends Migration
             $table->string('city')->nullable();
             $table->string('state')->nullable();
             $table->string('number_existing_equines')->nullable();
-            $table->date('birth_date')->nullable();
+            $table->string('birth_date')->nullable();
             $table->string('fur')->nullable();
             $table->longText('description')->nullable();
             $table->integer('status')->default(1);

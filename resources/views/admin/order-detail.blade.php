@@ -142,9 +142,17 @@
                                     {{ date('d/m/Y', strtotime($order->created_at)) }}</span></li>
                             <li class="list-group-item"><span>Origem do pedido: {{ $order->origin }}</span></li>
                             <li class="list-group-item">
-                                <div>
-                                    <input type="text" name="cpf_technical" value="{{ $order->cpf_technical ?? '' }}" data-id="{{ $order->id }}" class="form-control cpf-tech">
+                                <div class="row">
+                                    <div class="col-4">
+                                        <input type="text" name="cpf_technical"
+                                            value="{{ $order->cpf_technical ?? '' }}" data-id="{{ $order->id }}"
+                                            class="form-control cpf-tech">
+                                    </div>
+                                    <div class="col-4">
+                                        <p>CPF do RESPONSAVEL TÉCNICO</p>
+                                    </div>
                                 </div>
+
                             </li>
                         </ul>
                     </div>

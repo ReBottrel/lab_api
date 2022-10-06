@@ -171,7 +171,7 @@ class OrderController extends Controller
                 'COD LAB' => '',
                 'Nome' => $data->animal,
                 'RG' => '',
-                'ID' => $data->animal_id,
+                'id' => $animal->register_number_brand,
                 'Sexo' => $animal->sex,
                 'Exame' => 'EQUTR',
                 'Data Nascimento' => $animal->birth_date,
@@ -187,12 +187,12 @@ class OrderController extends Controller
                 'Fazenda' => $data->location,
                 'Proprietário' => $order->creator,
                 'Nº Pedido' => $order->collection_number,
-                'Data Cadastro' => '01/09/2022',
+                'Data Cadastro' => date('d/m/Y', strtotime($order->created_at)),
                 'Prioridade' => '',
-                'Responsável pela Coleta' => '093.921.299-47',
-                'Data da Coleta' => '10/09/2022',
+                'Responsável pela Coleta' => $order->cpf_technical,
+                'Data da Coleta' => date('d/m/Y', strtotime($order->collection_date)),
                 'TECNICO' => $order->technical_manager,
-                'DATA RECEBIMENTO' => '25/09/2022',
+                'DATA RECEBIMENTO' => date('d/m/Y', strtotime($order->updated_at)),
             ];
         }
 
@@ -205,8 +205,8 @@ class OrderController extends Controller
 
         ];
 
-        (new FastExcel($orders))->export('arquivos/'. $name);
+        (new FastExcel($orders))->export('arquivos/' . $name);
 
-        return response()->download(public_path('arquivos/'. $name), $name, $http_response_header);
+        return response()->download(public_path('arquivos/' . $name), $name, $http_response_header)->deleteFileAfterSend(true);
     }
 }
