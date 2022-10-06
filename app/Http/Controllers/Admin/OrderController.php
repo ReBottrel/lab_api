@@ -118,7 +118,7 @@ class OrderController extends Controller
 
         foreach ($order_request->data_g['data_table'] as $exam_id) {
             $animal = Animal::where('register_number_brand', $exam_id['id'])->first();
-            $exam = Exam::find(1);
+            $exam = Exam::find(4);
             $orderPay = OrderRequestPayment::create([
                 'order_request_id' => $request->order,
                 'owner_name' => $owner->owner_name,
