@@ -113,7 +113,7 @@ class OrderController extends Controller
         $order_request = OrderRequest::with('user')->find($request->order);
 
         $owner = Owner::find($order_request->user_id);
-        dd($owner);
+        dd($order_request);
 
 
         foreach ($order_request->data_g['data_table'] as $exam_id) {
