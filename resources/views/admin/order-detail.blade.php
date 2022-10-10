@@ -60,6 +60,10 @@
                                     @php
                                         $status = 'Recoleta solicitada';
                                     @endphp
+                                @elseif($animal->status == 9)
+                                    @php
+                                        $status = 'Amostra paga';
+                                    @endphp
                                 @endif
                             @endif
                             <ul class="list-group m-3">
@@ -72,7 +76,7 @@
                                 <li class="list-group-item"><span>MÃE: {{ $item['mae'] }}</span></li>
                                 <li class="list-group-item"><span>REGISTRO DA MÃE: {{ $item['registro_mae'] }}</span></li>
                                 <li
-                                    class="list-group-item text-uppercase @if ($status == 'Análise Aprovada') bg-success @elseif($status == 'Análise reprovada') bg-danger @elseif($status == 'Recoleta solicitada') bg-warning @else bg-primary @endif  text-white">
+                                    class="list-group-item text-uppercase @if ($status == 'Análise Aprovada') bg-success @elseif($status == 'Amostra paga') bg-success @elseif($status == 'Análise reprovada') bg-danger @elseif($status == 'Recoleta solicitada') bg-warning @else bg-primary @endif  text-white">
                                     <span>STATUS:
                                         {{ $status }}</span>
                                 </li>
@@ -96,6 +100,14 @@
                                                 <button class="btn btn-danger amostra-reprovada" data-value="6"
                                                     data-id="{{ $animal->id }}">Amostra
                                                     Reprovada</button>
+                                            </div>
+                                        </div>
+                                    @endif
+                                    @if ($status == 'Análise Aprovada')
+                                        <div class="row">
+                                            <div class="col-3">
+                                                <button class="btn text-white btn-success amostra-paga" data-value="9"
+                                                    data-id="{{ $animal->id }}">Amostra Paga</button>
                                             </div>
                                         </div>
                                     @endif
@@ -227,6 +239,22 @@
         $(document).on('click', '.amostra', function() {
             var id = $(this).data('id');
 
+            var value = $(this).data('value');
+            $.ajax({
+                url: `/amostra/${id}`,
+                type: 'POST',
+                data: {
+                    value: value,
+
+                },
+                success: function(data) {
+                    console.log(data);
+                    window.location.reload();
+                }
+            });
+        });
+        $(document).on('click', '.amostra-paga', function() {
+            var id = $(this).data('id');
             var value = $(this).data('value');
             $.ajax({
                 url: `/amostra/${id}`,

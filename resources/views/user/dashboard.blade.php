@@ -113,7 +113,8 @@
                                                     </div>
 
                                                     <div id="collapseOne-{{ $item->id }}"
-                                                        class="accordion-collapse collapse show" aria-labelledby="headingOne"
+                                                        class="accordion-collapse collapse show"
+                                                        aria-labelledby="headingOne"
                                                         data-bs-parent="#accordionExample-{{ $item->id }}">
                                                         <div class="accordion-body">
                                                             <div class="row">
@@ -123,6 +124,7 @@
                                                                             class="form-label">Tempo de
                                                                             entrega</label>
                                                                         <select class="form-select sel-price" name="days[]"
+                                                                            @if ($item->payment_status == 1) disabled @endif
                                                                             aria-label="Default select example">
                                                                             <option value="0" selected>20 Dias (Padrão)
                                                                             <option value="1">24 Horas</option>
@@ -139,7 +141,8 @@
                                                                     <div class="form-check">
                                                                         <input class="form-check-input paynow"
                                                                             type="checkbox" value="{{ $item->id }}"
-                                                                            name="paynow[]" id="flexCheckChecked" checked>
+                                                                            name="paynow[]" id="flexCheckChecked"
+                                                                            @if ($item->payment_status == 0) checked @else disabled="disabled" @endif>
                                                                         <label class="form-check-label"
                                                                             for="flexCheckChecked">
                                                                             Pagar Agora
@@ -151,13 +154,22 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                            @php
+                                                
+                                                if ($item->payment_status == 0) {
+                                                    $total += $item->value;
+                                                } else {
+                                                    $total += 0;
+                                                }
+                                                
+                                            @endphp
                                     @endforeach
                                     <div class="row">
                                         <div class="col-md-6">
                                             <input type="hidden" class="price" name="totalprice"
                                                 value="{{ $order->orderRequestPayment->count() * $prices[0] }}">
                                             <h4>TOTAL: <span class="total-price">
-                                                    {{ 'R$ ' . number_format($order->orderRequestPayment->count() * $prices[0], 2, ',', '.') }}</span>
+                                                    {{ 'R$ ' . number_format($total, 2, ',', '.') }}</span>
                                             </h4>
                                         </div>
                                         <div class="col-md-6 text-end">

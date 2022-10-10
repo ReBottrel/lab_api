@@ -125,7 +125,7 @@ class OrderController extends Controller
 
         $animals = Animal::where('order_id', $request->order)->where('status', 7)->get();
         foreach ($animals as $animal) {
-            $exam = Exam::find(4);
+            $exam = Exam::find(1);
             $orderPay = OrderRequestPayment::create([
                 'order_request_id' => $request->order,
                 'owner_name' => $order_request->user->name,
