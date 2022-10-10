@@ -70,6 +70,14 @@ class OrderController extends Controller
             'status' => $request->value,
         ]);
 
+        if ($request->order) {
+            $order = OrderRequest::find($request->order);
+            $order->update([
+                'status' => 4,
+            ]);
+        }
+
+
         return response()->json($animal);
     }
 

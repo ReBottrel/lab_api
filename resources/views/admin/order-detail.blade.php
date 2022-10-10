@@ -79,6 +79,7 @@
                                 <li class="list-group-item">
                                     @if ($status == 'Aguardando amostra')
                                         <div>
+
                                             <button class="btn btn-primary amostra" data-value="2"
                                                 data-id="{{ $animal->id }}">Amostra
                                                 Recebida</button>
@@ -87,8 +88,8 @@
                                     @if ($status == 'Amostra recebida')
                                         <div class="row">
                                             <div class="col-3">
-                                                <button class="btn btn-success amostra-ok" data-value="7"
-                                                    data-id="{{ $animal->id }}">Amostra
+                                                <button class="btn btn-success amostra-ok" data-order="{{ $order->id }}"
+                                                    data-value="7" data-id="{{ $animal->id }}">Amostra
                                                     Aprovada</button>
                                             </div>
                                             <div class="col-3">
@@ -168,7 +169,7 @@
                     <div class="col align-self-center me-auto"></div>
                     <div class="col text-center align-self-center">
                         @if (isset($animal))
-                            @if ($animal->status == 7)
+                            @if ($order->status == 4)
                                 <button class="btn fw-bold link-light gerar" type="button"
                                     data-order="{{ $order->id }}" style="background: var(--bs-info);">GERAR
                                     PAGAMENTO</button>
@@ -225,12 +226,14 @@
         });
         $(document).on('click', '.amostra', function() {
             var id = $(this).data('id');
+
             var value = $(this).data('value');
             $.ajax({
                 url: `/amostra/${id}`,
                 type: 'POST',
                 data: {
-                    value: value
+                    value: value,
+
                 },
                 success: function(data) {
                     console.log(data);
@@ -240,12 +243,14 @@
         });
         $(document).on('click', '.amostra-ok', function() {
             var id = $(this).data('id');
+            var order = $(this).data('order');
             var value = $(this).data('value');
             $.ajax({
                 url: `/amostra/${id}`,
                 type: 'POST',
                 data: {
-                    value: value
+                    value: value,
+                    order: order
                 },
                 success: function(data) {
                     console.log(data);
