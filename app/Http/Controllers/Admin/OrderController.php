@@ -115,10 +115,9 @@ class OrderController extends Controller
         $owner = Owner::where('user_id', $order_request->user_id)->first();
 
 
-
-        foreach ($order_request->data_g['data_table'] as $exam_id) {
-            $animal = Animal::where('register_number_brand', $exam_id['id'])->first();
-            $exam = Exam::find(4);
+        $animals = Animal::where('order_id', $request->order)->where('status', 7)->get();
+        foreach ($animals as $animal) {
+            $exam = Exam::find(1);
             $orderPay = OrderRequestPayment::create([
                 'order_request_id' => $request->order,
                 'owner_name' => $order_request->user->name,
@@ -133,7 +132,7 @@ class OrderController extends Controller
                 'requests' => $exam->requests,
                 'extra_value' => $exam->extra_value,
                 'extra_requests' => $request->extra_requests ?? 0,
-                'animal_id' => $exam_id['id'],
+                'animal_id' => $animal->register_number_brand,
             ]);
         }
 
