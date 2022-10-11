@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Animal;
 use App\Models\UserInfo;
 use App\Models\OrderRequest;
 use Illuminate\Http\Request;
@@ -88,6 +89,10 @@ class GatewayController extends Controller
                         'payment_id' => $response->success->id ?? null,
                         'payment_status' => 1 ?? null,
                         // 'value' => $response->success->amount ?? null,
+                    ]);
+                    $animal = Animal::where('register_number_brand', $or_payment->animal_id)->first();
+                    $animal->update([
+                        'status' => 9
                     ]);
                 }
             }

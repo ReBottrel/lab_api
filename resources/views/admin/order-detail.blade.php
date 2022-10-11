@@ -192,8 +192,9 @@
                                             style="background: var(--bs-info);">PAGAMENTO GERADO</button>
                                     </div>
                                     <div class="col-6">
-                                        <button class="btn fw-bold link-light" type="button"
-                                            style="background: var(--bs-success);">VER RELATÓRIO DE PEDIDO</button>
+                                        <a href="{{ route('order.request.detail', $order->id) }}"> <button
+                                                class="btn fw-bold link-light" type="button"
+                                                style="background: var(--bs-success);">VER RELATÓRIO DE PEDIDO</button></a>
                                     </div>
                                 </div>
                             @endif
