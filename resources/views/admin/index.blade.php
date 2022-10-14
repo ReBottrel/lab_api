@@ -139,6 +139,9 @@
                 </div>
             </div>
         @endforeach
-
+        <div class="ms-4">
+            {{ $orders->links() }}
+        </div>
+    </div>
    
 @endsection

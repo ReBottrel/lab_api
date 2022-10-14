@@ -10,7 +10,7 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $orders = OrderRequest::where('status', 0)->get();
+        $orders = OrderRequest::where('status', 0)->paginate(6);
         return view('admin.index', get_defined_vars());
     }
 
