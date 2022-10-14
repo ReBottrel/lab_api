@@ -74,4 +74,7 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::post('export' , [OrderController::class, 'exportExcel'])->name('export');
 
     Route::post('cpf-technical/{id}', [OrderController::class, 'cpfTechnical'])->name('cpf.technical');
+
+    Route::post('filter-status', [OrderController::class, 'filter'])->name('filter.status');
+    Route::post('filter-search', [OrderController::class, 'search'])->name('filter.search');
 });

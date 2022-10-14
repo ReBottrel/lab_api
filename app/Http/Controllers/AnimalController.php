@@ -9,6 +9,8 @@ use App\Models\ResenhaAnimal;
 
 class AnimalController extends Controller
 {
+    
+
     public function animalGet(Request $request, $id = null)
     {
         $user = user_token();

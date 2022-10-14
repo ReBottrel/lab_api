@@ -48,4 +48,9 @@ class Animal extends Model
     {
         return $this->hasMany(ResenhaAnimal::class, 'animal_id');
     }
+
+    public function order()
+    {
+        return $this->belongsTo(OrderRequest::class, 'order_id');
+    }
 }

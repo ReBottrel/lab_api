@@ -216,4 +216,20 @@ class OrderController extends Controller
 
         return response()->download(public_path('arquivos/' . $name), $name, $http_response_header)->deleteFileAfterSend(true);
     }
+
+    public function filter(Request $request)
+    {
+        $animals = Animal::with('order')->where('status', 'LIKE', '%' . $request->status . "%")->get();
+        $viewRender = view('admin.includes.filter-status', get_defined_vars())->render();
+        return response()->json([get_defined_vars()]);
+    }
+
+    public function search(Request $request)
+    {
+        if ($request->ajax()) {
+            $orders = OrderRequest::with('user', 'orderRequestPayment')->where('status', '!=', 0)->where('creator', 'LIKE', '%' . $request->search . "%")->get();;
+            $viewRender = view('admin.includes.filter-search', get_defined_vars())->render();
+            return response()->json([get_defined_vars()]);
+        }
+    }
 }
