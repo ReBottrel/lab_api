@@ -37,10 +37,16 @@
                     <li class="nav-item"></li>
                     <li class="nav-item"><a class="nav-link" href="{{ route('exames') }}"
                             style="color: var(--bs-dark);"><i class="far fa-list-alt"
-                                style="color: var(--bs-dark);"></i><span>Exames</span></a></li>
-                    <li class="nav-item"><a class="nav-link" href="#"
-                            style="background: var(--bs-gray-300);color: var(--bs-dark);"><i class="fa fa-gear"
-                                style="color: var(--bs-dark);"></i><span>Configurações</span></a></li>
+                                style="color: var(--bs-dark);"></i><span>Exames</span></a>
+                    </li>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('owners') }}"
+                            style=" background: var(--bs-gray-300);color: var(--bs-dark);"><i class="fas fa-users"
+                                style="color: var(--bs-dark);"></i><span>Proprietarios</span></a>
+                    </li>
+                    <li class="nav-item"><a class="nav-link" href="#" style="color: var(--bs-dark);"><i
+                                class="fa fa-gear" style="color: var(--bs-dark);"></i><span>Configurações</span></a>
+                    </li>
+
                 </ul>
                 <div class="text-center d-none d-md-inline"><button class="btn rounded-circle border-0"
                         id="sidebarToggle" type="button"></button></div>

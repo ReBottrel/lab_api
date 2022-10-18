@@ -77,4 +77,11 @@ Route::middleware(['auth:admin'])->group(function () {
 
     Route::post('filter-status', [OrderController::class, 'filter'])->name('filter.status');
     Route::post('filter-search', [OrderController::class, 'search'])->name('filter.search');
+
+    Route::get('owners', [OwnerController::class, 'index'])->name('owners');
+    Route::get('owner-edit/{id}', [OwnerController::class, 'edit'])->name('owner.edit');
+    Route::post('owner-update/{id}', [OwnerController::class, 'update'])->name('owner.update');
+    Route::get('owner-create', [OwnerController::class, 'create'])->name('owner.create');
+
+    Route::get('owners-delete', [OwnerController::class, 'destroyAll'])->name('owners.delete.all');
 });

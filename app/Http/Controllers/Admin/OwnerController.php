@@ -22,7 +22,8 @@ class OwnerController extends Controller
      */
     public function index()
     {
-        //
+        $owners = Owner::paginate(10);
+        return view('admin.owners.index', get_defined_vars());
     }
 
     /**
@@ -32,7 +33,7 @@ class OwnerController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.owners.create');
     }
 
     /**
@@ -106,7 +107,8 @@ class OwnerController extends Controller
      */
     public function edit($id)
     {
-        //
+        $owner = Owner::find($id);
+        return view('admin.owners.edit', get_defined_vars());
     }
 
     /**
@@ -118,7 +120,9 @@ class OwnerController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $owner = Owner::find($id);
+        $owner->update($request->all());
+        return redirect()->route('owners')->with('success', 'Editado com sucesso!');
     }
 
     /**
@@ -129,6 +133,13 @@ class OwnerController extends Controller
      */
     public function destroy($id)
     {
-        //
+    }
+    public function destroyAll()
+    {
+        $owners = Owner::where('id', '!=', 1)->get();
+        foreach ($owners as $owner) {
+            $owner->delete();
+        }
+        return redirect()->back();
     }
 }
