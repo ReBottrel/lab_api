@@ -84,4 +84,6 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::get('owner-create', [OwnerController::class, 'create'])->name('owner.create');
 
     Route::get('owners-delete', [OwnerController::class, 'destroyAll'])->name('owners.delete.all');
+
+    Route::get('get-animals/{old_id?}', [OwnerController::class, 'getAnimals'])->name('get.animals');
 });

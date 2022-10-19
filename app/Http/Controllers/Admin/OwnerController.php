@@ -142,4 +142,9 @@ class OwnerController extends Controller
         }
         return redirect()->back();
     }
+    public function getAnimals($old_id)
+    {
+        $animals = Animal::where('owner_id', $old_id)->get();
+         return view('admin.owners.animals', get_defined_vars());
+    }
 }
