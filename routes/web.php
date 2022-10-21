@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\AddressController;
 use App\Http\Controllers\User\UserOrderController;
 use App\Http\Controllers\User\UserDashboardController;
 use App\Http\Controllers\Admin\Auth\AdminAuthController;
+use App\Http\Controllers\Admin\TecnicoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -86,4 +87,11 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::get('owners-delete', [OwnerController::class, 'destroyAll'])->name('owners.delete.all');
 
     Route::get('get-animals/{old_id?}', [OwnerController::class, 'getAnimals'])->name('get.animals');
+
+    Route::get('technical/{id}', [OrderController::class, 'technical'])->name('technical');
+    Route::post('technical-add', [OrderController::class, 'technicalStore'])->name('technical.add');
+
+    Route::post('techinical-store', [TecnicoController::class, 'store'])->name('techinical.store');
+
+    Route::get('techinicals', [TecnicoController::class, 'index'])->name('techinicals');
 });

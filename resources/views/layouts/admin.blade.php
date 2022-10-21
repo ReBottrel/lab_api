@@ -43,8 +43,14 @@
                             style=" background: var(--bs-gray-300);color: var(--bs-dark);"><i class="fas fa-users"
                                 style="color: var(--bs-dark);"></i><span>Proprietarios</span></a>
                     </li>
-                    <li class="nav-item"><a class="nav-link" href="#" style="color: var(--bs-dark);"><i
-                                class="fa fa-gear" style="color: var(--bs-dark);"></i><span>Configurações</span></a>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('techinicals') }}"
+                            style="color: var(--bs-dark);"><i class="fas fa-user-nurse"
+                                style="color: var(--bs-dark);"></i><span>Técnicos</span></a>
+                    </li>
+
+                    <li class="nav-item"><a class="nav-link" href="#"
+                            style=" background: var(--bs-gray-300);color: var(--bs-dark)"><i class="fa fa-gear"
+                                style="color: var(--bs-dark);"></i><span>Configurações</span></a>
                     </li>
 
                 </ul>

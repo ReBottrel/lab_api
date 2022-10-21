@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Maatwebsite\Excel\Excel;
 use App\Models\OrderRequestPayment;
 use App\Http\Controllers\Controller;
+use App\Models\Tecnico;
 use Illuminate\Support\Facades\Mail;
 use Rap2hpoutre\FastExcel\FastExcel;
 
@@ -112,6 +113,22 @@ class OrderController extends Controller
         $order = OrderRequest::find($id);
         $owners = Owner::get();
         return view('admin.owner', get_defined_vars());
+    }
+    public function technical($id)
+    {
+        $order = OrderRequest::find($id);
+        $tecnicos = Tecnico::get();
+        return view('admin.tecnico', get_defined_vars());
+    }
+
+    public function technicalStore(Request $request)
+    {
+        $order = OrderRequest::find($request->id);
+        $order->update([
+            'id_tecnico' => $request->tecnico,
+        ]);
+
+        return redirect()->route('orders.all')->with('success', 'Técnico adicionado com sucesso!');
     }
 
     public function orderRequestPost(Request $request)
