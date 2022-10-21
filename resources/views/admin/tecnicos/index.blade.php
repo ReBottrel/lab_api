@@ -5,7 +5,15 @@
         <div class="card">
             <div class="card-header">
                 <h1>Técnicos</h1>
-                <a href="#" class="btn btn-primary">Criar Técnico</a>
+                <div class="row">
+                    <div class="col-6">
+                        <a href="#" class="btn btn-primary">Criar Técnico</a>
+                    </div>
+                    <div class="col-6">
+                        <p>Em breve filtros</p>
+                    </div>
+                </div>
+
             </div>
             <div class="card-body">
                 <div class="table-responsive">
