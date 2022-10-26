@@ -33,7 +33,7 @@
                                     <td>{{ $tecnico->email }}</td>
                                     <td>{{ $tecnico->cell }}</td>
                                     <td>
-                                        <a href="{{ route('owner.edit', $tecnico->id) }}"
+                                        <a href="{{ route('techinical.edit', $tecnico->id) }}"
                                             class="btn btn-sm btn-primary">Editar</a>
                                         <a href="" class="btn btn-sm btn-success">Detalhes</a>
 

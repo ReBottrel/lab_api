@@ -49,7 +49,7 @@ class TecnicoController extends Controller
      */
     public function show($id)
     {
-        //
+       
     }
 
     /**
@@ -60,7 +60,8 @@ class TecnicoController extends Controller
      */
     public function edit($id)
     {
-        //
+        $tecnico = Tecnico::find($id);
+        return view('admin.tecnicos.edit', get_defined_vars());
     }
 
     /**
@@ -72,7 +73,9 @@ class TecnicoController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $tecnico = Tecnico::find($id);
+        $tecnico->update($request->all());
+        return redirect()->route('techinicals')->with('success', 'Técnico atualizado com sucesso!');
     }
 
     /**
