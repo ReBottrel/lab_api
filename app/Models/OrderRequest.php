@@ -37,4 +37,8 @@ class OrderRequest extends Model
     {
         return $this->hasMany(OrderRequestPayment::class, 'order_request_id');
     }
+    public function tecnico()
+    {
+        return $this->hasOne(Tecnico::class, 'id', 'id_tecnico');
+    }
 }

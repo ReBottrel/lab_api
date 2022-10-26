@@ -97,7 +97,8 @@
                                                     Aprovada</button>
                                             </div>
                                             <div class="col-3">
-                                                <button class="btn btn-danger amostra-reprovada" data-value="6"
+                                                <button class="btn btn-danger amostra-reprovada"
+                                                    data-order="{{ $order->id }}" data-value="6"
                                                     data-id="{{ $animal->id }}">Amostra
                                                     Reprovada</button>
                                             </div>
@@ -239,13 +240,14 @@
         });
         $(document).on('click', '.amostra', function() {
             var id = $(this).data('id');
-
+            var order = $(this).data('order');
             var value = $(this).data('value');
             $.ajax({
                 url: `/amostra/${id}`,
                 type: 'POST',
                 data: {
                     value: value,
+                    order: order
 
                 },
                 success: function(data) {
@@ -289,12 +291,14 @@
         });
         $(document).on('click', '.amostra-reprovada', function() {
             var id = $(this).data('id');
+            var order = $(this).data('order');
             var value = $(this).data('value');
             $.ajax({
                 url: `/amostra/${id}`,
                 type: 'POST',
                 data: {
-                    value: value
+                    value: value,
+                    order: order
                 },
                 success: function(data) {
                     console.log(data);

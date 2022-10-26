@@ -11,6 +11,7 @@ use App\Http\Controllers\User\UserOrderController;
 use App\Http\Controllers\User\UserDashboardController;
 use App\Http\Controllers\Admin\Auth\AdminAuthController;
 use App\Http\Controllers\Admin\TecnicoController;
+use App\Http\Controllers\TesteController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,6 +26,7 @@ use App\Http\Controllers\Admin\TecnicoController;
 
 Auth::routes();
 
+Route::get('teste-zap-api', [TesteController::class, 'testeZapApi']);
 
 Route::get('admin-login', [AdminAuthController::class, 'index'])->name('admin.login');
 Route::post('admin-login-entrar', [AdminAuthController::class, 'login'])->name('admin.entrar');

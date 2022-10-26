@@ -6,12 +6,13 @@ use App\Models\Exam;
 use App\Models\User;
 use App\Models\Owner;
 use App\Models\Animal;
+use App\Models\Tecnico;
 use App\Models\OrderRequest;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Excel;
 use App\Models\OrderRequestPayment;
 use App\Http\Controllers\Controller;
-use App\Models\Tecnico;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 use Rap2hpoutre\FastExcel\FastExcel;
 
@@ -71,12 +72,31 @@ class OrderController extends Controller
             'status' => $request->value,
         ]);
 
+
         if ($request->order) {
-            $order = OrderRequest::find($request->order);
+            $order = OrderRequest::with('tecnico')->find($request->order);
             $order->update([
                 'status' => 4,
             ]);
+           
+            $telefone = str_replace(['(', ')', '-', ' '], ['', '', '', ''],  $order->tecnico->cell);
+      
+            if ($request->value == 7) {
+                $response = Http::post('https://api.z-api.io/instances/3B30881EC3E99084D3D3B6927F6ADC67/token/66E633717A0DCDD3D4A1BC19/send-text', [
+                    "phone" => "55$telefone",
+                    "message" => "Prezado Criador, Recebemos a amostra do animal $animal->animal_name que foi inspecionada e APROVADA para realização do exame de DNA. Em breve você receberá o link para pagamento do(s) exame (s) recebido e aprovado. Agradecemos a escolha pelo Laboratório Loci e nos colocamos a disposição para qualquer dúvida ou necessidade! NO LABORATÓRIO LOCI VOCÊ PODE CONFIAR!
+                    "
+                ]);
+            }
+            if ($request->value == 6) {
+                $response = Http::post('https://api.z-api.io/instances/3B30881EC3E99084D3D3B6927F6ADC67/token/66E633717A0DCDD3D4A1BC19/send-text', [
+                    "phone" => "55$telefone",
+                    "message" => "Prezado Criador, Recebemos a amostra do animal $animal->animal_name que foi REPROVADA para a execução do exame de DNA. Solicitamos recoletar uma nova amostra, abrir um novo chamado junto a ABCCMM informando que se trata de uma RECOLETA solicitada pelo laboratório e nos encaminhar novamente para execução. Pedimos que sinalize como uma nova amostra para tratarmos com prioridade. Agradecemos a escolha pelo Laboratório Loci e nos colocamos a disposição para qualquer dúvida ou necessidade! NO LABORATÓRIO LOCI VOCÊ PODE CONFIAR!
+                    "
+                ]);
+            }
         }
+
 
 
         return response()->json($animal);
@@ -135,14 +155,14 @@ class OrderController extends Controller
     {
         // $user = user_token();
         // $order_request = collect($request->all())->put('origin', 'site')->put('user_id', $user->id);
-        $order_request = OrderRequest::with('user')->find($request->order);
+        $order_request = OrderRequest::with('user', 'tecnico')->find($request->order);
 
         $owner = Owner::where('user_id', $order_request->user_id)->first();
 
 
         $animals = Animal::where('order_id', $request->order)->where('status', 7)->get();
         foreach ($animals as $animal) {
-            $exam = Exam::find(4);
+            $exam = Exam::find(1);
             $orderPay = OrderRequestPayment::create([
                 'order_request_id' => $request->order,
                 'owner_name' => $order_request->user->name,
@@ -164,11 +184,21 @@ class OrderController extends Controller
         $order_request->update([
             'status' => 2,
         ]);
-        $ordernew = OrderRequest::with('user')->find($request->id);
+        $ordernew = OrderRequest::with('user', 'tecnico')->find($request->id);
         $data = [];
         $email = $owner->email;
+    
         $senha = str_replace(['.', '-', '/'], ['', '', ''], $owner->document);
-
+        $telefone = str_replace(['(', ')', '-', ' '], ['', '', '', ''],  $order_request->tecnico->cell);
+        $url = route('user.dashboard');
+        $response = Http::post('https://api.z-api.io/instances/3B30881EC3E99084D3D3B6927F6ADC67/token/66E633717A0DCDD3D4A1BC19/send-text', [
+            "phone" => "55$telefone",
+            "message" => "Prezado, Criador! Segue abaixo o Link de acesso para clicar, efetuar o pagamento e liberar o(s) exame(s) para execução. Ao acessar, digite seu E-MAIL no campo USUÁRIO e o seu CPF em senha. Selecione os animais para pagamento e defina o prazo de liberação do resultado (temos opções de 20 dias úteis a 24 horas)*. *os valores variam conforme o prazo de liberação Assim que confirmarmos o pagamento no nosso sistema o exame estará liberado para execução internamente. Agradecemos a escolha pelo Laboratório Loci e nos colocamos a disposição para qualquer dúvida ou necessidade! NO LABORATÓRIO LOCI VOCÊ PODE CONFIAR!
+            ",
+            "linkUrl" => $url,
+            "title" => "Locilab",
+            "linkDescription" => "LociLab e a melhor plataforma de exames de DNA do Brasil",
+        ]);
 
         Mail::to($email)->send(new \App\Mail\NewOrder($email, $senha));
         return view('admin.success-page', get_defined_vars());

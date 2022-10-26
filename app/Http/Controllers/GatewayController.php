@@ -41,7 +41,7 @@ class GatewayController extends Controller
 
 
 
-        $order = OrderRequest::with('orderRequestPayment')->find($request->order_id);
+        $order = OrderRequest::with('orderRequestPayment', 'tecnico')->find($request->order_id);
         // \Log::info($order);
         // dd('die');
         $data = [
@@ -94,6 +94,25 @@ class GatewayController extends Controller
                     $animal->update([
                         'status' => 9
                     ]);
+                    $days = '';
+
+                    if ($or_payment->days == 0) {
+                        $days = '20 Dias';
+                    } elseif ($or_payment->days == 1) {
+                        $days = '24 Horas';
+                    } elseif ($or_payment->days == 2) {
+                        $days = '2 Dias';
+                    } elseif ($or_payment->days == 3) {
+                        $days = '5 Dias';
+                    } elseif ($or_payment->days == 4) {
+                        $days = '10 Dias';
+                    }
+                    $telefone = str_replace(['(', ')', '-', ' '], ['', '', '', ''],  $order->tecnico->cell);
+                    $response = Http::post('https://api.z-api.io/instances/3B30881EC3E99084D3D3B6927F6ADC67/token/66E633717A0DCDD3D4A1BC19/send-text', [
+                        "phone" => "55$telefone",
+                        "message" => "Prezado Criador, Confirmamos o pagamento do exame de DNA do(s) animal(ais) $animal->animal_name e informamos que o exame já se encontra em execução. A data prevista para liberação do resultado é de $days uteis. Agradecemos a escolha pelo Laboratório Loci e nos colocamos a disposição para qualquer dúvida ou necessidade! NO LABORATÓRIO LOCI VOCÊ PODE CONFIAR!                        
+                        "
+                    ]);
                 }
             }
         }
@@ -132,7 +151,7 @@ class GatewayController extends Controller
         }
 
 
-        return response()->json($response->success);
+        return response()->json($response);
     }
 
     public function success($id)
