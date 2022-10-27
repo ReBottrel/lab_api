@@ -98,4 +98,10 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::get('techinicals', [TecnicoController::class, 'index'])->name('techinicals');
     Route::get('techinical-edit/{id}', [TecnicoController::class, 'edit'])->name('techinical.edit');
     Route::post('techinical-update/{id}', [TecnicoController::class, 'update'])->name('techinical.update');
+
+    Route::post('owner-access', [OwnerController::class, 'ownerAcess'])->name('owner.access');
+
+    Route::get('get-ownser-user/{id}', [OwnerController::class, 'getUser'])->name('owner.user');
+    Route::post('owner-user-update/{id}', [OwnerController::class, 'updateUser'])->name('owner.user.update');
+    Route::get('owner-show/{id}', [OwnerController::class, 'getOwner'])->name('get.owners.details');
 });

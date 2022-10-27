@@ -145,6 +145,75 @@ class OwnerController extends Controller
     public function getAnimals($old_id)
     {
         $animals = Animal::where('owner_id', $old_id)->get();
-         return view('admin.owners.animals', get_defined_vars());
+        return view('admin.owners.animals', get_defined_vars());
+    }
+
+    public function ownerAcess(Request $request)
+    {
+
+        $owner = Owner::find($request->id);
+        $documents = str_replace(['.', '-', '/'], ['', '', ''],  $owner->document);
+
+
+        $user = User::create([
+            'name' => $owner->owner_name,
+            'email' => strtolower($owner->email),
+            'password' => Hash::make($documents),
+            'permission' => 1,
+        ]);
+
+        $info = UserInfo::create([
+            'user_id' => $user->id,
+            'document' => $owner->document,
+            'phone' => $owner->fone,
+            'zip_code' => $owner->zip_code,
+            'address' => $owner->address,
+            'number' => $owner->number,
+            'complement' => $owner->complement,
+            'district' => $owner->district,
+            'city' => $owner->city,
+            'state' => $owner->state,
+
+        ]);
+
+        $owner->update([
+            'user_id' => $user->id,
+        ]);
+
+        return response()->json($user);
+    }
+
+    public function getOwner($id)
+    {
+        $owner = Owner::find($id);
+        return view('admin.owners.show', get_defined_vars());
+    }
+
+    public function getUser($id)
+    {
+        $user = User::with('info')->find($id);
+        return view('admin.owners.user', get_defined_vars());
+    }
+    public function updateUser(Request $request, $id)
+    {
+        $user = User::find($id);
+        $user->update([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password)
+        ]);
+        $user->info()->update([
+            'document' => $request->document,
+            'phone' => $request->phone,
+            'zip_code' => $request->zip_code,
+            'address' => $request->address,
+            'number' => $request->number,
+            'complement' => $request->complement,
+            'district' => $request->district,
+            'city' => $request->city,
+            'state' => $request->state,
+        ]);
+
+        return redirect()->back()->with('success', 'Editado com sucesso!');
     }
 }
