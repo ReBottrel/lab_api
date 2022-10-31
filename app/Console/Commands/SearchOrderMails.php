@@ -57,14 +57,14 @@ class SearchOrderMails extends Command
             // $messages = $folder->query()->text('Coleta Material DNA')->get();
             // \Log::info($messages);
             $messages = $folder->query()->since(\Carbon\Carbon::now()->subDays(1))->get();
-
+            \Log::info($messages);
             foreach ($messages as $message) {
                 $get_data_message = collect();
 
                 // $get_data_messages->add(['UID' => $message->getUid(), 'HTML' => $message->getHTMLBody()]);
                 $dom = new \DOMDocument(); // abrindo DOMDoumento para ler os dados
                 $dom->loadHTML($message->getHTMLBody()); // lendo em html
-
+                // \Log::info($dom);
                 $xPath = new \DOMXPath($dom); // setando DOMXPath para que possamos acessar com o domdocuemnt
 
                 $table = $xPath->query('.//table')[0];

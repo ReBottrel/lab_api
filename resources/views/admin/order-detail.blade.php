@@ -286,6 +286,13 @@
                 success: function(data) {
                     console.log(data);
                     window.location.reload();
+                },
+                error: function(er) {
+                    Swal.fire(
+                        'Oops!',
+                        'Ocorreu um erro ao tentar atualizar o status da amostra, consulte se o numero de celular está atualizado!',
+                        'error'
+                    )
                 }
             });
         });
@@ -303,6 +310,13 @@
                 success: function(data) {
                     console.log(data);
                     window.location.reload();
+                },
+                error: function(er) {
+                    Swal.fire(
+                        'Oops!',
+                        'Ocorreu um erro ao tentar atualizar o status da amostra, consulte se o numero de celular está atualizado!',
+                        'error'
+                    )
                 }
             });
         });

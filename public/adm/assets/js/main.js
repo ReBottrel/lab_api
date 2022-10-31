@@ -130,6 +130,7 @@ $(document).ready(function () {
     });
     $('#cep').mask('99999-999');
     $('#fone').mask('(99) 99999-9999');
+    $('#cell').mask('(99) 99999-9999');
 
     $(document).on('blur keyup', '#cep', function () {
         cep = $(this).val();

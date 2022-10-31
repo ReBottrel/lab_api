@@ -59,7 +59,8 @@ class OrderController extends Controller
         $user = Owner::find($request->owner);
 
         $order->update([
-            'user_id' => $user->user_id
+            'user_id' => $user->user_id,
+            'owner_id' => $request->owner
         ]);
 
         return redirect()->route('order.detail', $order->id);
@@ -68,35 +69,51 @@ class OrderController extends Controller
     public function amostra(Request $request, $id)
     {
         $animal = Animal::find($id);
-        $animal->update([
-            'status' => $request->value,
-        ]);
+
 
 
         if ($request->order) {
-            $order = OrderRequest::with('tecnico')->find($request->order);
+            $order = OrderRequest::with('tecnico', 'owner')->find($request->order);
             $order->update([
                 'status' => 4,
             ]);
-           
-            $telefone = str_replace(['(', ')', '-', ' '], ['', '', '', ''],  $order->tecnico->cell);
-      
+
+            $telefoneTecnico = str_replace(['(', ')', '-', ' '], ['', '', '', ''],  $order->tecnico->cell);
+            $telefoneOwner = str_replace(['(', ')', '-', ' '], ['', '', '', ''],  $order->owner->cell);
+
             if ($request->value == 7) {
                 $response = Http::post('https://api.z-api.io/instances/3B30881EC3E99084D3D3B6927F6ADC67/token/66E633717A0DCDD3D4A1BC19/send-text', [
-                    "phone" => "55$telefone",
+                    "phone" => "55$telefoneTecnico",
+                    "message" => "Prezado Técnico, Recebemos a amostra do animal $animal->animal_name que foi inspecionada e APROVADA para realização do exame de DNA. Em breve você receberá o link para pagamento do(s) exame (s) recebido e aprovado. Agradecemos a escolha pelo Laboratório Loci e nos colocamos a disposição para qualquer dúvida ou necessidade! NO LABORATÓRIO LOCI VOCÊ PODE CONFIAR!
+                    "
+                ]);
+            }
+            if ($request->value == 6) {
+                $response = Http::post('https://api.z-api.io/instances/3B30881EC3E99084D3D3B6927F6ADC67/token/66E633717A0DCDD3D4A1BC19/send-text', [
+                    "phone" => "55$telefoneTecnico",
+                    "message" => "Prezado Técnico, Recebemos a amostra do animal $animal->animal_name que foi REPROVADA para a execução do exame de DNA. Solicitamos recoletar uma nova amostra, abrir um novo chamado junto a ABCCMM informando que se trata de uma RECOLETA solicitada pelo laboratório e nos encaminhar novamente para execução. Pedimos que sinalize como uma nova amostra para tratarmos com prioridade. Agradecemos a escolha pelo Laboratório Loci e nos colocamos a disposição para qualquer dúvida ou necessidade! NO LABORATÓRIO LOCI VOCÊ PODE CONFIAR!
+                    "
+                ]);
+            }
+
+            if ($request->value == 7) {
+                $response = Http::post('https://api.z-api.io/instances/3B30881EC3E99084D3D3B6927F6ADC67/token/66E633717A0DCDD3D4A1BC19/send-text', [
+                    "phone" => "55$telefoneOwner",
                     "message" => "Prezado Criador, Recebemos a amostra do animal $animal->animal_name que foi inspecionada e APROVADA para realização do exame de DNA. Em breve você receberá o link para pagamento do(s) exame (s) recebido e aprovado. Agradecemos a escolha pelo Laboratório Loci e nos colocamos a disposição para qualquer dúvida ou necessidade! NO LABORATÓRIO LOCI VOCÊ PODE CONFIAR!
                     "
                 ]);
             }
             if ($request->value == 6) {
                 $response = Http::post('https://api.z-api.io/instances/3B30881EC3E99084D3D3B6927F6ADC67/token/66E633717A0DCDD3D4A1BC19/send-text', [
-                    "phone" => "55$telefone",
+                    "phone" => "55$telefoneOwner",
                     "message" => "Prezado Criador, Recebemos a amostra do animal $animal->animal_name que foi REPROVADA para a execução do exame de DNA. Solicitamos recoletar uma nova amostra, abrir um novo chamado junto a ABCCMM informando que se trata de uma RECOLETA solicitada pelo laboratório e nos encaminhar novamente para execução. Pedimos que sinalize como uma nova amostra para tratarmos com prioridade. Agradecemos a escolha pelo Laboratório Loci e nos colocamos a disposição para qualquer dúvida ou necessidade! NO LABORATÓRIO LOCI VOCÊ PODE CONFIAR!
                     "
                 ]);
             }
         }
-
+        $animal->update([
+            'status' => $request->value,
+        ]);
 
 
         return response()->json($animal);
@@ -155,7 +172,7 @@ class OrderController extends Controller
     {
         // $user = user_token();
         // $order_request = collect($request->all())->put('origin', 'site')->put('user_id', $user->id);
-        $order_request = OrderRequest::with('user', 'tecnico')->find($request->order);
+        $order_request = OrderRequest::with('user', 'tecnico', 'owner')->find($request->order);
 
         $owner = Owner::where('user_id', $order_request->user_id)->first();
 
@@ -187,9 +204,9 @@ class OrderController extends Controller
         $ordernew = OrderRequest::with('user', 'tecnico')->find($request->id);
         $data = [];
         $email = $owner->email;
-    
+
         $senha = str_replace(['.', '-', '/'], ['', '', ''], $owner->document);
-        $telefone = str_replace(['(', ')', '-', ' '], ['', '', '', ''],  $order_request->tecnico->cell);
+        $telefone = str_replace(['(', ')', '-', ' '], ['', '', '', ''],  $order_request->owner->cell);
         $url = route('user.dashboard');
         $response = Http::post('https://api.z-api.io/instances/3B30881EC3E99084D3D3B6927F6ADC67/token/66E633717A0DCDD3D4A1BC19/send-text', [
             "phone" => "55$telefone",

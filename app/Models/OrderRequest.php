@@ -25,7 +25,8 @@ class OrderRequest extends Model
         'status',
         'total',
         'cpf_technical',
-        'id_tecnico'
+        'id_tecnico',
+        'owner_id'
     ];
 
     public function user()
@@ -40,5 +41,9 @@ class OrderRequest extends Model
     public function tecnico()
     {
         return $this->hasOne(Tecnico::class, 'id', 'id_tecnico');
+    }
+    public function owner()
+    {
+        return $this->hasOne(Owner::class, 'id', 'owner_id');
     }
 }
