@@ -182,7 +182,7 @@ class OrderController extends Controller
             $exam = Exam::find(4);
             $orderPay = OrderRequestPayment::create([
                 'order_request_id' => $request->order,
-                'owner_name' => $order_request->user->name,
+                'owner_name' => $order_request->owner->owner_name,
                 'email' => $order_request->user->email,
                 'location' => $owner->propriety,
                 'exam_id' => $exam->id,
