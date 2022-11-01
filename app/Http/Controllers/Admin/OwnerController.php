@@ -22,7 +22,7 @@ class OwnerController extends Controller
      */
     public function index()
     {
-        $owners = Owner::paginate(10);
+        $owners = Owner::orderBy('owner_name', 'asc')->paginate(10);
         return view('admin.owners.index', get_defined_vars());
     }
 
