@@ -183,7 +183,7 @@ class OrderController extends Controller
             $orderPay = OrderRequestPayment::create([
                 'order_request_id' => $request->order,
                 'owner_name' => $order_request->owner->owner_name,
-                'email' => $order_request->user->email,
+                'email' => $order_request->owner->email,
                 'location' => $owner->propriety,
                 'exam_id' => $exam->id,
                 'category' => $exam->category,
