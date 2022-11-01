@@ -79,6 +79,12 @@
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
+                                <label for="exampleFormControlInput1" class="form-label">Celular</label>
+                                <input type="text" name="cell"  id="cell" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="mb-3">
                                 <label for="exampleFormControlInput1" class="form-label">Email</label>
                                 <input type="email" name="email"  class="form-control">
                             </div>

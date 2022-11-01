@@ -39,7 +39,7 @@ class OrderController extends Controller
 
     public function animal(Request $request)
     {
-        $order = OrderRequest::find($request->id);
+        $order = OrderRequest::with('owner')->find($request->id);
         foreach ($order->data_g['data_table'] as $data) {
 
             Animal::create([
@@ -63,7 +63,7 @@ class OrderController extends Controller
             'owner_id' => $request->owner
         ]);
 
-        return redirect()->route('order.detail', $order->id);
+        return redirect()->back()->with('success', 'Proprietário vinculado com sucesso');
     }
 
     public function amostra(Request $request, $id)

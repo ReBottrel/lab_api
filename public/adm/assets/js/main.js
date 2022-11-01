@@ -165,7 +165,7 @@ $(document).ready(function () {
                 console.log(data);
                 Swal.fire(
                     'Sucesso!',
-                    'Proprietario cadastrado com sucesso!',
+                    'Proprietario editado com sucesso!',
                     'success'
                 )
                 window.location.reload();
