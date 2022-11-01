@@ -17,7 +17,7 @@
                                     <option value=""> Todos</option>
                                     <option value="1"> Aguardando amostra</option>
                                     <option value="2"> Amostra recebida</option>
-                                    <option value="3"> Amostra em inspeção</option>
+                                    {{-- <option value="3"> Amostra em inspeção</option> --}}
                                     <option value="7"> Amostra aprovada</option>
                                     <option value="6"> Amostra reprovada</option>
                                     <option value="7"> Aguardando pagamento</option>

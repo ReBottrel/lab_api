@@ -183,7 +183,7 @@ class OwnerController extends Controller
         return response()->json($user);
     }
 
-    public function getOwner($id)
+    public functio'1($id)
     {
         $owner = Owner::find($id);
         return view('admin.owners.show', get_defined_vars());
