@@ -6,10 +6,10 @@
             <div class="card-header">
                 <h1>Proprietarios</h1>
                 <div class="row">
-                    <div class="col-6">
+                    <div class="col-4">
                         <a href="{{ route('owner.create') }}" class="btn btn-primary">Criar Proprietario</a>
                     </div>
-                    <div class="col-6">
+                    <div class="col-8">
                         <form action="" method="POST" class="form form-inline">
                             @csrf
                             <input type="search" name="filter" placeholder="Buscar por nome..."
@@ -126,6 +126,15 @@
                     }
                 });
             });
+            // $(document).ready(function() {
+            //     $('.buscar-owner').on('keyup', function() {
+            //         var value = $(this).val().toLowerCase();
+            //         console.log(value);
+            //         $('.filter').filter(function() {
+            //             $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            //         });
+            //     });
+            // });
         });
     </script>
 @endsection

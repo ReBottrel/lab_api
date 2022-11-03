@@ -31,7 +31,7 @@ Route::get('teste-zap-api', [TesteController::class, 'testeZapApi']);
 Route::get('admin-login', [AdminAuthController::class, 'index'])->name('admin.login');
 Route::post('admin-login-entrar', [AdminAuthController::class, 'login'])->name('admin.entrar');
 
-Route::middleware(['auth:web'])->group(function (){
+Route::middleware(['auth:web'])->group(function () {
     Route::get('user-orders', [UserOrderController::class, 'index'])->name('user.orders');
     Route::get('user-dashboard', [UserDashboardController::class, 'index'])->name('user.dashboard');
 
@@ -74,7 +74,7 @@ Route::middleware(['auth:admin'])->group(function () {
 
     Route::post('order-generate', [OrderController::class, 'orderRequestPost'])->name('order.generate');
 
-    Route::post('export' , [OrderController::class, 'exportExcel'])->name('export');
+    Route::post('export', [OrderController::class, 'exportExcel'])->name('export');
 
     Route::post('cpf-technical/{id}', [OrderController::class, 'cpfTechnical'])->name('cpf.technical');
 
@@ -99,6 +99,7 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::get('techinical-create', [TecnicoController::class, 'create'])->name('techinical.create');
     Route::get('techinical-edit/{id}', [TecnicoController::class, 'edit'])->name('techinical.edit');
     Route::post('techinical-update/{id}', [TecnicoController::class, 'update'])->name('techinical.update');
+    Route::post('techinical-search', [TecnicoController::class, 'search'])->name('techinical.search');
 
     Route::post('owner-access', [OwnerController::class, 'ownerAcess'])->name('owner.access');
 

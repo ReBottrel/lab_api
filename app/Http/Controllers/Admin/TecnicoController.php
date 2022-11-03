@@ -87,4 +87,12 @@ class TecnicoController extends Controller
     {
         //
     }
+    public function search(Request $request)
+    {
+        if ($request->ajax()) {
+            $tecnicos = Tecnico::where('professional_name', 'LIKE', '%' . $request->search . "%")->get();;
+            $viewRender = view('admin.tecnicos.search', get_defined_vars())->render();
+            return response()->json([get_defined_vars()]);
+        }
+    }
 }
