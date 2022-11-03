@@ -40,30 +40,35 @@ class OrderController extends Controller
     public function animal(Request $request)
     {
         $order = OrderRequest::with('owner')->find($request->id);
-        foreach ($order->data_g['data_table'] as $data) {
-
-            Animal::create([
-                'user_id' => $request->owner,
-                'order_id' => $order->id,
-                'animal_name' => $data['produto'],
-                'register_number_brand' => $data['id'],
-                'sex' => $data['sexo'],
-                'birth_date' => $data['nascimento'],
-                'registro_pai' => $data['registro_pai'],
-                'pai' => $data['pai'],
-                'registro_mae' => $data['registro_mae'],
-                'mae' => $data['mae'],
-            ]);
-        }
-
         $user = Owner::find($request->owner);
+        if ($user->user_id != null) {
+            foreach ($order->data_g['data_table'] as $data) {
 
-        $order->update([
-            'user_id' => $user->user_id,
-            'owner_id' => $request->owner
-        ]);
+                Animal::create([
+                    'user_id' => $request->owner,
+                    'order_id' => $order->id,
+                    'animal_name' => $data['produto'],
+                    'register_number_brand' => $data['id'],
+                    'sex' => $data['sexo'],
+                    'birth_date' => $data['nascimento'],
+                    'registro_pai' => $data['registro_pai'],
+                    'pai' => $data['pai'],
+                    'registro_mae' => $data['registro_mae'],
+                    'mae' => $data['mae'],
+                ]);
+            }
 
-        return redirect()->back()->with('success', 'Proprietário vinculado com sucesso');
+
+
+            $order->update([
+                'user_id' => $user->user_id,
+                'owner_id' => $request->owner
+            ]);
+
+            return redirect()->back()->with('success', 'Proprietário vinculado com sucesso');
+        } else {
+            return redirect()->back()->with('error', 'Proprietário não possui acesso ao sistema, por favor crie um acesso e repita o processo');
+        }
     }
 
     public function amostra(Request $request, $id)

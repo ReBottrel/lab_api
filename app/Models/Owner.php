@@ -28,4 +28,8 @@ class Owner extends Model
         'status',
         'propriety',
     ];
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }
