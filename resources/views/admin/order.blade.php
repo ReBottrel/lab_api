@@ -48,6 +48,9 @@
                                             <div class="col">
                                                 <p>Data:</p>
                                             </div>
+                                            <div class="col">
+                                                <p>Status</p>
+                                            </div>
                                         </div>
                                         <div class="row fw-bold text-dark" style="height: auto;">
                                             <div class="col">
@@ -62,28 +65,45 @@
                                             <div class="col">
                                                 <p>{{ date('d/m/Y', strtotime($order->created_at)) }}</p>
                                             </div>
+                                            <div class="col">
+                                                <p><span
+                                                        @if ($order->id_tecnico) class="text-success"
+
+                                                @else
+                                                    class="text-danger" @endif>T</span>
+                                                    / <span
+                                                        @if ($order->owner_id) class="text-success"
+                                                    @else
+                                                        class="text-danger" @endif>C</span>
+                                                </p>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="col-xl-1 col-xxl-3">
-                                        <div class="btn-group border rounded" style="background: var(--bs-success);">
-                                            <button class="btn link-light" type="button">Ações</button><button
-                                                class="btn btn-sm dropdown-toggle dropdown-toggle-split link-light"
-                                                data-bs-toggle="dropdown" aria-expanded="false" type="button"></button>
-                                            <div class="dropdown-menu">
+                                        <div class="dropdown">
+                                            <a class="btn btn-alt-loci text-white dropdown-toggle" href="#"
+                                                role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                Ações
+                                            </a>
+
+                                            <ul class="dropdown-menu">
                                                 <a class="dropdown-item" id="show-btn"
                                                     href="{{ route('order.detail', $order->id) }}">Ver</a>
                                                 <a class="dropdown-item" id="show-btn"
                                                     href="{{ route('orders.owner', $order->id) }}">Proprietario</a>
                                                 <a class="dropdown-item" id="show-btn"
-                                                    href="{{ route('technical', $order->id) }}">Técnico responsável</a>
+                                                    href="{{ route('technical', $order->id) }}">Técnico
+                                                    responsável</a>
                                                 @if ($order->status == 2)
                                                     <a class="dropdown-item"
                                                         href="{{ route('order.request.detail', $order->id) }}">Detalhes do
                                                         pedido</a>
                                                 @endif
-                                            </div>
+                                            </ul>
                                         </div>
+
                                     </div>
+
                                 </div>
                             </div>
                         </div>
@@ -127,6 +147,5 @@
                 });
             });
         });
-
     </script>
 @endsection
