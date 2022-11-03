@@ -26,6 +26,7 @@
                             <tr>
                                 <th>Nome</th>
                                 <th>Email</th>
+                                <th>Possuí acesso?</th>
                                 <th>Ações</th>
                             </tr>
                         </thead>
@@ -34,6 +35,13 @@
                                 <tr>
                                     <td>{{ $owner->owner_name }}</td>
                                     <td>{{ strtolower($owner->email) }}</td>
+                                    <td>
+                                        @if ($owner->user_id)
+                                            <span class="text-success">Possuí acesso</span>
+                                        @else
+                                            <span class="text-danger">Não possuí acesso</span>
+                                        @endif
+                                    </td>
                                     <td>
                                         <div class="dropdown">
                                             <a class="btn btn-alt-loci text-white dropdown-toggle" href="#"
