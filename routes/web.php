@@ -1,17 +1,18 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\TesteController;
 use App\Http\Controllers\GatewayController;
 use App\Http\Controllers\Admin\HomeController;
 use App\Http\Controllers\Admin\ExameController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\OwnerController;
+use App\Http\Controllers\Admin\ConfigController;
 use App\Http\Controllers\Admin\AddressController;
+use App\Http\Controllers\Admin\TecnicoController;
 use App\Http\Controllers\User\UserOrderController;
 use App\Http\Controllers\User\UserDashboardController;
 use App\Http\Controllers\Admin\Auth\AdminAuthController;
-use App\Http\Controllers\Admin\TecnicoController;
-use App\Http\Controllers\TesteController;
 
 /*
 |--------------------------------------------------------------------------
@@ -108,4 +109,6 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::get('owner-show/{id}', [OwnerController::class, 'getOwner'])->name('get.owners.details');
 
     Route::post('owners-search', [OwnerController::class, 'search'])->name('owners.search');
+
+    Route::get('config', [ConfigController::class, 'index'])->name('configs');
 });

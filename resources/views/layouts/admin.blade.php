@@ -48,7 +48,7 @@
                                 style="color: var(--bs-dark);"></i><span>Técnicos</span></a>
                     </li>
 
-                    <li class="nav-item"><a class="nav-link" href="#"
+                    <li class="nav-item"><a class="nav-link" href="{{ route('configs') }}"
                             style=" background: var(--bs-gray-300);color: var(--bs-dark)"><i class="fa fa-gear"
                                 style="color: var(--bs-dark);"></i><span>Configurações</span></a>
                     </li>
@@ -108,7 +108,7 @@
                                     <div class="dropdown-menu shadow dropdown-menu-end animated--grow-in"><a
                                             class="dropdown-item" href="#"><i
                                                 class="fas fa-user fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Perfil</a><a
-                                            class="dropdown-item" href="#"><i
+                                            class="dropdown-item" href="{{ route('configs') }}"><i
                                                 class="fas fa-cogs fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Configurações</a>
                                         <div class="dropdown-divider"></div><a class="dropdown-item"
                                             href="#"><i
