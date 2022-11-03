@@ -356,7 +356,7 @@
                         },
                         success: function(data) {
                             console.log(data);
-                            // window.location.reload();
+                            window.location.reload();
                         }
                     }));
                 if (result.isConfirmed) {
