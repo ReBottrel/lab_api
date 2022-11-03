@@ -27,7 +27,7 @@
                                 animais</button></a>
                     @else
                         <a class="dropdown-item" href="{{ route('get.animals', $owner->id) }}">
-                            >Ver animais</a>
+                            Ver animais</a>
                     @endif
                     <a href="#" class="dropdown-item">Propriedades</a>
                 </ul>
@@ -35,3 +35,4 @@
         </td>
     </tr>
 @endforeach
+

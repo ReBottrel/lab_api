@@ -82,7 +82,7 @@
 @section('js')
     <script>
         $(document).ready(function() {
-            $('.create-access').click(function() {
+            $(document).on('click', '.create-access', function() {
                 var id = $(this).data('id');
                 $.ajax({
                     url: "{{ route('owner.access') }}",
