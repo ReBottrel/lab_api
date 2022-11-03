@@ -338,6 +338,7 @@
         $(document).on('click', '.gerar', function() {
             var id = $(this).data('id');
             var order = $(this).data('order');
+            $(this).attr("disabled", true);
             Swal.fire({
                 title: 'Confirmar envio de pagamento?',
                 text: "Essa ação não poderá ser desfeita!",
