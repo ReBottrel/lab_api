@@ -1,3 +1,7 @@
+a {
+    text-decoration: none !important;
+}
+
 #wrapper {
     display: flex;
     min-height: 100vh;
@@ -22,6 +26,7 @@
 .ajust {
     padding: 15px;
 }
-.btn-alt-loci{
+
+.btn-alt-loci {
     background-color: #694487 !important;
 }
