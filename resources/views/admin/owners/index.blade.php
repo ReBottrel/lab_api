@@ -5,7 +5,19 @@
         <div class="card">
             <div class="card-header">
                 <h1>Proprietarios</h1>
-                <a href="{{ route('owner.create') }}" class="btn btn-primary">Criar Proprietario</a>
+                <div class="row">
+                    <div class="col-6">
+                        <a href="{{ route('owner.create') }}" class="btn btn-primary">Criar Proprietario</a>
+                    </div>
+                    <div class="col-6">
+                        <form action="" method="POST" class="form form-inline">
+                            @csrf
+                            <input type="search" name="filter" placeholder="Buscar por nome..."
+                                class="form-control buscar-owner" value="{{ $filters['filter'] ?? '' }}">
+                        </form>
+                    </div>
+                </div>
+
             </div>
             <div class="card-body">
                 <div class="table-responsive">
@@ -17,7 +29,7 @@
                                 <th>Ações</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody class="filter">
                             @foreach ($owners as $owner)
                                 <tr>
                                     <td>{{ $owner->owner_name }}</td>
@@ -83,6 +95,21 @@
                             title: 'Oops...',
                             text: 'Algo deu errado!',
                         });
+                    }
+                });
+            });
+            $('.buscar-owner').keyup(function() {
+                var search = $(this).val();
+                $.ajax({
+                    url: "{{ route('owners.search') }}",
+                    type: "POST",
+                    data: {
+                        _token: "{{ csrf_token() }}",
+                        search: search
+                    },
+                    success: function(data) {
+                        console.log(data);
+                        $('.filter').html(data[0].viewRender);
                     }
                 });
             });

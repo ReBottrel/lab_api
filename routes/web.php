@@ -104,4 +104,6 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::get('get-ownser-user/{id}', [OwnerController::class, 'getUser'])->name('owner.user');
     Route::post('owner-user-update/{id}', [OwnerController::class, 'updateUser'])->name('owner.user.update');
     Route::get('owner-show/{id}', [OwnerController::class, 'getOwner'])->name('get.owners.details');
+
+    Route::post('owners-search', [OwnerController::class, 'search'])->name('owners.search');
 });

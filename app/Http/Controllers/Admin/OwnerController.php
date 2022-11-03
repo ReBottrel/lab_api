@@ -216,4 +216,13 @@ class OwnerController extends Controller
 
         return redirect()->back()->with('success', 'Editado com sucesso!');
     }
+
+    public function search(Request $request)
+    {
+        if ($request->ajax()) {
+            $owners = Owner::where('owner_name', 'LIKE', '%' . $request->search . "%")->get();;
+            $viewRender = view('admin.owners.search', get_defined_vars())->render();
+            return response()->json([get_defined_vars()]);
+        }
+    }
 }
