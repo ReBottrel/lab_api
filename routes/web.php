@@ -96,6 +96,7 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::post('techinical-store', [TecnicoController::class, 'store'])->name('techinical.store');
 
     Route::get('techinicals', [TecnicoController::class, 'index'])->name('techinicals');
+    Route::get('techinical-create', [TecnicoController::class, 'create'])->name('techinical.create');
     Route::get('techinical-edit/{id}', [TecnicoController::class, 'edit'])->name('techinical.edit');
     Route::post('techinical-update/{id}', [TecnicoController::class, 'update'])->name('techinical.update');
 

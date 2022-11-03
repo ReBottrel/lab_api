@@ -26,7 +26,7 @@ class TecnicoController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.tecnicos.create');
     }
 
     /**
@@ -49,7 +49,6 @@ class TecnicoController extends Controller
      */
     public function show($id)
     {
-       
     }
 
     /**

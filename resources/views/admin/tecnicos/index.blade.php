@@ -7,7 +7,7 @@
                 <h1>Técnicos</h1>
                 <div class="row">
                     <div class="col-6">
-                        <a href="#" class="btn btn-primary">Criar Técnico</a>
+                        <a href="{{ route('techinical.create') }}" class="btn btn-primary">Criar Técnico</a>
                     </div>
                     <div class="col-6">
                         <p>Em breve filtros</p>

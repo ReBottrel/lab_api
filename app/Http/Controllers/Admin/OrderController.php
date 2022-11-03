@@ -153,7 +153,7 @@ class OrderController extends Controller
     }
     public function technical($id)
     {
-        $order = OrderRequest::find($id);
+        $order = OrderRequest::with('tecnico')->find($id);
         $tecnicos = Tecnico::get();
         return view('admin.tecnico', get_defined_vars());
     }
@@ -165,7 +165,7 @@ class OrderController extends Controller
             'id_tecnico' => $request->tecnico,
         ]);
 
-        return redirect()->route('orders.all')->with('success', 'Técnico adicionado com sucesso!');
+        return redirect()->back()->with('success', 'Técnico adicionado com sucesso!');
     }
 
     public function orderRequestPost(Request $request)
