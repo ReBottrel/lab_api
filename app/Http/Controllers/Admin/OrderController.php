@@ -224,7 +224,7 @@ class OrderController extends Controller
 
     public function orderRequestDetail($id)
     {
-        $order = OrderRequest::with('user', 'orderRequestPayment')->find($id);
+        $order = OrderRequest::with('user', 'orderRequestPayment', 'owner')->find($id);
         $userInfo = User::with('info')->find($order->user_id);
         return view('admin.order-request-detail', get_defined_vars());
     }

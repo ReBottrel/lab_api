@@ -11,7 +11,7 @@
     <div class="container">
         <div class="card">
             <div class="card-header">
-                <h5 class="mb-0">CLIENTE: {{ $order->user->name }}</h5>
+                <h5 class="mb-0">CLIENTE: {{ $order->owner->name }}</h5>
             </div>
             <div class="card-body">
                 <div class="row">
@@ -21,9 +21,9 @@
                             </li>
                             <li class="list-group-item"><span>TOTAL: {{ 'R$ ' . number_format($order->total, 2, ',', '.') }}
                                 </span></li>
-                            <li class="list-group-item"><span>E-MAIL: {{ $order->user->email }}</span>
+                            <li class="list-group-item"><span>E-MAIL: {{ $order->owner->email }}</span>
                             </li>
-                            <li class="list-group-item"><span>TELEFONE: {{ $userInfo->info->phone }}</span>
+                            <li class="list-group-item"><span>TELEFONE: {{ $order->owner->cell }}</span>
                             </li>
                         </ul>
                     </div>
