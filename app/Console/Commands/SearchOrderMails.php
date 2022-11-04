@@ -53,18 +53,19 @@ class SearchOrderMails extends Command
         /** @var \Webklex\PHPIMAP\Support\FolderCollection $folders */
         $folders = $client->getFolders();
         $get_data_messages = collect();
+        libxml_use_internal_errors(true);
         foreach ($folders as $folder) {
             // $messages = $folder->query()->text('Coleta Material DNA')->get();
             // \Log::info($messages);
             $messages = $folder->query()->since(\Carbon\Carbon::now()->subDays(1))->get();
-            \Log::info($messages);
+            // \Log::info($messages);
             foreach ($messages as $message) {
                 $get_data_message = collect();
 
-                // $get_data_messages->add(['UID' => $message->getUid(), 'HTML' => $message->getHTMLBody()]);
+                $get_data_message->add(['UID' => $message->getUid(), 'HTML' => $message->getHTMLBody()]);
                 $dom = new \DOMDocument(); // abrindo DOMDoumento para ler os dados
-                $dom->loadHTML($message->getHTMLBody()); // lendo em html
-                // \Log::info($dom);
+                $file = @$dom->loadHTML($message->getHTMLBody()); // lendo em html
+
                 $xPath = new \DOMXPath($dom); // setando DOMXPath para que possamos acessar com o domdocuemnt
 
                 $table = $xPath->query('.//table')[0];
@@ -74,13 +75,13 @@ class SearchOrderMails extends Command
                     $table_td = $xPath->query('.//td', $table[$i]);
                     // \Log::info($table_td);
                     if (count($table_td) > 0) {
-                        if(count($table_td) > 8){
+                        if (count($table_td) > 8) {
                             $collumns = $this->collumns2;
-                        }else{
+                        } else {
                             $collumns = $this->collumns;
                         }
                         for ($itd = 0; count($table_td) > $itd; $itd++) {
-                            $get_data_table->put($collumns[$itd],trim(utf8_decode($table_td[$itd]->textContent)));
+                            $get_data_table->put($collumns[$itd], trim(utf8_decode($table_td[$itd]->textContent)));
                             // $get_data_table->put($itd, trim(utf8_decode($table_td[$itd]->textContent)));
                         }
                     }
@@ -108,7 +109,7 @@ class SearchOrderMails extends Command
                     }
                 }
 
-                if ($get_data_message->count() > 0) $get_data_messages->add([
+                $get_data_messages->add([
                     'uid' => $message->getUid(),
                     'data_table' => $get_data_message->all(),
                     'data_g' => $dados_gerais->toArray(),
@@ -121,7 +122,8 @@ class SearchOrderMails extends Command
         }
 
         $get_data_messages->map(function ($query) {
-            if (OrderRequest::where('data_g->uid', $query['uid'])->get()->count() == 0) {
+            \Log::info($query);
+            if (OrderRequest::where('uid', $query['uid'])->get()->count() == 0) {
                 $order_request['origin'] = 'email';
                 $order_request['creator'] = $query['data_g']['criador'][1] ?? null;
                 $order_request['creator_number'] = $query['data_g']['criador'][0] ?? null;
@@ -132,6 +134,7 @@ class SearchOrderMails extends Command
                 OrderRequest::create($order_request);
             }
         });
+
         return true;
     }
 }
