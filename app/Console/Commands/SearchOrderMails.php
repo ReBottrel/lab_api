@@ -124,6 +124,7 @@ class SearchOrderMails extends Command
         $get_data_messages->map(function ($query) {
             \Log::info($query);
             if (OrderRequest::where('uid', $query['uid'])->get()->count() == 0) {
+                $order_request['uid'] = $query['uid'];
                 $order_request['origin'] = 'email';
                 $order_request['creator'] = $query['data_g']['criador'][1] ?? null;
                 $order_request['creator_number'] = $query['data_g']['criador'][0] ?? null;
