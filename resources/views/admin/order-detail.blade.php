@@ -24,8 +24,8 @@
                     <div class="col">
                         @foreach ($order->data_g['data_table'] as $item)
                             @php
-                                $id = $item['id'] ? null : $item['UID'];
-                                $animal = App\Models\Animal::where('register_number_brand', $id)->first();
+                            
+                                $animal = App\Models\Animal::where('register_number_brand', $item['id'])->first();
                                 $status = 'Aguardando cadastro';
                             @endphp
                             @if ($animal)
@@ -68,7 +68,7 @@
                                 @endif
                             @endif
                             <ul class="list-group m-3">
-                                <li class="list-group-item"><span>ID: {{ $item['id'] ?? $item['UID'] }}</span></li>
+                                <li class="list-group-item"><span>ID: {{ $item['id'] }}</span></li>
                                 <li class="list-group-item"><span>PRODUTO: {{ $item['produto'] }}</span></li>
                                 <li class="list-group-item"><span>SEXO: {{ $item['sexo'] }}</span></li>
                                 <li class="list-group-item"><span>NASCIMENTO: {{ $item['nascimento'] }}</span></li>
