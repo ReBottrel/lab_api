@@ -53,7 +53,7 @@ class SearchOrderMails extends Command
         /** @var \Webklex\PHPIMAP\Support\FolderCollection $folders */
         $folders = $client->getFolders();
         $get_data_messages = collect();
-        libxml_use_internal_errors(true);
+        // libxml_use_internal_errors(true);
         foreach ($folders as $folder) {
             // $messages = $folder->query()->text('Coleta Material DNA')->get();
             // \Log::info($messages);
@@ -61,16 +61,21 @@ class SearchOrderMails extends Command
             // \Log::info($messages);
             foreach ($messages as $message) {
                 $get_data_message = collect();
-
-                $get_data_message->add(['UID' => $message->getUid(), 'HTML' => $message->getHTMLBody()]);
+             
+                // $get_data_message->add(['UID' => $message->getUid(), 'HTML' => $message->getHTMLBody()]);
                 $dom = new \DOMDocument(); // abrindo DOMDoumento para ler os dados
-                $file = $dom->loadHTML($message->getHTMLBody()); // lendo em html
-
+                $dom->loadHTML(strip_tags($message->getHTMLBody(), '<table><td><tr><font><tbody>')); // lendo em html
+                // \Log::info(strip_tags($message->getHTMLBody(), '<table><td><tr><font><tbody>'));
+            
                 $xPath = new \DOMXPath($dom); // setando DOMXPath para que possamos acessar com o domdocuemnt
-
+               
                 $table = $xPath->query('.//table')[0];
-                $table = $xPath->query('.//tbody/tr', $table);
+
+                // $table = $xPath->query('.//tbody/tr', $table);
+                $table = $xPath->query('.//tr', $table);
+
                 for ($i = 1; count($table) > $i; $i++) {
+
                     $get_data_table = collect([]);
                     $table_td = $xPath->query('.//td', $table[$i]);
                     // \Log::info($table_td);
@@ -98,7 +103,7 @@ class SearchOrderMails extends Command
                         $dados_gerais->put(\Str::slug(trim($dados_search[0]), '_'), trim($dados_search[1]));
                     }
                     if (str_contains($dados_content, 'Criador:')) {
-                        \Log::info($dados_content);
+                        // \Log::info($dados_content);
                         $dados_search = explode(':', $dados_content);
                         $dados_ss = explode('-', $dados_search[1]);
                         if (count($dados_ss) > 0) {
@@ -122,7 +127,7 @@ class SearchOrderMails extends Command
         }
 
         $get_data_messages->map(function ($query) {
- 
+
             if (OrderRequest::where('uid', $query['uid'])->get()->count() == 0) {
                 $order_request['uid'] = $query['uid'];
                 $order_request['origin'] = 'email';
