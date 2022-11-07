@@ -173,7 +173,8 @@
                                             </h4>
                                         </div>
                                         <div class="col-md-6 text-end">
-                                            <button type="submit" class="btn btn-primary">Formas
+                                            <button type="submit" @if ($total == 0) disabled @else @endif
+                                                class="btn btn-primary">Formas
                                                 de Pagamento</button>
                                         </div>
                                     </div>

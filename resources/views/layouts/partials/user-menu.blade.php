@@ -19,8 +19,14 @@
         <a href="#" class="list-group-item list-group-item-action">
             <i class="bi-lock fs-6"></i> Alterar Senha
         </a>
-        <a href="#" class="list-group-item list-group-item-action">
+        <a href="{{ route('logout') }}"
+            onclick="event.preventDefault();
+        document.getElementById('logout-form').submit();"
+            class="list-group-item list-group-item-action">
             <i class="bi-door-open fs-6"></i> Sair
         </a>
+        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+            @csrf
+        </form>
     </div>
 </div>
