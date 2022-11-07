@@ -20,9 +20,6 @@
             </ul>
         </div>
         <a href="#" class="list-group-item list-group-item-action">
-            <i class="bi-heart fs-6"></i> Favoritos
-        </a>
-        <a href="#" class="list-group-item list-group-item-action">
             <i class="bi-lock fs-6"></i> Alterar Senha
         </a>
         <a href="{{ route('logout') }}"

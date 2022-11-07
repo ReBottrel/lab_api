@@ -132,6 +132,7 @@ class GatewayController extends Controller
                     ]);
                 }
             }
+
             $datapix = PaymentReturn::create([
                 'order_request_id' => $request->order_id,
                 'user_id' => auth()->user()->id,
@@ -139,7 +140,7 @@ class GatewayController extends Controller
                 'payment_type' => $request->payment_type,
                 'payment_status' => 1 ?? null,
                 'pixqrcode' => $response->success->pix_qrcode_url ?? null,
-                'pixcode' => $response->success->payment_method->pix_link ?? null,
+                'pixcode' => $response->success->payment_method->qr_code->emv ?? null,
 
             ]);
         }
