@@ -206,7 +206,7 @@ class GatewayController extends Controller
                         'reason' => '2-Pagamento Efetuado',
                         'description' => 'Alterado o status',
                     ]);
-                    \Log::channel('iopay_pix')->info($query);
+                    \Log::channel('iopay_notify_payment')->info($query);
                 });
             }
         }
