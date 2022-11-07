@@ -199,19 +199,43 @@ class GatewayController extends Controller
         if ($response->success->status == 'succeeded') {
 
             $orderRequest = OrderRequestPayment::where('payment_id', $response->success->id)->get();
-            \Log::channel('iopay_notify_payment')->info(['order request', $orderRequest]);
-            // if (OrderRequestPayment::where('payment_id', $response->success->id)->get()->count() > 0) {
-            //     OrderRequestPayment::where('payment_id', $response->success->id)->get()->each(function ($query) {
-            //         HistoryStatus::create([
-            //             'reference_type' => 'OrderRequestPayment',
-            //             'reference_id' => $query->id,
-            //             'type' => 'STATUS',
-            //             'reason' => '2-Pagamento Efetuado',
-            //             'description' => 'Alterado o status',
-            //         ]);
 
-            //     });
-            // }
+            \Log::channel('iopay_notify_payment')->info(['order request', $orderRequest]);
+            foreach ($orderRequest as $item) {
+                $order = OrderRequest::where('id', $item->order_request_id)->first();
+                $item->update([
+                    'payment_status' => 1
+                ]);
+                $animal = Animal::where('register_number_brand', $item->animal_id)->first();
+                $animal->update([
+                    'status' => 9
+                ]);
+                $days = '';
+
+                if ($item->days == 0) {
+                    $days = '20 Dias';
+                } elseif ($item->days == 1) {
+                    $days = '24 Horas';
+                } elseif ($item->days == 2) {
+                    $days = '2 Dias';
+                } elseif ($item->days == 3) {
+                    $days = '5 Dias';
+                } elseif ($item->days == 4) {
+                    $days = '10 Dias';
+                }
+                $telefone = str_replace(['(', ')', '-', ' '], ['', '', '', ''],  $order->tecnico->cell);
+                $response = Http::post('https://api.z-api.io/instances/3B30881EC3E99084D3D3B6927F6ADC67/token/66E633717A0DCDD3D4A1BC19/send-text', [
+                    "phone" => "55$telefone",
+                    "message" => "Prezado Criador, Confirmamos o pagamento do exame de DNA do(s) animal(ais) $animal->animal_name e informamos que o exame já se encontra em execução. A data prevista para liberação do resultado é de $days uteis. Agradecemos a escolha pelo Laboratório Loci e nos colocamos a disposição para qualquer dúvida ou necessidade! NO LABORATÓRIO LOCI VOCÊ PODE CONFIAR!                        
+                    "
+                ]);
+                $telefoneOwner = str_replace(['(', ')', '-', ' '], ['', '', '', ''],  $order->owner->cell);
+                $responseOwner = Http::post('https://api.z-api.io/instances/3B30881EC3E99084D3D3B6927F6ADC67/token/66E633717A0DCDD3D4A1BC19/send-text', [
+                    "phone" => "55$telefoneOwner",
+                    "message" => "Prezado Criador, Confirmamos o pagamento do exame de DNA do(s) animal(ais) $animal->animal_name e informamos que o exame já se encontra em execução. A data prevista para liberação do resultado é de $days uteis. Agradecemos a escolha pelo Laboratório Loci e nos colocamos a disposição para qualquer dúvida ou necessidade! NO LABORATÓRIO LOCI VOCÊ PODE CONFIAR!                        
+                    "
+                ]);
+            }
         }
     }
 
