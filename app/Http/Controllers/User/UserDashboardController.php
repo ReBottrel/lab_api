@@ -24,9 +24,9 @@ class UserDashboardController extends Controller
         $prices = [00.02, 500.00, 400.00, 300.00, 200.00];
 
         $order = OrderRequest::with('orderRequestPayment')->find($request->orderId);
-        $order->update([
-            'total' => $request->totalprice
-        ]);
+
+        // dd($order);
+
 
         foreach ($order->orderRequestPayment as $key => $payment) {
             foreach ($request->days as $key2 => $day) {
@@ -70,7 +70,17 @@ class UserDashboardController extends Controller
                 ]);
             }
         }
-        
+
+        $value = 0;
+
+        foreach ($order->orderRequestPayment as $pay) {
+            if ($pay->paynow == 1) {
+                $value += $pay->value;
+            }
+        }
+        $order->update([
+            'total' => $value
+        ]);
 
         return view('user.payment', get_defined_vars());
     }
