@@ -197,18 +197,19 @@ class GatewayController extends Controller
         \Log::channel('iopay_notify_payment')->info(collect($response)->toArray());
 
         if ($response->success->status == 'succeeded') {
-            if (OrderRequestPayment::where('payment_id', $response->success->id)->get()->count() > 0) {
-                OrderRequestPayment::where('payment_id', $response->success->id)->get()->each(function ($query) {
-                    HistoryStatus::create([
-                        'reference_type' => 'OrderRequestPayment',
-                        'reference_id' => $query->id,
-                        'type' => 'STATUS',
-                        'reason' => '2-Pagamento Efetuado',
-                        'description' => 'Alterado o status',
-                    ]);
-                    \Log::channel('iopay_notify_payment')->info(['return pix', $query]);
-                });
-            }
+            \Log::channel('iopay_notify_payment')->info('entrei');
+            // if (OrderRequestPayment::where('payment_id', $response->success->id)->get()->count() > 0) {
+            //     OrderRequestPayment::where('payment_id', $response->success->id)->get()->each(function ($query) {
+            //         HistoryStatus::create([
+            //             'reference_type' => 'OrderRequestPayment',
+            //             'reference_id' => $query->id,
+            //             'type' => 'STATUS',
+            //             'reason' => '2-Pagamento Efetuado',
+            //             'description' => 'Alterado o status',
+            //         ]);
+
+            //     });
+            // }
         }
     }
 
