@@ -12,7 +12,7 @@ class UserDashboardController extends Controller
 {
     public function index()
     {
-        $prices = [00.05, 500.00, 400.00, 300.00, 200.00];
+        $prices = [00.02, 500.00, 400.00, 300.00, 200.00];
         $user = Auth::user()->id;
         $orders = OrderRequest::with('user', 'orderRequestPayment')->where('user_id', $user)->where('status', 2)->get();
         // dd($orders);
@@ -21,7 +21,7 @@ class UserDashboardController extends Controller
 
     public function paymentMethod(Request $request)
     {
-        $prices = [00.05, 500.00, 400.00, 300.00, 200.00];
+        $prices = [00.02, 500.00, 400.00, 300.00, 200.00];
 
         $order = OrderRequest::with('orderRequestPayment')->find($request->orderId);
         $order->update([
@@ -46,7 +46,7 @@ class UserDashboardController extends Controller
         foreach ($order->orderRequestPayment as $payment) {
             if ($payment->days == 0) {
                 $payment->update([
-                    'value' => 00.05,
+                    'value' => 00.02,
                 ]);
             }
             if ($payment->days == 1) {

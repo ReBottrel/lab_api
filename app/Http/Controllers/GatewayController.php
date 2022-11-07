@@ -124,6 +124,12 @@ class GatewayController extends Controller
         }
 
         if ($request->payment_type == 'pix') {
+            foreach ($order->orderRequestPayment as $or_payment) {
+                $or_payment->update([
+                    'payment_id' => $response->success->id ?? null,
+                    // 'value' => $response->success->amount ?? null,
+                ]);
+            }
             $datapix = PaymentReturn::create([
                 'order_request_id' => $request->order_id,
                 'user_id' => auth()->user()->id,
@@ -135,16 +141,16 @@ class GatewayController extends Controller
 
             ]);
         }
-        if ($request->payment_type == 'credit') {
-            $datapix = PaymentReturn::create([
-                'order_request_id' => $request->order_id,
-                'user_id' => auth()->user()->id,
-                'payment_id' => $response->success->id ?? null,
-                'payment_type' => $request->payment_type,
-                'pixqrcode' => $response->success->pix_qrcode_url ?? null,
-                'pixcode' => $response->success->payment_method->pix_link ?? null,
-            ]);
-        }
+        // if ($request->payment_type == 'credit') {
+        //     $datapix = PaymentReturn::create([
+        //         'order_request_id' => $request->order_id,
+        //         'user_id' => auth()->user()->id,
+        //         'payment_id' => $response->success->id ?? null,
+        //         'payment_type' => $request->payment_type,
+        //         'pixqrcode' => $response->success->pix_qrcode_url ?? null,
+        //         'pixcode' => $response->success->payment_method->pix_link ?? null,
+        //     ]);
+        // }
         if ($request->payment_type == 'boleto') {
             $datapix = PaymentReturn::create([
                 'order_request_id' => $request->order_id,
