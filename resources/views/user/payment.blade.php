@@ -15,7 +15,8 @@
                             <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile"
                                 type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Pix</button>
                             <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-boleto"
-                                type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Boleto</button>
+                                type="button" role="tab" aria-controls="nav-profile"
+                                aria-selected="false">Boleto</button>
 
                         </div>
                     </nav>
@@ -41,7 +42,24 @@
                                             <div class="col-4">
                                                 <div class="mb-3">
                                                     <label for="exampleFormControlInput1" class="form-label">Ano</label>
-                                                    <input type="text" class="form-control" id="year">
+                                                    <select class="form-select" id="year"
+                                                        aria-label="Default select example">
+
+                                                        <option value="22" selected>2022</option>
+                                                        <option value="23">2023</option>
+                                                        <option value="24">2024</option>
+                                                        <option value="25">2025</option>
+                                                        <option value="26">2026</option>
+                                                        <option value="27">2027</option>
+                                                        <option value="28">2028</option>
+                                                        <option value="29">2029</option>
+                                                        <option value="30">2030</option>
+                                                        <option value="31">2031</option>
+                                                        <option value="32">2032</option>
+                                                        <option value="33">2033</option>
+                                                        <option value="34">2034</option>
+                                                        <option value="35">2035</option>
+                                                    </select>
                                                 </div>
                                             </div>
                                             <div class="col-4">
@@ -193,6 +211,5 @@
                 }
             });
         });
-        
     </script>
 @endsection
