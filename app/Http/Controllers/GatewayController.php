@@ -197,7 +197,9 @@ class GatewayController extends Controller
         \Log::channel('iopay_notify_payment')->info(collect($response)->toArray());
 
         if ($response->success->status == 'succeeded') {
-            \Log::channel('iopay_notify_payment')->info('entrei');
+
+            $orderRequest = OrderRequestPayment::where('payment_id', $response->success->id)->get();
+            \Log::channel('iopay_notify_payment')->info(['order request', $orderRequest]);
             // if (OrderRequestPayment::where('payment_id', $response->success->id)->get()->count() > 0) {
             //     OrderRequestPayment::where('payment_id', $response->success->id)->get()->each(function ($query) {
             //         HistoryStatus::create([
