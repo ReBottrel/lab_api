@@ -218,7 +218,7 @@ class GatewayController extends Controller
                     $item->update([
                         'payment_status' => 1
                     ]);
-                    if ($response->success->history == 'paid') {
+                    if ($order->requests == null) {
                         $animal = Animal::where('register_number_brand', $item->animal_id)->first();
                         $animal->update([
                             'status' => 9
@@ -247,6 +247,10 @@ class GatewayController extends Controller
                             "phone" => "55$telefoneOwner",
                             "message" => "Prezado Criador, Confirmamos o pagamento do exame de DNA do(s) animal(ais) $animal->animal_name e informamos que o exame já se encontra em execução. A data prevista para liberação do resultado é de $days uteis. Agradecemos a escolha pelo Laboratório Loci e nos colocamos a disposição para qualquer dúvida ou necessidade! NO LABORATÓRIO LOCI VOCÊ PODE CONFIAR!                        
                         "
+                        ]);
+
+                        $order->update([
+                            'requests' => 1
                         ]);
                     }
                 }
