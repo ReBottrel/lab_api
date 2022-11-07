@@ -107,6 +107,7 @@
                             title: 'Sucesso',
                             text: 'Acesso criado com sucesso',
                         });
+                        window.reload();
 
                     },
                     error: function(data) {
