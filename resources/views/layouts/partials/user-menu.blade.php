@@ -3,16 +3,22 @@
         <a href="#" class="list-group-item list-group-item-action">
             <i class="bi-person fs-6"></i> Dados Pessoais
         </a>
-        <a href="#" class="list-group-item list-group-item-action">
-            <i class="bi-mailbox fs-6"></i> Contatos
-        </a>
+
         <a href="#" class="list-group-item list-group-item-action">
             <i class="bi-house-door fs-6"></i> Endereço
         </a>
-        <a href="{{ route('user.dashboard') }}"
-            class="list-group-item list-group-item-action text-bg-primary active text-light">
-            <i class="bi-truck fs-6"></i> Pedidos
-        </a>
+        <div class="dropdown">
+            <a href="#"
+                class="list-group-item list-group-item-action text-bg-primary active text-light dropdown-toggle" role="button" data-bs-toggle="dropdown"
+                aria-expanded="false">
+                <i class="bi-truck fs-6"></i> Pedidos
+            </a>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="{{ route('user.dashboard') }}">Efetuados</a></li>
+                <li><a class="dropdown-item" href="#">Concluídos</a></li>
+                <li><a class="dropdown-item" href="#">Cancelados</a></li>
+            </ul>
+        </div>
         <a href="#" class="list-group-item list-group-item-action">
             <i class="bi-heart fs-6"></i> Favoritos
         </a>
