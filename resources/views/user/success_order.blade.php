@@ -11,6 +11,7 @@
                         <div class="col-12">
                             <h2 class="text-primary">Pedido #00{{ $pixreponse->order_request_id }}</h2>
                             <p class="text-secondary">Pedido realizado com sucesso!</p>
+                            <p class="text-secondary">{{ $pixreponse->payment_id }}</p>
                             <p class="text-secondary">Acompanhe o status do seu pedido na página de pedidos.</p>
                             @if ($pixreponse->payment_type == 'pix')
                                 <div class="col-12">
