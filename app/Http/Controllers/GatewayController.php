@@ -218,35 +218,37 @@ class GatewayController extends Controller
                     $item->update([
                         'payment_status' => 1
                     ]);
-                    $animal = Animal::where('register_number_brand', $item->animal_id)->first();
-                    $animal->update([
-                        'status' => 9
-                    ]);
-                    $days = '';
+                    if ($response->success->history == 'paid') {
+                        $animal = Animal::where('register_number_brand', $item->animal_id)->first();
+                        $animal->update([
+                            'status' => 9
+                        ]);
+                        $days = '';
 
-                    if ($item->days == 0) {
-                        $days = '20 Dias';
-                    } elseif ($item->days == 1) {
-                        $days = '24 Horas';
-                    } elseif ($item->days == 2) {
-                        $days = '2 Dias';
-                    } elseif ($item->days == 3) {
-                        $days = '5 Dias';
-                    } elseif ($item->days == 4) {
-                        $days = '10 Dias';
+                        if ($item->days == 0) {
+                            $days = '20 Dias';
+                        } elseif ($item->days == 1) {
+                            $days = '24 Horas';
+                        } elseif ($item->days == 2) {
+                            $days = '2 Dias';
+                        } elseif ($item->days == 3) {
+                            $days = '5 Dias';
+                        } elseif ($item->days == 4) {
+                            $days = '10 Dias';
+                        }
+                        $telefone = str_replace(['(', ')', '-', ' '], ['', '', '', ''],  $order->tecnico->cell);
+                        $response = Http::post('https://api.z-api.io/instances/3B30881EC3E99084D3D3B6927F6ADC67/token/66E633717A0DCDD3D4A1BC19/send-text', [
+                            "phone" => "55$telefone",
+                            "message" => "Prezado Criador, Confirmamos o pagamento do exame de DNA do(s) animal(ais) $animal->animal_name e informamos que o exame já se encontra em execução. A data prevista para liberação do resultado é de $days uteis. Agradecemos a escolha pelo Laboratório Loci e nos colocamos a disposição para qualquer dúvida ou necessidade! NO LABORATÓRIO LOCI VOCÊ PODE CONFIAR!                        
+                        "
+                        ]);
+                        $telefoneOwner = str_replace(['(', ')', '-', ' '], ['', '', '', ''],  $order->owner->cell);
+                        $responseOwner = Http::post('https://api.z-api.io/instances/3B30881EC3E99084D3D3B6927F6ADC67/token/66E633717A0DCDD3D4A1BC19/send-text', [
+                            "phone" => "55$telefoneOwner",
+                            "message" => "Prezado Criador, Confirmamos o pagamento do exame de DNA do(s) animal(ais) $animal->animal_name e informamos que o exame já se encontra em execução. A data prevista para liberação do resultado é de $days uteis. Agradecemos a escolha pelo Laboratório Loci e nos colocamos a disposição para qualquer dúvida ou necessidade! NO LABORATÓRIO LOCI VOCÊ PODE CONFIAR!                        
+                        "
+                        ]);
                     }
-                    $telefone = str_replace(['(', ')', '-', ' '], ['', '', '', ''],  $order->tecnico->cell);
-                    $response = Http::post('https://api.z-api.io/instances/3B30881EC3E99084D3D3B6927F6ADC67/token/66E633717A0DCDD3D4A1BC19/send-text', [
-                        "phone" => "55$telefone",
-                        "message" => "Prezado Criador, Confirmamos o pagamento do exame de DNA do(s) animal(ais) $animal->animal_name e informamos que o exame já se encontra em execução. A data prevista para liberação do resultado é de $days uteis. Agradecemos a escolha pelo Laboratório Loci e nos colocamos a disposição para qualquer dúvida ou necessidade! NO LABORATÓRIO LOCI VOCÊ PODE CONFIAR!                        
-                    "
-                    ]);
-                    $telefoneOwner = str_replace(['(', ')', '-', ' '], ['', '', '', ''],  $order->owner->cell);
-                    $responseOwner = Http::post('https://api.z-api.io/instances/3B30881EC3E99084D3D3B6927F6ADC67/token/66E633717A0DCDD3D4A1BC19/send-text', [
-                        "phone" => "55$telefoneOwner",
-                        "message" => "Prezado Criador, Confirmamos o pagamento do exame de DNA do(s) animal(ais) $animal->animal_name e informamos que o exame já se encontra em execução. A data prevista para liberação do resultado é de $days uteis. Agradecemos a escolha pelo Laboratório Loci e nos colocamos a disposição para qualquer dúvida ou necessidade! NO LABORATÓRIO LOCI VOCÊ PODE CONFIAR!                        
-                    "
-                    ]);
                 }
             }
         }
