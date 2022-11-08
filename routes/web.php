@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\TecnicoController;
 use App\Http\Controllers\User\UserOrderController;
 use App\Http\Controllers\User\UserDashboardController;
 use App\Http\Controllers\Admin\Auth\AdminAuthController;
+use App\Http\Controllers\User\UserDadosController;
 
 /*
 |--------------------------------------------------------------------------
@@ -41,6 +42,8 @@ Route::middleware(['auth:web'])->group(function () {
     Route::post('gateway/payment', [GatewayController::class, 'payment'])->name('user.checkout');
 
     Route::get('gateway/payment/success/{id?}', [GatewayController::class, 'success'])->name('user.success');
+
+    Route::get('user-dados', [UserDadosController::class, 'index'])->name('user.dados');
 });
 
 

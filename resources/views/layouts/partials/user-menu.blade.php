@@ -1,6 +1,6 @@
 <div class="col-3">
     <div class="list-group">
-        <a href="#" class="list-group-item list-group-item-action">
+        <a href="{{ route('user.dados') }}" class="list-group-item list-group-item-action">
             <i class="bi-person fs-6"></i> Dados Pessoais
         </a>
 
