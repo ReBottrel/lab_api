@@ -71,9 +71,8 @@
                     <img class="img-fluid" src="{{ asset('loja/assets/img/inmetro.jpg') }}" alt="">
                 </div>
                 <div class="col-12  text-center text-bg-primary mt-3">
-                    &copy; 2022 -Loci Ltda
-                    Rua Tal, 111, Cidade CD
-                    CPNJ 99.999.999/0001-99
+                    Rua Coronel Durães, 170, slj 01,
+                    Bela Vista - Lagoa Santa l MG Labloci © 2022 Todos os Direitos Reservados
                 </div>
 
             </div>
