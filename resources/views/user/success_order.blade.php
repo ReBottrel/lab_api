@@ -5,7 +5,7 @@
         <div class="row gx-3">
             @component('layouts.partials.user-menu')
             @endcomponent
-            <div class="col-8">
+            <div class="col-md-8 col-12 my-3">
                 <div class="container">
                     <div class="row">
                         <div class="col-12">

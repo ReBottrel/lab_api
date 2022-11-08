@@ -5,7 +5,7 @@
         <div class="row gx-3">
             @component('layouts.partials.user-menu')
             @endcomponent
-            <div class="col-8">
+            <div class="col-md-8 col-12 my-3">
                 <div class="row">
                     <nav>
                         <div class="nav nav-tabs" id="nav-tab" role="tablist">
@@ -25,7 +25,7 @@
                             tabindex="0">
                             <div class="container my-3">
                                 <div class="row justify-content-center">
-                                    <div class="col-8">
+                                    <div class="col-md-8 col-12">
                                         <input type="hidden" name="order_id" value="{{ $order->id }}">
                                         <div class="row inputs">
                                             <div class="mb-3 col-12">

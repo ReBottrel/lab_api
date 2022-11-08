@@ -5,13 +5,13 @@
         <div class="row gx-3">
             @component('layouts.partials.user-menu')
             @endcomponent
-            <div class="col-8">
+            <div class="col-md-8 col-12 my-3">
                 <div class="container">
                     <div class="row">
                         <div class="col-12">
                             <h2 class="text-primary">Dados Pessoais</h2>
                             <div class="row">
-                                <div class="col-md-6">
+                                <div class="col-md-6 col-12">
                                     <div class="list">
                                         <ul class="list-group list-group-flush">
                                             <li class="list-group-item">Nome: {{ $user->name }}</li>
@@ -24,7 +24,7 @@
                                         <a href="{{ route('user.edit.dados') }}" class="btn btn-primary">Alterar Dados</a>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-6 col-12 my-3">
                                     <div class="list">
                                         <ul class="list-group list-group-flush">
                                             <li class="list-group-item">CEP: {{ $user->info->zip_code }}</li>
