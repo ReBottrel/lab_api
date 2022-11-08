@@ -21,7 +21,7 @@
                                         </ul>
                                     </div>
                                     <div>
-                                        <a href="#" class="btn btn-primary">Alterar Dados</a>
+                                        <a href="{{ route('user.edit.dados') }}" class="btn btn-primary">Alterar Dados</a>
                                     </div>
                                 </div>
                                 <div class="col-md-6">

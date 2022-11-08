@@ -48,6 +48,9 @@ Route::middleware(['auth:web'])->group(function () {
     Route::post('user-address-update', [UserDadosController::class, 'updateAddress'])->name('user.update.address');
 
     Route::get('user-cep-get', [UserDadosController::class, 'getCep'])->name('user.get.cep');
+
+    Route::get('user-edit-dados', [UserDadosController::class, 'editDados'])->name('user.edit.dados');
+    Route::post('user-update-dados', [UserDadosController::class, 'updateUser'])->name('user.update.dados');
 });
 
 
