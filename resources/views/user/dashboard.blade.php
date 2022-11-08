@@ -7,9 +7,9 @@
             @component('layouts.partials.user-menu')
             @endcomponent
 
-            <div class="col-8">
+            <div class="col-md-8 col-12">
                 <form class="row mb-3">
-                    <div class="col-12 col-md-6 mb-3">
+                    <div class="col-12 col-md-6 my-3">
                         <div class="form-floating">
                             <select class="form-select">
                                 <option value="30">Últimos 30 dias</option>
@@ -22,7 +22,7 @@
                             <label>Período</label>
                         </div>
                     </div>
-                    <div class="col-12 col-md-6">
+                    <div class="col-12 col-md-6 mb-3">
                         <div class="form-floating">
                             <select class="form-select">
                                 <option value="1" selected>Mais novos primeiro</option>

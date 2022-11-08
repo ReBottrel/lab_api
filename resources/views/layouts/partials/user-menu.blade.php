@@ -1,4 +1,4 @@
-<div class="col-3">
+<div class="col-md-3 col-12">
     <div class="list-group">
         <a href="{{ route('user.dados') }}" class="list-group-item list-group-item-action @if(request()->routeIs('user.dados*')) active @else  @endif">
             <i class="bi-person fs-6"></i> Dados Pessoais
