@@ -5,7 +5,7 @@ namespace App\Http\Controllers\User;
 use App\Models\OrderRequest;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-
+use App\Models\OrderRequestPayment;
 use Illuminate\Support\Facades\Auth;
 
 class UserDashboardController extends Controller
@@ -25,51 +25,45 @@ class UserDashboardController extends Controller
 
         $order = OrderRequest::with('orderRequestPayment')->find($request->orderId);
 
-        // dd($order);
 
 
-        foreach ($order->orderRequestPayment as $key => $payment) {
-            foreach ($request->days as $key2 => $day) {
-                if ($key == $key2) {
-                    $payment->update([
-                        'days' => $day
-                    ]);
-                }
+
+
+        foreach ($request->days as $key2 => $day) {
+            $dayexplodido = explode('-', $day);
+            switch ($dayexplodido[0]) {
+                case 0:
+                    $value = 00.02;
+                    break;
+                case 1:
+                    $value = 500.00;
+                    break;
+                case 2:
+                    $value = 400.00;
+                    break;
+                case 3:
+                    $value = 300.00;
+                    break;
+                case 4:
+                    $value = 200.00;
+                    break;
+                default:
+                    00.02;
             }
+            $orderRequest = OrderRequestPayment::find($dayexplodido[1])->update([
+                'days' => $dayexplodido[0],
+                'value' => $value,
+            ]);
         }
+
+
 
         foreach ($order->orderRequestPayment as $key => $payment) {
             $payment->update([
                 'paynow' => in_array($payment->id, $request->paynow) ? 1 : 0,
             ]);
         }
-        foreach ($order->orderRequestPayment as $payment) {
-            if ($payment->days == 0) {
-                $payment->update([
-                    'value' => 00.02,
-                ]);
-            }
-            if ($payment->days == 1) {
-                $payment->update([
-                    'value' => 500.00,
-                ]);
-            }
-            if ($payment->days == 2) {
-                $payment->update([
-                    'value' => 400.00,
-                ]);
-            }
-            if ($payment->days == 3) {
-                $payment->update([
-                    'value' => 300.00,
-                ]);
-            }
-            if ($payment->days == 4) {
-                $payment->update([
-                    'value' => 200.00,
-                ]);
-            }
-        }
+
 
         $value = 0;
 
@@ -79,7 +73,7 @@ class UserDashboardController extends Controller
             }
         }
         $order->update([
-            'total' => $value
+            'total' => $value,
         ]);
 
         return view('user.payment', get_defined_vars());

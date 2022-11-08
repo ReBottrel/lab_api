@@ -37,7 +37,7 @@
                                         </ul>
                                     </div>
                                     <div>
-                                        <a href="#" class="btn btn-primary">Alterar Endereço</a>
+                                        <a href="{{ route('user.address') }}" class="btn btn-primary">Alterar Endereço</a>
                                     </div>
                                 </div>
                             </div>

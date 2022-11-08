@@ -1,15 +1,15 @@
 <div class="col-3">
     <div class="list-group">
-        <a href="{{ route('user.dados') }}" class="list-group-item list-group-item-action">
+        <a href="{{ route('user.dados') }}" class="list-group-item list-group-item-action @if(request()->routeIs('user.dados*')) active @else  @endif">
             <i class="bi-person fs-6"></i> Dados Pessoais
         </a>
 
-        <a href="#" class="list-group-item list-group-item-action">
+        <a href="{{ route('user.address') }}" class="list-group-item @if(request()->routeIs('user.address*')) active @else  @endif list-group-item-action">
             <i class="bi-house-door fs-6"></i> Endereço
         </a>
         <div class="dropdown">
             <a href="#"
-                class="list-group-item list-group-item-action text-bg-primary active text-light dropdown-toggle" role="button" data-bs-toggle="dropdown"
+                class="list-group-item list-group-item-action @if(request()->routeIs('user.dashboard*')) active @else  @endif  dropdown-toggle" role="button" data-bs-toggle="dropdown"
                 aria-expanded="false">
                 <i class="bi-truck fs-6"></i> Pedidos
             </a>

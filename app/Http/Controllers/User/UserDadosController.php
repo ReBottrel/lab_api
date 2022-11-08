@@ -13,4 +13,9 @@ class UserDadosController extends Controller
         $user = User::with('info')->find(auth()->user()->id);
         return view('user.dados', get_defined_vars());
     }
+    public function address()
+    {
+        $user = User::with('info')->find(auth()->user()->id);
+        return view('user.endereco', get_defined_vars());
+    }
 }

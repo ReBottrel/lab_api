@@ -126,12 +126,11 @@
                                                                         <select class="form-select sel-price" name="days[]"
                                                                             @if ($item->payment_status == 1) disabled @endif
                                                                             aria-label="Default select example">
-                                                                            <option value="0" selected>20 Dias (Padrão)
-                                                                            <option value="1">24 Horas</option>
-                                                                            <option value="2">2 Dias</option>
-                                                                            <option value="3">5 Dias</option>
-                                                                            <option value="4">10 Dias</option>
-
+                                                                            <option value="0-{{ $item->id }}" selected>20 Dias (Padrão)
+                                                                            <option value="1-{{ $item->id }}">24 Horas</option>
+                                                                            <option value="2-{{ $item->id }}">2 Dias</option>
+                                                                            <option value="3-{{ $item->id }}">5 Dias</option>
+                                                                            <option value="4-{{ $item->id }}">10 Dias</option>
                                                                             </option>
                                                                         </select>
                                                                     </div>

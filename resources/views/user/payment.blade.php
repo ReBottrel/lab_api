@@ -36,24 +36,24 @@
                                             <div class="col-4">
                                                 <div class="mb-3">
                                                     <label for="exampleFormControlInput1" class="form-label">MES</label>
-                                                  
-                                                    <select class="form-select" id="mounth"
-                                                    aria-label="Default select example">
 
-                                                    <option value="01" selected>01</option>
-                                                    <option value="02">02</option>
-                                                    <option value="03">03</option>
-                                                    <option value="04">04</option>
-                                                    <option value="05">05</option>
-                                                    <option value="06">06</option>
-                                                    <option value="07">07</option>
-                                                    <option value="08">08</option>
-                                                    <option value="09">09</option>
-                                                    <option value="10">10</option>
-                                                    <option value="11">11</option>
-                                                    <option value="12">12</option>
-                                                  
-                                                </select>
+                                                    <select class="form-select" id="mounth"
+                                                        aria-label="Default select example">
+
+                                                        <option value="01" selected>01</option>
+                                                        <option value="02">02</option>
+                                                        <option value="03">03</option>
+                                                        <option value="04">04</option>
+                                                        <option value="05">05</option>
+                                                        <option value="06">06</option>
+                                                        <option value="07">07</option>
+                                                        <option value="08">08</option>
+                                                        <option value="09">09</option>
+                                                        <option value="10">10</option>
+                                                        <option value="11">11</option>
+                                                        <option value="12">12</option>
+
+                                                    </select>
                                                 </div>
                                             </div>
                                             <div class="col-4">
@@ -220,10 +220,46 @@
                 error: function(data) {
                     Swal.fire(
                         'Ops!',
-                        'Revise os dados do cartão',
+                        'Erro encontrado entre em contato com o suporte',
                         'error'
                     )
                     $('.submitPix').html("Finalizar");
+                    $('.inputs').find('input').prop("disabled", false);
+                }
+            });
+        });
+        $(document).on('click', '.submitBoleto', function() {
+            var order_id = $('input[name=order_id]').val();
+            $.ajax({
+                url: "{{ route('user.checkout') }}",
+                type: "POST",
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    payment_type: 'boleto',
+                    installments: 1,
+                    order_id: order_id,
+                },
+                success: function(data) {
+                    console.log(data);
+                    Swal.fire(
+                        'Sucesso!',
+                        'Pedido feito com sucesso!',
+                        'success'
+                    )
+                    window.location.href = `{{ route('user.success') }}/${order_id}`;
+                },
+                beforeSend: function() {
+                    $('.submitBoleto').html("PROCESSANDO...");
+                    $('.inputs').find('input').prop("disabled", true);
+
+                },
+                error: function(data) {
+                    Swal.fire(
+                        'Ops!',
+                        'Erro encontrado entre em contato com o suporte',
+                        'error'
+                    )
+                    $('.submitBoleto').html("Finalizar");
                     $('.inputs').find('input').prop("disabled", false);
                 }
             });

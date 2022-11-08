@@ -44,6 +44,7 @@ Route::middleware(['auth:web'])->group(function () {
     Route::get('gateway/payment/success/{id?}', [GatewayController::class, 'success'])->name('user.success');
 
     Route::get('user-dados', [UserDadosController::class, 'index'])->name('user.dados');
+    Route::get('user-address', [UserDadosController::class, 'address'])->name('user.address');
 });
 
 

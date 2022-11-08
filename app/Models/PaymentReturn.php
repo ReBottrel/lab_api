@@ -16,5 +16,6 @@ class PaymentReturn extends Model
         'payment_status',
         'pixqrcode',
         'pixcode',
+        'boleto',
     ];
 }

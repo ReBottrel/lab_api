@@ -169,7 +169,8 @@ class GatewayController extends Controller
                 'payment_id' => $response->success->id ?? null,
                 'payment_type' => $request->payment_type,
                 'payment_status' => 1 ?? null,
-                'boleto' => $response->success->payment_method->boleto_url ?? null,
+                'pixcode' => $response->success->payment_method->barcode ?? null,
+                'boleto' => $response->success->payment_method->url ?? null,
             ]);
         }
 
