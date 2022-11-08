@@ -193,7 +193,7 @@
     <script>
         $(document).on('change', '.sel-price', function() {
             $(this).closest('.accordion').find('.prices').addClass('d-none');
-            $(this).closest('.accordion').find(`.prices.prices-${$(this).val()}`).removeClass('d-none');
+            $(this).closest('.accordion').find(`.prices.prices-${$(this).val().split('-')[0]}`).removeClass('d-none');
             var totalPrice = 0;
             $(this).closest('#divPedidos').find(`.preco`).each(function() {
                 if ($(this).is('.d-none') == false && $(this).closest('.accordion').find('.paynow').is(
