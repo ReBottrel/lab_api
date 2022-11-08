@@ -110,13 +110,15 @@ class GatewayController extends Controller
                     $telefone = str_replace(['(', ')', '-', ' '], ['', '', '', ''],  $order->tecnico->cell);
                     $response = Http::post('https://api.z-api.io/instances/3B30881EC3E99084D3D3B6927F6ADC67/token/66E633717A0DCDD3D4A1BC19/send-text', [
                         "phone" => "55$telefone",
-                        "message" => "Prezado Criador, Confirmamos o pagamento do exame de DNA do(s) animal(ais) $animal->animal_name e informamos que o exame já se encontra em execução. A data prevista para liberação do resultado é de $days uteis. Agradecemos a escolha pelo Laboratório Loci e nos colocamos a disposição para qualquer dúvida ou necessidade! NO LABORATÓRIO LOCI VOCÊ PODE CONFIAR!                        
+                        "message" => "Prezado Técnico,
+                        Confirmamos o pagamento do exame de DNA do(s) animal(ais) $animal->animal_name e informamos que o exame já se encontra em execução.
                         "
                     ]);
                     $telefoneOwner = str_replace(['(', ')', '-', ' '], ['', '', '', ''],  $order->owner->cell);
                     $responseOwner = Http::post('https://api.z-api.io/instances/3B30881EC3E99084D3D3B6927F6ADC67/token/66E633717A0DCDD3D4A1BC19/send-text', [
                         "phone" => "55$telefoneOwner",
-                        "message" => "Prezado Criador, Confirmamos o pagamento do exame de DNA do(s) animal(ais) $animal->animal_name e informamos que o exame já se encontra em execução. A data prevista para liberação do resultado é de $days uteis. Agradecemos a escolha pelo Laboratório Loci e nos colocamos a disposição para qualquer dúvida ou necessidade! NO LABORATÓRIO LOCI VOCÊ PODE CONFIAR!                        
+                        "message" => "Prezado Criador,
+                        Confirmamos o pagamento do exame de DNA do(s) animal(ais) $animal->animal_name e informamos que o exame já se encontra em execução.
                         "
                     ]);
                 }
@@ -240,14 +242,16 @@ class GatewayController extends Controller
                         $telefone = str_replace(['(', ')', '-', ' '], ['', '', '', ''],  $order->tecnico->cell);
                         $response = Http::post('https://api.z-api.io/instances/3B30881EC3E99084D3D3B6927F6ADC67/token/66E633717A0DCDD3D4A1BC19/send-text', [
                             "phone" => "55$telefone",
-                            "message" => "Prezado Criador, Confirmamos o pagamento do exame de DNA do(s) animal(ais) $animal->animal_name e informamos que o exame já se encontra em execução. A data prevista para liberação do resultado é de $days uteis. Agradecemos a escolha pelo Laboratório Loci e nos colocamos a disposição para qualquer dúvida ou necessidade! NO LABORATÓRIO LOCI VOCÊ PODE CONFIAR!                        
-                        "
+                            "message" => "Prezado Técnico,
+                            Confirmamos o pagamento do exame de DNA do(s) animal(ais) $animal->animal_name e informamos que o exame já se encontra em execução.
+                            "
                         ]);
                         $telefoneOwner = str_replace(['(', ')', '-', ' '], ['', '', '', ''],  $order->owner->cell);
                         $responseOwner = Http::post('https://api.z-api.io/instances/3B30881EC3E99084D3D3B6927F6ADC67/token/66E633717A0DCDD3D4A1BC19/send-text', [
                             "phone" => "55$telefoneOwner",
-                            "message" => "Prezado Criador, Confirmamos o pagamento do exame de DNA do(s) animal(ais) $animal->animal_name e informamos que o exame já se encontra em execução. A data prevista para liberação do resultado é de $days uteis. Agradecemos a escolha pelo Laboratório Loci e nos colocamos a disposição para qualquer dúvida ou necessidade! NO LABORATÓRIO LOCI VOCÊ PODE CONFIAR!                        
-                        "
+                            "message" => "Prezado Criador,
+                            Confirmamos o pagamento do exame de DNA do(s) animal(ais) $animal->animal_name e informamos que o exame já se encontra em execução.
+                            "
                         ]);
 
                         $order->update([

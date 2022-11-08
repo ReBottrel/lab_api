@@ -89,14 +89,17 @@ class OrderController extends Controller
             if ($request->value == 7) {
                 $response = Http::post('https://api.z-api.io/instances/3B30881EC3E99084D3D3B6927F6ADC67/token/66E633717A0DCDD3D4A1BC19/send-text', [
                     "phone" => "55$telefoneTecnico",
-                    "message" => "Prezado Técnico, Recebemos a amostra do animal $animal->animal_name que foi inspecionada e APROVADA para realização do exame de DNA. Em breve você receberá o link para pagamento do(s) exame (s) recebido e aprovado. Agradecemos a escolha pelo Laboratório Loci e nos colocamos a disposição para qualquer dúvida ou necessidade! NO LABORATÓRIO LOCI VOCÊ PODE CONFIAR!
+                    "message" => "Prezado Técnico,
+                    A amostra do animal $animal->animal_name foi recebida e APROVADA para realização do exame de DNA no Laboratório Loci.
                     "
                 ]);
             }
             if ($request->value == 6) {
                 $response = Http::post('https://api.z-api.io/instances/3B30881EC3E99084D3D3B6927F6ADC67/token/66E633717A0DCDD3D4A1BC19/send-text', [
                     "phone" => "55$telefoneTecnico",
-                    "message" => "Prezado Técnico, Recebemos a amostra do animal $animal->animal_name que foi REPROVADA para a execução do exame de DNA. Solicitamos recoletar uma nova amostra, abrir um novo chamado junto a ABCCMM informando que se trata de uma RECOLETA solicitada pelo laboratório e nos encaminhar novamente para execução. Pedimos que sinalize como uma nova amostra para tratarmos com prioridade. Agradecemos a escolha pelo Laboratório Loci e nos colocamos a disposição para qualquer dúvida ou necessidade! NO LABORATÓRIO LOCI VOCÊ PODE CONFIAR!
+                    "message" => "Prezado Técnico,
+                    A amostra do animal $animal->animal_name  foi REPROVADA para a execução do exame de DNA no laboratório Loci.
+                    Solicitamos RECOLETAR uma nova amostra, abrir um novo chamado junto a ABCCMM informando que se trata de uma RECOLETA solicitada pelo laboratório e nos encaminhar novamente para execução.
                     "
                 ]);
             }
@@ -104,14 +107,16 @@ class OrderController extends Controller
             if ($request->value == 7) {
                 $response = Http::post('https://api.z-api.io/instances/3B30881EC3E99084D3D3B6927F6ADC67/token/66E633717A0DCDD3D4A1BC19/send-text', [
                     "phone" => "55$telefoneOwner",
-                    "message" => "Prezado Criador, Recebemos a amostra do animal $animal->animal_name que foi inspecionada e APROVADA para realização do exame de DNA. Em breve você receberá o link para pagamento do(s) exame (s) recebido e aprovado. Agradecemos a escolha pelo Laboratório Loci e nos colocamos a disposição para qualquer dúvida ou necessidade! NO LABORATÓRIO LOCI VOCÊ PODE CONFIAR!
-                    "
+                    "message" => "Prezado Criador,
+                    A amostra do animal $animal->animal_name foi recebida e APROVADA para realização do exame de DNA no Laboratório Loci"
                 ]);
             }
             if ($request->value == 6) {
                 $response = Http::post('https://api.z-api.io/instances/3B30881EC3E99084D3D3B6927F6ADC67/token/66E633717A0DCDD3D4A1BC19/send-text', [
                     "phone" => "55$telefoneOwner",
-                    "message" => "Prezado Criador, Recebemos a amostra do animal $animal->animal_name que foi REPROVADA para a execução do exame de DNA. Solicitamos recoletar uma nova amostra, abrir um novo chamado junto a ABCCMM informando que se trata de uma RECOLETA solicitada pelo laboratório e nos encaminhar novamente para execução. Pedimos que sinalize como uma nova amostra para tratarmos com prioridade. Agradecemos a escolha pelo Laboratório Loci e nos colocamos a disposição para qualquer dúvida ou necessidade! NO LABORATÓRIO LOCI VOCÊ PODE CONFIAR!
+                    "message" => "Prezado Criador,
+                    A amostra do animal $animal->animal_name  foi REPROVADA para a execução do exame de DNA no laboratório Loci.
+                    Solicitamos RECOLETAR uma nova amostra, abrir um novo chamado junto a ABCCMM informando que se trata de uma RECOLETA solicitada pelo laboratório e nos encaminhar novamente para execução.
                     "
                 ]);
             }
@@ -215,7 +220,11 @@ class OrderController extends Controller
         $url = route('user.dashboard');
         $response = Http::post('https://api.z-api.io/instances/3B30881EC3E99084D3D3B6927F6ADC67/token/66E633717A0DCDD3D4A1BC19/send-text', [
             "phone" => "55$telefone",
-            "message" => "Prezado, Criador! Segue abaixo o Link de acesso para clicar, efetuar o pagamento e liberar o(s) exame(s) para execução. Ao acessar, digite seu E-MAIL no campo USUÁRIO e o seu CPF em senha. Selecione os animais para pagamento e defina o prazo de liberação do resultado (temos opções de 20 dias úteis a 24 horas)*. *os valores variam conforme o prazo de liberação Assim que confirmarmos o pagamento no nosso sistema o exame estará liberado para execução internamente. Agradecemos a escolha pelo Laboratório Loci e nos colocamos a disposição para qualquer dúvida ou necessidade! NO LABORATÓRIO LOCI VOCÊ PODE CONFIAR!
+            "message" => "Prezado, Criador!
+            Segue abaixo o Link de acesso para clicar, efetuar o pagamento e liberar o(s) exame(s) para execução.
+            Ao acessar, digite seu E-MAIL no campo USUÁRIO e o seu CPF em senha.
+            Selecione os animais para pagamento e defina o prazo de liberação do resultado (temos opções de 20 dias úteis a 24 horas)*.
+            *os valores variam conforme o prazo de liberação.
             ",
             "linkUrl" => $url,
             "title" => "Locilab",
