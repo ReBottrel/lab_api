@@ -12,7 +12,7 @@ class UserDashboardController extends Controller
 {
     public function index()
     {
-        $prices = [00.02, 500.00, 400.00, 300.00, 200.00];
+        $prices = [55.00, 500.00, 400.00, 300.00, 200.00];
         $user = Auth::user()->id;
         $orders = OrderRequest::with('user', 'orderRequestPayment')->where('user_id', $user)->where('status', 2)->get();
         // dd($orders);
@@ -21,7 +21,7 @@ class UserDashboardController extends Controller
 
     public function paymentMethod(Request $request)
     {
-        $prices = [00.02, 500.00, 400.00, 300.00, 200.00];
+        $prices = [55.00, 500.00, 400.00, 300.00, 200.00];
 
         $order = OrderRequest::with('orderRequestPayment')->find($request->orderId);
 
@@ -33,7 +33,7 @@ class UserDashboardController extends Controller
             $dayexplodido = explode('-', $day);
             switch ($dayexplodido[0]) {
                 case 0:
-                    $value = 00.02;
+                    $value = 55.00;
                     break;
                 case 1:
                     $value = 500.00;
@@ -48,7 +48,7 @@ class UserDashboardController extends Controller
                     $value = 200.00;
                     break;
                 default:
-                    00.02;
+                    55.00;
             }
             $orderRequest = OrderRequestPayment::find($dayexplodido[1])->update([
                 'days' => $dayexplodido[0],
