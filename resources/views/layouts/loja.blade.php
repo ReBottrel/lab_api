@@ -82,7 +82,23 @@
     <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-maskmoney/3.0.2/jquery.maskMoney.min.js"></script>
     @yield('scripts')
+    @if (Session::has('success'))
+        <script type="text/javascript">
+            Swal.fire({
+                title: 'Sucesso!',
+                icon: 'success',
+                text: "{{ Session::get('success') }}",
+                timer: 5000,
+                type: 'success'
+            }).then((result) => {
+                // Reload the Page
+                location.reload();
+            });
+        </script>
+    @endif
 </body>
 
 </html>
