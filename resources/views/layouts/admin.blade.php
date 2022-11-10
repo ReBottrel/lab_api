@@ -35,7 +35,7 @@
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                             <li><a class="dropdown-item" href="{{ route('orders.all') }}">Recebidos</a></li>
                             <li><a class="dropdown-item" href="#">Concluídos</a></li>
-                            <li><a class="dropdown-item" href="#">Criar Pedido</a></li>
+                            <li><a class="dropdown-item" href="{{ route('order.create.painel') }}">Criar Pedido</a></li>
                         </ul>
                     </li>
                     <li class="nav-item">

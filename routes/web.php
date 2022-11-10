@@ -14,6 +14,7 @@ use App\Http\Controllers\User\UserOrderController;
 use App\Http\Controllers\User\UserDashboardController;
 use App\Http\Controllers\Admin\Auth\AdminAuthController;
 use App\Http\Controllers\User\UserDadosController;
+use App\Models\OrderRequest;
 
 /*
 |--------------------------------------------------------------------------
@@ -121,4 +122,6 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::post('owners-search', [OwnerController::class, 'search'])->name('owners.search');
 
     Route::get('config', [ConfigController::class, 'index'])->name('configs');
+
+    Route::get('order-admin-create', [OrderController::class, 'orderCreate'])->name('order.create.painel');
 });

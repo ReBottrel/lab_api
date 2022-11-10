@@ -310,4 +310,27 @@ class OrderController extends Controller
             return response()->json([get_defined_vars()]);
         }
     }
+
+    public function orderCreate()
+    {
+        $owners = Owner::get();
+        // $animals = Animal::get();
+        $tecnicos = Tecnico::get();
+        return view('admin.order-create', get_defined_vars());
+    }
+
+    public function requestPost(Request $request)
+    {
+
+        $order_request = OrderRequest::create([
+            'user_id' => $request->user_id,
+            'collection_number' => $request->collection_number,
+            'collection_date' => $request->collection_date,
+            'cpf_technical' => $request->cpf_technical,
+            'technical_manager' => $request->technical_manager,
+            'creator' => $request->creator,
+            'status' => 1,
+
+        ]);
+    }
 }
