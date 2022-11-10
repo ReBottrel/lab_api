@@ -29,12 +29,20 @@
                             style="background: var(--bs-gray-300);color: var(--bs-dark);"><i
                                 class="fas fa-tachometer-alt" style="color: var(--bs-dark);"></i><span>Home</span></a>
                     </li>
-                    <li class="nav-item"><a class="nav-link" href="{{ route('orders.all') }}"
+                    <li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href="#"
                             style="color: var(--bs-dark);"><i class="fas fa-table"
-                                style="color: var(--bs-dark);"></i><span>Pedidos</span></a><a class="nav-link"
-                            href="#" style="color: var(--bs-body-color);background: var(--bs-gray-300);"><i
-                                class="fas fa-user" style="color: var(--bs-dark);"></i><span>Usuários</span></a></li>
-                    <li class="nav-item"></li>
+                                style="color: var(--bs-dark);"></i><span>Pedidos</span></a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <li><a class="dropdown-item" href="{{ route('orders.all') }}">Recebidos</a></li>
+                            <li><a class="dropdown-item" href="#">Concluídos</a></li>
+                            <li><a class="dropdown-item" href="#">Criar Pedido</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link " href="#"
+                            style="color: var(--bs-body-color);background: var(--bs-gray-300);"><i class="fas fa-user"
+                                style="color: var(--bs-dark);"></i><span>Usuários</span></a>
+                    </li>
                     <li class="nav-item"><a class="nav-link" href="{{ route('exames') }}"
                             style="color: var(--bs-dark);"><i class="far fa-list-alt"
                                 style="color: var(--bs-dark);"></i><span>Exames</span></a>

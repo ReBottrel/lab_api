@@ -55,30 +55,46 @@ class SearchOrderMails extends Command
         $get_data_messages = collect();
         // libxml_use_internal_errors(true);
         foreach ($folders as $folder) {
-            // $messages = $folder->query()->text('Coleta Material DNA')->get();
+            $messages = $folder->query()->text('Atendimento ABCCMM')->get();
             // \Log::info($messages);
-            $messages = $folder->query()->since(\Carbon\Carbon::now()->subDays(1))->get();
-            // \Log::info($messages);
+            // $messages = $folder->query()->since(\Carbon\Carbon::now()->subDays(3))->get();
+
             foreach ($messages as $message) {
                 $get_data_message = collect();
-             
-                // $get_data_message->add(['UID' => $message->getUid(), 'HTML' => $message->getHTMLBody()]);
-                $dom = new \DOMDocument(); // abrindo DOMDoumento para ler os dados
-                $dom->loadHTML(strip_tags($message->getHTMLBody(), '<table><td><tr><font><tbody>')); // lendo em html
-                // \Log::info(strip_tags($message->getHTMLBody(), '<table><td><tr><font><tbody>'));
-            
-                $xPath = new \DOMXPath($dom); // setando DOMXPath para que possamos acessar com o domdocuemnt
-               
-                $table = $xPath->query('.//table')[0];
 
-                // $table = $xPath->query('.//tbody/tr', $table);
+                // $get_data_message->add(['UID' => $message->getUid(), 'HTML' => $message->getHTMLBody()]);
+
+                $dom = new \DOMDocument(); // abrindo DOMDoumento para ler os dados
+
+                $html = $message->getHTMLBody();
+
+
+                $html = strip_tags($html, "<td></td><tr></tr><table></table><tbody></tbody><font></font>");
+
+
+
+                // \Log::info(json_encode($dom));
+                @$dom->loadHTML($html);
+
+                // \Log::info(print_r($dom));
+                // die();
+                $xPath = new \DOMXPath($dom); // setando DOMXPath para que possamos acessar com o domdocuemnt
+                // $table = $dom->getElementsByTagName('table');
+                // \Log::info(print_r($table));
+                $table = $xPath->query('//table')[0];
+                // $table = $xPath->query('.//table[@class="mGrid"]/tbody/tr');
+                // $table = $dom->getElementsByTagName('tr');
                 $table = $xPath->query('.//tr', $table);
 
+                // $table = $xPath->query('.//tr', $table);
+                // die();
                 for ($i = 1; count($table) > $i; $i++) {
+
 
                     $get_data_table = collect([]);
                     $table_td = $xPath->query('.//td', $table[$i]);
-                    // \Log::info($table_td);
+                    // $table_td = $table[$i]->getElementsByTagName('td');
+
                     if (count($table_td) > 0) {
                         if (count($table_td) > 8) {
                             $collumns = $this->collumns2;
@@ -87,6 +103,7 @@ class SearchOrderMails extends Command
                         }
                         for ($itd = 0; count($table_td) > $itd; $itd++) {
                             $get_data_table->put($collumns[$itd], trim(utf8_decode($table_td[$itd]->textContent)));
+
                             // $get_data_table->put($itd, trim(utf8_decode($table_td[$itd]->textContent)));
                         }
                     }
@@ -95,6 +112,7 @@ class SearchOrderMails extends Command
                 }
 
                 $dados_g = $xPath->query('.//font');
+                // $dados_g = $dom->getElementsByTagName('font');
                 $dados_gerais = collect();
                 for ($i = 0; count($dados_g) > $i; $i++) {
                     $dados_content = utf8_decode($dados_g[$i]->textContent);
@@ -126,6 +144,7 @@ class SearchOrderMails extends Command
             }
         }
 
+        // die();
         $get_data_messages->map(function ($query) {
 
             if (OrderRequest::where('uid', $query['uid'])->get()->count() == 0) {
