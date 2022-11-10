@@ -367,7 +367,7 @@ class OrderController extends Controller
             'register_number_brand' => $request->register_number_brand,
             'animal_name' => $request->animal_name,
             'especies' => $request->especies,
-            'breed' => $request->breed,
+            'breed' => 'MANGALARGA MARCHADOR',
             'sex' => $request->sex,
             'age' => $request->age,
             'birth_date' => $request->birth_date,
@@ -376,6 +376,7 @@ class OrderController extends Controller
             'pai' => $request->pai,
             'registro_mae' => $request->registro_mae,
             'mae' => $request->mae,
+            'owner_id' => $owner->id
         ]);
         return redirect()->back()->with('success', 'Produto adicionado com sucesso');
     }
