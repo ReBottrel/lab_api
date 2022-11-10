@@ -359,7 +359,10 @@ class OrderController extends Controller
 
     public function orderAddAnimalPost(Request $request)
     {
+        $order = OrderRequest::find($request->order);
+        $owner = Owner::find($order->owner_id);
         $create = Animal::create([
+            'user_id' => $owner->user_id,
             'order_id' => $request->order,
             'register_number_brand' => $request->register_number_brand,
             'animal_name' => $request->animal_name,
@@ -387,6 +390,6 @@ class OrderController extends Controller
         $order = OrderRequest::find($id);
         $order->status = 1;
         $order->save();
-        return redirect()->route('orders.all')->with('success', 'Pedido finalizado com sucesso');
+        return redirect()->route('orders.sistema')->with('success', 'Pedido finalizado com sucesso');
     }
 }
