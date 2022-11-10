@@ -37,6 +37,7 @@ class Animal extends Model
         'pai',
         'registro_mae',
         'mae',
+        'codlab'
     ];
 
     public function owner()

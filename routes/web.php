@@ -72,7 +72,9 @@ Route::middleware(['auth:admin'])->group(function () {
 
     Route::post('recived/{id}', [OrderController::class, 'recivedOrder'])->name('order.recived');
 
-    Route::get('orders', [OrderController::class, 'order'])->name('orders.all');
+    Route::get('orders-email', [OrderController::class, 'order'])->name('orders.all');
+    Route::get('orders-sistema', [OrderController::class, 'orderSistema'])->name('orders.sistema');
+    Route::get('order-sistema-detail/{id}', [OrderController::class, 'orderSistemaDetail'])->name('order.sistema.detail');
 
     Route::get('owner/{id}', [OrderController::class, 'owner'])->name('orders.owner');
 
@@ -124,4 +126,11 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::get('config', [ConfigController::class, 'index'])->name('configs');
 
     Route::get('order-admin-create', [OrderController::class, 'orderCreate'])->name('order.create.painel');
+    Route::post('order-admin-store', [OrderController::class, 'requestPost'])->name('order.store.painel');
+    Route::get('add-animal-get/{id}', [OrderController::class, 'orderAddAnimal'])->name('admin.order-add-animal');
+    Route::post('add-animal-post', [OrderController::class, 'orderAddAnimalPost'])->name('admin.order-add-animal-post');
+    Route::any('product-delete/{id}', [OrderController::class, 'orderAddAnimalDelete'])->name('admin.produto.delete');
+    Route::get('order-admin-end/{id}', [OrderController::class, 'orderEnd'])->name('order.end.painel');
+
+
 });

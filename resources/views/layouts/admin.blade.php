@@ -33,7 +33,8 @@
                             style="color: var(--bs-dark);"><i class="fas fa-table"
                                 style="color: var(--bs-dark);"></i><span>Pedidos</span></a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                            <li><a class="dropdown-item" href="{{ route('orders.all') }}">Recebidos</a></li>
+                            <li><a class="dropdown-item" href="{{ route('orders.all') }}">Recebidos do email</a></li>
+                            <li><a class="dropdown-item" href="{{ route('orders.sistema') }}">Pedidos do sistema</a></li>
                             <li><a class="dropdown-item" href="#">Concluídos</a></li>
                             <li><a class="dropdown-item" href="{{ route('order.create.painel') }}">Criar Pedido</a></li>
                         </ul>

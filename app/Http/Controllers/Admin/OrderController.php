@@ -21,8 +21,19 @@ class OrderController extends Controller
 
     public function order()
     {
-        $orders = OrderRequest::where('status', '!=', 0)->get();
+        $orders = OrderRequest::where('origin', 'email')->where('status', '!=', 0)->get();
         return view('admin.order', get_defined_vars());
+    }
+    public function orderSistema()
+    {
+        $orders = OrderRequest::where('origin', 'sistema')->where('status', '!=', 0)->get();
+        return view('admin.orders.orders-sistema', get_defined_vars());
+    }
+    public function orderSistemaDetail($id)
+    {
+        $order = OrderRequest::find($id);
+        $animals = Animal::where('order_id', $id)->get();
+        return view('admin.orders.order-sistema-detail', get_defined_vars());
     }
 
     public function recivedOrder(Request $request, $id)
@@ -189,7 +200,7 @@ class OrderController extends Controller
 
         $animals = Animal::where('order_id', $request->order)->where('status', 7)->get();
         foreach ($animals as $animal) {
-            $exam = Exam::find(4);
+            $exam = Exam::find(1);
             $orderPay = OrderRequestPayment::create([
                 'order_request_id' => $request->order,
                 'owner_name' => $order_request->owner->owner_name,
@@ -321,16 +332,61 @@ class OrderController extends Controller
 
     public function requestPost(Request $request)
     {
+        $owner = Owner::find($request->owner);
+        $tecnico = Tecnico::find($request->tecnico);
+        if ($owner->user_id != null) {
+            $order_request = OrderRequest::create([
+                'collection_number' => $request->collection_number,
+                'collection_date' => date("Y-m-d"),
+                'technical_manager' => $tecnico->professional_name,
+                'creator' => $owner->owner_name,
+                'owner_id' => $request->owner,
+                'id_tecnico' => $request->tecnico,
+                'status' => 0,
+                'origin' => 'sistema',
+                'creator_number' => 0,
+            ]);
+            return redirect()->route('admin.order-add-animal', $order_request->id);
+        }
+        return redirect()->back()->with('error', 'Proprietário não possui cadastro no sistema');
+    }
+    public function orderAddAnimal($id)
+    {
+        $order = OrderRequest::find($id);
+        $animals = Animal::where('order_id', $id)->get();
+        return view('admin.order-add-animal', get_defined_vars());
+    }
 
-        $order_request = OrderRequest::create([
-            'user_id' => $request->user_id,
-            'collection_number' => $request->collection_number,
-            'collection_date' => $request->collection_date,
-            'cpf_technical' => $request->cpf_technical,
-            'technical_manager' => $request->technical_manager,
-            'creator' => $request->creator,
-            'status' => 1,
-
+    public function orderAddAnimalPost(Request $request)
+    {
+        $create = Animal::create([
+            'order_id' => $request->order,
+            'register_number_brand' => $request->register_number_brand,
+            'animal_name' => $request->animal_name,
+            'especies' => $request->especies,
+            'breed' => $request->breed,
+            'sex' => $request->sex,
+            'age' => $request->age,
+            'birth_date' => $request->birth_date,
+            'chip_number' => $request->chip_number,
+            'registro_pai' => $request->registro_pai,
+            'pai' => $request->pai,
+            'registro_mae' => $request->registro_mae,
+            'mae' => $request->mae,
         ]);
+        return redirect()->back()->with('success', 'Produto adicionado com sucesso');
+    }
+    public function orderAddAnimalDelete($id)
+    {
+        $animal = Animal::find($id);
+        $animal->delete();
+        return redirect()->back()->with('success', 'Produto removido com sucesso');
+    }
+    public function orderEnd($id)
+    {
+        $order = OrderRequest::find($id);
+        $order->status = 1;
+        $order->save();
+        return redirect()->route('orders.all')->with('success', 'Pedido finalizado com sucesso');
     }
 }
