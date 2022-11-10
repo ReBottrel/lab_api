@@ -38,7 +38,7 @@
                                         <div>
                                             <a href="{{ route('admin.produto.delete', $item->id) }}"> <button
                                                     class="btn btn-danger">Apagar</button></a>
-                                            <button class="btn btn-info">Editar</button>
+
                                         </div>
                                     </td>
                                 </tr>
