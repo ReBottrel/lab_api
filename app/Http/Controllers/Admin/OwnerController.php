@@ -197,6 +197,7 @@ class OwnerController extends Controller
     public function updateUser(Request $request, $id)
     {
         $user = User::find($id);
+  
         $user->update([
             'name' => $request->name,
             'email' => $request->email,

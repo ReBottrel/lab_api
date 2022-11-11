@@ -95,7 +95,16 @@ class AdminAuthController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $data = Admin::find($id);
+
+        $data->name = $request->name;
+        $data->email = $request->email;
+        if ($request->password != null) {
+            $data->password = Hash::make($request->password);
+        }
+        $data->save();
+
+        return redirect()->route('configs')->with('success', 'Usuário editado com sucesso');
     }
 
     /**
@@ -106,6 +115,13 @@ class AdminAuthController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $data = Admin::find($id);
+        $data->delete();
+        return redirect()->route('configs')->with('success', 'Usuário deletado com sucesso');
+    }
+    public function logout()
+    {
+        Auth::guard('admin')->logout();
+        return redirect()->route('admin.login');
     }
 }

@@ -120,7 +120,7 @@
                                             class="dropdown-item" href="{{ route('configs') }}"><i
                                                 class="fas fa-cogs fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Configurações</a>
                                         <div class="dropdown-divider"></div><a class="dropdown-item"
-                                            href="#"><i
+                                            href="{{ route('admin.logout') }}"><i
                                                 class="fas fa-sign-out-alt fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Sair</a>
                                     </div>
                                 </div>

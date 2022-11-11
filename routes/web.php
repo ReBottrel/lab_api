@@ -132,5 +132,8 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::any('product-delete/{id}', [OrderController::class, 'orderAddAnimalDelete'])->name('admin.produto.delete');
     Route::get('order-admin-end/{id}', [OrderController::class, 'orderEnd'])->name('order.end.painel');
 
-
+    Route::get('admin-edit/{id}', [ConfigController::class, 'adminEdit'])->name('config.edit.admin');
+    Route::post('admin-update/{id}', [AdminAuthController::class, 'update'])->name('config.update.admin');
+    Route::any('admin-logout', [AdminAuthController::class, 'logout'])->name('admin.logout');
+    Route::any('admin-delete/{id}', [AdminAuthController::class, 'destroy'])->name('admin.delete');
 });

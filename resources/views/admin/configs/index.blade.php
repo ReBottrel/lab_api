@@ -50,6 +50,35 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">ID</th>
+                                                <th scope="col">Nome</th>
+                                                <th scope="col">Acões</th>
+
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($admins as $user)
+                                                <tr>
+                                                    <th scope="row">{{ $user->id }}</th>
+                                                    <td>{{ $user->name }}</td>
+                                                    <td>
+                                                        <a href="{{ route('config.edit.admin', $user->id) }}"
+                                                            class="btn btn-primary">Editar</a>
+                                                        <a href="{{ route('admin.delete', $user->id) }}"
+                                                            class="btn btn-danger">Excluir</a>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
