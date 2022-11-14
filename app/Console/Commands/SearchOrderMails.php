@@ -55,9 +55,9 @@ class SearchOrderMails extends Command
         $get_data_messages = collect();
         // libxml_use_internal_errors(true);
         foreach ($folders as $folder) {
-            $messages = $folder->query()->text('Atendimento ABCCMM')->get();
+            // $messages = $folder->query()->text('Atendimento ABCCMM')->get();
             // \Log::info($messages);
-            // $messages = $folder->query()->since(\Carbon\Carbon::now()->subDays(4))->get();
+            $messages = $folder->query()->since(\Carbon\Carbon::now()->subDays(1))->get();
 
             foreach ($messages as $message) {
                 $get_data_message = collect();
