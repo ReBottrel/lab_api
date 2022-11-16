@@ -25,43 +25,53 @@
                     style="width: 150px;margin: 10px;padding: 10px;">
                 <hr class="sidebar-divider my-0">
                 <ul class="navbar-nav text-light" id="accordionSidebar">
-                    <li class="nav-item"><a class="nav-link active" href="{{ route('admin') }}"
-                            style="background: var(--bs-gray-300);color: var(--bs-dark);"><i
-                                class="fas fa-tachometer-alt" style="color: var(--bs-dark);"></i><span>Home</span></a>
-                    </li>
+                    @if (auth()->user()->permission == 10)
+                        <li class="nav-item"><a class="nav-link active" href="{{ route('admin') }}"
+                                style="background: var(--bs-gray-300);color: var(--bs-dark);"><i
+                                    class="fas fa-tachometer-alt"
+                                    style="color: var(--bs-dark);"></i><span>Home</span></a>
+                        </li>
+                    @endif
                     <li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href="#"
                             style="color: var(--bs-dark);"><i class="fas fa-table"
                                 style="color: var(--bs-dark);"></i><span>Pedidos</span></a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                            <li><a class="dropdown-item" href="{{ route('orders.all') }}">Pedidos do email</a></li>
-                            <li><a class="dropdown-item" href="{{ route('orders.sistema') }}">Pedidos do sistema</a></li>
-                            <li><a class="dropdown-item" href="#">Concluídos</a></li>
-                            <li><a class="dropdown-item" href="{{ route('order.create.painel') }}">Criar Pedido</a></li>
+                            @if (auth()->user()->permission == 10)
+                                <li><a class="dropdown-item" href="{{ route('orders.all') }}">Pedidos do email</a></li>
+                                <li><a class="dropdown-item" href="{{ route('orders.sistema') }}">Pedidos do sistema</a>
+                                </li>
+                                <li><a class="dropdown-item" href="#">Concluídos</a></li>
+                            @endif
+                            @if ((auth()->user()->permission == 10) | (auth()->user()->permission == 8))
+                                <li><a class="dropdown-item" href="{{ route('order.create.painel') }}">Criar Pedido</a>
+                                </li>
+                            @endif
                         </ul>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link " href="#"
-                            style="color: var(--bs-body-color);background: var(--bs-gray-300);"><i class="fas fa-user"
-                                style="color: var(--bs-dark);"></i><span>Usuários</span></a>
-                    </li>
-                    <li class="nav-item"><a class="nav-link" href="{{ route('exames') }}"
-                            style="color: var(--bs-dark);"><i class="far fa-list-alt"
-                                style="color: var(--bs-dark);"></i><span>Exames</span></a>
-                    </li>
-                    <li class="nav-item"><a class="nav-link" href="{{ route('owners') }}"
-                            style=" background: var(--bs-gray-300);color: var(--bs-dark);"><i class="fas fa-users"
-                                style="color: var(--bs-dark);"></i><span>Proprietarios</span></a>
-                    </li>
-                    <li class="nav-item"><a class="nav-link" href="{{ route('techinicals') }}"
-                            style="color: var(--bs-dark);"><i class="fas fa-user-nurse"
-                                style="color: var(--bs-dark);"></i><span>Técnicos</span></a>
-                    </li>
+                    @if (auth()->user()->permission == 10)
+                        <li class="nav-item">
+                            <a class="nav-link " href="#"
+                                style="color: var(--bs-body-color);background: var(--bs-gray-300);"><i
+                                    class="fas fa-user" style="color: var(--bs-dark);"></i><span>Usuários</span></a>
+                        </li>
+                        <li class="nav-item"><a class="nav-link" href="{{ route('exames') }}"
+                                style="color: var(--bs-dark);"><i class="far fa-list-alt"
+                                    style="color: var(--bs-dark);"></i><span>Exames</span></a>
+                        </li>
+                        <li class="nav-item"><a class="nav-link" href="{{ route('owners') }}"
+                                style=" background: var(--bs-gray-300);color: var(--bs-dark);"><i class="fas fa-users"
+                                    style="color: var(--bs-dark);"></i><span>Proprietarios</span></a>
+                        </li>
+                        <li class="nav-item"><a class="nav-link" href="{{ route('techinicals') }}"
+                                style="color: var(--bs-dark);"><i class="fas fa-user-nurse"
+                                    style="color: var(--bs-dark);"></i><span>Técnicos</span></a>
+                        </li>
 
-                    <li class="nav-item"><a class="nav-link" href="{{ route('configs') }}"
-                            style=" background: var(--bs-gray-300);color: var(--bs-dark)"><i class="fa fa-gear"
-                                style="color: var(--bs-dark);"></i><span>Configurações</span></a>
-                    </li>
-
+                        <li class="nav-item"><a class="nav-link" href="{{ route('configs') }}"
+                                style=" background: var(--bs-gray-300);color: var(--bs-dark)"><i class="fa fa-gear"
+                                    style="color: var(--bs-dark);"></i><span>Configurações</span></a>
+                        </li>
+                    @endif
                 </ul>
                 <div class="text-center d-none d-md-inline"><button class="btn rounded-circle border-0"
                         id="sidebarToggle" type="button"></button></div>

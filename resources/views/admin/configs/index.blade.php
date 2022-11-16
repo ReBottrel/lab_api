@@ -35,13 +35,22 @@
                                             </div>
                                             <div class="form-group mb-3">
                                                 <label for="name">Selecionar permissão</label>
-                                                <select class="form-select" aria-label="Default select example">
+                                                <select class="form-select select-permission"
+                                                    aria-label="Default select example" name="permission">
 
-                                                    <option value="1">Administrador</option>
-                                                    <option value="2">Financeiro</option>
-                                                    <option value="3">Técnico</option>
+                                                    <option value="10">Administrador</option>
+                                                    <option value="8">Associação</option>
+
                                                 </select>
                                             </div>
+                                            <div class="form-group mb-3 d-none association">
+                                                <label for="name">Selecionar associação</label>
+                                                <select class="form-select association-select" aria-label="Default select example">
+                                                    <option value="1">MANGALARGA MARCHADOR</option>
+                                                    <option value="2">PEGA</option>
+                                                </select>
+                                            </div>
+
                                             <div class="my-3 text-center">
                                                 <button type="button" class="btn btn-success create-adm">Criar
                                                     usuário</button>
@@ -95,7 +104,9 @@
                 var email = $('#email').val();
                 var password = $('#password').val();
                 var password_confirm = $('#password-confirm').val();
-                var permission = $('.form-select').val();
+                var permission = $('.select-permission').val();
+                var association = $('.association-select').val();
+
                 $.ajax({
                     url: "{{ route('admin.login.store') }}",
                     type: "POST",
@@ -105,6 +116,7 @@
                         password: password,
                         password_confirm: password_confirm,
                         permission: permission,
+                        association: association,
                         _token: "{{ csrf_token() }}"
                     },
                     success: function(response) {
@@ -132,6 +144,18 @@
                         });
                     }
                 });
+            });
+            $(document).on('change', '.select-permission', function() {
+                var permission = $(this).val();
+                if (permission == 8) {
+
+                    $('.create-adm').text('Criar associação');
+                    $('.association').removeClass('d-none');
+                } else {
+                    $('.create-adm').text('Criar usuário');
+                    $('.association').addClass('d-none');
+                }
+
             });
         });
     </script>

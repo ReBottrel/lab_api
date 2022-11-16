@@ -39,11 +39,18 @@ class AdminAuthController extends Controller
     public function store(Request $request)
     {
         $data = $request->all();
+        $association = 0;
+        if ($request->permission == 8) {
+            $association = $request->association;
+        }
+
 
         $save = Admin::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'permission' => $request->permission,
+            'association_id' => $association,
         ]);
 
         return response()->json($save);

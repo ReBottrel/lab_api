@@ -20,5 +20,6 @@ class Admin extends Authenticatable
         'access_token',
         'token_expires_in',
         'status',
+        'association_id',
     ];
 }
