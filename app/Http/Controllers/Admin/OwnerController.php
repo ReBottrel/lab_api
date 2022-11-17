@@ -84,8 +84,11 @@ class OwnerController extends Controller
             'propriety' => $request->propriety,
         ]);
 
-
-        return response()->json($dados);
+        if (auth()->user()->permission == 10) {
+            return response()->json($dados);
+        } else {
+            return redirect()->route('order.create.painel')->with('success', 'Proprietário cadastrado com sucesso!');
+        }
     }
 
     /**
@@ -197,7 +200,7 @@ class OwnerController extends Controller
     public function updateUser(Request $request, $id)
     {
         $user = User::find($id);
-  
+
         $user->update([
             'name' => $request->name,
             'email' => $request->email,

@@ -38,7 +38,11 @@ class TecnicoController extends Controller
     public function store(Request $request)
     {
         $tecnicos = Tecnico::create($request->all());
-        return response()->json($tecnicos);
+        if (auth()->user()->permission == 10) {
+            return response()->json($tecnicos);
+        } else {
+            return redirect()->route('order.create.painel');
+        }
     }
 
     /**

@@ -367,7 +367,7 @@ class OrderController extends Controller
             'register_number_brand' => $request->register_number_brand,
             'animal_name' => $request->animal_name,
             'especies' => $request->especies,
-            'breed' => 'MANGALARGA MARCHADOR',
+            'breed' => $request->breed,
             'sex' => $request->sex,
             'age' => $request->age,
             'birth_date' => $request->birth_date,

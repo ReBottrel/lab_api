@@ -101,6 +101,17 @@
                                     <select class="form-select" name="especies">
                                         <option value="EQUINA">EQUINA</option>
                                         <option value="BOVINA">BOVINA</option>
+                                        <option value="ASININOMUARES">ASININOS E MUARES</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="exampleFormControlInput1" class="form-label">Raça</label>
+                                    <select class="form-select" name="breed">
+                                        <option value="MANGALARGA">MANGALARGA MARCHADOR</option>
+                                        <option value="PÊGA">PÊGA</option>
+                                        <option value="QUARTO DE MILHO">QUARTO DE MILHO</option>
                                     </select>
                                 </div>
                             </div>

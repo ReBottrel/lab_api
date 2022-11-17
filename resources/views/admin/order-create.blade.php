@@ -16,6 +16,10 @@
                                     <option value="{{ $owner->id }}">{{ $owner->owner_name }}</option>
                                 @endforeach
                             </select>
+                            <div>
+                                <h6>*Obs se não encontro o proprietário <a href="{{ route('owner.create') }}">clique
+                                        aqui</a> para cadastrar um novo</h6>
+                            </div>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="exampleFormControlInput1" class="form-label">Nome do técnico</label>
@@ -24,6 +28,11 @@
                                     <option value="{{ $tecnico->id }}">{{ $tecnico->professional_name }}</option>
                                 @endforeach
                             </select>
+                            <div>
+                                <h6>*Obs se não encontro o técnico <a href="{{ route('techinical.create') }}">clique
+                                        aqui</a> para
+                                    cadastrar um novo</h6>
+                            </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
