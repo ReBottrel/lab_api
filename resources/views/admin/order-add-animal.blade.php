@@ -111,7 +111,8 @@
                                     <select class="form-select" name="breed">
                                         <option value="MANGALARGA">MANGALARGA MARCHADOR</option>
                                         <option value="PÊGA">PÊGA</option>
-                                        <option value="QUARTO DE MILHO">QUARTO DE MILHO</option>
+                                        <option value="QUARTO DE MILHO">QUARTO DE MILHA</option>
+                                        <option value="PAMPA">PAMPA</option>
                                     </select>
                                 </div>
                             </div>
