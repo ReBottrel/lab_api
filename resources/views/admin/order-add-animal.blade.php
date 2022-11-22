@@ -101,7 +101,8 @@
                                     <select class="form-select" name="especies">
                                         <option value="EQUINA">EQUINA</option>
                                         <option value="BOVINA">BOVINA</option>
-                                        <option value="ASININOMUARES">ASININOS E MUARES</option>
+                                        <option value="ASININO">ASININOS</option>
+                                        <option value="MUARES">MUARES</option>
                                     </select>
                                 </div>
                             </div>

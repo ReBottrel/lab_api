@@ -69,8 +69,6 @@ class OrderController extends Controller
                 ]);
             }
 
-
-
             $order->update([
                 'user_id' => $user->user_id,
                 'owner_id' => $request->owner
@@ -392,5 +390,10 @@ class OrderController extends Controller
         $order->status = 1;
         $order->save();
         return redirect()->route('orders.sistema')->with('success', 'Pedido finalizado com sucesso');
+    }
+    public function orderListSistem()
+    {
+        $orders = OrderRequest::with('user', 'orderRequestPayment')->where('origin', 'sistema')->where('status', '!=', 0)->get();
+        return view('admin.orders.list-sistem-orders', get_defined_vars());
     }
 }
