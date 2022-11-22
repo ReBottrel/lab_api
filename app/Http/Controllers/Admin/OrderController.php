@@ -26,7 +26,7 @@ class OrderController extends Controller
     }
     public function orderEmail()
     {
-        $orders = OrderRequest::where('origin', 'email')->where('status', '!=', 0)->get();
+        $orders = OrderRequest::where('origin', 'email')->where('status', '!=', 0)->paginate(10);
         return view('admin.order', get_defined_vars());
     }
     public function orderSistema()
