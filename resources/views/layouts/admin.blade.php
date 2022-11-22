@@ -37,6 +37,7 @@
                                 style="color: var(--bs-dark);"></i><span>Pedidos</span></a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                             @if (auth()->user()->permission == 10)
+                                <li><a class="dropdown-item" href="{{ route('orders.all') }}">Todos os pedidos</a></li>
                                 <li><a class="dropdown-item" href="{{ route('orders.all') }}">Pedidos do email</a></li>
                                 <li><a class="dropdown-item" href="{{ route('orders.sistema') }}">Pedidos do sistema</a>
                                 </li>
