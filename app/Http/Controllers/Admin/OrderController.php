@@ -332,6 +332,7 @@ class OrderController extends Controller
     {
         $owner = Owner::find($request->owner);
         $tecnico = Tecnico::find($request->tecnico);
+
         if ($owner->user_id != null) {
             $order_request = OrderRequest::create([
                 'collection_number' => $request->collection_number,
@@ -386,8 +387,26 @@ class OrderController extends Controller
     }
     public function orderEnd($id)
     {
+        $code = '';
+        $number = 1000;
+        if (auth()->user()->association_id == null) {
+            $code = "SI";
+        }
+        if (auth()->user()->association_id == 1) {
+            $code = "PA";
+        }
+        if (auth()->user()->association_id == 2) {
+            $code = "PE";
+        }
+        if (auth()->user()->association_id == 3) {
+            $code = "QM";
+        }
+        if (auth()->user()->association_id == 4) {
+            $code = "CA";
+        }
         $order = OrderRequest::find($id);
         $order->status = 1;
+        $order->creator_number = ''.$code.'00'.$order->id.'';
         $order->save();
         return redirect()->route('orders.sistema')->with('success', 'Pedido finalizado com sucesso');
     }

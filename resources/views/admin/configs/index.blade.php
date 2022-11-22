@@ -46,8 +46,10 @@
                                             <div class="form-group mb-3 d-none association">
                                                 <label for="name">Selecionar associação</label>
                                                 <select class="form-select association-select" aria-label="Default select example">
-                                                    <option value="1">MANGALARGA MARCHADOR</option>
+                                                    <option value="1">PAMPA</option>
                                                     <option value="2">PEGA</option>
+                                                    <option value="3">QUARTO MILHA</option>
+                                                    <option value="4">CAMPOLINA</option>
                                                 </select>
                                             </div>
 
