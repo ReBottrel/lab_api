@@ -236,7 +236,7 @@ class OrderController extends Controller
             "phone" => "55$telefone",
             "message" => "Prezado, Criador!
             Segue abaixo o Link de acesso para clicar, efetuar o pagamento e liberar o(s) exame(s) para execução.
-            Ao acessar, digite seu E-MAIL no campo USUÁRIO e o seu CPF em senha.
+            Ao acessar, digite seu E-MAIL: $email no campo USUÁRIO e o seu CPF: $senha em senha.
             Selecione os animais para pagamento e defina o prazo de liberação do resultado (temos opções de 20 dias úteis a 24 horas)*.
             *os valores variam conforme o prazo de liberação.
             ",
