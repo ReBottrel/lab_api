@@ -31,20 +31,40 @@ a {
     background-color: #694487 !important;
 }
 
-.navbar-nav li:hover > ul.dropdown-menu {
+.navbar-nav li:hover>ul.dropdown-menu {
     display: block;
 }
+
 .dropdown-submenu {
-    position:relative;
+    position: relative;
 }
-.dropdown-submenu > .dropdown-menu {
+
+.dropdown-submenu>.dropdown-menu {
     top: 0;
     left: 100%;
-    margin-top:-6px;
+    margin-top: -6px;
 }
 
 /* rotate caret on hover */
-.dropdown-menu > li > a:hover:after {
+.dropdown-menu>li>a:hover:after {
     text-decoration: underline;
     transform: rotate(-90deg);
-} 
+}
+
+.m-side {
+    a {
+        color: #3a3b45 !important;
+        font-weight: 700;
+        span{
+            margin: 0 5px;
+        }
+    }
+
+    .dropdown-item {
+        padding: 0.8em !important;
+    }
+
+    li:nth-child(odd) {
+        background-color: #dddfeb !important;
+    }
+}

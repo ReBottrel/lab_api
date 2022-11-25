@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="{{ asset('adm/assets/fonts/font-awesome.min.css') }}">
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="{{ asset('adm/assets/fonts/fontawesome5-overrides.min.css') }}">
+    <script src="https://kit.fontawesome.com/0ab2bcde1c.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="{{ asset('adm/assets/css/style.min.css') }}">
 </head>
 
@@ -24,10 +25,9 @@
                     src="{{ asset('adm/assets/img/logo.svg') }}" width="100%" loading="lazy"
                     style="width: 150px;margin: 10px;padding: 10px;">
                 <hr class="sidebar-divider my-0">
-                <ul class="navbar-nav text-light" id="accordionSidebar">
+                <ul class="navbar-nav text-light m-side" id="accordionSidebar">
                     @if (auth()->user()->permission == 10)
-                        <li class="nav-item"><a class="nav-link active" href="{{ route('admin') }}"
-                                style="background: var(--bs-gray-300);color: var(--bs-dark);"><i
+                        <li class="nav-item"><a class="nav-link active" href="{{ route('admin') }}"><i
                                     class="fas fa-tachometer-alt"
                                     style="color: var(--bs-dark);"></i><span>Home</span></a>
                         </li>
@@ -38,8 +38,10 @@
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                             @if (auth()->user()->permission == 10)
                                 <li><a class="dropdown-item" href="{{ route('orders.all') }}">Todos os pedidos</a></li>
-                                <li><a class="dropdown-item" href="{{ route('orders.email') }}">Pedidos do email</a></li>
-                                <li><a class="dropdown-item" href="{{ route('orders.sistema') }}">Pedidos do sistema</a>
+                                <li><a class="dropdown-item" href="{{ route('orders.email') }}">Pedidos do email</a>
+                                </li>
+                                <li><a class="dropdown-item" href="{{ route('orders.sistema') }}">Pedidos do
+                                        sistema</a>
                                 </li>
                                 <li><a class="dropdown-item" href="#">Concluídos</a></li>
                             @endif
@@ -51,16 +53,18 @@
                     </li>
                     @if (auth()->user()->permission == 10)
                         <li class="nav-item">
-                            <a class="nav-link " href="#"
-                                style="color: var(--bs-body-color);background: var(--bs-gray-300);"><i
-                                    class="fas fa-user" style="color: var(--bs-dark);"></i><span>Usuários</span></a>
+                            <a class="nav-link " href="#"><i class="fa-solid fa-horse"
+                                    style="color: var(--bs-dark);"></i><span>Animais</span></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link " href="#"><i class="fas fa-user"
+                                    style="color: var(--bs-dark);"></i><span>Usuários</span></a>
                         </li>
                         <li class="nav-item"><a class="nav-link" href="{{ route('exames') }}"
                                 style="color: var(--bs-dark);"><i class="far fa-list-alt"
                                     style="color: var(--bs-dark);"></i><span>Exames</span></a>
                         </li>
-                        <li class="nav-item"><a class="nav-link" href="{{ route('owners') }}"
-                                style=" background: var(--bs-gray-300);color: var(--bs-dark);"><i class="fas fa-users"
+                        <li class="nav-item"><a class="nav-link" href="{{ route('owners') }}"><i class="fas fa-users"
                                     style="color: var(--bs-dark);"></i><span>Proprietarios</span></a>
                         </li>
                         <li class="nav-item"><a class="nav-link" href="{{ route('techinicals') }}"
@@ -68,8 +72,7 @@
                                     style="color: var(--bs-dark);"></i><span>Técnicos</span></a>
                         </li>
 
-                        <li class="nav-item"><a class="nav-link" href="{{ route('configs') }}"
-                                style=" background: var(--bs-gray-300);color: var(--bs-dark)"><i class="fa fa-gear"
+                        <li class="nav-item"><a class="nav-link" href="{{ route('configs') }}"><i class="fa fa-gear"
                                     style="color: var(--bs-dark);"></i><span>Configurações</span></a>
                         </li>
                     @endif
