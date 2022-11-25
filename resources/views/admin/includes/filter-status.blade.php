@@ -36,6 +36,10 @@
             @php
                 $status = 'Amostra paga';
             @endphp
+        @elseif($animal->status == 10)
+            @php
+                $status = 'Pedido concluído';
+            @endphp
         @endif
         <div class="filter-changed">
             <div class="ajust">

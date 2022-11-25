@@ -21,6 +21,7 @@
                                     <option value="6"> Amostra reprovada</option>
                                     <option value="7"> Aguardando pagamento</option>
                                     <option value="9"> Pagamento confirmado</option>
+                                    <option value="10"> Pedido concluído</option>
                                 </optgroup>
                             </select>
                         </form>

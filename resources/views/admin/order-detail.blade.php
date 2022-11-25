@@ -24,7 +24,7 @@
                     <div class="col">
                         @foreach ($order->data_g['data_table'] as $item)
                             @php
-                            
+                                
                                 $animal = App\Models\Animal::where('register_number_brand', $item['id'])->first();
                                 $status = 'Aguardando cadastro';
                             @endphp
@@ -64,6 +64,10 @@
                                 @elseif($animal->status == 9)
                                     @php
                                         $status = 'Amostra paga';
+                                    @endphp
+                                @elseif($animal->status == 10)
+                                    @php
+                                        $status = 'Pedido Concluído';
                                     @endphp
                                 @endif
                             @endif
@@ -119,6 +123,12 @@
                                                 data-id="{{ $animal->id }}">Solicitar Recoleta</button>
                                         </div>
                                     @endif
+                                    @if ($status == 'Amostra paga')
+                                        <div>
+                                            <button class="btn btn-primary pedido-concluido" data-value="10"
+                                                data-id="{{ $animal->id }}">Pedido Concluído</button>
+                                        </div>
+                                    @endif
 
                                 </li>
                                 @if ($status != 'Aguardando amostra' && $status != 'Aguardando cadastro')
@@ -135,6 +145,7 @@
                                         </div>
                                     </li>
                                 @endif
+
 
                             </ul>
                         @endforeach
@@ -336,6 +347,22 @@
                 }
             });
         });
+        $(document).on('click', '.pedido-concluido', function() {
+            var id = $(this).data('id');
+            var value = $(this).data('value');
+            $.ajax({
+                url: `/amostra/${id}`,
+                type: 'POST',
+                data: {
+                    value: value
+                },
+                success: function(data) {
+                    console.log(data);
+                    window.location.reload();
+                }
+            });
+        });
+
         $(document).on('click', '.gerar', function() {
             var id = $(this).data('id');
             var order = $(this).data('order');
@@ -371,5 +398,6 @@
                 }
             });
         });
+
     </script>
 @endsection
