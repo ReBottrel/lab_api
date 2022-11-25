@@ -53,7 +53,7 @@
                     </li>
                     @if (auth()->user()->permission == 10)
                         <li class="nav-item">
-                            <a class="nav-link " href="#"><i class="fa-solid fa-horse"
+                            <a class="nav-link " href="{{ route('animais') }}"><i class="fa-solid fa-horse"
                                     style="color: var(--bs-dark);"></i><span>Animais</span></a>
                         </li>
                         <li class="nav-item">

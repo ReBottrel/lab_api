@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\OwnerController;
 use App\Http\Controllers\Admin\ConfigController;
 use App\Http\Controllers\Admin\AddressController;
+use App\Http\Controllers\Admin\AnimaisController;
 use App\Http\Controllers\Admin\TecnicoController;
 use App\Http\Controllers\User\UserOrderController;
 use App\Http\Controllers\User\UserDashboardController;
@@ -137,4 +138,6 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::post('admin-update/{id}', [AdminAuthController::class, 'update'])->name('config.update.admin');
     Route::any('admin-logout', [AdminAuthController::class, 'logout'])->name('admin.logout');
     Route::any('admin-delete/{id}', [AdminAuthController::class, 'destroy'])->name('admin.delete');
+
+    Route::get('animais', [AnimaisController::class, 'index'])->name('animais');
 });
