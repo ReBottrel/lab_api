@@ -114,6 +114,7 @@
                                         <option value="PÊGA">PÊGA</option>
                                         <option value="QUARTO DE MILHO">QUARTO DE MILHA</option>
                                         <option value="PAMPA">PAMPA</option>
+                                        <option value="DESCONHECIDA">DESCONHECIDA</option>
                                     </select>
                                 </div>
                             </div>
