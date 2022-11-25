@@ -411,7 +411,7 @@ class OrderController extends Controller
         }
         $order = OrderRequest::find($id);
         $order->status = 1;
-        $order->creator_number = ''.$code.'00'.$order->id.'';
+        $order->creator_number = '' . $code . '00' . $order->id . '';
         $order->save();
         return redirect()->route('orders.sistema')->with('success', 'Pedido finalizado com sucesso');
     }
@@ -419,5 +419,12 @@ class OrderController extends Controller
     {
         $orders = OrderRequest::with('user', 'orderRequestPayment')->where('origin', 'sistema')->where('status', '!=', 0)->get();
         return view('admin.orders.list-sistem-orders', get_defined_vars());
+    }
+    public function filterPayment(Request $request)
+    {
+        $animals = OrderRequestPayment::with('orderRequest')->where('payment_status', '=', $request->status)->get();
+ 
+        $viewRender = view('admin.includes.filter-payment', get_defined_vars())->render();
+        return response()->json([get_defined_vars()]);
     }
 }

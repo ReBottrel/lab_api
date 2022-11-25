@@ -3,14 +3,14 @@
     <div class="container">
         <div class="card">
             <div class="card-body">
+                <div class="col">
+                    <h4>Pedidos</h4>
+                </div>
                 <div class="row">
-                    <div class="col">
-                        <h4>Pedidos</h4>
-                    </div>
-                    <div class="col">
+                    <div class="col-4">
                         <form><input class="form-control search" type="search" placeholder="Buscar pelo nome..."></form>
                     </div>
-                    <div class="col">
+                    <div class="col-4">
                         <form>
                             <select class="form-select status-filter">
                                 <optgroup label="Status">
@@ -19,9 +19,18 @@
                                     <option value="2"> Amostra recebida</option>
                                     <option value="7"> Amostra aprovada</option>
                                     <option value="6"> Amostra reprovada</option>
-                                    <option value="7"> Aguardando pagamento</option>
-                                    <option value="9"> Pagamento confirmado</option>
                                     <option value="10"> Pedido concluído</option>
+                                </optgroup>
+                            </select>
+                        </form>
+                    </div>
+                    <div class="col-4">
+                        <form>
+                            <select class="form-select status-payment">
+                                <optgroup label="Status">
+                                    <option value=""> Todos</option>
+                                    <option value="0"> Aguardando pagamento</option>
+                                    <option value="1"> Pagamento confirmado</option>
                                 </optgroup>
                             </select>
                         </form>
@@ -108,7 +117,7 @@
                             </div>
                         </div>
                     @endforeach
-                  
+
                 </div>
             </div>
         </div>
@@ -132,6 +141,23 @@
                     }
                 });
             });
+
+            $('.status-payment').change(function() {
+                var status = $(this).val();
+                $.ajax({
+                    url: "{{ route('filter.payment') }}",
+                    type: "POST",
+                    data: {
+                        _token: "{{ csrf_token() }}",
+                        status: status
+                    },
+                    success: function(data) {
+                        console.log(data);
+                        $('.filter').html(data[0].viewRender);
+                    }
+                });
+            });
+
             $('.search').keyup(function() {
                 var search = $(this).val();
                 $.ajax({

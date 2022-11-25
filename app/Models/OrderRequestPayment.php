@@ -34,4 +34,8 @@ class OrderRequestPayment extends Model
     {
         return $this->hasMany(HistoryStatus::class, 'reference_id')->where('reference_type', 'OrderRequestPayment');
     }
+    public function orderRequest()
+    {
+        return $this->belongsTo(OrderRequest::class);
+    }
 }
