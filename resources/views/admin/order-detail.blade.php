@@ -198,11 +198,11 @@
                     <div class="col align-self-center me-auto"></div>
                     <div class="col text-center align-self-center">
                         @if (isset($animal))
-                            @if ($animal->status == 7)
+                            @if ($order->status == 4)
                                 <button class="btn fw-bold link-light gerar" type="button"
                                     data-order="{{ $order->id }}" style="background: var(--bs-info);">GERAR
                                     PAGAMENTO</button>
-                            @elseif($animal->status == 9)
+                            @elseif($order->status == 2)
                                 <div class="row">
                                     <div class="col-6">
                                         <button class="btn fw-bold link-light" type="button" disabled
@@ -213,7 +213,6 @@
                                                 class="btn fw-bold link-light" type="button"
                                                 style="background: var(--bs-success);">VER RELATÓRIO DE PEDIDO</button></a>
                                     </div>
-
                                 </div>
                             @endif
                         @endif
@@ -403,5 +402,6 @@
                 }
             });
         });
+
     </script>
 @endsection
