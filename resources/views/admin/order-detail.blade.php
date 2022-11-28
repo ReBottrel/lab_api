@@ -208,13 +208,14 @@
                                         <button class="btn fw-bold link-light" type="button" disabled
                                             style="background: var(--bs-info);">PAGAMENTO GERADO</button>
                                     </div>
-                                    <div class="col-6">
-                                        <a href="{{ route('order.request.detail', $order->id) }}"> <button
-                                                class="btn fw-bold link-light" type="button"
-                                                style="background: var(--bs-success);">VER RELATÓRIO DE PEDIDO</button></a>
-                                    </div>
+
                                 </div>
                             @endif
+                            <div class="col-6">
+                                <a href="{{ route('order.request.detail', $order->id) }}"> <button
+                                        class="btn fw-bold link-light" type="button"
+                                        style="background: var(--bs-success);">VER RELATÓRIO DE PEDIDO</button></a>
+                            </div>
                         @endif
                     </div>
                     <div class="col"></div>
@@ -402,6 +403,5 @@
                 }
             });
         });
-
     </script>
 @endsection
