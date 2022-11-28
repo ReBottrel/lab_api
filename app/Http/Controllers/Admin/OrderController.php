@@ -203,7 +203,7 @@ class OrderController extends Controller
 
         $animals = Animal::where('order_id', $request->order)->where('status', 7)->get();
         foreach ($animals as $animal) {
-            $exam = Exam::find(4);
+            $exam = Exam::find(1);
             $orderPay = OrderRequestPayment::create([
                 'order_request_id' => $request->order,
                 'owner_name' => $order_request->owner->owner_name,
@@ -219,6 +219,9 @@ class OrderController extends Controller
                 'extra_value' => $exam->extra_value,
                 'extra_requests' => $request->extra_requests ?? 0,
                 'animal_id' => $animal->register_number_brand,
+            ]);
+            $animal->update([
+                'status' => 11,
             ]);
         }
 
@@ -422,8 +425,8 @@ class OrderController extends Controller
     }
     public function filterPayment(Request $request)
     {
-        $animals = OrderRequestPayment::with('orderRequest')->where('payment_status', '=', $request->status)->get();
- 
+        $animals = Animal::with('order')->where('status', $request->status)->where('order_id', '!=', null)->get();
+
         $viewRender = view('admin.includes.filter-payment', get_defined_vars())->render();
         return response()->json([get_defined_vars()]);
     }

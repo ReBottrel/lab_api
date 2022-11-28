@@ -1,10 +1,10 @@
 <div class="p-4">
     @forelse ($animals as $item)
-        @if ($item->payment_status == 0)
+        @if ($item->payment_status == 11)
             @php
                 $status = 'Aguardando pagamento';
             @endphp
-        @elseif($item->payment_status == 1)
+        @elseif($item->payment_status == 9)
             @php
                 $status = 'Pagamento recebido';
             @endphp

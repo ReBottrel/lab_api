@@ -34,11 +34,15 @@
             @endphp
         @elseif($animal->status == 9)
             @php
-                $status = 'Amostra paga';
+                $status = 'Pagamento confirmado';
             @endphp
         @elseif($animal->status == 10)
             @php
                 $status = 'Pedido concluído';
+            @endphp
+        @elseif($animal->status == 11)
+            @php
+                $status = 'Aguardando pagamento';
             @endphp
         @endif
         <div class="filter-changed">

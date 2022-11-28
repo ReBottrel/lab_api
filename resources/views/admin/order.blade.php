@@ -6,12 +6,16 @@
                 <div class="col">
                     <h4>Pedidos</h4>
                 </div>
-                <div class="row">
-                    <div class="col-4">
-                        <form><input class="form-control search" type="search" placeholder="Buscar pelo nome..."></form>
-                    </div>
-                    <div class="col-4">
+                <div class="row my-4">
+                    <div class="col-6">
                         <form>
+                            <label for="exampleFormControlInput1" class="form-label">Buscar proprietário</label>
+                            <input class="form-control search" type="search" placeholder="Buscar pelo nome...">
+                        </form>
+                    </div>
+                    <div class="col-6">
+                        <form>
+                            <label for="exampleFormControlInput1" class="form-label">Filtrar Amostra</label>
                             <select class="form-select status-filter">
                                 <optgroup label="Status">
                                     <option value="0"> Todos</option>
@@ -20,21 +24,13 @@
                                     <option value="7"> Amostra aprovada</option>
                                     <option value="6"> Amostra reprovada</option>
                                     <option value="10"> Pedido concluído</option>
+                                    <option value="11"> Aguardando pagamento</option>
+                                    <option value="9"> Pagamento confirmado</option>
                                 </optgroup>
                             </select>
                         </form>
                     </div>
-                    <div class="col-4">
-                        <form>
-                            <select class="form-select status-payment">
-                                <optgroup label="Status">
-                                    <option value=""> Todos</option>
-                                    <option value="0"> Aguardando pagamento</option>
-                                    <option value="1"> Pagamento confirmado</option>
-                                </optgroup>
-                            </select>
-                        </form>
-                    </div>
+
                 </div>
                 <div class="filter">
                     @foreach ($orders as $order)

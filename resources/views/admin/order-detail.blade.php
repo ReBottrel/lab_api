@@ -69,6 +69,10 @@
                                     @php
                                         $status = 'Pedido Concluído';
                                     @endphp
+                                @elseif($animal->status == 11)
+                                    @php
+                                        $status = 'Aguardando Pagamento';
+                                    @endphp
                                 @endif
                             @endif
                             <ul class="list-group m-3">
