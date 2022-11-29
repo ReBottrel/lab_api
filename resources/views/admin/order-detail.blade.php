@@ -15,7 +15,7 @@
                 <div class="row">
                     <div class="col-md-6">
                         <h5 class="mb-0">CRIADOR: {{ $order->data_g['data_g']['criador'][1] }} -
-                            {{ $order->data_g['data_g']['criador'][0] ??  }}</h5>
+                            {{ $order->data_g['data_g']['criador'][0] }}</h5>
                     </div>
                 </div>
             </div>
