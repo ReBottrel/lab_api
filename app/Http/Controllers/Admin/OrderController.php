@@ -344,13 +344,14 @@ class OrderController extends Controller
         if ($owner->user_id != null) {
             $order_request = OrderRequest::create([
                 'collection_number' => $request->collection_number,
-                'collection_date' => date("Y-m-d"),
+                'collection_date' => $request->collection_date,
                 'technical_manager' => $tecnico->professional_name,
                 'creator' => $owner->owner_name,
                 'owner_id' => $request->owner,
                 'id_tecnico' => $request->tecnico,
                 'status' => 0,
                 'origin' => 'sistema',
+                'uid' => $request->uid,
                 'creator_number' => 0,
             ]);
             return redirect()->route('admin.order-add-animal', $order_request->id);
