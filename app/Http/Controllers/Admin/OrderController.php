@@ -287,7 +287,7 @@ class OrderController extends Controller
                 'Registro Doadora' => $animal->registro_mae,
                 'Nome matriz' => $animal->mae,
                 'Fazenda' => $data->location,
-                'Proprietário' => $order->creator,
+                'Proprietário' => $order->user->name,
                 'Nº Pedido' => $order->collection_number,
                 'Data Cadastro' => date('d/m/Y', strtotime($order->created_at)),
                 'Prioridade' => '',
