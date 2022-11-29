@@ -72,6 +72,7 @@
                     <div class="col-2">
                         <p>{{ $status }}</p>
                     </div>
+                
                     <div class="col-3">
                         <div>
                            <a href="@if ($animal->order->origin == 'email') {{ route('order.detail', $animal->order_id) }} @else {{ route('order.sistema.detail', $animal->order_id) }} @endif"><button class="btn btn-success">Ver Produto</button></a> 
