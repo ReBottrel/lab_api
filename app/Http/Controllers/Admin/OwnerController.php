@@ -57,7 +57,7 @@ class OwnerController extends Controller
         $info = UserInfo::create([
             'user_id' => $user->id,
             'document' => $request->document,
-            'phone' => $request->fone,
+            'phone' => $request->cell,
             'zip_code' => $request->zip_code,
             'address' => $request->address,
             'number' => $request->number,
@@ -74,6 +74,7 @@ class OwnerController extends Controller
             'owner_name' => $request->owner_name,
             'email' => $request->email,
             'fone' => $request->fone,
+            'cell' => $request->cell,
             'zip_code' => $request->zip_code,
             'address' => $request->address,
             'number'  => $request->number,
@@ -168,7 +169,7 @@ class OwnerController extends Controller
         $info = UserInfo::create([
             'user_id' => $user->id,
             'document' => $owner->document,
-            'phone' => $owner->fone,
+            'phone' => $owner->cell,
             'zip_code' => $owner->zip_code,
             'address' => $owner->address,
             'number' => $owner->number,
