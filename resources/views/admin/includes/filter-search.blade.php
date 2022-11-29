@@ -42,7 +42,7 @@
 
                         <ul class="dropdown-menu">
                             <a class="dropdown-item" id="show-btn"
-                                href="{{ route('order.detail', $order->id) }}">Ver</a>
+                                href="@if ($order->origin == 'email') {{ route('order.detail', $order->id) }} @else {{ route('order.sistema.detail', $order->id) }} @endif">Ver</a>
                             <a class="dropdown-item" id="show-btn"
                                 href="{{ route('orders.owner', $order->id) }}">Proprietario</a>
                             <a class="dropdown-item" id="show-btn" href="{{ route('technical', $order->id) }}">Técnico
