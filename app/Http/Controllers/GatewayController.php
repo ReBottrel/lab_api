@@ -281,7 +281,7 @@ class GatewayController extends Controller
         // $user = user_token();
         // $name = explode(' ', $user->name);
         $user = UserInfo::where('user_id', auth()->user()->id)->first();
-        \Log::info($user);
+ 
         if (!$user->buyer_id) {
             $data = [
                 "first_name" => auth()->user()->name,
@@ -302,7 +302,7 @@ class GatewayController extends Controller
             ];
 
             $response = Http::withHeaders(['Authorization' => $this->bearer_token])->post(env('IOPAY_URL') . 'v1/customer/new', $data)->object();
-
+            \Log::info($user);
             UserInfo::where('user_id', $user->id)->update(['buyer_id' => ($response->success->id ?? $response->id)]);
             return ($response->success->id ?? $response->id);
         }
