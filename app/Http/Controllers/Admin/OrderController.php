@@ -343,6 +343,7 @@ class OrderController extends Controller
 
         if ($owner->user_id != null) {
             $order_request = OrderRequest::create([
+                'user_id' => $owner->user_id,
                 'collection_number' => $request->collection_number,
                 'collection_date' => $request->collection_date,
                 'technical_manager' => $tecnico->professional_name,
