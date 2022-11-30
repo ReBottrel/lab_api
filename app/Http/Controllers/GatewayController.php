@@ -296,7 +296,7 @@ class GatewayController extends Controller
                     "line3" =>  $user->complement,
                     "neighborhood"  =>  $user->district,
                     "city"  =>  $user->city,
-                    "state"  =>   $user->state,
+                    "state"  =>   'PR',
                     "postal_code" => $user->zip_code
                 ]
             ];
