@@ -281,7 +281,7 @@ class GatewayController extends Controller
         // $user = user_token();
         // $name = explode(' ', $user->name);
         $user = UserInfo::where('user_id', auth()->user()->id)->first();
-
+        \Log::info($user);
         if (!$user->buyer_id) {
             $data = [
                 "first_name" => auth()->user()->name,
