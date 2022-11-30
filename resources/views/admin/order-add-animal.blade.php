@@ -79,7 +79,7 @@
                                     <input type="text" name="animal_name" id="animal_name" class="form-control">
                                 </div>
                             </div>
-                  
+
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="exampleFormControlInput1" class="form-label">ID do animal</label>
@@ -117,6 +117,12 @@
                                         <option value="PAMPA">PAMPA</option>
                                         <option value="DESCONHECIDA">DESCONHECIDA</option>
                                     </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="exampleFormControlInput1" class="form-label">Data de coleta</label>
+                                    <input type="date" name="" id="birth_date" class="form-control">
                                 </div>
                             </div>
                             <div class="col-md-6">
