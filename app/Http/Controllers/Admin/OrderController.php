@@ -434,10 +434,14 @@ class OrderController extends Controller
     public function orderDelete($id)
     {
         $orders = OrderRequest::with('orderRequestPayment')->find($id);
+        $animals = Animal::where('order_id', $id)->get();
+        foreach ($animals as $animal) {
+            $animal->delete();
+        }
         \Log::channel('admins_actions')->info(['deletou', auth()->user()->name], ['Order Deletada', $orders->creator]);
         $orders->orderRequestPayment()->delete();
         $orders->delete();
-       
+
         return redirect()->back()->with('success', 'Pedido removido com sucesso');
     }
 }
