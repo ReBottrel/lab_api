@@ -139,6 +139,7 @@ class OrderController extends Controller
             'status' => $request->value,
         ]);
 
+        \Log::channel('admins_actions')->info(['Usuário', auth()->user()->name], ['Alterou status de:', $animal->animal_name]);
 
         return response()->json($animal);
     }
