@@ -142,4 +142,6 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::any('admin-delete/{id}', [AdminAuthController::class, 'destroy'])->name('admin.delete');
 
     Route::get('animais', [AnimaisController::class, 'index'])->name('animais');
+
+    Route::any('order-delete/{id}', [OrderController::class, 'orderDelete'])->name('orders.delete');
 });

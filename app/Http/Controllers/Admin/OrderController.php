@@ -432,4 +432,13 @@ class OrderController extends Controller
         $viewRender = view('admin.includes.filter-payment', get_defined_vars())->render();
         return response()->json([get_defined_vars()]);
     }
+    public function orderDelete($id)
+    {
+        $orders = OrderRequest::with('orderRequestPayment')->find($id);
+        \Log::info(['deletou', auth()->user()->name], ['Order Deletada', $orders->creator]);
+        $orders->orderRequestPayment()->delete();
+        $orders->delete();
+       
+        return redirect()->back()->with('success', 'Pedido removido com sucesso');
+    }
 }
