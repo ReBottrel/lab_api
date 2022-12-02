@@ -113,7 +113,7 @@
                                             </div>
                                         </div>
                                     @endif
-                                    @if ($status == 'Análise Aprovada')
+                                    @if ($status == 'Análise Aprovada' | $status == 'Aguardando Pagamento')
                                         <div class="row">
                                             <div class="col-3">
                                                 <button class="btn text-white btn-success amostra-paga" data-value="9"
