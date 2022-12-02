@@ -89,8 +89,6 @@ class OrderController extends Controller
     {
         $animal = Animal::find($id);
 
-
-
         if ($request->order) {
             $order = OrderRequest::with('tecnico', 'owner')->find($request->order);
             $order->update([

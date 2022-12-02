@@ -67,7 +67,7 @@
                         <p>{{ $animal->animal_name }}</p>
                     </div>
                     <div class="col-4">
-                        <p>{{ $animal->order->creator }}</p>
+                        <p>{{ $animal->order->creator ?? 'Sem criador' }}</p>
                     </div>
                     <div class="col-2">
                         <p>{{ $status }}</p>
