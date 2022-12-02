@@ -36,10 +36,10 @@ class GatewayController extends Controller
 
     public function payment(Request $request)
     {
-        // \Log::info($request->all());
+        \Log::channel('iopay_inp')->info($request->all());
         // dd($request->all());
 
-
+        
 
         $order = OrderRequest::with('orderRequestPayment', 'tecnico', 'owner')->find($request->order_id);
         // \Log::info($order);

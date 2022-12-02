@@ -64,6 +64,11 @@ return [
             'path' => storage_path('logs/iopay_notify_payment.log'),
             'level' => env('LOG_LEVEL', 'debug'),
         ],
+        'iopay_inp' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/iopay_inp.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+        ],
         'admins_actions' => [
             'driver' => 'single',
             'path' => storage_path('logs/admins_actions.log'),
