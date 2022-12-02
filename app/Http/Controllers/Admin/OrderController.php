@@ -435,7 +435,7 @@ class OrderController extends Controller
     public function orderDelete($id)
     {
         $orders = OrderRequest::with('orderRequestPayment')->find($id);
-        \Log::info(['deletou', auth()->user()->name], ['Order Deletada', $orders->creator]);
+        \Log::channel('admins_actions')->info(['deletou', auth()->user()->name], ['Order Deletada', $orders->creator]);
         $orders->orderRequestPayment()->delete();
         $orders->delete();
        
