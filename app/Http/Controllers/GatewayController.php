@@ -222,7 +222,7 @@ class GatewayController extends Controller
                         'payment_status' => 1
                     ]);
                     if ($order->requests == null) {
-                        $animal = Animal::where('register_number_brand', $item->animal_id)->first();
+                        $animal = Animal::where('id', $item->animal_id)->first();
                         $animal->update([
                             'status' => 9
                         ]);
