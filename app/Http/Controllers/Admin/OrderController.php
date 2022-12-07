@@ -461,4 +461,6 @@ class OrderController extends Controller
 
         return redirect()->back()->with('success', 'Pedido removido com sucesso');
     }
+
+  
 }
