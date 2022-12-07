@@ -217,7 +217,7 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <input type="hidden" class="price-{{ $order->id }}" name="totalprice"
-                                                value="{{ $order->orderRequestPayment->count() * $prices[0] }}">
+                                                value="{{ $total }}">
                                             <h4>TOTAL: <span class="total-price-{{ $order->id }}">
                                                     {{ 'R$ ' . number_format($total, 2, ',', '.') }}</span>
                                             </h4>
