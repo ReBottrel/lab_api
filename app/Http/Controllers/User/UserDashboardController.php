@@ -62,4 +62,8 @@ class UserDashboardController extends Controller
 
         return view('user.payment', get_defined_vars());
     }
+    public function maintrance()
+    {
+        return view('user.maintrance');
+    }
 }
