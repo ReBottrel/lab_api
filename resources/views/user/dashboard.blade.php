@@ -213,13 +213,7 @@
                                     @endforeach
                                     @php
                                         
-                                        // if ($item->payment_status == 0) {
-                                        //     $total = $item->count() * $item->value;
-                                        // } else {
-                                        //     $total = 0;
-                                        // }
-                                        // $total = $order->orderRequestPayment->count() * $order->orderRequestPayment->first()->value;
-
+                                    
                                        $total = $order->orderRequestPayment->where('payment_status', 0)->map(function($query){
                                             return $query->value;
                                         })->sum();
