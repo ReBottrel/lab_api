@@ -90,10 +90,6 @@
                                                 $exames = App\Models\Exam::where('category', 'dna')
                                                     ->where('requests', 2)
                                                     ->get();
-                                            } else {
-                                                $exames = App\Models\Exam::where('category', 'dna')
-                                                    ->where('requests', 1)
-                                                    ->get();
                                             }
                                         @endphp
                                         <form action="{{ route('user.payment') }}" method="post">
@@ -213,10 +209,12 @@
                                     @endforeach
                                     @php
                                         
-                                    
-                                       $total = $order->orderRequestPayment->where('payment_status', 0)->map(function($query){
-                                            return $query->value;
-                                        })->sum();
+                                        $total = $order->orderRequestPayment
+                                            ->where('payment_status', 0)
+                                            ->map(function ($query) {
+                                                return $query->value;
+                                            })
+                                            ->sum();
                                         
                                     @endphp
                                     <div class="row">
