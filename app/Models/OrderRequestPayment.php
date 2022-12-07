@@ -28,6 +28,7 @@ class OrderRequestPayment extends Model
         'days',
         'paynow',
         'animal_id',
+        'category_exam'
     ];
 
     public function historyStatus()

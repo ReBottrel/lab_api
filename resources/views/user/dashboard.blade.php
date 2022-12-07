@@ -40,12 +40,13 @@
                         <div class="accordion-item">
                             <h2 class="accordion-header">
                                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                    data-bs-target="#pedido000010">
+                                    data-bs-target="#pedido-{{ $order->id }}">
                                     <b>Pedido {{ $order->id }}</b>
                                     <span class="mx-1">(realizado em {{ $order->created_at }})</span>
                                 </button>
                             </h2>
-                            <div id="pedido000010" class="accordion-collapse collapse" data-bs-parent="#divPedidos">
+                            <div id="pedido-{{ $order->id }}" class="accordion-collapse collapse"
+                                data-bs-parent="#divPedidos">
                                 <div class="accordion-body">
                                     <div class="row px-2">
                                         <div class="col-md-4 px-2 font-weight-bold">
@@ -65,9 +66,31 @@
                                         </div>
                                     </div>
                                     @foreach ($order->orderRequestPayment as $item)
+                                        @php
+                                            $animal = App\Models\Animal::where('id', $item->animal_id)
+                                                ->orWhere('register_number_brand', $item->animal_id)
+                                                ->first();
+                                            if ($animal->especies == 'EQUINA') {
+                                                $exames = App\Models\Exam::where('category', 'dna')
+                                                    ->where('requests', 1)
+                                                    ->get();
+                                            } elseif ($animal->especies == 'ASININO') {
+                                                $exames = App\Models\Exam::where('category', 'dna')
+                                                    ->where('requests', 2)
+                                                    ->get();
+                                            } elseif ($animal->especies == 'MUAR') {
+                                                $exames = App\Models\Exam::where('category', 'dna')
+                                                    ->where('requests', 2)
+                                                    ->get();
+                                            } else {
+                                                $exames = App\Models\Exam::where('category', 'dna')
+                                                    ->where('requests', 1)
+                                                    ->get();
+                                            }
+                                        @endphp
                                         <form action="{{ route('user.payment') }}" method="post">
                                             @csrf
-                                            <input type="hidden" name="orderId" value="{{ $order->id }}">
+                                            <input type="hidden" name="orderId" id="orderId" value="{{ $order->id }}">
                                             <input type="hidden" name="itemId[]" value="{{ $item->id }}">
                                             <div class="accordion my-3" id="accordionExample-{{ $item->id }}">
                                                 <div class="accordion-item">
@@ -79,11 +102,18 @@
                                                             <p>{{ $item->animal }}</p>
                                                         </div>
                                                         <div class="col-md-2">
-                                                            @foreach ($prices as $key => $p)
+                                                            {{-- @foreach ($prices as $key => $p)
                                                                 <p class="prices preco @if ($key != 0) d-none @endif prices-{{ $key }}"
                                                                     data-price="{{ $p }}">
 
                                                                     {{ 'R$ ' . number_format($p, 2, ',', '.') }} </p>
+                                                            @endforeach --}}
+                                                            @foreach ($exames as $key => $p)
+                                                                <p class="prices preco @if ($key != 0) d-none @endif prices-{{ $key }}"
+                                                                    data-price="{{ $p->value }}">
+
+                                                                    {{ 'R$ ' . number_format($p->value, 2, ',', '.') }}
+                                                                </p>
                                                             @endforeach
                                                             {{-- <p>{{ 'R$ ' . number_format($item->value, 2, ',', '.') }} </p> --}}
                                                         </div>
@@ -91,10 +121,11 @@
                                                             <p>1</p>
                                                         </div>
                                                         <div class="col-md-2">
-                                                            @foreach ($prices as $key => $p)
+                                                            @foreach ($exames as $key => $p)
                                                                 <p
                                                                     class="prices @if ($key != 0) d-none @endif prices-{{ $key }}">
-                                                                    {{ 'R$ ' . number_format($p, 2, ',', '.') }} </p>
+                                                                    {{ 'R$ ' . number_format($p->value, 2, ',', '.') }}
+                                                                </p>
                                                             @endforeach
                                                         </div>
                                                         <div class="col-md-2">
@@ -123,15 +154,33 @@
                                                                         <label for="exampleFormControlInput1"
                                                                             class="form-label">Tempo de
                                                                             entrega</label>
+                                                                        {{-- <select class="form-select sel-price" name="days[]"
+                                                                            @if ($item->payment_status == 1) disabled @endif
+                                                                            aria-label="Default select example">
+                                                                            <option value="0-{{ $item->id }}" selected>
+                                                                                20 Dias (Padrão)
+                                                                            <option value="1-{{ $item->id }}">24 Horas
+                                                                            </option>
+                                                                            <option value="2-{{ $item->id }}">2 Dias
+                                                                            </option>
+                                                                            <option value="3-{{ $item->id }}">5 Dias
+                                                                            </option>
+                                                                            <option value="4-{{ $item->id }}">10 Dias
+                                                                            </option>
+                                                                            </option>
+                                                                        </select> --}}
                                                                         <select class="form-select sel-price" name="days[]"
                                                                             @if ($item->payment_status == 1) disabled @endif
                                                                             aria-label="Default select example">
-                                                                            <option value="0-{{ $item->id }}" selected>20 Dias (Padrão)
-                                                                            <option value="1-{{ $item->id }}">24 Horas</option>
-                                                                            <option value="2-{{ $item->id }}">2 Dias</option>
-                                                                            <option value="3-{{ $item->id }}">5 Dias</option>
-                                                                            <option value="4-{{ $item->id }}">10 Dias</option>
-                                                                            </option>
+                                                                            @foreach ($exames as $key => $exame)
+                                                                                <option
+                                                                                    value="{{ $key }}-{{ $item->id }}-{{ $exame->id }}"
+                                                                                    data-value="{{ $exame->value }}"
+                                                                                    data-id="{{ $order->id }}">
+                                                                                    {{ $exame->title }}
+                                                                                </option>
+                                                                            @endforeach
+
                                                                         </select>
                                                                     </div>
 
@@ -155,19 +204,21 @@
                                             </div>
                                             @php
                                                 
-                                                if ($item->payment_status == 0) {
-                                                    $total += $item->value;
-                                                } else {
-                                                    $total += 0;
+                                                if ($item->order_request_id == $order->id) {
+                                                    if ($item->payment_status == 0) {
+                                                        $total += $item->value;
+                                                    } else {
+                                                        $total += 0;
+                                                    }
                                                 }
                                                 
                                             @endphp
                                     @endforeach
                                     <div class="row">
                                         <div class="col-md-6">
-                                            <input type="hidden" class="price" name="totalprice"
+                                            <input type="hidden" class="price-{{ $order->id }}" name="totalprice"
                                                 value="{{ $order->orderRequestPayment->count() * $prices[0] }}">
-                                            <h4>TOTAL: <span class="total-price">
+                                            <h4>TOTAL: <span class="total-price-{{ $order->id }}">
                                                     {{ 'R$ ' . number_format($total, 2, ',', '.') }}</span>
                                             </h4>
                                         </div>
@@ -191,21 +242,41 @@
 
 @section('scripts')
     <script>
+        // $(document).on('change', '.sel-price', function() {
+        //     $(this).closest('.accordion').find('.prices').addClass('d-none');
+        //     $(this).closest('.accordion').find(`.prices.prices-${$(this).val().split('-')[0]}`).removeClass(
+        //         'd-none');
+        //     var totalPrice = 0;
+        //     $(this).closest('#divPedidos').find(`.preco`).each(function() {
+        //         if ($(this).is('.d-none') == false && $(this).closest('.accordion').find('.paynow').is(
+        //                 ':checked')) {
+        //             totalPrice += parseFloat($(this).data('price'));
+        //             // console.log($(this).closest('.accordion').find('.paynow'));
+        //         }
+        //     });
+        //     $('.total-price').text(totalPrice.toFixed(2).replace('.', ','));
+        //     $('.price').val(totalPrice.toFixed(2).replace('.', ','));
+
+        // });
         $(document).on('change', '.sel-price', function() {
+            orderId = $(this).find(':selected').data('id');
+
+            console.log(orderId);
             $(this).closest('.accordion').find('.prices').addClass('d-none');
-            $(this).closest('.accordion').find(`.prices.prices-${$(this).val().split('-')[0]}`).removeClass('d-none');
+            $(this).closest('.accordion').find(`.prices.prices-${$(this).val().split('-')[0]}`).removeClass(
+                'd-none');
             var totalPrice = 0;
-            $(this).closest('#divPedidos').find(`.preco`).each(function() {
+            $(this).closest(`#divPedidos`).find(`.preco`).each(function() {
                 if ($(this).is('.d-none') == false && $(this).closest('.accordion').find('.paynow').is(
                         ':checked')) {
                     totalPrice += parseFloat($(this).data('price'));
                     // console.log($(this).closest('.accordion').find('.paynow'));
                 }
             });
-            $('.total-price').text(totalPrice.toFixed(2).replace('.', ','));
-            $('.price').val(totalPrice.toFixed(2).replace('.', ','));
-
+            $(`.total-price-${orderId}`).text(totalPrice.toFixed(2).replace('.', ','));
+            $(`.price-${orderId}`).val(totalPrice.toFixed(2).replace('.', ','));
         });
+
         $(document).on('click', '.paynow', function() {
             var totalPrice = 0;
             $(this).closest('#divPedidos').find(`.preco`).each(function() {
@@ -215,8 +286,8 @@
                     // console.log($(this).closest('.accordion').find('.paynow'));
                 }
             });
-            $('.total-price').text(totalPrice.toFixed(2).replace('.', ','));
-            $('.price').val(totalPrice.toFixed(2).replace('.', ','));
+            $(`.total-price-${orderId}`).text(totalPrice.toFixed(2).replace('.', ','));
+            $(`.price-${orderId}`).val(totalPrice.toFixed(2).replace('.', ','));
         });
     </script>
 @endsection

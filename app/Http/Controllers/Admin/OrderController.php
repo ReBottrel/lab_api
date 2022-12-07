@@ -218,6 +218,7 @@ class OrderController extends Controller
                 'extra_value' => $exam->extra_value,
                 'extra_requests' => $request->extra_requests ?? 0,
                 'animal_id' => $animal->id,
+                'category_exam' => $animal->especies
             ]);
             $animal->update([
                 'status' => 11,
