@@ -210,7 +210,7 @@
                                     @php
                                         
                                         if ($item->payment_status == 0) {
-                                            $total += $item->value;
+                                            $total = $item->count() * $item->value;
                                         } else {
                                             $total = 0;
                                         }
