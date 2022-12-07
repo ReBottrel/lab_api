@@ -7,6 +7,6 @@
     <title>Document</title>
 </head>
 <body>
-    <h1>EM MANUTENÇÂO VOLTAREMOS EM BREVE!</h1>
+    <h1>EM MANUTENÇÃO VOLTAREMOS EM BREVE!</h1>
 </body>
 </html>
