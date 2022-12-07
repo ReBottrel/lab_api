@@ -78,6 +78,10 @@
                                                 $exames = App\Models\Exam::where('category', 'dna')
                                                     ->where('requests', 2)
                                                     ->get();
+                                            } elseif ($animal->especies == 'MUARES') {
+                                                $exames = App\Models\Exam::where('category', 'dna')
+                                                    ->where('requests', 2)
+                                                    ->get();
                                             } elseif ($animal->especies == 'MUAR') {
                                                 $exames = App\Models\Exam::where('category', 'dna')
                                                     ->where('requests', 2)
