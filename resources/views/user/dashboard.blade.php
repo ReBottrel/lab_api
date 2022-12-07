@@ -206,18 +206,16 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            @php
-                                                
-                                                if ($item->order_request_id == $order->id) {
-                                                    if ($item->payment_status == 0) {
-                                                        $total += $item->value;
-                                                    } else {
-                                                        $total += 0;
-                                                    }
-                                                }
-                                                
-                                            @endphp
                                     @endforeach
+                                    @php
+                                        
+                                        if ($item->payment_status == 0) {
+                                            $total += $item->value;
+                                        } else {
+                                            $total = 0;
+                                        }
+                                        
+                                    @endphp
                                     <div class="row">
                                         <div class="col-md-6">
                                             <input type="hidden" class="price-{{ $order->id }}" name="totalprice"

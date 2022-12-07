@@ -202,7 +202,23 @@ class OrderController extends Controller
 
         $animals = Animal::where('order_id', $request->order)->where('status', 7)->get();
         foreach ($animals as $animal) {
-            $exam = Exam::find(4);
+            if ($animal->especies == 'BOVINA') {
+                $exam = Exam::find(4);
+            }
+            if ($animal->especies == 'MUARES') {
+                $exam = Exam::find(20);
+            }
+            if ($animal->especies == 'ASININO') {
+                $exam = Exam::find(20);
+            }
+            if ($animal->especies == 'BOVINA') {
+                $exam = Exam::find(4);
+            }
+            if ($animal->especies == 'EQUINA') {
+                $exam = Exam::find(4);
+            } else {
+                $exam = Exam::find(4);
+            }
             $orderPay = OrderRequestPayment::create([
                 'order_request_id' => $request->order,
                 'owner_name' => $order_request->owner->owner_name,
