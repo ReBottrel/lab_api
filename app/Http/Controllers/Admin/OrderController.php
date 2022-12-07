@@ -204,17 +204,13 @@ class OrderController extends Controller
         foreach ($animals as $animal) {
             if ($animal->especies == 'BOVINA') {
                 $exam = Exam::find(4);
-            }
-            if ($animal->especies == 'MUARES') {
+            } elseif ($animal->especies == 'MUARES') {
                 $exam = Exam::find(20);
-            }
-            if ($animal->especies == 'ASININO') {
+            } elseif ($animal->especies == 'ASININO') {
                 $exam = Exam::find(20);
-            }
-            if ($animal->especies == 'BOVINA') {
-                $exam = Exam::find(4);
-            }
-            if ($animal->especies == 'EQUINA') {
+            } elseif ($animal->especies == 'EQUINO_PEGA') {
+                $exam = Exam::find(20);
+            } elseif ($animal->especies == 'EQUINA') {
                 $exam = Exam::find(4);
             } else {
                 $exam = Exam::find(4);
@@ -461,6 +457,4 @@ class OrderController extends Controller
 
         return redirect()->back()->with('success', 'Pedido removido com sucesso');
     }
-
-  
 }
