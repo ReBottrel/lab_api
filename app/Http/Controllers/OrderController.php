@@ -100,6 +100,7 @@ class OrderController extends Controller
             $create_orp['requests'] = $exam->requests;
             $create_orp['extra_value'] = $exam->extra_value;
             $create_orp['extra_requests'] = $request->extra_requests ?? 0;
+         
             OrderRequestPayment::create($create_orp);
         }
 

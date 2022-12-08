@@ -156,6 +156,7 @@ class SearchOrderMails extends Command
                 $order_request['collection_date'] = date('Y-m-d', strtotime($query['data_g']['data'] ?? date('Y-m-d'))) ?? null;
                 $order_request['collection_number'] = $query['data_g']['numero_do_atendimento'] ?? null;
                 $order_request['data_g'] = $query ?? null;
+                $order_request['tipo'] = 1;
                 OrderRequest::create($order_request);
             }
         });

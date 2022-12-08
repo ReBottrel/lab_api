@@ -366,6 +366,7 @@ class OrderController extends Controller
                 'origin' => 'sistema',
                 'uid' => $request->uid,
                 'creator_number' => 0,
+                'tipo' => $request->tipo
             ]);
             return redirect()->route('admin.order-add-animal', $order_request->id);
         }
@@ -456,5 +457,13 @@ class OrderController extends Controller
         $orders->delete();
 
         return redirect()->back()->with('success', 'Pedido removido com sucesso');
+    }
+    public function massUpdate()
+    {
+        $orders = OrderRequest::where('tipo', null)->update([
+            'tipo' => 1,
+        ]);
+
+        return response()->json($orders);
     }
 }

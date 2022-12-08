@@ -27,7 +27,8 @@ class OrderRequest extends Model
         'cpf_technical',
         'id_tecnico',
         'owner_id',
-        'uid'
+        'uid',
+        'tipo'
     ];
 
     public function user()

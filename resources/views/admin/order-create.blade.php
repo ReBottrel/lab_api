@@ -43,19 +43,31 @@
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="exampleFormControlInput1" class="form-label">ID da coleta</label>
-                                <input type="text" name="uid"  class="form-control">
+                                <input type="text" name="uid" class="form-control">
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="exampleFormControlInput1" class="form-label">Data da coleta</label>
-                                <input type="date" name="collection_date"  class="form-control">
+                                <input type="date" name="collection_date" class="form-control">
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="exampleFormControlInput1" class="form-label">Data de recebimento</label>
-                                <input type="date"  class="form-control">
+                                <input type="date" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="exampleFormControlInput1" class="form-label">Tipo de exame</label>
+                                <select class="form-select" name="tipo" aria-label="Default select example">
+                                    <option selected>Selecione o tipo de exame</option>
+                                    <option value="1">DNA Genotipagem</option>
+                                    <option value="2">DNA Homozigose</option>
+                                    <option value="3">DNA Beta Caseína</option>
+                                    <option value="4">Sorologia</option>
+                                </select>
                             </div>
                         </div>
                         <div class="col-md-12 my-4 ">

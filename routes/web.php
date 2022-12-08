@@ -146,4 +146,6 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::get('animais', [AnimaisController::class, 'index'])->name('animais');
 
     Route::any('order-delete/{id}', [OrderController::class, 'orderDelete'])->name('orders.delete');
+
+    Route::any('update-mass', [OrderController::class, 'massUpdate']);
 });
