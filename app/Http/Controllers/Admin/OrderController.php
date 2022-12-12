@@ -466,4 +466,38 @@ class OrderController extends Controller
 
         return response()->json($orders);
     }
+    public function exportPay()
+    {
+        $orders = OrderRequestPayment::where('payment_status', 1)->get();
+
+        $newdata = [];
+        foreach ($orders as $order) {
+            $newdata[] = [
+                'id' => $order->id,
+                'Id de pagamento' => $order->payment_id,
+                'Criador' => $order->owner_name,
+                'Status de pagamento' => 'Pago',
+                'E-mail' => $order->email,
+                'Categoria de Exame' => $order->category,
+                'Produto' => $order->animal,
+                'Valor do pagamento' => $order->value,
+                'Data de pagamento' => date('d/m/Y', strtotime($order->updated_at)),
+            ];
+
+            $name = $order->owner_name . '.xlsx';
+        }
+
+
+
+        $orders = collect($newdata);
+
+        $http_response_header = [
+            'Content-Type' => 'application/vnd.ms-excel',
+
+        ];
+
+        (new FastExcel($orders))->export('arquivos/' . $name);
+
+        return response()->download(public_path('arquivos/' . $name), $name, $http_response_header)->deleteFileAfterSend(true);
+    }
 }

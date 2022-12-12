@@ -3,8 +3,17 @@
     <div class="container">
         <div class="card">
             <div class="card-body">
-                <div class="col">
-                    <h4>Pedidos</h4>
+                <div class="row">
+                    <div class="col-md-6">
+                        <h4>Pedidos</h4>
+                    </div>
+                    <div class="col-md-6">
+                        <form action="{{ route('export.pay') }}" method="post">
+                            @csrf
+                            <button type="submit" class="btn btn-alt-loci text-white float-end export-pay">Exportar
+                                Pagos</button>
+                        </form>
+                    </div>
                 </div>
                 <div class="row my-4">
                     <div class="col-6">
@@ -171,6 +180,7 @@
                     }
                 });
             });
+
         });
     </script>
 @endsection
