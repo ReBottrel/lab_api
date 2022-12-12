@@ -483,11 +483,9 @@ class OrderController extends Controller
                 'Valor do pagamento' => $order->value,
                 'Data de pagamento' => date('d/m/Y', strtotime($order->updated_at)),
             ];
-
-         
         }
-
-        $name =  'relatorio.xlsx';
+        $date = date('d-m-y h:i:s');
+        $name =  'relatorio-' . $date . '.xlsx';
 
         $orders = collect($newdata);
 
