@@ -474,7 +474,7 @@ class OrderController extends Controller
         foreach ($orders as $order) {
             $newdata[] = [
                 'id' => $order->id,
-                'Id de pagamento' => $order->payment_id,
+                'Id de pagamento' => $order->payment_id ? $order->payment_id : 'Pago fora do sistema',
                 'Criador' => $order->owner_name,
                 'Status de pagamento' => 'Pago',
                 'E-mail' => $order->email,
