@@ -37,7 +37,7 @@
                     <div class="col-2">
                         <p>{{ $status }}</p>
                     </div>
-                    <div class="col-3">
+                    <div class="col-3 ">
                         <div>
                             <a href="#"><button class="btn btn-success">Ver Produto</button></a>
                         </div>

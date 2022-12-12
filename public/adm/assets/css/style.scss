@@ -55,7 +55,8 @@ a {
     a {
         color: #3a3b45 !important;
         font-weight: 700;
-        span{
+
+        span {
             margin: 0 5px;
         }
     }
@@ -67,4 +68,10 @@ a {
     li:nth-child(odd) {
         background-color: #dddfeb !important;
     }
+}
+
+.btn-buscar {
+    place-items: center;
+
+    margin-top: 13px;
 }

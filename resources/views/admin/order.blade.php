@@ -42,6 +42,9 @@
 
                 </div>
                 <div class="row">
+                    <div>
+                        <p>Filtro por data de pagamento</p>
+                    </div>
                     <div class="col-md-4">
                         <div class="mb-3">
                             <label for="exampleFormControlInput1" class="form-label">Inicio</label>
@@ -54,9 +57,8 @@
                             <input type="date" class="form-control" id="fim">
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="mb-3">
-                            <label for="exampleFormControlInput1" class="form-label"></label>
+                    <div class="col-md-4 d-flex btn-buscar">
+                        <div class="">
                             <button type="button" class="btn btn-primary buscar">BUSCAR</button>
                         </div>
                     </div>
