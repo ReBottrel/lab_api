@@ -39,7 +39,7 @@
                     </div>
                     <div class="col-3 ">
                         <div>
-                            <a href="#"><button class="btn btn-success">Ver Produto</button></a>
+                            <a href="{{ route('order.request.detail', $item->order_request_id) }}"><button class="btn btn-success">Ver Produto</button></a>
                         </div>
                     </div>
                     <div class="col-6">
