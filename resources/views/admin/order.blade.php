@@ -214,12 +214,12 @@
                         to: fim
                     },
                     beforeSend: function() {
-                        $(this).html(`<div class="spinner-border text-primary" role="status">
+                        $('.buscar').html(`<div class="spinner-border text-primary" role="status">
   <span class="sr-only">Loading...</span>
 </div>`);
                     },
                     success: function(data) {
-                        $(this).html(`BUSCAR`);
+                        $('.buscar').html(`BUSCAR`);
 
                         $('.filter').html(data[0].viewRender);
                     },
