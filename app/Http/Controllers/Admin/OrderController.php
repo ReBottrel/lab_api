@@ -21,7 +21,7 @@ class OrderController extends Controller
 
     public function order()
     {
-        $orders = OrderRequest::where('status', '!=', 0)->get();
+        $orders = OrderRequest::where('status', '!=', 0)->paginate(10);
         return view('admin.order', get_defined_vars());
     }
     public function orderEmail()
