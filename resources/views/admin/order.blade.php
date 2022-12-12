@@ -11,7 +11,7 @@
                         <form action="{{ route('export.pay') }}" method="post">
                             @csrf
                             <button type="submit" class="btn btn-alt-loci text-white float-end export-pay">Exportar
-                                Pagos</button>
+                               Relatório de Pedidos Pagos</button>
                         </form>
                     </div>
                 </div>
