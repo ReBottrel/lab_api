@@ -498,4 +498,10 @@ class OrderController extends Controller
 
         return response()->download(public_path('arquivos/' . $name), $name, $http_response_header)->deleteFileAfterSend(true);
     }
+    public function dateFilter(Request $request)
+    {
+        $animals = OrderRequestPayment::whereBetween('updated_at', [$request->get('from'), $request->get('to')])->where('payment_status', 1)->get();
+        $viewRender = view('admin.includes.filter-date', get_defined_vars())->render();
+        return response()->json([get_defined_vars()]);
+    }
 }

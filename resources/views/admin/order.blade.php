@@ -11,7 +11,7 @@
                         <form action="{{ route('export.pay') }}" method="post">
                             @csrf
                             <button type="submit" class="btn btn-alt-loci text-white float-end export-pay">Exportar
-                               Relatório de Pedidos Pagos</button>
+                                Relatório de Pedidos Pagos</button>
                         </form>
                     </div>
                 </div>
@@ -40,6 +40,26 @@
                         </form>
                     </div>
 
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label for="exampleFormControlInput1" class="form-label">Inicio</label>
+                            <input type="date" class="form-control" id="inicio">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label for="exampleFormControlInput1" class="form-label">Fim</label>
+                            <input type="date" class="form-control" id="fim">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label for="exampleFormControlInput1" class="form-label"></label>
+                            <button type="button" class="btn btn-primary buscar">BUSCAR</button>
+                        </div>
+                    </div>
                 </div>
                 <div class="filter">
                     @foreach ($orders as $order)
@@ -173,6 +193,23 @@
                     data: {
                         _token: "{{ csrf_token() }}",
                         search: search
+                    },
+                    success: function(data) {
+                        console.log(data);
+                        $('.filter').html(data[0].viewRender);
+                    }
+                });
+            });
+            $(document).on('click', '.buscar', function(){
+                var inicio = $('#inicio').val();
+                var fim = $('#fim').val();
+                $.ajax({
+                    url: "{{ route('filter.date') }}",
+                    type: "POST",
+                    data: {
+                        _token: "{{ csrf_token() }}",
+                        from: inicio,
+                        to: fim
                     },
                     success: function(data) {
                         console.log(data);
