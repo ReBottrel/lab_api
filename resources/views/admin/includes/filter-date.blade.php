@@ -45,6 +45,9 @@
                     <div class="col-6">
                         <p>ID da transação: {{ $item->payment_id ?? 'Pago pelo sistema' }}</p>
                     </div>
+                    <div class="col-6">
+                        <p>ID do pedido: {{ $item->order_request_id  }}</p>
+                    </div>
 
                 </div>
             </div>
