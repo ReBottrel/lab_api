@@ -202,7 +202,7 @@
                     }
                 });
             });
-            $(document).on('click', '.buscar', function(){
+            $(document).on('click', '.buscar', function() {
                 var inicio = $('#inicio').val();
                 var fim = $('#fim').val();
                 $.ajax({
@@ -213,9 +213,22 @@
                         from: inicio,
                         to: fim
                     },
+                    beforeSend: function() {
+                        $(this).html(`<div class="spinner-border text-primary" role="status">
+  <span class="sr-only">Loading...</span>
+</div>`);
+                    },
                     success: function(data) {
-                        console.log(data);
+                        $(this).html(`BUSCAR`);
+
                         $('.filter').html(data[0].viewRender);
+                    },
+                    error: function(er) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Encontramos um erro!',
+                        })
                     }
                 });
             });
