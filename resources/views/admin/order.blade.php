@@ -57,9 +57,14 @@
                             <input type="date" class="form-control" id="fim">
                         </div>
                     </div>
-                    <div class="col-md-4 d-flex btn-buscar">
+                    <div class="col-md-2 d-flex btn-buscar">
                         <div class="">
                             <button type="button" class="btn btn-primary buscar">BUSCAR</button>
+                        </div>
+                    </div>
+                    <div class="col-md-2 d-none d-flex btn-buscar export">
+                        <div class="">
+                            <button type="button" class="btn btn-success "><i class="fa-solid fa-file-excel"></i> EXPORTAR</button>
                         </div>
                     </div>
                 </div>
@@ -225,6 +230,7 @@
                         $('.buscar').html(`BUSCAR`);
 
                         $('.filter').html(data[0].viewRender);
+                        $('.export').removeClass('d-none');
                     },
                     error: function(er) {
                         Swal.fire({

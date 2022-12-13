@@ -117,6 +117,7 @@
                                         <option value="QUARTO DE MILHO">QUARTO DE MILHA</option>
                                         <option value="PAMPA">PAMPA</option>
                                         <option value="DESCONHECIDA">DESCONHECIDA</option>
+                                        <option value="NELORE">NELORE</option>
                                     </select>
                                 </div>
                             </div>
