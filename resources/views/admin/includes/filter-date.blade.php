@@ -55,4 +55,5 @@
     @empty
         <h4>Sem itens</h4>
     @endforelse
+    
 </div>

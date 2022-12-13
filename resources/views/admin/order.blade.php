@@ -223,7 +223,7 @@
                 var fim = $('#fim').val();
                 $.ajax({
                     url: "{{ route('filter.date') }}",
-                    type: "POST",
+                    type: "GET",
                     data: {
                         _token: "{{ csrf_token() }}",
                         from: inicio,
