@@ -9,7 +9,6 @@ use App\Models\Animal;
 use App\Models\Tecnico;
 use App\Models\OrderRequest;
 use Illuminate\Http\Request;
-use Maatwebsite\Excel\Excel;
 use App\Models\OrderRequestPayment;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Http;
