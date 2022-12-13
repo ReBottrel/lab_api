@@ -503,4 +503,35 @@ class OrderController extends Controller
         $viewRender = view('admin.includes.filter-date', get_defined_vars())->render();
         return response()->json([get_defined_vars()]);
     }
+    public function exportFilter(Request $request)
+    {
+        $animals = OrderRequestPayment::whereBetween('updated_at', [$request->get('from'), $request->get('to')])->where('payment_status', 1)->get();
+        $newdata = [];
+        foreach ($animals as $order) {
+            $newdata[] = [
+                'id' => $order->id,
+                'Id de pagamento' => $order->payment_id ? $order->payment_id : 'Pago fora do sistema',
+                'Criador' => $order->owner_name,
+                'Status de pagamento' => 'Pago',
+                'E-mail' => $order->email,
+                'Categoria de Exame' => $order->category,
+                'Produto' => $order->animal,
+                'Valor do pagamento' => $order->value,
+                'Data de pagamento' => date('d/m/Y', strtotime($order->updated_at)),
+            ];
+        }
+        $date = date('d-m-y h:i:s');
+        $name =  'relatorio-filtro.xlsx';
+
+        $orders = collect($newdata);
+
+        $http_response_header = [
+            'Content-Type' => 'application/vnd.ms-excel',
+
+        ];
+
+        (new FastExcel($orders))->export('arquivos/' . $name);
+
+        return response()->download(public_path('arquivos/' . $name), $name, $http_response_header)->deleteFileAfterSend(true);
+    }
 }

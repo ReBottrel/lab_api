@@ -94,6 +94,7 @@ Route::middleware(['auth:admin'])->group(function () {
 
     Route::post('export', [OrderController::class, 'exportExcel'])->name('export');
     Route::post('export-pay', [OrderController::class, 'exportPay'])->name('export.pay');
+    Route::post('export-filter', [OrderController::class, 'exportFilter'])->name('export.filter');
 
     Route::post('cpf-technical/{id}', [OrderController::class, 'cpfTechnical'])->name('cpf.technical');
 

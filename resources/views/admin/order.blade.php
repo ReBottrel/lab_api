@@ -64,7 +64,15 @@
                     </div>
                     <div class="col-md-2 d-none d-flex btn-buscar export">
                         <div class="">
-                            <button type="button" class="btn btn-success "><i class="fa-solid fa-file-excel"></i> EXPORTAR</button>
+                            <form action="{{ route('export.filter') }}" method="post">
+                                @csrf
+                                <input type="hidden" name="from" id="from">
+                                <input type="hidden" name="to" id="to">
+                                <button type="submit" class="btn btn-success export-filter"><i
+                                        class="fa-solid fa-file-excel"></i>
+                                    EXPORTAR</button>
+                            </form>
+
                         </div>
                     </div>
                 </div>
@@ -223,14 +231,16 @@
                     },
                     beforeSend: function() {
                         $('.buscar').html(`<div class="spinner-border text-primary" role="status">
-  <span class="sr-only">Loading...</span>
-</div>`);
+        <span class="sr-only">Loading...</span>
+        </div>`);
                     },
                     success: function(data) {
                         $('.buscar').html(`BUSCAR`);
 
                         $('.filter').html(data[0].viewRender);
                         $('.export').removeClass('d-none');
+                        $('#from').val(inicio);
+                        $('#to').val(fim);
                     },
                     error: function(er) {
                         Swal.fire({
