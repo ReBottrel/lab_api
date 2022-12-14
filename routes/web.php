@@ -158,4 +158,7 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::get('animal-show/{id}', [AnimaisController::class, 'show'])->name('animais.show');
     Route::get('animal-edit/{id}', [AnimaisController::class, 'edit'])->name('animais.edit');
     Route::post('animal-update/{id}', [AnimaisController::class, 'update'])->name('animais.update');
+    Route::get('animal-status/{id}', [AnimaisController::class, 'showStatus'])->name('animais.status');
+    Route::get('animal-get-status/{id}', [AnimaisController::class, 'getStatus'])->name('animais.get.status');
+    Route::post('animal-status-update/{id}', [AnimaisController::class, 'statusUpdate'])->name('animais.status.update');
 });

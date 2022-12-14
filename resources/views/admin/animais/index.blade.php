@@ -104,6 +104,7 @@
                                             <ul class="dropdown-menu">
 
                                                 <a href="{{ route('animais.show', $animal->id) }}" class="dropdown-item">Editar</a>
+                                                <a href="{{ route('animais.status', $animal->id) }}" class="dropdown-item">Editar Status</a>
                                             </ul>
                                         </div>
 

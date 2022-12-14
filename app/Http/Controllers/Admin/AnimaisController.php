@@ -87,7 +87,9 @@ class AnimaisController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $animal = Animal::find($id);
+        $animal->delete();
+        return redirect()->route('animais')->with('success', 'Animal excluído com sucesso!');
     }
     public function search(Request $request)
     {
@@ -96,5 +98,22 @@ class AnimaisController extends Controller
             $viewRender = view('admin.animais.includes.render', get_defined_vars())->render();
             return response()->json([get_defined_vars()]);
         }
+    }
+    public function showStatus($id)
+    {
+        $animal = Animal::find($id);
+        return view('admin.animais.status-edit', get_defined_vars());
+    }
+
+    public function getStatus($id)
+    {
+        $animal = Animal::find($id);
+        return response()->json($animal);
+    }
+    public function statusUpdate(Request $request, $id)
+    {
+        $animal = Animal::find($id);
+        $animal->update($request->all());
+        return redirect()->route('animais')->with('success', 'Status editado com sucesso!');
     }
 }

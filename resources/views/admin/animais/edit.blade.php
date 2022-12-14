@@ -115,25 +115,31 @@
                                     data-bs-dismiss="modal">Cancelar</button>
                                 <button type="submit" class="btn btn-primary">Salvar</button>
                             </div>
-                        @endsection
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection
 
-                        @section('js')
-                            <script>
-                                $(document).ready(function() {
-                                    var id = $('.id').val();
-                                    console.log(id);
-                                    $.ajax({
-                                        url: `{{ url('animal-edit') }}/${id}`,
+@section('js')
+    <script>
+        $(document).ready(function() {
+            var id = $('.id').val();
+            console.log(id);
+            $.ajax({
+                url: `{{ url('animal-edit') }}/${id}`,
 
-                                        type: 'GET',
-                                        success: (data) => {
-                                            console.log(data);
-                                            for (i in data) {
+                type: 'GET',
+                success: (data) => {
+                    console.log(data);
+                    for (i in data) {
 
-                                                $('#editar-produto').find(`[name="${i}"]`).val(data[i]);
-                                            }
-                                        }
-                                    });
-                                });
-                            </script>
-                        @endsection
+                        $('#editar-produto').find(`[name="${i}"]`).val(data[i]);
+                    }
+                }
+            });
+        });
+    </script>
+@endsection
