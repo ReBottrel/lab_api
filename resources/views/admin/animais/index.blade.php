@@ -92,7 +92,7 @@
                                     <td>{{ $animal->animal_name }}</td>
                                     <td> {{ $animal->breed }} </td>
                                     <td>
-                                        {{ $status }}
+                                        {{ $status ?? 'Sem Status' }}
                                     </td>
                                     <td>
                                         <div class="dropdown">
