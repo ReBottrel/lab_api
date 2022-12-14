@@ -16,7 +16,7 @@ class AnimaisController extends Controller
     public function index()
     {
         $animais = Animal::paginate();
-     
+
         return view('admin.animais.index', get_defined_vars());
     }
 
@@ -49,7 +49,8 @@ class AnimaisController extends Controller
      */
     public function show($id)
     {
-        //
+        $animal = Animal::find($id);
+        return view('admin.animais.edit', get_defined_vars());
     }
 
     /**
@@ -60,7 +61,8 @@ class AnimaisController extends Controller
      */
     public function edit($id)
     {
-        //
+        $animal = Animal::find($id);
+        return response()->json($animal);
     }
 
     /**
@@ -72,7 +74,9 @@ class AnimaisController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $animal = Animal::find($id);
+        $animal->update($request->all());
+        return redirect()->route('animais')->with('success', 'Animal editado com sucesso!');
     }
 
     /**
@@ -84,5 +88,13 @@ class AnimaisController extends Controller
     public function destroy($id)
     {
         //
+    }
+    public function search(Request $request)
+    {
+        if ($request->ajax()) {
+            $animais = Animal::where('animal_name', 'LIKE', '%' . $request->search . "%")->get();
+            $viewRender = view('admin.animais.includes.render', get_defined_vars())->render();
+            return response()->json([get_defined_vars()]);
+        }
     }
 }

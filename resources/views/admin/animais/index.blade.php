@@ -6,7 +6,7 @@
             <div class="card-header">
                 <h1>Animais</h1>
                 <div class="row">
-                
+
                     <div class="col-6">
                         <form action="" method="POST" class="form form-inline">
                             @csrf
@@ -14,7 +14,7 @@
                                 class="form-control buscar-animal" value="{{ $filters['filter'] ?? '' }}">
                         </form>
                     </div>
-                    <div class="col-6">
+                    {{-- <div class="col-6">
                         <form>
                             <select class="form-select status-filter">
                                 <optgroup label="Status">
@@ -29,7 +29,7 @@
                                 </optgroup>
                             </select>
                         </form>
-                    </div>
+                    </div> --}}
                 </div>
 
             </div>
@@ -103,21 +103,50 @@
 
                                             <ul class="dropdown-menu">
 
-                                                <a href="#" class="dropdown-item">Proprietário</a>
+                                                <a href="{{ route('animais.show', $animal->id) }}" class="dropdown-item">Editar</a>
                                             </ul>
                                         </div>
 
                                     </td>
                                 </tr>
                             @endforeach
+
                         </tbody>
+
                     </table>
                 </div>
-                {{ $animais->links() }}
+                <div class="pagin">
+                    {{ $animais->links() }}
+                </div>
             </div>
         </div>
 
     </div>
 @endsection
 @section('js')
+    <script>
+        $(document).ready(function() {
+            $('.buscar-animal').keyup(function() {
+                var query = $(this).val();
+                if (query != '') {
+
+                    $.ajax({
+                        url: "{{ route('search.animal') }}",
+                        method: "GET",
+                        data: {
+                            search: query,
+
+                        },
+                        success: function(data) {
+                            // console.log(data[0].animal[0]);
+                            $('.filter').html(data[0].viewRender);
+                            $('.pagin').addClass('d-none');
+                        }
+                    });
+                } else {
+                    $('.pagin').removeClass('d-none');
+                }
+            });
+        });
+    </script>
 @endsection

@@ -333,7 +333,7 @@ class OrderController extends Controller
     public function search(Request $request)
     {
         if ($request->ajax()) {
-            $orders = OrderRequest::with('user', 'orderRequestPayment')->where('status', '!=', 0)->where('creator', 'LIKE', '%' . $request->search . "%")->get();;
+            $orders = OrderRequest::with('user', 'orderRequestPayment')->where('status', '!=', 0)->where('creator', 'LIKE', '%' . $request->search . "%")->get();
             $viewRender = view('admin.includes.filter-search', get_defined_vars())->render();
             return response()->json([get_defined_vars()]);
         }

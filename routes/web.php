@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\TecnicoController;
 use App\Http\Controllers\User\UserOrderController;
 use App\Http\Controllers\User\UserDashboardController;
 use App\Http\Controllers\Admin\Auth\AdminAuthController;
+use App\Http\Controllers\AnimalController;
 use App\Http\Controllers\User\UserDadosController;
 use App\Models\OrderRequest;
 
@@ -146,9 +147,15 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::any('admin-logout', [AdminAuthController::class, 'logout'])->name('admin.logout');
     Route::any('admin-delete/{id}', [AdminAuthController::class, 'destroy'])->name('admin.delete');
 
-    Route::get('animais', [AnimaisController::class, 'index'])->name('animais');
 
     Route::any('order-delete/{id}', [OrderController::class, 'orderDelete'])->name('orders.delete');
 
     Route::any('update-mass', [OrderController::class, 'massUpdate']);
+
+
+    Route::get('animais', [AnimaisController::class, 'index'])->name('animais');
+    Route::get('search-animal', [AnimaisController::class, 'search'])->name('search.animal');
+    Route::get('animal-show/{id}', [AnimaisController::class, 'show'])->name('animais.show');
+    Route::get('animal-edit/{id}', [AnimaisController::class, 'edit'])->name('animais.edit');
+    Route::post('animal-update/{id}', [AnimaisController::class, 'update'])->name('animais.update');
 });

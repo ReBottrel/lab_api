@@ -161,6 +161,7 @@
     <script src="{{ asset('adm/assets/js/script.min.js') }}"></script>
     <script src="{{ asset('adm/assets/js/main.js') }}"></script>
     @yield('js')
+
     @if (Session::has('success'))
         <script type="text/javascript">
             Swal.fire({
@@ -189,7 +190,8 @@
             });
         </script>
     @endif
-
+    @component('layouts.partials.javascript')
+    @endcomponent
 </body>
 
 </html>
