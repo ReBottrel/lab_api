@@ -46,7 +46,7 @@
                         @csrf
                     </form>
                 @else
-                    <a href="/entrar.html" type="button" class="btn btn-primary">Entrar</a>
+                    <a href="{{ route('login') }}" type="button" class="btn btn-primary">Entrar</a>
                     <a href="/cadastro.html" type="button" class="btn btn-secondary">Cadastar-se</a>
                 @endif
 
@@ -146,7 +146,7 @@
         <!-- Copyright -->
         <div class="text-center p-4" style="background-color: rgba(0, 0, 0, 0.025);">
             © 2022 Todos os Direitos Reservados
-            <a class="text-reset fw-bold" href="#">Labloci</a>
+            <a class="text-reset fw-bold" href="https://locilab.com.br/">Labloci</a>
         </div>
         <!-- Copyright -->
     </footer>

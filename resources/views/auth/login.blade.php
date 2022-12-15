@@ -163,7 +163,7 @@
         <!-- Copyright -->
         <div class="text-center p-4" style="background-color: rgba(0, 0, 0, 0.025);">
             © 2022 Todos os Direitos Reservados
-            <a class="text-reset fw-bold" href="#">Labloci</a>
+            <a class="text-reset fw-bold" href="https://locilab.com.br/">Labloci</a>
         </div>
         <!-- Copyright -->
     </footer>
