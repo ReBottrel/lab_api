@@ -45,6 +45,7 @@ Route::post('admin-login-entrar', [AdminAuthController::class, 'login'])->name('
 Route::middleware(['auth:web'])->group(function () {
     Route::get('user-orders', [UserOrderController::class, 'index'])->name('user.orders');
     Route::get('user-dashboard', [UserDashboardController::class, 'index'])->name('user.dashboard');
+    Route::get('order-done', [UserDashboardController::class, 'ordersDone'])->name('orders.done');
 
     // Route::get('user-dashboard', [UserDashboardController::class, 'maintrance'])->name('user.dashboard');
 

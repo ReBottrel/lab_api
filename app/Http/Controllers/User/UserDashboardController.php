@@ -22,6 +22,16 @@ class UserDashboardController extends Controller
         return view('user.dashboard', get_defined_vars());
     }
 
+    public function ordersDone()
+    {
+        $user = Auth::user()->id;
+        $orders = OrderRequest::with('user', 'orderRequestPayment')->whereHas('orderRequestPayment', function ($query) {
+            $query->where('payment_status', 1);
+        })->where('user_id', $user)->where('status', 2)->get();
+
+        return view('user.orders-done', get_defined_vars());
+    }
+
     public function paymentMethod(Request $request)
     {
         $prices = [55.00, 500.00, 400.00, 300.00, 200.00];
