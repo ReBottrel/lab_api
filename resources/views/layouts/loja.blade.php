@@ -14,7 +14,7 @@
     <script src="https://kit.fontawesome.com/0ab2bcde1c.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="{{ asset('loja/css/style.min.css') }}">
 
-    <title>Pedidos</title>
+    <title>LABLOCI - E-COMMERCE</title>
 </head>
 
 <body>
