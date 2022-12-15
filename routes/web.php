@@ -17,6 +17,7 @@ use App\Http\Controllers\User\UserDadosController;
 use App\Http\Controllers\User\UserOrderController;
 use App\Http\Controllers\User\Auth\LoginController;
 use App\Http\Controllers\User\UserDashboardController;
+use App\Http\Controllers\Admin\HomeController as Admin;
 use App\Http\Controllers\Admin\Auth\AdminAuthController;
 
 /*
@@ -65,7 +66,7 @@ Route::middleware(['auth:web'])->group(function () {
 
 
 Route::middleware(['auth:admin'])->group(function () {
-    Route::get('painel', [HomeController::class, 'index'])->name('admin');
+    Route::get('painel', [Admin::class, 'index'])->name('admin');
     Route::get('order-detail/{id}', [OrderController::class, 'orderDetail'])->name('order.detail');
     Route::get('order-json/{id}', [HomeController::class, 'orderJson'])->name('order.json');
 
