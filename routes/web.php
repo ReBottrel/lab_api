@@ -1,9 +1,11 @@
 <?php
 
+use App\Models\OrderRequest;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TesteController;
+use App\Http\Controllers\AnimalController;
 use App\Http\Controllers\GatewayController;
-use App\Http\Controllers\Admin\HomeController;
+use App\Http\Controllers\Loja\HomeController;
 use App\Http\Controllers\Admin\ExameController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\OwnerController;
@@ -11,12 +13,11 @@ use App\Http\Controllers\Admin\ConfigController;
 use App\Http\Controllers\Admin\AddressController;
 use App\Http\Controllers\Admin\AnimaisController;
 use App\Http\Controllers\Admin\TecnicoController;
+use App\Http\Controllers\User\UserDadosController;
 use App\Http\Controllers\User\UserOrderController;
+use App\Http\Controllers\User\Auth\LoginController;
 use App\Http\Controllers\User\UserDashboardController;
 use App\Http\Controllers\Admin\Auth\AdminAuthController;
-use App\Http\Controllers\AnimalController;
-use App\Http\Controllers\User\UserDadosController;
-use App\Models\OrderRequest;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,6 +31,10 @@ use App\Models\OrderRequest;
 */
 
 Auth::routes();
+
+Route::post('login-post', [LoginController::class, 'login'])->name('login.custom');
+
+Route::get('/', [HomeController::class, 'index'])->name('loja');
 
 Route::get('teste-zap-api', [TesteController::class, 'testeZapApi']);
 

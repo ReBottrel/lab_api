@@ -40,19 +40,21 @@
         <main class="flex-fill">
             <div class="container">
                 <div class="row justify-content-center">
-                    <form class="col-sm-10 col-md-8 col-lg-6" action="{{ route('login') }}" method="post">
+                    <form class="col-sm-10 col-md-8 col-lg-6" id="loginForm">
                         @csrf
                         <h3 class="text-primary">Identifique-se, por favor</h3>
 
                         <div class="form-floating mb-3">
-                            <input type="email" name="email" id="txtEmail" class="form-control" placeholder=" "
+                            <input type="email" name="email" id="email" class="form-control" placeholder=" "
                                 autofocus>
                             <label for="txtEmail">E-mail</label>
+                            <span id="emailError" class="error"></span>
                         </div>
 
                         <div class="form-floating mb-3">
-                            <input type="password" name="password" id="txtSenha" class="form-control" placeholder=" ">
+                            <input type="password" name="password" id="password" class="form-control" placeholder=" ">
                             <label for="txtSenha">Senha</label>
+                            <span id="passwordError" class="error"></span>
                         </div>
 
                         <div class="form-check mb-3">
@@ -95,7 +97,70 @@
             </div>
         </div>
     </footer>
+    <script src="{{ asset('adm/assets/js/jquery.min.js') }}"></script>
     <script src="{{ asset('loja/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+    <script>
+        // rota para processar o login
+        const loginRoute = "{{ route('login.custom') }}";
+
+        // função de callback para processar o login
+        function handleLogin(response) {
+            // verifica se o login foi bem-sucedido
+            if (response.success) {
+                // redireciona para a página inicial
+                window.location.href = "{{ route('user.dashboard') }}";
+            } else {
+                // exibe uma mensagem de erro
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Falha ao realizar login: ' + response.message,
+                    icon: 'error',
+                    confirmButtonText: 'Ok'
+                })
+
+            }
+        }
+
+        // quando o formulário for enviado
+        $('#loginForm').submit(function(event) {
+
+            event.preventDefault();
+            $('#emailError').text('');
+            $('#passwordError').text('');
+            // previne o envio padrão do formulário
+            let isValid = true;
+            const email = $('#email').val();
+            // verifica se o e-mail é válido
+            if (!email || !email.match(/\S+@\S+\.\S+/)) {
+                // exibe uma mensagem de erro
+                $('#emailError').text('Por favor, informe um endereço de e-mail válido.');
+
+                // indica que o formulário é inválido
+                isValid = false;
+            }
+            const password = $('#password').val();
+
+            // verifica se a senha é válida
+            if (!password || password.length < 6) {
+                // exibe uma mensagem de erro
+                $('#passwordError').text('A senha deve conter pelo menos 6 caracteres.');
+
+                // indica que o formulário é inválido
+                isValid = false;
+            }
+
+
+            // pega os dados do formulário
+            const data = $(this).serialize();
+            if (!isValid) {
+                event.preventDefault();
+            }
+            // envia os dados do formulário para a rota de login
+            $.post(loginRoute, data, handleLogin);
+        });
+    </script>
 </body>
 
 </html>

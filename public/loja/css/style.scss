@@ -1,10 +1,13 @@
 @import "../css/cores";
+
 .btn-secondary {
   color: white;
 }
+
 .btn-secondary:hover {
   color: white !important;
 }
+
 .filtros {
   display: flex;
   flex-wrap: wrap;
@@ -30,12 +33,15 @@
 .submit-line input {
   color: $primary;
 }
+
 .form-control {
   border: 1px solid $secondary;
 }
+
 .form-control::placeholder {
   color: $secondary;
 }
+
 .form-control:focus::placeholder {
   color: $primary;
 }
@@ -48,6 +54,7 @@
   background-color: $primary;
   color: white;
 }
+
 .drop-secondary:hover {
   background-color: $secondary;
 }
@@ -58,32 +65,68 @@
   border: none !important;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px !important;
 }
+
 .card-header {
   background-color: $gray-400;
   border: none !important;
   color: $gray-600;
 }
+
 .card-header p {
   border: none !important;
 }
+
 .price {
   color: $gray-700;
 }
+
 .btn-xxl {
   padding: 20px;
   display: block;
 }
+
 .text-gray {
   color: $gray-700;
 }
+
 .card-2 {
   padding: 20px;
   box-shadow: rgba(0, 0, 0, 0.2) 0px 12px 28px 0px, rgba(0, 0, 0, 0.1) 0px 2px 4px 0px,
     rgba(255, 255, 255, 0.05) 0px 0px 0px 1px inset;
 }
-li{
+
+li {
   list-style: none;
 }
+
 a.list-group-item.list-group-item-action {
   padding: 15px;
+}
+
+html {
+  height: 100%;
+  min-height: 100%;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+
+footer {
+  margin-top: auto;
+  // background-color: rgb(223, 222, 222);
+  border-top: solid 2px $primary;
+
+}
+
+.imgs-footer {
+  display: flex;
+
+  flex-direction: column;
+  img{
+    width: 80px;
+    margin: 8px 0;
+  }
 }
