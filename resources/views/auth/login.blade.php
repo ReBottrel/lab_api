@@ -76,26 +76,96 @@
             </div>
         </main>
     </div>
-    <footer class="border-top border-primary text-muted text-bg-primary">
-        <div class="container">
-            <div class="row py-3 ">
-                <div class="  col-5 patrocinios mb-3">
-                    <img class="img-fluid" src="{{ asset('loja/assets/img/isag.jpg') }}" alt="">
-                </div>
-                <div class=" col-5 patrocinios mb-3">
-                    <img class="img-fluid" src="{{ asset('loja/assets/img/mpa.jpg') }}" alt="">
-                </div>
-                <div class=" col-2 patrocinios mb-3">
-                    <img class="img-fluid" src="{{ asset('loja/assets/img/inmetro.jpg') }}" alt="">
-                </div>
-                <div class="col-12  text-center text-bg-primary mt-3">
-                    &copy; 2022 -Loci Ltda
-                    Rua Tal, 111, Cidade CD
-                    CPNJ 99.999.999/0001-99
-                </div>
+    <footer class="text-center text-lg-start bg-white text-muted">
+        <!-- Section: Social media -->
 
+        <!-- Section: Social media -->
+
+        <!-- Section: Links  -->
+        <section class="">
+            <div class="container text-center text-md-start mt-5">
+                <!-- Grid row -->
+                <div class="row mt-3">
+                    <!-- Grid column -->
+                    <div class="col-md-3 col-lg-4 col-xl-3 mx-auto mb-4">
+                        <!-- Content -->
+                        <h6 class="text-uppercase fw-bold mb-4">
+                            <i class="fas fa-gem me-3 text-primary"></i>LABLOCI
+                        </h6>
+                        <p>
+                            Somos uma equipe de cientistas fiéis aos princípios da ética, da competência técnica e da
+                            segurança dos resultados produzidos;
+                        </p>
+                    </div>
+                    <!-- Grid column -->
+
+                    <!-- Grid column -->
+                    <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mb-4">
+                        <!-- Links -->
+                        <h6 class="text-uppercase fw-bold mb-4">
+                            Parceiros
+                        </h6>
+                        <div class="imgs-footer">
+                            <div>
+                                <img class="img-fluid" src="{{ asset('loja/assets/img/isag.jpg') }}" alt="">
+                            </div>
+                            <div>
+                                <img class="img-fluid" src="{{ asset('loja/assets/img/mpa.jpg') }}" alt="">
+                            </div>
+                            <div>
+                                <img class="img-fluid" src="{{ asset('loja/assets/img/inmetro.jpg') }}" alt="">
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Grid column -->
+
+                    <!-- Grid column -->
+                    <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mb-4">
+                        <!-- Links -->
+                        <h6 class="text-uppercase fw-bold mb-4">
+                            Links Úteis
+                        </h6>
+                        <p>
+                            <a href="#!" class="text-reset">Politicas de privacidade</a>
+                        </p>
+                        <p>
+                            <a href="#!" class="text-reset">Termos e condições</a>
+                        </p>
+                        <p>
+                            <a href="#!" class="text-reset">Pedidos</a>
+                        </p>
+                        <p>
+                            <a href="#!" class="text-reset">Suporte</a>
+                        </p>
+                    </div>
+                    <!-- Grid column -->
+
+                    <!-- Grid column -->
+                    <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mb-md-0 mb-4">
+                        <!-- Links -->
+                        <h6 class="text-uppercase fw-bold mb-4">Contato</h6>
+                        <p><i class="fas fa-home me-3 text-primary"></i>Rua Coronel Durães, 170, slj 01, Bela Vista -
+                            Lagoa Santa l MG</p>
+                        <p>
+                            <i class="fas fa-envelope me-3 text-primary"></i>
+                            atendimento@locilab.com.br
+                        </p>
+                        <p><i class="fas fa-phone me-3 text-primary"></i> 31 3681-4331</p>
+                        <p><i class="fa-brands me-3 fa-whatsapp text-primary"></i> 31 99737-0135</p>
+                    </div>
+                    <!-- Grid column -->
+                </div>
+                <!-- Grid row -->
             </div>
+        </section>
+        <!-- Section: Links  -->
+
+        <!-- Copyright -->
+        <div class="text-center p-4" style="background-color: rgba(0, 0, 0, 0.025);">
+            © 2022 Todos os Direitos Reservados
+            <a class="text-reset fw-bold" href="#">Labloci</a>
         </div>
+        <!-- Copyright -->
     </footer>
     <script src="{{ asset('adm/assets/js/jquery.min.js') }}"></script>
     <script src="{{ asset('loja/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
