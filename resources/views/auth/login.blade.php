@@ -30,7 +30,7 @@
                 </div>
             </form>
             <div class="col-md-3 text-end">
-                <a href="/entrar.html" type="button" class="btn btn-primary">Entrar</a>
+                <a href="{{ route('login') }}" type="button" class="btn btn-primary">Entrar</a>
                 <a href="/cadastro.html" type="button" class="btn btn-secondary">Cadastar-se</a>
             </div>
         </header>
