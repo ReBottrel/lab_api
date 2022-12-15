@@ -123,19 +123,22 @@
                         </div>
                     </div>
                     <div class="col-xl-1 col-xxl-3">
-                        <div class="btn-group border rounded" style="background: var(--bs-success);">
-                            <button class="btn link-light" type="button">Ações</button><button
-                                class="btn btn-sm dropdown-toggle dropdown-toggle-split link-light"
-                                data-bs-toggle="dropdown" aria-expanded="false" type="button"></button>
-                            <div class="dropdown-menu">
-                                <a class="dropdown-item" data-id="{{ $order->id }}" id="btn-aceitar">Aceitar</a>
+                        <div class="dropdown">
+                            <a class="btn btn-alt-loci text-white dropdown-toggle" href="#" role="button"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                Ações
+                            </a>
 
+                            <ul class="dropdown-menu">
+                                <a class="dropdown-item" data-id="{{ $order->id }}" id="btn-aceitar">Aceitar</a>
                                 <a class="dropdown-item" id="show-btn"
                                     href="{{ route('order.detail', $order->id) }}">Ver</a>
-
-                            </div>
+                                <a class="dropdown-item" data-id="{{ $order->id }}" id="btn-delete">Excluir</a>
+                            </ul>
                         </div>
+
                     </div>
+
                 </div>
             </div>
         </div>
@@ -156,4 +159,38 @@
         </div>
     </div>
     @endif
+@endsection
+@section('js')
+    <script>
+        $(document).on('click', '#btn-delete', function() {
+            var id = $(this).data('id');
+            Swal.fire({
+                title: 'Tem certeza?',
+                text: "Você não poderá reverter isso!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sim, deletar!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '/order-delete/' + id,
+                        type: 'POST',
+                        data: {
+                            "_token": "{{ csrf_token() }}",
+                        },
+                        success: function(response) {
+                            Swal.fire(
+                                'Deletado!',
+                                'O pedido foi deletado.',
+                                'success'
+                            )
+                            location.reload();
+                        }
+                    });
+                }
+            })
+        });
+    </script>
 @endsection
