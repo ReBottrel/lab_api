@@ -168,3 +168,24 @@ footer {
     place-items: center;
   }
 }
+
+.order-itens {
+  background-color: #f8f9fa;
+  margin: 15px 10px;
+  padding: 10px;
+  border-radius: 10px;
+  -webkit-box-shadow: 0px 6px 5px 0px rgba(0, 0, 0, 0.12);
+  -moz-box-shadow: 0px 6px 5px 0px rgba(0, 0, 0, 0.12);
+  box-shadow: 0px 6px 5px 0px rgba(0, 0, 0, 0.12);
+
+  span {
+    color: #5e5e5e;
+  }
+}
+
+.payment-ok {
+  span {
+    color: rgb(29, 214, 29);
+    font-weight: 700;
+  }
+}

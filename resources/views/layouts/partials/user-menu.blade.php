@@ -11,7 +11,7 @@
             </a>
             <ul class="dropdown-menu">
                 <li><a class="dropdown-item" href="{{ route('user.dashboard') }}">Efetuados</a></li>
-                <li><a class="dropdown-item" href="{{ route('orders.done') }}">Concluídos</a></li>
+                <li><a class="dropdown-item" href="#">Concluídos</a></li>
                 <li><a class="dropdown-item" href="#">Cancelados</a></li>
             </ul>
         </div>

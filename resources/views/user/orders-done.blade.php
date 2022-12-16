@@ -10,7 +10,7 @@
                     <div class="row">
                         @foreach ($orders as $item)
                             <div class="order">
-                                <a href="">
+                                <a href="{{ route('orders.done.detail', $item->id) }}">
                                     <div class="order-flex">
                                         <div>
                                             <p>Numero do pedido: {{ $item->id }}</p>
