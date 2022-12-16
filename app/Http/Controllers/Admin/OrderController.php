@@ -136,6 +136,13 @@ class OrderController extends Controller
             'status' => $request->value,
         ]);
 
+        if ($request->value == 10) {
+            $orderRequest = OrderRequestPayment::where('animal_id', $animal->id)->first();
+            $orderRequest->update([
+                'payment_status' => 2,
+            ]);
+        }
+
         \Log::channel('admins_actions')->info(['Usuário', auth()->user()->name], ['Alterou status de:', $animal->animal_name]);
 
         return response()->json($animal);

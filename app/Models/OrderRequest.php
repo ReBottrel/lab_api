@@ -48,4 +48,8 @@ class OrderRequest extends Model
     {
         return $this->hasOne(Owner::class, 'id', 'owner_id');
     }
+    public function animals()
+    {
+        return $this->hasMany(Animal::class, 'order_id');
+    }
 }

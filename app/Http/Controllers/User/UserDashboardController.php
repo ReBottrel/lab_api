@@ -26,20 +26,15 @@ class UserDashboardController extends Controller
     {
         $user = Auth::user()->id;
         $orders = OrderRequest::with('user', 'orderRequestPayment')->whereHas('orderRequestPayment', function ($query) {
-            $query->where('payment_status', 1);
+            $query->where('payment_status', 2);
         })->where('user_id', $user)->where('status', 2)->get();
 
         return view('user.orders-done', get_defined_vars());
     }
     public function ordersDoneDetail($id)
     {
-        $order = OrderRequest::with('user', 'orderRequestPayment')->whereHas('orderRequestPayment', function ($query) {
-            $query->where('payment_status', 1);
-        })->find($id);
-
-    
+        $order = OrderRequest::with('user', 'orderRequestPayment', 'animals')->find($id);
        
-
         return view('user.orders-done-detail', get_defined_vars());
     }
 

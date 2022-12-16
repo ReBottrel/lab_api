@@ -9,8 +9,8 @@
                 <div class="container">
                     <div class="row">
                         @foreach ($order->orderRequestPayment as $item)
-                            @if ($item->payment_status == 1)
-                                @if ($item->payment_status == 1)
+                            @if ($item->payment_status == 2)
+                                @if ($item->payment_status == 2)
                                     @php
                                         
                                         $status = 'Pagamento confirmado';
