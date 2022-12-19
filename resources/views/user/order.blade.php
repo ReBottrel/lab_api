@@ -155,5 +155,17 @@
                 }
             });
         });
+        $(document).on('click', '.paynow', function() {
+            var totalPrice = 0;
+            $('.sel-price').each(function() {
+                if (!$(this).attr('disabled')) {
+                    if ($(this).closest('.order-itens').find('.paynow').prop('checked'))
+                        totalPrice += parseFloat($(this).find(':selected').data('value'));
+                    console.log($(this));
+                }
+            });
+            $(`.total-price`).text(`R$ ${totalPrice.toFixed(2).replace('.', ',')}`);
+            $(`.price-total`).val(`${totalPrice.toFixed(2).replace('.', ',')}`);
+        });
     </script>
 @endsection
