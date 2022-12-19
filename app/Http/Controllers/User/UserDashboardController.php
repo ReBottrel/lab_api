@@ -14,7 +14,6 @@ class UserDashboardController extends Controller
 {
     public function index()
     {
-        $prices = [55.00, 500.00, 400.00, 300.00, 200.00];
 
         $user = Auth::user()->id;
         $orders = OrderRequest::with('user', 'orderRequestPayment')->where('user_id', $user)->where('status', 2)->get();
@@ -43,12 +42,30 @@ class UserDashboardController extends Controller
         return view('user.orders-done-detail', get_defined_vars());
     }
 
+    public function updateValue(Request $request, $id)
+    {
+
+        $order = OrderRequest::find($id);
+        $order->update([
+            'total' => $request->value,
+        ]);
+
+        $product = OrderRequestPayment::find($request->product);
+        $exame = Exam::find($request->exame);
+        $product->update([
+            'value' => $request->productValue,
+            'title' => $exame->title,
+            'short_description' => $exame->short_description,
+            'exam_id' => $exame->id
+        ]);
+
+        return response()->json($product);
+    }
+
     public function paymentMethod(Request $request)
     {
-        $prices = [55.00, 500.00, 400.00, 300.00, 200.00];
 
         $order = OrderRequest::with('orderRequestPayment')->find($request->orderId);
-
 
 
 
@@ -77,9 +94,9 @@ class UserDashboardController extends Controller
                 $value += $pay->value;
             }
         }
-        $order->update([
-            'total' => $value,
-        ]);
+        // $order->update([
+        //     'total' => $value,
+        // ]);
 
         return view('user.payment', get_defined_vars());
     }

@@ -64,6 +64,8 @@ Route::middleware(['auth:web'])->group(function () {
 
     Route::get('user-edit-dados', [UserDadosController::class, 'editDados'])->name('user.edit.dados');
     Route::post('user-update-dados', [UserDadosController::class, 'updateUser'])->name('user.update.dados');
+
+    Route::post('value-update/{id}', [UserDashboardController::class, 'updateValue']);
 });
 
 
