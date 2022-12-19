@@ -7,10 +7,25 @@
             @endcomponent
             <div class="col-md-8 col-12 my-3">
                 <div class="row">
+                    <div class="col-md-8">
+                        <div class="mb-3">
+                            <label for="exampleFormControlInput1" class="form-label">Tem um cupom de desconto?</label>
+                            <input type="text" class="form-control" id="exampleFormControlInput1"
+                                placeholder="Coloque aqui o código do seu cupom">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <button class="btn btn-primary">APLICAR</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
                     <nav>
                         <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                            <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home"
-                                type="button" role="tab" aria-controls="nav-home" aria-selected="true">Cartão de
+                            <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab"
+                                data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home"
+                                aria-selected="true">Cartão de
                                 crédito</button>
                             <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile"
                                 type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Pix</button>

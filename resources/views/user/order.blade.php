@@ -103,15 +103,18 @@
                         ->sum();
                     
                 @endphp
-                <div class="row">
-                    <div class="col-md-6">
-                        <h4>Total do seu pedido: <span
-                                class="total-price">{{ 'R$ ' . number_format($total, 2, ',', '.') }}</span></h4>
-                        <input type="hidden" class="price-total" name="totalprice" value="{{ $total }}">
-                    </div>
-                    <div class="col-md-6">
-                        <button type="submit" class="btn btn-primary">Formas
-                            de Pagamento</button>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 text-uppercase">
+                            <h4>Total do seu pedido: <span
+                                    class="total-price text-gray">{{ 'R$ ' . number_format($total, 2, ',', '.') }}</span>
+                            </h4>
+                            <input type="hidden" class="price-total" name="totalprice" value="{{ $total }}">
+                        </div>
+                        <div class="col-md-6">
+                            <button type="submit" class="btn btn-primary">Formas
+                                de Pagamento</button>
+                        </div>
                     </div>
                 </div>
                 </form>
