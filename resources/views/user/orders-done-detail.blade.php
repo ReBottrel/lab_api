@@ -31,6 +31,10 @@
                                         <p>ID de Pagamento: <span>{{ $item->payment_id ?? 'Pago fora do sistema' }}</span>
                                         </p>
                                     </div>
+                                    <div class="col-md-12">
+                                        <p>Status do pedido: <span>Pedido concluído</span>
+                                        </p>
+                                    </div>
                                 </div>
                             @endif
                         @endforeach

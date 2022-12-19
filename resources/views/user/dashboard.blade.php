@@ -35,8 +35,8 @@
                 @php
                     $total = 0;
                 @endphp
-                @foreach ($orders as $order)
-                    <div class="accordion my-4" id="divPedidos">
+                @foreach ($orders as $item)
+                    {{-- <div class="accordion my-4" id="divPedidos">
                         <div class="accordion-item">
                             <h2 class="accordion-header">
                                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
@@ -110,12 +110,7 @@
                                                             <p>{{ $item->animal }}</p>
                                                         </div>
                                                         <div class="col-md-2">
-                                                            {{-- @foreach ($prices as $key => $p)
-                                                                <p class="prices preco @if ($key != 0) d-none @endif prices-{{ $key }}"
-                                                                    data-price="{{ $p }}">
-
-                                                                    {{ 'R$ ' . number_format($p, 2, ',', '.') }} </p>
-                                                            @endforeach --}}
+                                                        
                                                             @foreach ($exames as $key => $p)
                                                                 <p class="prices preco @if ($key != 0) d-none @endif prices-{{ $key }}"
                                                                     data-price="{{ $p->value }}">
@@ -123,7 +118,7 @@
                                                                     {{ 'R$ ' . number_format($p->value, 2, ',', '.') }}
                                                                 </p>
                                                             @endforeach
-                                                            {{-- <p>{{ 'R$ ' . number_format($item->value, 2, ',', '.') }} </p> --}}
+                                                          
                                                         </div>
                                                         <div class="col-md-2">
                                                             <p>1</p>
@@ -162,21 +157,7 @@
                                                                         <label for="exampleFormControlInput1"
                                                                             class="form-label">Tempo de
                                                                             entrega</label>
-                                                                        {{-- <select class="form-select sel-price" name="days[]"
-                                                                            @if ($item->payment_status == 1) disabled @endif
-                                                                            aria-label="Default select example">
-                                                                            <option value="0-{{ $item->id }}" selected>
-                                                                                20 Dias (Padrão)
-                                                                            <option value="1-{{ $item->id }}">24 Horas
-                                                                            </option>
-                                                                            <option value="2-{{ $item->id }}">2 Dias
-                                                                            </option>
-                                                                            <option value="3-{{ $item->id }}">5 Dias
-                                                                            </option>
-                                                                            <option value="4-{{ $item->id }}">10 Dias
-                                                                            </option>
-                                                                            </option>
-                                                                        </select> --}}
+                                                                
                                                                         <select class="form-select sel-price" name="days[]"
                                                                             @if ($item->payment_status == 1) disabled @endif
                                                                             aria-label="Default select example">
@@ -237,6 +218,21 @@
                                 </div>
                             </div>
                         </div>
+                    </div> --}}
+                    <div class="order">
+                        <a href="{{ route('user.orders', $item->id) }}">
+                            <div class="row order-flex">
+                                <div class="col-md-4">
+                                    <p>Numero do pedido: #{{ $item->id }}</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <p>Data: {{ date('d/m/Y', strtotime($item->created_at)) }}</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <p>Clique para ver mais informações</p>
+                                </div>
+                            </div>
+                        </a>
                     </div>
                 @endforeach
 

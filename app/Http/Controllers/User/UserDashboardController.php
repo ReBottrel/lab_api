@@ -21,6 +21,11 @@ class UserDashboardController extends Controller
 
         return view('user.dashboard', get_defined_vars());
     }
+    public function orders($id)
+    {
+        $order = OrderRequest::with('user', 'orderRequestPayment')->find($id);
+        return view('user.order', get_defined_vars());
+    }
 
     public function ordersDone()
     {
@@ -34,7 +39,7 @@ class UserDashboardController extends Controller
     public function ordersDoneDetail($id)
     {
         $order = OrderRequest::with('user', 'orderRequestPayment', 'animals')->find($id);
-       
+
         return view('user.orders-done-detail', get_defined_vars());
     }
 

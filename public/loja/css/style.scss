@@ -144,7 +144,7 @@ footer {
 
 .order {
   background-color: #f8f9fa;
-  margin: 10px 0;
+  margin: 20px 0;
   border-radius: 10px;
   -webkit-box-shadow: 0px 6px 5px 0px rgba(0, 0, 0, 0.12);
   -moz-box-shadow: 0px 6px 5px 0px rgba(0, 0, 0, 0.12);
@@ -163,15 +163,13 @@ footer {
   }
 
   .order-flex {
-    display: flex;
-    justify-content: space-around;
-    place-items: center;
+    align-items: center;
   }
 }
 
 .order-itens {
   background-color: #f8f9fa;
-  margin: 15px 10px;
+  margin: 25px 10px;
   padding: 10px;
   border-radius: 10px;
   -webkit-box-shadow: 0px 6px 5px 0px rgba(0, 0, 0, 0.12);
