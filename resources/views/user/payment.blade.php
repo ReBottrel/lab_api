@@ -177,6 +177,7 @@
 @endsection
 @section('scripts')
     <script>
+        $('#cardNumber').mask('0000 0000 0000 0000');
         $(document).on('click', '.submitPayment', function() {
             var cardNumber = $('#cardNumber').val();
             var mounth = $('#mounth').val();

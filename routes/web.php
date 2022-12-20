@@ -6,6 +6,7 @@ use App\Http\Controllers\TesteController;
 use App\Http\Controllers\AnimalController;
 use App\Http\Controllers\GatewayController;
 use App\Http\Controllers\Loja\HomeController;
+use App\Http\Controllers\Admin\CupomController;
 use App\Http\Controllers\Admin\ExameController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\OwnerController;
@@ -171,4 +172,7 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::get('animal-status/{id}', [AnimaisController::class, 'showStatus'])->name('animais.status');
     Route::get('animal-get-status/{id}', [AnimaisController::class, 'getStatus'])->name('animais.get.status');
     Route::post('animal-status-update/{id}', [AnimaisController::class, 'statusUpdate'])->name('animais.status.update');
+
+    Route::get('cupons', [CupomController::class, 'index'])->name('cupons');
+    Route::post('cupons-store', [CupomController::class, 'store'])->name('cupons.store');
 });
