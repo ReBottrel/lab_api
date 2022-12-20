@@ -112,7 +112,7 @@
                             <input type="hidden" class="price-total" name="totalprice" value="{{ $total }}">
                         </div>
                         <div class="col-md-6">
-                            <button type="submit" class="btn btn-primary">Formas
+                            <button type="submit" id="submitPay" class="btn btn-primary">Formas
                                 de Pagamento</button>
                         </div>
                     </div>

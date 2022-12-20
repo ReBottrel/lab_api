@@ -94,9 +94,9 @@ class UserDashboardController extends Controller
                 $value += $pay->value;
             }
         }
-        // $order->update([
-        //     'total' => $value,
-        // ]);
+        $order->update([
+            'total' => $request->totalprice,
+        ]);
 
         return view('user.payment', get_defined_vars());
     }
