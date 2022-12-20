@@ -6,6 +6,11 @@
             @component('layouts.partials.user-menu')
             @endcomponent
             <div class="col-md-8 col-12 my-3">
+                <div class="row my-4">
+                    <div>
+                        <h4>FINALIZAR PEDIDO</h4>
+                    </div>
+                </div>
                 <div class="row">
                     <div class="col-md-8">
                         <div class="mb-3">
@@ -15,9 +20,23 @@
                         </div>
                     </div>
                     <div class="col-md-4">
-                        <div class="mb-3">
+                        <div class="mb-3 btn-cupom">
                             <button class="btn btn-primary">APLICAR</button>
                         </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="pedido-check">
+                            <h4>INFORMAÇÕES DO PEDIDO</h4>
+                            <p>Numero do pedido: #{{ $order->id }}</p>
+                            <P>Total do pedido: <span>{{ 'R$ ' . number_format($order->total, 2, ',', '.') }}</span></P>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-5">
+                    <div>
+                        <h4>ESCOLHA A FORMA DE PAGAMENTO</h4>
                     </div>
                 </div>
                 <div class="row">
@@ -39,7 +58,7 @@
                         <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab"
                             tabindex="0">
                             <div class="container my-3">
-                                <div class="row justify-content-center">
+                                <div class="row ">
                                     <div class="col-md-8 col-12">
                                         <input type="hidden" name="order_id" value="{{ $order->id }}">
                                         <div class="row inputs">
@@ -107,7 +126,7 @@
                                             </div>
                                             <div class="col-12 text-center">
                                                 <button type="button"
-                                                    class="btn btn-secondary submitPayment">Finalizar</button>
+                                                    class="btn btn-secondary submitPayment">PAGAR</button>
                                             </div>
                                         </div>
 
@@ -125,7 +144,7 @@
 
                                             <div class="col-12 text-center">
                                                 <button type="button"
-                                                    class="btn btn-secondary submitPix">Finalizar</button>
+                                                    class="btn btn-secondary submitPix">PAGAR</button>
                                             </div>
                                         </div>
                                     </div>
@@ -142,7 +161,7 @@
 
                                             <div class="col-12 text-center">
                                                 <button type="button"
-                                                    class="btn btn-secondary submitBoleto">Finalizar</button>
+                                                    class="btn btn-secondary submitBoleto">PAGAR</button>
                                             </div>
                                         </div>
                                     </div>

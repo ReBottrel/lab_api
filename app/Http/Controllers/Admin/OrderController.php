@@ -548,4 +548,6 @@ class OrderController extends Controller
 
         return response()->download(public_path('arquivos/' . $name), $name, $http_response_header)->deleteFileAfterSend(true);
     }
+
+
 }
