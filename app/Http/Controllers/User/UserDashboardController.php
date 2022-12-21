@@ -109,13 +109,14 @@ class UserDashboardController extends Controller
         $cupom = Cupom::where('code', $request->cupom)->first();
         if ($cupom) {
             $total = $order->total - ($order->total * $cupom->value / 100);
-         
+
             $order->update([
                 'total' => $total,
             ]);
+            return response()->json($order);
+        } else {
+            return response()->json(['erro', 10200]);
         }
-
-        return response()->json($order);
     }
 
     public function maintrance()

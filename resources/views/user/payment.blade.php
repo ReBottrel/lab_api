@@ -194,9 +194,19 @@
 </div>`);
                 },
                 success: function(data) {
-                    console.log(data)
-                    $(`.total-order`).text(`R$ ${data.total.toFixed(2).replace('.', ',')}`);
-                    $(`.submit-cupom`).html(`APLICAR`);
+
+                    if (!data[0]) {
+                        $(`.total-order`).text(`R$ ${data.total.toFixed(2).replace('.', ',')}`);
+                        $(`.submit-cupom`).html(`APLICAR`);
+                    } else {
+                        Swal.fire(
+                            'Ops!',
+                            'Cupom indisponivel',
+                            'error'
+                        )
+                        $(`.submit-cupom`).html(`APLICAR`);
+                    }
+
                 }
             });
         });
