@@ -83,6 +83,9 @@ class CupomController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $cupom = Cupom::find($id);
+        $cupom->delete();
+        return redirect()->route('cupons')->with('success', 'Cupom deletado com sucesso!');
+        
     }
 }

@@ -26,8 +26,8 @@
                                 <td>{{ $cupon->value }}</td>
                                 <td>Ativo</td>
                                 <td>
-                                    <a href="" class="btn btn-sm btn-primary">Editar</a>
-                                    <a href="" class="btn btn-sm btn-danger">Excluir</a>
+                                   
+                                    <a href="{{ route('cupom.delete', $cupon->id) }}" class="btn btn-sm btn-danger">Excluir</a>
                                 </td>
                             </tr>
                         @empty

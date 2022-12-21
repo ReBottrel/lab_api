@@ -176,4 +176,5 @@ Route::middleware(['auth:admin'])->group(function () {
 
     Route::get('cupons', [CupomController::class, 'index'])->name('cupons');
     Route::post('cupons-store', [CupomController::class, 'store'])->name('cupons.store');
+    Route::any('cupom-delete/{id}', [CupomController::class, 'destroy'])->name('cupom.delete');
 });
