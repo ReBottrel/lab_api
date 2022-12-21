@@ -68,7 +68,7 @@
                                     style="color: var(--bs-dark);"></i><span>Proprietarios</span></a>
                         </li>
                         <li class="nav-item"><a class="nav-link" href="{{ route('cupons') }}"
-                                style="color: var(--bs-dark);"><i class="fas fa-user-nurse"
+                                style="color: var(--bs-dark);"><i class="fa-solid fa-percent"
                                     style="color: var(--bs-dark);"></i><span>Cupons</span></a>
                         </li>
                         <li class="nav-item"><a class="nav-link" href="{{ route('techinicals') }}"
