@@ -40,7 +40,7 @@
                         }
                     @endphp
                     @if ($item->payment_status != 2)
-                        <form action="{{ route('user.payment') }}" method="post">
+                        <form action="" method="post">
                             @csrf
                             <input type="hidden" name="orderId" id="orderId" value="{{ $order->id }}">
                             <input type="hidden" name="itemId[]" value="{{ $item->id }}">
@@ -112,7 +112,7 @@
                             <input type="hidden" class="price-total" name="totalprice" value="{{ $total }}">
                         </div>
                         <div class="col-md-6">
-                            <button type="submit" id="submitPay" class="btn btn-primary">Formas
+                            <button type="button" id="submitPay" class="btn btn-primary">Formas
                                 de Pagamento</button>
                         </div>
                     </div>
@@ -169,6 +169,31 @@
             });
             $(`.total-price`).text(`R$ ${totalPrice.toFixed(2).replace('.', ',')}`);
             $(`.price-total`).val(`${totalPrice.toFixed(2).replace('.', ',')}`);
+        });
+        $(document).on('click', '#submitPay', function() {
+            var total = parseFloat($('.price-total').val());
+            var orderId = $('#orderId').val();
+            var values = $("select[name^='days']").map(function(idx, ele) {
+                return $(ele).val();
+            }).get();
+            var paynow = $("input[name^='paynow']").map(function(idx, ele) {
+                return $(ele).val();
+            }).get();
+
+            $.ajax({
+                type: 'post',
+                url: `{{ route('user.payment.process') }}`,
+                data: {
+                    total: total,
+                    orderId: orderId,
+                    days: values,
+                    paynow: paynow,
+                },
+                success: function(data) {
+                    console.log(data)
+                    window.location.href = `/user-payment/${orderId}`
+                }
+            });
         });
     </script>
 @endsection

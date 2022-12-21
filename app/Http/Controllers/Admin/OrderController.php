@@ -411,7 +411,9 @@ class OrderController extends Controller
             'pai' => $request->pai,
             'registro_mae' => $request->registro_mae,
             'mae' => $request->mae,
-            'owner_id' => $owner->id
+            'owner_id' => $owner->id,
+            'especie_pai' => $request->especie_pai,
+            'especie_mae' => $request->especie_mae,
         ]);
         return redirect()->back()->with('success', 'Produto adicionado com sucesso');
     }

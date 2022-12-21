@@ -63,13 +63,12 @@ class UserDashboardController extends Controller
         return response()->json($product);
     }
 
-    public function paymentMethod(Request $request)
+    public function payments(Request $request)
     {
-
         $order = OrderRequest::with('orderRequestPayment')->find($request->orderId);
 
-
-
+      
+  
         foreach ($request->days as $key2 => $day) {
             $dayexplodido = explode('-', $day);
             $exame = Exam::find($dayexplodido[2]);
@@ -96,8 +95,17 @@ class UserDashboardController extends Controller
             }
         }
         $order->update([
-            'total' => $request->totalprice,
+            'total' => floatval($request->total),
         ]);
+
+        return response()->json($order);
+    }
+
+    public function paymentMethod(Request $request, $id)
+    {
+
+
+        $order = OrderRequest::with('orderRequestPayment')->find($id);
 
         return view('user.payment', get_defined_vars());
     }

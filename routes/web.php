@@ -51,7 +51,8 @@ Route::middleware(['auth:web'])->group(function () {
 
     // Route::get('user-dashboard', [UserDashboardController::class, 'maintrance'])->name('user.dashboard');
 
-    Route::post('user-payment', [UserDashboardController::class, 'paymentMethod'])->name('user.payment');
+    Route::get('user-payment/{id}', [UserDashboardController::class, 'paymentMethod'])->name('user.payment');
+    Route::post('user-payment-process', [UserDashboardController::class, 'payments'])->name('user.payment.process');
 
     Route::post('gateway/payment', [GatewayController::class, 'payment'])->name('user.checkout');
 

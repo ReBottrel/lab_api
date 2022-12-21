@@ -154,6 +154,18 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-3">
+                                    <label for="exampleFormControlInput1" class="form-label">Espécie do pai</label>
+                                    <select class="form-select" name="especie_pai">
+                                        <option value="EQUINA">EQUINA</option>
+                                        <option value="BOVINA">BOVINA</option>
+                                        <option value="ASININO">ASININOS</option>
+                                        <option value="MUARES">MUARES</option>
+                                        <option value="EQUINO_PEGA">EQUINO PÊGA</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
                                     <label for="exampleFormControlInput1" class="form-label">Nome do pai</label>
                                     <input type="text" name="pai" id="pai" class="form-control">
                                 </div>
@@ -163,6 +175,18 @@
                                     <label for="exampleFormControlInput1" class="form-label">Numero de registro da
                                         mãe</label>
                                     <input type="text" name="registro_mae" id="registro_mae" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="exampleFormControlInput1" class="form-label">Espécie da mãe</label>
+                                    <select class="form-select" name="especie_mae">
+                                        <option value="EQUINA">EQUINA</option>
+                                        <option value="BOVINA">BOVINA</option>
+                                        <option value="ASININO">ASININOS</option>
+                                        <option value="MUARES">MUARES</option>
+                                        <option value="EQUINO_PEGA">EQUINO PÊGA</option>
+                                    </select>
                                 </div>
                             </div>
                             <div class="col-md-6">
