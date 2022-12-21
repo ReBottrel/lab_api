@@ -6,6 +6,7 @@ use App\Models\OrderRequest;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Animal;
+use App\Models\Cupom;
 use App\Models\Exam;
 use App\Models\OrderRequestPayment;
 use Illuminate\Support\Facades\Auth;
@@ -100,6 +101,23 @@ class UserDashboardController extends Controller
 
         return view('user.payment', get_defined_vars());
     }
+
+    public function discount(Request $request)
+    {
+        $order = OrderRequest::find($request->order_id);
+
+        $cupom = Cupom::where('code', $request->cupom)->first();
+        if ($cupom) {
+            $total = $order->total - ($order->total * $cupom->value / 100);
+         
+            $order->update([
+                'total' => $total,
+            ]);
+        }
+
+        return response()->json($order);
+    }
+
     public function maintrance()
     {
         return view('user.maintrance');

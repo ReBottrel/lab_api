@@ -67,6 +67,7 @@ Route::middleware(['auth:web'])->group(function () {
     Route::post('user-update-dados', [UserDadosController::class, 'updateUser'])->name('user.update.dados');
 
     Route::post('value-update/{id}', [UserDashboardController::class, 'updateValue']);
+    Route::post('discount-apply', [UserDashboardController::class, 'discount'])->name('discount.apply');
 });
 
 

@@ -15,13 +15,13 @@
                     <div class="col-md-8">
                         <div class="mb-3">
                             <label for="exampleFormControlInput1" class="form-label">Tem um cupom de desconto?</label>
-                            <input type="text" class="form-control" id="exampleFormControlInput1"
+                            <input type="text" class="form-control" id="cupom-code"
                                 placeholder="Coloque aqui o código do seu cupom">
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="mb-3 btn-cupom">
-                            <button class="btn btn-primary">APLICAR</button>
+                            <button class="btn btn-primary submit-cupom">APLICAR</button>
                         </div>
                     </div>
                 </div>
@@ -30,7 +30,8 @@
                         <div class="pedido-check">
                             <h4>INFORMAÇÕES DO PEDIDO</h4>
                             <p>Numero do pedido: #{{ $order->id }}</p>
-                            <P>Total do pedido: <span>{{ 'R$ ' . number_format($order->total, 2, ',', '.') }}</span></P>
+                            <P>Total do pedido: <span
+                                    class="total-order">{{ 'R$ ' . number_format($order->total, 2, ',', '.') }}</span></P>
                         </div>
                     </div>
                 </div>
@@ -143,8 +144,7 @@
                                         <div class="row">
 
                                             <div class="col-12 text-center">
-                                                <button type="button"
-                                                    class="btn btn-secondary submitPix">PAGAR</button>
+                                                <button type="button" class="btn btn-secondary submitPix">PAGAR</button>
                                             </div>
                                         </div>
                                     </div>
@@ -177,6 +177,31 @@
 @endsection
 @section('scripts')
     <script>
+        $(document).on('click', '.submit-cupom', function() {
+            var cupom = $('#cupom-code').val();
+            var order_id = $('input[name=order_id]').val();
+            $.ajax({
+                url: "{{ route('discount.apply') }}",
+                type: "POST",
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    cupom: cupom,
+                    order_id: order_id,
+                },
+                beforeSend: function() {
+                    $(`.submit-cupom`).html(`<div class="spinner-border" role="status">
+  <span class="visually-hidden">Loading...</span>
+</div>`);
+                },
+                success: function(data) {
+                    console.log(data)
+                    $(`.total-order`).text(`R$ ${data.total.toFixed(2).replace('.', ',')}`);
+                    $(`.submit-cupom`).html(`APLICAR`);
+                }
+            });
+        });
+
+
         $('#cardNumber').mask('0000 0000 0000 0000');
         $(document).on('click', '.submitPayment', function() {
             var cardNumber = $('#cardNumber').val();
