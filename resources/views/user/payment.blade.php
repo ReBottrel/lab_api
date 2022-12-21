@@ -197,7 +197,13 @@
 
                     if (!data[0]) {
                         $(`.total-order`).text(`R$ ${data.total.toFixed(2).replace('.', ',')}`);
+                        $(`.total-order`).css("color", "green");
                         $(`.submit-cupom`).html(`APLICAR`);
+                        Swal.fire(
+                            'Sucesso!',
+                            'Cupom aplicado!',
+                            'success'
+                        )
                     } else {
                         Swal.fire(
                             'Ops!',
