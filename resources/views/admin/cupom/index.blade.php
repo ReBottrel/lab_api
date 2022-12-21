@@ -32,7 +32,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td>Sem animal</td>
+                                <td>Sem cupom</td>
                             </tr>
                         @endforelse
                     </tbody>
