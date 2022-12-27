@@ -20,6 +20,7 @@ use App\Http\Controllers\User\Auth\LoginController;
 use App\Http\Controllers\User\UserDashboardController;
 use App\Http\Controllers\Admin\HomeController as Admin;
 use App\Http\Controllers\Admin\Auth\AdminAuthController;
+use App\Http\Controllers\Admin\SpeciesBreedsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -174,8 +175,17 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::get('animal-status/{id}', [AnimaisController::class, 'showStatus'])->name('animais.status');
     Route::get('animal-get-status/{id}', [AnimaisController::class, 'getStatus'])->name('animais.get.status');
     Route::post('animal-status-update/{id}', [AnimaisController::class, 'statusUpdate'])->name('animais.status.update');
+    Route::get('animais-complete', [AnimaisController::class, 'getAnimal'])->name('animais.get.complete');
 
     Route::get('cupons', [CupomController::class, 'index'])->name('cupons');
     Route::post('cupons-store', [CupomController::class, 'store'])->name('cupons.store');
     Route::any('cupom-delete/{id}', [CupomController::class, 'destroy'])->name('cupom.delete');
+
+    Route::get('species', [SpeciesBreedsController::class, 'index'])->name('species');
+    Route::post('species-store', [SpeciesBreedsController::class, 'store'])->name('species.store');
+
+    Route::get('breeds', [SpeciesBreedsController::class, 'breeds'])->name('breeds');
+    Route::post('breeds-store', [SpeciesBreedsController::class, 'storeBreed'])->name('breeds.store');
+
+    Route::get('get-breeds/{id}', [SpeciesBreedsController::class, 'getBreed'])->name('get.breed');
 });

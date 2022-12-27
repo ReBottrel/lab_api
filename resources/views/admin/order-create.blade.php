@@ -67,6 +67,7 @@
                                     <option value="2">DNA Homozigose</option>
                                     <option value="3">DNA Beta Caseína</option>
                                     <option value="4">Sorologia</option>
+                                    <option value="5">Verificação de parentesco</option>
                                 </select>
                             </div>
                         </div>

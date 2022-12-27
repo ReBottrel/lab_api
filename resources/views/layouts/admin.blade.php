@@ -52,9 +52,18 @@
                         </ul>
                     </li>
                     @if (auth()->user()->permission == 10)
-                        <li class="nav-item">
-                            <a class="nav-link " href="{{ route('animais') }}"><i class="fa-solid fa-horse"
+
+                        <li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href="#"
+                                style="color: var(--bs-dark);"><i class="fa-solid fa-horse"
                                     style="color: var(--bs-dark);"></i><span>Animais</span></a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                @if (auth()->user()->permission == 10)
+                                    <li><a class="dropdown-item" href="{{ route('animais') }}">Todos os animais</a>
+                                    </li>
+                                    <li><a class="dropdown-item" href="{{ route('species') }}">Espécie</a></li>
+                                    <li><a class="dropdown-item" href="{{ route('breeds') }}">Raça</a></li>
+                                @endif
+                            </ul>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link " href="#"><i class="fas fa-user"
@@ -156,6 +165,7 @@
     </div>
 
     <script src="{{ asset('adm/assets/js/jquery.min.js') }}"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
     <script src="{{ asset('adm/assets/bootstrap/js/bootstrap.min.js') }}"></script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>

@@ -116,4 +116,10 @@ class AnimaisController extends Controller
         $animal->update($request->all());
         return redirect()->route('animais')->with('success', 'Status editado com sucesso!');
     }
+
+    public function getAnimal(Request $request)
+    {
+        $animais = Animal::where('animal_name', $request->q);
+        return response()->json($animais);
+    }
 }

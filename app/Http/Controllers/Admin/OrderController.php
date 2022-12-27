@@ -6,6 +6,7 @@ use App\Models\Exam;
 use App\Models\User;
 use App\Models\Owner;
 use App\Models\Animal;
+use App\Models\Specie;
 use App\Models\Tecnico;
 use App\Models\OrderRequest;
 use Illuminate\Http\Request;
@@ -365,7 +366,6 @@ class OrderController extends Controller
     {
         $owner = Owner::find($request->owner);
         $tecnico = Tecnico::find($request->tecnico);
-
         if ($owner->user_id != null) {
             $order_request = OrderRequest::create([
                 'user_id' => $owner->user_id,
@@ -375,12 +375,13 @@ class OrderController extends Controller
                 'creator' => $owner->owner_name,
                 'owner_id' => $request->owner,
                 'id_tecnico' => $request->tecnico,
-                'status' => 0,
+                'status' => 5,
                 'origin' => 'sistema',
                 'uid' => $request->uid,
                 'creator_number' => 0,
                 'tipo' => $request->tipo
             ]);
+
             return redirect()->route('admin.order-add-animal', $order_request->id);
         }
         return redirect()->back()->with('error', 'Proprietário não possui cadastro no sistema');
@@ -388,6 +389,7 @@ class OrderController extends Controller
     public function orderAddAnimal($id)
     {
         $order = OrderRequest::find($id);
+        $species = Specie::get();
         $animals = Animal::where('order_id', $id)->get();
         return view('admin.order-add-animal', get_defined_vars());
     }
@@ -550,6 +552,4 @@ class OrderController extends Controller
 
         return response()->download(public_path('arquivos/' . $name), $name, $http_response_header)->deleteFileAfterSend(true);
     }
-
-
 }

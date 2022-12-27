@@ -3,7 +3,7 @@
     <div class="container">
         <div class="card my-4">
             <div class="card-header">
-                <h4>Criar pedido add produto</h4>
+                <h4>Criar pedido verificação de parentesco produto</h4>
             </div>
             <div class="card-body">
                 <div class="row">
@@ -83,7 +83,7 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="exampleFormControlInput1" class="form-label">CHIP do animal</label>
-                                    <input type="text" name="chip_number" id="register_number_brand"
+                                    <input type="text" name="register_number_brand" id="register_number_brand"
                                         class="form-control">
                                 </div>
                             </div>
@@ -99,21 +99,25 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="exampleFormControlInput1" class="form-label">Espécie</label>
-                                    <select class="form-select species" name="especies">
-                                        <option>Selecione e espécie</option>
-                                        @foreach ($species as $specie)
-                                            <option value="{{ $specie->name }}" data-specie="{{ $specie->id }}">
-                                                {{ $specie->name }}</option>
-                                        @endforeach
+                                    <select class="form-select" name="especies">
+                                        <option value="EQUINA">EQUINA</option>
+                                        <option value="BOVINA">BOVINA</option>
+                                        <option value="ASININO">ASININOS</option>
+                                        <option value="MUARES">MUARES</option>
+                                        <option value="EQUINO_PEGA">EQUINO PÊGA</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="exampleFormControlInput1" class="form-label">Raça</label>
-                                    <select class="form-select breeds" name="breed">
-                                        <option>Selecione a raça</option>
-
+                                    <select class="form-select" name="breed">
+                                        <option value="MANGALARGA">MANGALARGA MARCHADOR</option>
+                                        <option value="PÊGA">PÊGA</option>
+                                        <option value="QUARTO DE MILHO">QUARTO DE MILHA</option>
+                                        <option value="PAMPA">PAMPA</option>
+                                        <option value="DESCONHECIDA">DESCONHECIDA</option>
+                                        <option value="NELORE">NELORE</option>
                                     </select>
                                 </div>
                             </div>
@@ -138,6 +142,12 @@
 
                             <div class="col-md-6">
                                 <div class="mb-3">
+                                    <label for="exampleFormControlInput1" class="form-label">Numero do chip</label>
+                                    <input type="text" name="chip_number" id="chip_number" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
                                     <label for="exampleFormControlInput1" class="form-label">Numero de registro do
                                         pai</label>
                                     <input type="text" name="registro_pai" id="registro_pai" class="form-control">
@@ -147,10 +157,11 @@
                                 <div class="mb-3">
                                     <label for="exampleFormControlInput1" class="form-label">Espécie do pai</label>
                                     <select class="form-select" name="especie_pai">
-                                        <option>Selecione a espécie</option>
-                                        @foreach ($species as $specie)
-                                            <option value="{{ $specie->name }}">{{ $specie->name }}</option>
-                                        @endforeach
+                                        <option value="EQUINA">EQUINA</option>
+                                        <option value="BOVINA">BOVINA</option>
+                                        <option value="ASININO">ASININOS</option>
+                                        <option value="MUARES">MUARES</option>
+                                        <option value="EQUINO_PEGA">EQUINO PÊGA</option>
                                     </select>
                                 </div>
                             </div>
@@ -171,10 +182,11 @@
                                 <div class="mb-3">
                                     <label for="exampleFormControlInput1" class="form-label">Espécie da mãe</label>
                                     <select class="form-select" name="especie_mae">
-                                        <option>Selecione a espécie</option>
-                                        @foreach ($species as $specie)
-                                            <option value="{{ $specie->name }}">{{ $specie->name }}</option>
-                                        @endforeach
+                                        <option value="EQUINA">EQUINA</option>
+                                        <option value="BOVINA">BOVINA</option>
+                                        <option value="ASININO">ASININOS</option>
+                                        <option value="MUARES">MUARES</option>
+                                        <option value="EQUINO_PEGA">EQUINO PÊGA</option>
                                     </select>
                                 </div>
                             </div>
@@ -204,33 +216,20 @@
                 var age = Math.floor((today - date) / (365.25 * 24 * 60 * 60 * 1000));
                 $('#age').val(age);
             });
-
-            $('.species').change(function() {
-                var specie = $(this).find(':selected').data('specie');
-                $.ajax({
-                    url: '/get-breeds/' + specie,
-                    type: 'GET',
-                    dataType: 'json',
-                    success: function(response) {
-                        console.log(response)
-                        var len = 0;
-                        if (response != null) {
-                            len = response.length;
+            $("#pai").autocomplete({
+                source: function(request, response) {
+                    $.ajax({
+                        url: "animais-complete/",
+                        dataType: "jsonp",
+                        data: {
+                            q: request.term
+                        },
+                        success: function(data) {
+                            console.log(data)
                         }
-                        if (len > 0) {
-                            $(".breeds").empty();
-                            for (var i = 0; i < len; i++) {
-                                var id = response[i].id;
-                                var name = response[i].name;
-                                var option = "<option value='" + name + "'>" + name +
-                                    "</option>";
-                                $(".breeds").append(option);
-                            }
-                        }
-                    }
-                });
+                    });
+                }
             });
-
         });
     </script>
 @endsection
