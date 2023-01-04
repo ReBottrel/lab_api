@@ -286,7 +286,7 @@ class GatewayController extends Controller
             $data = [
                 "first_name" => auth()->user()->name,
                 "last_name" => collect(auth()->user()->name)->forget(0)->join(' '),
-                "email" => auth()->user()->email,
+                "email" => 'locilab@gmail.com',
                 "taxpayer_id" => '09392129947',
                 "phone_number" => $user->phone,
                 "gender" => "male",
