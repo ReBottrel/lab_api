@@ -17,7 +17,7 @@
                             $exames = App\Models\Exam::where('category', 'dna')
                                 ->where('requests', 1)
                                 ->get();
-                        } elseif ($animal->especies == 'ASININO') {
+                        } elseif ($animal->especies == 'ASININA') {
                             $exames = App\Models\Exam::where('category', 'dna')
                                 ->where('requests', 2)
                                 ->get();
