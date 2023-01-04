@@ -293,7 +293,7 @@ class GatewayController extends Controller
                 "address" =>  [
                     "line1" =>  $user->address,
                     "line2" => $user->number,
-                    "line3" =>  $user->complement,
+                    "line3" =>  null,
                     "neighborhood"  =>  $user->district,
                     "city"  =>  $user->city,
                     "state"  =>   'PR',
