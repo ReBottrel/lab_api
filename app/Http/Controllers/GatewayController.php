@@ -281,13 +281,13 @@ class GatewayController extends Controller
         // $user = user_token();
         // $name = explode(' ', $user->name);
         $user = UserInfo::where('user_id', auth()->user()->id)->first();
- 
+        $documents = str_replace(['.', '-', '/'], ['', '', ''],  $user->document);
         if (!$user->buyer_id) {
             $data = [
                 "first_name" => auth()->user()->name,
                 "last_name" => collect(auth()->user()->name)->forget(0)->join(' '),
                 "email" => 'locilab@gmail.com',
-                "taxpayer_id" => '09392129947',
+                "taxpayer_id" => $documents,
                 "phone_number" => $user->phone,
                 "gender" => "male",
                 "address" =>  [
