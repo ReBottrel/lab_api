@@ -82,6 +82,14 @@
 
                             <div class="col-md-6">
                                 <div class="mb-3">
+                                    <label for="exampleFormControlInput1" class="form-label">ID do animal</label>
+                                    <input type="text" name="register_number_brand" id="register_number_brand"
+                                        class="form-control">
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="mb-3">
                                     <label for="exampleFormControlInput1" class="form-label">CHIP do animal</label>
                                     <input type="text" name="chip_number" id="register_number_brand"
                                         class="form-control">
