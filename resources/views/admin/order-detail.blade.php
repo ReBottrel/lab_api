@@ -87,7 +87,7 @@
                                 <li class="list-group-item"><span>REGISTRO DO PAI: {{ $item['registro_pai'] }}</span></li>
                                 <li class="list-group-item"><span>MÃE: {{ $item['mae'] }}</span></li>
                                 <li class="list-group-item"><span>REGISTRO DA MÃE: {{ $item['registro_mae'] }}</span></li>
-                                {{-- <li class="list-group-item">{{ $animal->animal_name }}</li> --}}
+                                {{-- <li class="list-group-item">{{ $animal->id ?? ''}}</li> --}}
                                 <li
                                     class="list-group-item text-uppercase @if ($status == 'Análise Aprovada') bg-success @elseif($status == 'Amostra paga') bg-success @elseif($status == 'Análise reprovada') bg-danger @elseif($status == 'Recoleta solicitada') bg-warning @else bg-primary @endif  text-white">
                                     <span>STATUS:

@@ -192,6 +192,42 @@
                                     <input type="text" name="mae" id="mae" class="form-control">
                                 </div>
                             </div>
+                            <div class="col-md-6">
+                                <input class="form-check-input extra-verification" type="checkbox" value=""
+                                    id="flexCheckDefault">
+                                <label class="form-check-label" for="flexCheckDefault">
+                                    Verificação extra
+                                </label>
+                            </div>
+                            <div class="col-md-6 type-verify d-none">
+                                <div class="mb-3">
+                                    <label for="exampleFormControlInput1" class="form-label">Tipo de verificação</label>
+                                    <select class="form-select" name="especie_mae">
+                                        <option>Selecione a verificação</option>
+                                        <option value="ASIGN">ASIGN</option>
+                                        <option value="ASIMD">ASIMD</option>
+                                        <option value="ASIPD">ASIPD</option>
+                                        <option value="ASITR">ASITR</option>
+                                        <option value="BOVGN">BOVGN</option>
+                                        <option value="BOVMD">BOVMD</option>
+                                        <option value="BOVPD">BOVPD</option>
+                                        <option value="BOVTR">BOVTR</option>
+                                        <option value="CPGN">CPGN</option>
+                                        <option value="CAPMD">CAPMD</option>
+                                        <option value="CAPPD">CAPPD</option>
+                                        <option value="CAPTR">CAPTR</option>
+                                        <option value="EQUGN">EQUGN</option>
+                                        <option value="EQUMD">EQUMD</option>
+                                        <option value="EQUPD">EQUPD</option>
+                                        <option value="EQUTR">EQUTR</option>
+                                        <option value="MUAGN">MUAGN</option>
+                                        <option value="MUAMD">MUAMD</option>
+                                        <option value="MUAPD">MUAPD</option>
+                                        <option value="MUATR">MUATR</option>
+                                    </select>
+                                </div>
+                            </div>
+
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary"
                                     data-bs-dismiss="modal">Cancelar</button>
@@ -238,7 +274,16 @@
                     }
                 });
             });
+            $('.extra-verification').change(function() {
+                if ($(this).is(':checked')) {
+                    $('.extra-verification').val('1');
+                    $('.type-verify').removeClass('d-none');
 
+                } else {
+                    $('.extra-verification').val('0');
+                    $('.type-verify').addClass('d-none');
+                }
+            });
         });
     </script>
 @endsection
