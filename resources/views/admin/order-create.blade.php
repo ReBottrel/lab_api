@@ -34,13 +34,30 @@
                                     cadastrar um novo</h6>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        {{-- <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="exampleFormControlInput1" class="form-label">Numero da coleta</label>
                                 <input type="text" name="collection_number" id="collection_number" class="form-control">
                             </div>
-                        </div>                
-                     
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="exampleFormControlInput1" class="form-label">ID da coleta</label>
+                                <input type="text" name="uid" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="exampleFormControlInput1" class="form-label">Data da coleta</label>
+                                <input type="date" name="collection_date" class="form-control">
+                            </div>
+                        </div> --}}
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="exampleFormControlInput1" class="form-label">Data de recebimento</label>
+                                <input type="date" class="form-control">
+                            </div>
+                        </div>
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="exampleFormControlInput1" class="form-label">Tipo de exame</label>
