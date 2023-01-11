@@ -143,15 +143,49 @@
                                     <input type="text" name="age" id="age" class="form-control">
                                 </div>
                             </div>
-
                             <div class="col-md-6">
+                                <input class="form-check-input extra-verification" type="checkbox" value=""
+                                    id="flexCheckDefault">
+                                <label class="form-check-label" for="flexCheckDefault">
+                                    Verificação de parentesco
+                                </label>
+                            </div>
+                            <div class="col-md-6 type-verify d-none">
+                                <div class="mb-3">
+                                    <label for="exampleFormControlInput1" class="form-label">Tipo de verificação</label>
+                                    <select class="form-select verify-type" name="extra_verify">
+                                        <option>Selecione a verificação</option>
+                                        <option value="ASIGN" data-verify="1">ASIGN</option>
+                                        <option value="ASIMD" data-verify="2">ASIMD</option>
+                                        <option value="ASIPD" data-verify="3">ASIPD</option>
+                                        <option value="ASITR" data-verify="4">ASITR</option>
+                                        <option value="BOVGN" data-verify="1">BOVGN</option>
+                                        <option value="BOVMD" data-verify="2">BOVMD</option>
+                                        <option value="BOVPD" data-verify="3">BOVPD</option>
+                                        <option value="BOVTR" data-verify="4">BOVTR</option>
+                                        <option value="CPGN" data-verify="1">CPGN</option>
+                                        <option value="CAPMD" data-verify="2">CAPMD</option>
+                                        <option value="CAPPD" data-verify="3">CAPPD</option>
+                                        <option value="CAPTR" data-verify="4">CAPTR</option>
+                                        <option value="EQUGN" data-verify="1">EQUGN</option>
+                                        <option value="EQUMD" data-verify="2">EQUMD</option>
+                                        <option value="EQUPD" data-verify="3">EQUPD</option>
+                                        <option value="EQUTR" data-verify="4">EQUTR</option>
+                                        <option value="MUAGN" data-verify="1">MUAGN</option>
+                                        <option value="MUAMD" data-verify="2">MUAMD</option>
+                                        <option value="MUAPD" data-verify="3">MUAPD</option>
+                                        <option value="MUATR" data-verify="4">MUATR</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6 pai">
                                 <div class="mb-3">
                                     <label for="exampleFormControlInput1" class="form-label">Numero de registro do
                                         pai</label>
                                     <input type="text" name="registro_pai" id="registro_pai" class="form-control">
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-6 pai">
                                 <div class="mb-3">
                                     <label for="exampleFormControlInput1" class="form-label">Espécie do pai</label>
                                     <select class="form-select" name="especie_pai">
@@ -162,20 +196,20 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-6 pai">
                                 <div class="mb-3">
                                     <label for="exampleFormControlInput1" class="form-label">Nome do pai</label>
                                     <input type="text" name="pai" id="pai" class="form-control">
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-6 mae">
                                 <div class="mb-3">
                                     <label for="exampleFormControlInput1" class="form-label">Numero de registro da
                                         mãe</label>
                                     <input type="text" name="registro_mae" id="registro_mae" class="form-control">
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-6 mae">
                                 <div class="mb-3">
                                     <label for="exampleFormControlInput1" class="form-label">Espécie da mãe</label>
                                     <select class="form-select" name="especie_mae">
@@ -186,47 +220,13 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-6 mae">
                                 <div class="mb-3">
                                     <label for="exampleFormControlInput1" class="form-label">Nome da mãe</label>
                                     <input type="text" name="mae" id="mae" class="form-control">
                                 </div>
                             </div>
-                            <div class="col-md-6">
-                                <input class="form-check-input extra-verification" type="checkbox" value=""
-                                    id="flexCheckDefault">
-                                <label class="form-check-label" for="flexCheckDefault">
-                                    Verificação extra
-                                </label>
-                            </div>
-                            <div class="col-md-6 type-verify d-none">
-                                <div class="mb-3">
-                                    <label for="exampleFormControlInput1" class="form-label">Tipo de verificação</label>
-                                    <select class="form-select" name="especie_mae">
-                                        <option>Selecione a verificação</option>
-                                        <option value="ASIGN">ASIGN</option>
-                                        <option value="ASIMD">ASIMD</option>
-                                        <option value="ASIPD">ASIPD</option>
-                                        <option value="ASITR">ASITR</option>
-                                        <option value="BOVGN">BOVGN</option>
-                                        <option value="BOVMD">BOVMD</option>
-                                        <option value="BOVPD">BOVPD</option>
-                                        <option value="BOVTR">BOVTR</option>
-                                        <option value="CPGN">CPGN</option>
-                                        <option value="CAPMD">CAPMD</option>
-                                        <option value="CAPPD">CAPPD</option>
-                                        <option value="CAPTR">CAPTR</option>
-                                        <option value="EQUGN">EQUGN</option>
-                                        <option value="EQUMD">EQUMD</option>
-                                        <option value="EQUPD">EQUPD</option>
-                                        <option value="EQUTR">EQUTR</option>
-                                        <option value="MUAGN">MUAGN</option>
-                                        <option value="MUAMD">MUAMD</option>
-                                        <option value="MUAPD">MUAPD</option>
-                                        <option value="MUATR">MUATR</option>
-                                    </select>
-                                </div>
-                            </div>
+
 
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary"
@@ -283,6 +283,26 @@
                     $('.extra-verification').val('0');
                     $('.type-verify').addClass('d-none');
                 }
+            });
+            $('.type-verify').change(function() {
+                var type = $(this).find(':selected').data('verify');
+                if (type == 1) {
+                    $('.pai').addClass('d-none');
+                    $('.mae').addClass('d-none');
+                }
+                if (type == 2) {
+                    $('.mae').removeClass('d-none');
+                    $('.pai').addClass('d-none');
+                }
+                if (type == 3) {
+                    $('.mae').addClass('d-none');
+                    $('.pai').removeClass('d-none');
+                }
+                if (type == 4) {
+                    $('.pai').removeClass('d-none');
+                    $('.mae').removeClass('d-none');
+                }
+
             });
         });
     </script>
