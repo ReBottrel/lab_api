@@ -182,7 +182,8 @@
                                 <div class="mb-3">
                                     <label for="exampleFormControlInput1" class="form-label">Numero de registro do
                                         pai</label>
-                                    <input type="text" name="registro_pai" id="registro_pai" class="form-control">
+                                    <input type="text" name="registro_pai" id="registro_pai"
+                                        class="form-control registro_pai">
                                 </div>
                             </div>
                             <div class="col-md-6 pai">
@@ -206,7 +207,8 @@
                                 <div class="mb-3">
                                     <label for="exampleFormControlInput1" class="form-label">Numero de registro da
                                         mãe</label>
-                                    <input type="text" name="registro_mae" id="registro_mae" class="form-control">
+                                    <input type="text" name="registro_mae" id="registro_mae"
+                                        class="form-control registro_mae">
                                 </div>
                             </div>
                             <div class="col-md-6 mae">
@@ -304,6 +306,40 @@
                 }
 
             });
+            $('.registro_pai').on('blur', function() {
+                var registro = $(this).val();
+                $.ajax({
+                    url: '/get-pai/',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        registro: registro
+                    },
+                    success: function(response) {
+                        console.log(response.animal_name)
+                        $('#pai').val(response.animal_name);
+
+                    }
+                });
+            });
+            $('.registro_mae').on('blur', function() {
+                var registro = $(this).val();
+                $.ajax({
+                    url: '/get-pai/',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        registro: registro
+                    },
+                    success: function(response) {
+                        console.log(response.animal_name)
+                        $('#mae').val(response.animal_name);
+
+                    }
+                });
+            });
+
+
         });
     </script>
 @endsection

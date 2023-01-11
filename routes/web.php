@@ -188,4 +188,5 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::post('breeds-store', [SpeciesBreedsController::class, 'storeBreed'])->name('breeds.store');
 
     Route::get('get-breeds/{id}', [SpeciesBreedsController::class, 'getBreed'])->name('get.breed');
+    Route::post('get-pai', [AnimaisController::class, 'getPai'])->name('get.pai');
 });
