@@ -273,7 +273,7 @@ class OrderController extends Controller
                 $exam = Exam::find(4);
             } elseif ($animal->especies == 'MUARES') {
                 $exam = Exam::find(20);
-            } elseif ($animal->especies == 'ASININO') {
+            } elseif ($animal->especies == 'ASININA') {
                 $exam = Exam::find(20);
             } elseif ($animal->especies == 'EQUINO_PEGA') {
                 $exam = Exam::find(20);
