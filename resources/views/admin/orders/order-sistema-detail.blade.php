@@ -81,45 +81,19 @@
                                         {{ $status }}</span>
                                 </li>
                                 <li class="list-group-item">
-                                    @if ($status == 'Aguardando amostra')
-                                        <div>
-
-                                            <button class="btn btn-primary amostra" data-value="2"
-                                                data-id="{{ $animal->id }}">Amostra
-                                                Recebida</button>
-                                        </div>
-                                    @endif
-                                    @if ($status == 'Amostra recebida')
-                                        <div class="row">
-                                            <div class="col-3">
-                                                <button class="btn btn-success amostra-ok" data-order="{{ $order->id }}"
-                                                    data-value="7" data-id="{{ $animal->id }}">Amostra
-                                                    Aprovada</button>
-                                            </div>
-                                            <div class="col-3">
-                                                <button class="btn btn-danger amostra-reprovada"
-                                                    data-order="{{ $order->id }}" data-value="6"
-                                                    data-id="{{ $animal->id }}">Amostra
-                                                    Reprovada</button>
-                                            </div>
-                                        </div>
-                                    @endif
-                                    @if ($status == 'Análise Aprovada' | $status == 'Aguardando Pagamento')
-                                        <div class="row">
-                                            <div class="col-3">
-                                                <button class="btn text-white btn-success amostra-paga" data-value="9"
-                                                    data-id="{{ $animal->id }}">Amostra Paga</button>
-                                            </div>
-                                        </div>
-                                    @endif
-                                    @if ($status == 'Análise reprovada')
-                                        <div>
-                                            <button class="btn btn-primary recoleta" data-value="8"
-                                                data-id="{{ $animal->id }}">Solicitar Recoleta</button>
-                                        </div>
-                                    @endif
-
+                                    <label for="exampleFormControlInput1" class="form-label">Status do pedido</label>
+                                    <select class="form-select status-select" data-order="{{ $order->id }}"
+                                        data-id="{{ $animal->id ?? '' }}" aria-label="Default select example">
+                                        @if ($animal)
+                                            @foreach ($stats as $key => $stat)
+                                                <option value="{{ $key }}"
+                                                    @if ($animal->status == $key) selected @endif>{{ $stat }}
+                                                </option>
+                                            @endforeach
+                                        @endif
+                                    </select>
                                 </li>
+  
                                 @if ($status != 'Aguardando amostra' && $status != 'Aguardando cadastro')
                                     <li class="list-group-item">
                                         <div class="row">
@@ -226,49 +200,16 @@
                 }
             });
         });
-        $(document).on('click', '.amostra', function() {
+        $(document).on('change', '.status-select', function() {
             var id = $(this).data('id');
-            var order = $(this).data('order');
-            var value = $(this).data('value');
+            if ($(this).val() == 6 | $(this).val() == 7) {
+                var order = $(this).data('order');
+            }
             $.ajax({
                 url: `/amostra/${id}`,
                 type: 'POST',
                 data: {
-                    value: value,
-                    order: order
-
-                },
-                success: function(data) {
-                    console.log(data);
-                    window.location.reload();
-                }
-            });
-        });
-        $(document).on('click', '.amostra-paga', function() {
-            var id = $(this).data('id');
-            var value = $(this).data('value');
-            $.ajax({
-                url: `/amostra/${id}`,
-                type: 'POST',
-                data: {
-                    value: value,
-
-                },
-                success: function(data) {
-                    console.log(data);
-                    window.location.reload();
-                }
-            });
-        });
-        $(document).on('click', '.amostra-ok', function() {
-            var id = $(this).data('id');
-            var order = $(this).data('order');
-            var value = $(this).data('value');
-            $.ajax({
-                url: `/amostra/${id}`,
-                type: 'POST',
-                data: {
-                    value: value,
+                    value: $(this).val(),
                     order: order
                 },
                 success: function(data) {
@@ -276,53 +217,11 @@
                     window.location.reload();
                 },
                 error: function(er) {
-                    Swal.fire(
-                        'Oops!',
-                        'Ocorreu um erro ao tentar atualizar o status da amostra, consulte se o numero de celular está atualizado!',
-                        'error'
-                    )
+                    console.log('erro');
                 }
             });
         });
-        $(document).on('click', '.amostra-reprovada', function() {
-            var id = $(this).data('id');
-            var order = $(this).data('order');
-            var value = $(this).data('value');
-            $.ajax({
-                url: `/amostra/${id}`,
-                type: 'POST',
-                data: {
-                    value: value,
-                    order: order
-                },
-                success: function(data) {
-                    console.log(data);
-                    window.location.reload();
-                },
-                error: function(er) {
-                    Swal.fire(
-                        'Oops!',
-                        'Ocorreu um erro ao tentar atualizar o status da amostra, consulte se o numero de celular está atualizado!',
-                        'error'
-                    )
-                }
-            });
-        });
-        $(document).on('click', '.recoleta', function() {
-            var id = $(this).data('id');
-            var value = $(this).data('value');
-            $.ajax({
-                url: `/amostra/${id}`,
-                type: 'POST',
-                data: {
-                    value: value
-                },
-                success: function(data) {
-                    console.log(data);
-                    window.location.reload();
-                }
-            });
-        });
+
         $(document).on('click', '.gerar', function() {
             var id = $(this).data('id');
             var order = $(this).data('order');

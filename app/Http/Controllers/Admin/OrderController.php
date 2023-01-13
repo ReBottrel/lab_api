@@ -12,6 +12,7 @@ use App\Models\OrderRequest;
 use Illuminate\Http\Request;
 use App\Models\OrderRequestPayment;
 use App\Http\Controllers\Controller;
+use App\Models\PedidoAnimal;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 use Rap2hpoutre\FastExcel\FastExcel;
@@ -32,11 +33,26 @@ class OrderController extends Controller
     public function orderSistema()
     {
         $orders = OrderRequest::where('origin', 'sistema')->where('status', '!=', 0)->get();
+
         return view('admin.orders.orders-sistema', get_defined_vars());
     }
     public function orderSistemaDetail($id)
     {
         $order = OrderRequest::find($id);
+        $stats = [
+            1 => 'Aguardando amostra',
+            2 => 'Amostra recebida',
+            3 => 'Em análise',
+            4 => 'Análise concluída',
+            5 => 'Resultado disponível',
+            6 => 'Análise reprovada',
+            7 => 'Análise Aprovada',
+            8 => 'Recoleta solicitada',
+            9 => 'Amostra paga',
+            10 => 'Pedido Concluído',
+            11 => 'Aguardando Pagamento'
+
+        ];
         $animals = Animal::where('order_id', $id)->get();
         return view('admin.orders.order-sistema-detail', get_defined_vars());
     }
@@ -60,7 +76,7 @@ class OrderController extends Controller
         if ($user->user_id != null) {
             foreach ($order->data_g['data_table'] as $data) {
 
-                Animal::create([
+                $animal =  Animal::create([
                     'user_id' => $request->owner,
                     'order_id' => $order->id,
                     'animal_name' => $data['produto'],
@@ -72,12 +88,19 @@ class OrderController extends Controller
                     'registro_mae' => $data['registro_mae'],
                     'mae' => $data['mae'],
                 ]);
+
+                PedidoAnimal::create([
+                    'id_pedido' => $order->id,
+                    'id_animal' => $animal->id,
+                    'status' => 1,
+                ]);
             }
 
             $order->update([
                 'user_id' => $user->user_id,
                 'owner_id' => $request->owner
             ]);
+
 
             return redirect()->back()->with('success', 'Proprietário vinculado com sucesso');
         } else {
@@ -88,7 +111,20 @@ class OrderController extends Controller
     public function amostra(Request $request, $id)
     {
         $animal = Animal::find($id);
+        $status = PedidoAnimal::where('id_animal', $animal->id)->first();
 
+
+        if ($status) {
+            $status->update([
+                'status' => $request->value,
+            ]);
+        } else {
+            PedidoAnimal::create([
+                'id_pedido' => $animal->order_id,
+                'id_animal' => $animal->id,
+                'status' => $request->value,
+            ]);
+        }
         if ($request->order) {
             $order = OrderRequest::with('tecnico', 'owner')->find($request->order);
             $order->update([
@@ -137,18 +173,21 @@ class OrderController extends Controller
             'status' => $request->value,
         ]);
 
-        if ($request->value == 10) {
-            $orderRequest = OrderRequestPayment::where('animal_id', $animal->id)->first();
-            $orderRequest->update([
-                'payment_status' => 2,
-            ]);
-        }
+        $orderRequest = OrderRequestPayment::where('animal_id', $animal->id)->first();
+        if ($orderRequest) {
+            if ($request->value == 10) {
 
-        if ($request->value == 9) {
-            $orderRequest = OrderRequestPayment::where('animal_id', $animal->id)->first();
-            $orderRequest->update([
-                'payment_status' => 1,
-            ]);
+                $orderRequest->update([
+                    'payment_status' => 2,
+                ]);
+            }
+
+            if ($request->value == 9) {
+
+                $orderRequest->update([
+                    'payment_status' => 1,
+                ]);
+            }
         }
 
         \Log::channel('admins_actions')->info(['Usuário', auth()->user()->name], ['Alterou status de:', $animal->animal_name]);
@@ -179,6 +218,20 @@ class OrderController extends Controller
     public function orderDetail($id)
     {
         $order = OrderRequest::find($id);
+        $stats = [
+            1 => 'Aguardando amostra',
+            2 => 'Amostra recebida',
+            3 => 'Em análise',
+            4 => 'Análise concluída',
+            5 => 'Resultado disponível',
+            6 => 'Análise reprovada',
+            7 => 'Análise Aprovada',
+            8 => 'Recoleta solicitada',
+            9 => 'Amostra paga',
+            10 => 'Pedido Concluído',
+            11 => 'Aguardando Pagamento'
+
+        ];
         return view('admin.order-detail', get_defined_vars());
     }
 
@@ -398,26 +451,59 @@ class OrderController extends Controller
     {
         $order = OrderRequest::find($request->order);
         $owner = Owner::find($order->owner_id);
-        $create = Animal::create([
-            'user_id' => $owner->user_id,
-            'order_id' => $request->order,
-            'register_number_brand' => $request->register_number_brand,
-            'animal_name' => $request->animal_name,
-            'especies' => $request->especies,
-            'breed' => $request->breed,
-            'sex' => $request->sex,
-            'age' => $request->age,
-            'birth_date' => $request->birth_date,
-            'chip_number' => $request->chip_number,
-            'registro_pai' => $request->registro_pai,
-            'pai' => $request->pai,
-            'registro_mae' => $request->registro_mae,
-            'mae' => $request->mae,
-            'owner_id' => $owner->id,
-            'especie_pai' => $request->especie_pai,
-            'especie_mae' => $request->especie_mae,
-        ]);
+        if ($request->id) {
+            $animal = Animal::find($request->id);
+            $animal->update([
+                'user_id' => $owner->user_id,
+                'order_id' => $request->order,
+                'register_number_brand' => $request->register_number_brand,
+                'animal_name' => $request->animal_name,
+                'especies' => $request->especies,
+                'breed' => $request->breed,
+                'sex' => $request->sex,
+                'age' => $request->age,
+                'birth_date' => $request->birth_date,
+                'chip_number' => $request->chip_number,
+                'registro_pai' => $request->registro_pai,
+                'pai' => $request->pai,
+                'registro_mae' => $request->registro_mae,
+                'mae' => $request->mae,
+                'owner_id' => $owner->id,
+                'especie_pai' => $request->especie_pai,
+                'especie_mae' => $request->especie_mae,
+            ]);
+        } else {
+            $create = Animal::create([
+                'user_id' => $owner->user_id,
+                'order_id' => $request->order,
+                'register_number_brand' => $request->register_number_brand,
+                'animal_name' => $request->animal_name,
+                'especies' => $request->especies,
+                'breed' => $request->breed,
+                'sex' => $request->sex,
+                'age' => $request->age,
+                'birth_date' => $request->birth_date,
+                'chip_number' => $request->chip_number,
+                'registro_pai' => $request->registro_pai,
+                'pai' => $request->pai,
+                'registro_mae' => $request->registro_mae,
+                'mae' => $request->mae,
+                'owner_id' => $owner->id,
+                'especie_pai' => $request->especie_pai,
+                'especie_mae' => $request->especie_mae,
+            ]);
+        }
+
         return redirect()->back()->with('success', 'Produto adicionado com sucesso');
+    }
+    public function orderAddAnimalEdit(Request $request)
+    {
+        $animal = Animal::find($request->id);
+        $species = Specie::get();
+        return response()->json([
+            'animal' => $animal,
+            'species' => $species
+        ]);
     }
     public function orderAddAnimalDelete($id)
     {

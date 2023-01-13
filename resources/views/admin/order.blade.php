@@ -86,13 +86,13 @@
                                     <div class="col-xl-10 col-xxl-9 offset-xxl-0">
                                         <div class="row" style="height: auto;">
                                             <div class="col">
-                                                <p>Origem do pedido:</p>
+                                                <p>Numero do pedido:</p>
                                             </div>
                                             <div class="col">
                                                 <p>Cliente:</p>
                                             </div>
                                             <div class="col">
-                                                <p>Atendimento:</p>
+                                                <p>Origem:</p>
                                             </div>
                                             <div class="col">
                                                 <p>Data:</p>
@@ -103,13 +103,13 @@
                                         </div>
                                         <div class="row fw-bold text-dark" style="height: auto;">
                                             <div class="col">
-                                                <p>{{ $order->origin }}</p>
+                                                <p>{{ $order->id }}</p>
                                             </div>
                                             <div class="col">
                                                 <p>{{ $order->creator }}</p>
                                             </div>
                                             <div class="col">
-                                                <p>{{ $order->collection_number }}</p>
+                                                <p>{{ $order->origin }}</p>
                                             </div>
                                             <div class="col">
                                                 <p>{{ date('d/m/Y', strtotime($order->created_at)) }}</p>

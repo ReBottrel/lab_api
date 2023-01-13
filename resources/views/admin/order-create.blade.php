@@ -61,7 +61,7 @@
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="exampleFormControlInput1" class="form-label">Tipo de exame</label>
-                                <select class="form-select" name="tipo" aria-label="Default select example">
+                                <select class="form-select tipo-exame" name="tipo" aria-label="Default select example">
                                     <option selected>Selecione o tipo de exame</option>
                                     <option value="1">DNA Genotipagem</option>
                                     <option value="2">DNA Homozigose</option>
@@ -81,4 +81,5 @@
     </div>
 @endsection
 @section('js')
+
 @endsection

@@ -35,10 +35,17 @@
                                     <td>{{ $item->register_number_brand }}</td>
                                     <td>{{ $item->sex }}</td>
                                     <td>
-                                        <div>
-                                            <a href="{{ route('admin.produto.delete', $item->id) }}"> <button
-                                                    class="btn btn-danger">Apagar</button></a>
+                                        <div class="d-flex">
+                                            <div>
+                                                <a href="{{ route('admin.produto.delete', $item->id) }}"> <button
+                                                        class="btn btn-danger">Apagar</button></a>
 
+                                            </div>
+                                            <div class="mx-2">
+                                                <button type="button" class="btn btn-primary edit" data-bs-toggle="modal"
+                                                    data-bs-target="#exampleModal"
+                                                    data-id="{{ $item->id }}">Editar</button>
+                                            </div>
                                         </div>
                                     </td>
                                 </tr>
@@ -71,7 +78,8 @@
                 <form action="{{ route('admin.order-add-animal-post') }}" method="post">
                     @csrf
                     <input type="hidden" name="order" value="{{ $order->id }}">
-                    <div class="modal-body">
+                    <div class="modal-body" id="edit-app">
+                        <input type="hidden" name="id">
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="mb-3">
@@ -338,8 +346,27 @@
                     }
                 });
             });
+            $(document).on('click', '.edit', function() {
+                var id = $(this).data('id');
+                $.ajax({
+                    url: '/order-edit-animal/' + id,
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        id: id
+                    },
+                    success: (data) => {
+                        console.log(data.animal)
+                        if (id) {
+                            for (i in data.animal) {
+                                $('#edit-app').find(`[name="${i}"]`).val(data.animal[i]);
+                            }
+                        }
 
+                    }
+                });
 
+            });
         });
     </script>
 @endsection

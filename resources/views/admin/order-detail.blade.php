@@ -26,56 +26,111 @@
                             @php
                                 
                                 $animal = App\Models\Animal::where('id', $item['id'])
-                                                ->orWhere('register_number_brand', $item['id'])
-                                                ->first();
-                                              
+                                    ->orWhere('register_number_brand', $item['id'])
+                                    ->first();
+                                if ($animal) {
+                                    $get = App\Models\PedidoAnimal::where('id_animal', $animal->id)->first();
+                                }
+                                
                                 $status = 'Aguardando cadastro';
                             @endphp
                             @if ($animal)
-                                @if ($animal->status == 1)
-                                    @php
-                                        $status = 'Aguardando amostra';
-                                    @endphp
-                                @elseif($animal->status == 2)
-                                    @php
-                                        $status = 'Amostra recebida';
-                                    @endphp
-                                @elseif($animal->status == 3)
-                                    @php
-                                        $status = 'Em análise';
-                                    @endphp
-                                @elseif($animal->status == 4)
-                                    @php
-                                        $status = 'Análise concluída';
-                                    @endphp
-                                @elseif($animal->status == 5)
-                                    @php
-                                        $status = 'Resultado disponível';
-                                    @endphp
-                                @elseif($animal->status == 6)
-                                    @php
-                                        $status = 'Análise reprovada';
-                                    @endphp
-                                @elseif($animal->status == 7)
-                                    @php
-                                        $status = 'Análise Aprovada';
-                                    @endphp
-                                @elseif($animal->status == 8)
-                                    @php
-                                        $status = 'Recoleta solicitada';
-                                    @endphp
-                                @elseif($animal->status == 9)
-                                    @php
-                                        $status = 'Amostra paga';
-                                    @endphp
-                                @elseif($animal->status == 10)
-                                    @php
-                                        $status = 'Pedido Concluído';
-                                    @endphp
-                                @elseif($animal->status == 11)
-                                    @php
-                                        $status = 'Aguardando Pagamento';
-                                    @endphp
+                                @if ($get)
+                                    @if ($get->status)
+                                        @if ($status == 1)
+                                            @php
+                                                $status = 'Aguardando amostra';
+                                            @endphp
+                                        @elseif($get->status == 2)
+                                            @php
+                                                $status = 'Amostra recebida';
+                                            @endphp
+                                        @elseif($get->status == 3)
+                                            @php
+                                                $status = 'Em análise';
+                                            @endphp
+                                        @elseif($get->status == 4)
+                                            @php
+                                                $status = 'Análise concluída';
+                                            @endphp
+                                        @elseif($get->status == 5)
+                                            @php
+                                                $status = 'Resultado disponível';
+                                            @endphp
+                                        @elseif($get->status == 6)
+                                            @php
+                                                $status = 'Análise reprovada';
+                                            @endphp
+                                        @elseif($get->status == 7)
+                                            @php
+                                                $status = 'Análise Aprovada';
+                                            @endphp
+                                        @elseif($get->status == 8)
+                                            @php
+                                                $status = 'Recoleta solicitada';
+                                            @endphp
+                                        @elseif($get->status == 9)
+                                            @php
+                                                $status = 'Amostra paga';
+                                            @endphp
+                                        @elseif($get->status == 10)
+                                            @php
+                                                $status = 'Pedido Concluído';
+                                            @endphp
+                                        @elseif($get->status == 11)
+                                            @php
+                                                $status = 'Aguardando Pagamento';
+                                            @endphp
+                                        @endif
+                                    @endif
+                                @else
+                                    @if ($animal->status)
+                                        @if ($status == 1)
+                                            @php
+                                                $status = 'Aguardando amostra';
+                                            @endphp
+                                        @elseif($animal->status == 2)
+                                            @php
+                                                $status = 'Amostra recebida';
+                                            @endphp
+                                        @elseif($animal->status == 3)
+                                            @php
+                                                $status = 'Em análise';
+                                            @endphp
+                                        @elseif($animal->status == 4)
+                                            @php
+                                                $status = 'Análise concluída';
+                                            @endphp
+                                        @elseif($animal->status == 5)
+                                            @php
+                                                $status = 'Resultado disponível';
+                                            @endphp
+                                        @elseif($animal->status == 6)
+                                            @php
+                                                $status = 'Análise reprovada';
+                                            @endphp
+                                        @elseif($animal->status == 7)
+                                            @php
+                                                $status = 'Análise Aprovada';
+                                            @endphp
+                                        @elseif($animal->status == 8)
+                                            @php
+                                                $status = 'Recoleta solicitada';
+                                            @endphp
+                                        @elseif($animal->status == 9)
+                                            @php
+                                                $status = 'Amostra paga';
+                                            @endphp
+                                        @elseif($animal->status == 10)
+                                            @php
+                                                $status = 'Pedido Concluído';
+                                            @endphp
+                                        @elseif($animal->status == 11)
+                                            @php
+                                                $status = 'Aguardando Pagamento';
+                                            @endphp
+                                        @endif
+                                    @endif
                                 @endif
                             @endif
                             <ul class="list-group m-3">
@@ -93,7 +148,7 @@
                                     <span>STATUS:
                                         {{ $status }}</span>
                                 </li>
-                                <li class="list-group-item">
+                                {{-- <li class="list-group-item">
                                     @if ($status == 'Aguardando amostra')
                                         <div>
 
@@ -117,7 +172,7 @@
                                             </div>
                                         </div>
                                     @endif
-                                    @if ($status == 'Análise Aprovada' | $status == 'Aguardando Pagamento')
+                                    @if (($status == 'Análise Aprovada') | ($status == 'Aguardando Pagamento'))
                                         <div class="row">
                                             <div class="col-3">
                                                 <button class="btn text-white btn-success amostra-paga" data-value="9"
@@ -138,6 +193,19 @@
                                         </div>
                                     @endif
 
+                                </li> --}}
+                                <li class="list-group-item">
+                                    <label for="exampleFormControlInput1" class="form-label">Status do pedido</label>
+                                    <select class="form-select status-select" data-order="{{ $order->id }}" data-id="{{ $animal->id ?? '' }}"
+                                        aria-label="Default select example">
+                                        @if ($animal)
+                                            @foreach ($stats as $key => $stat)
+                                                <option value="{{ $key }}"
+                                                    @if ($animal->status == $key) selected @endif>{{ $stat }}
+                                                </option>
+                                            @endforeach
+                                        @endif
+                                    </select>
                                 </li>
                                 @if ($status != 'Aguardando amostra' && $status != 'Aguardando cadastro')
                                     <li class="list-group-item">
@@ -244,129 +312,24 @@
                 }
             });
         });
-        $(document).on('blur', '.chip', function() {
-            var id = $(this).data('id');
-            $.ajax({
-                url: `/chip/${id}`,
-                type: 'POST',
 
-                data: {
-                    chip: $(this).val()
-                },
-                success: function(data) {
-                    console.log(data);
-                }
-            });
-        });
-        $(document).on('click', '.amostra', function() {
+        $(document).on('change', '.status-select', function() {
             var id = $(this).data('id');
-            var order = $(this).data('order');
-            var value = $(this).data('value');
+            if ($(this).val() == 6 | $(this).val() == 7) {
+                var order = $(this).data('order');
+            }
             $.ajax({
                 url: `/amostra/${id}`,
                 type: 'POST',
                 data: {
-                    value: value,
-                    order: order
-
-                },
-                success: function(data) {
-                    console.log(data);
-                    window.location.reload();
-                }
-            });
-        });
-        $(document).on('click', '.amostra-paga', function() {
-            var id = $(this).data('id');
-            var value = $(this).data('value');
-            $.ajax({
-                url: `/amostra/${id}`,
-                type: 'POST',
-                data: {
-                    value: value,
-
-                },
-                success: function(data) {
-                    console.log(data);
-                    window.location.reload();
-                }
-            });
-        });
-        $(document).on('click', '.amostra-ok', function() {
-            var id = $(this).data('id');
-            var order = $(this).data('order');
-            var value = $(this).data('value');
-            $.ajax({
-                url: `/amostra/${id}`,
-                type: 'POST',
-                data: {
-                    value: value,
-                    order: order
+                    value: $(this).val()
                 },
                 success: function(data) {
                     console.log(data);
                     window.location.reload();
                 },
                 error: function(er) {
-                    Swal.fire(
-                        'Oops!',
-                        'Ocorreu um erro ao tentar atualizar o status da amostra, consulte se o numero de celular está atualizado!',
-                        'error'
-                    )
-                }
-            });
-        });
-        $(document).on('click', '.amostra-reprovada', function() {
-            var id = $(this).data('id');
-            var order = $(this).data('order');
-            var value = $(this).data('value');
-            $.ajax({
-                url: `/amostra/${id}`,
-                type: 'POST',
-                data: {
-                    value: value,
-                    order: order
-                },
-                success: function(data) {
-                    console.log(data);
-                    window.location.reload();
-                },
-                error: function(er) {
-                    Swal.fire(
-                        'Oops!',
-                        'Ocorreu um erro ao tentar atualizar o status da amostra, consulte se o numero de celular está atualizado!',
-                        'error'
-                    )
-                }
-            });
-        });
-        $(document).on('click', '.recoleta', function() {
-            var id = $(this).data('id');
-            var value = $(this).data('value');
-            $.ajax({
-                url: `/amostra/${id}`,
-                type: 'POST',
-                data: {
-                    value: value
-                },
-                success: function(data) {
-                    console.log(data);
-                    window.location.reload();
-                }
-            });
-        });
-        $(document).on('click', '.pedido-concluido', function() {
-            var id = $(this).data('id');
-            var value = $(this).data('value');
-            $.ajax({
-                url: `/amostra/${id}`,
-                type: 'POST',
-                data: {
-                    value: value
-                },
-                success: function(data) {
-                    console.log(data);
-                    window.location.reload();
+                    console.log('erro');
                 }
             });
         });
@@ -405,7 +368,9 @@
 
                 }
             });
-        });
 
+
+
+        });
     </script>
 @endsection
