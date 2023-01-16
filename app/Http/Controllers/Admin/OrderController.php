@@ -188,6 +188,12 @@ class OrderController extends Controller
                     'payment_status' => 1,
                 ]);
             }
+            if ($request->value == 11) {
+
+                $orderRequest->update([
+                    'payment_status' => 0,
+                ]);
+            }
         }
 
         \Log::channel('admins_actions')->info(['Usuário', auth()->user()->name], ['Alterou status de:', $animal->animal_name]);
