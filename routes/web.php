@@ -190,4 +190,6 @@ Route::middleware(['auth:admin'])->group(function () {
 
     Route::get('get-breeds/{id}', [SpeciesBreedsController::class, 'getBreed'])->name('get.breed');
     Route::post('get-pai', [AnimaisController::class, 'getPai'])->name('get.pai');
+
+    Route::get('export-order', [OrderController::class, 'exportOrders']);
 });

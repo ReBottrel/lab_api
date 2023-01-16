@@ -638,4 +638,35 @@ class OrderController extends Controller
 
         return response()->download(public_path('arquivos/' . $name), $name, $http_response_header)->deleteFileAfterSend(true);
     }
+    public function exportOrders()
+    {
+        $orders = OrderRequest::where('total', '>', 1)->get();
+        $newdata = [];
+        foreach ($orders as $order) {
+            $newdata[] = [
+                'id' => $order->id,
+                'Criador' => $order->creator,
+                'Status de pagamento' => 'Pago',
+                'E-mail' => $order->email,
+                'Categoria de Exame' => $order->category,
+                'Produto' => $order->animal,
+                'Valor do pagamento' => $order->total,
+                'Data de criação' => date('d/m/Y', strtotime($order->created_at)),
+                'Data de pagamento' => date('d/m/Y', strtotime($order->updated_at)),
+            ];
+        }
+        $date = date('d-m-y h:i:s');
+        $name =  'relatorio-order.xlsx';
+
+        $orders = collect($newdata);
+
+        $http_response_header = [
+            'Content-Type' => 'application/vnd.ms-excel',
+
+        ];
+
+        (new FastExcel($orders))->export('arquivos/' . $name);
+
+        return response()->download(public_path('arquivos/' . $name), $name, $http_response_header)->deleteFileAfterSend(true);
+    }
 }
