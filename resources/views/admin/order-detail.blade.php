@@ -321,7 +321,9 @@
                 url: `/amostra/${id}`,
                 type: 'POST',
                 data: {
-                    value: $(this).val()
+                    value: $(this).val(),
+                    order: order
+
                 },
                 success: function(data) {
                     console.log(data);

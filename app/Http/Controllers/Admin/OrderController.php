@@ -130,7 +130,6 @@ class OrderController extends Controller
             $order->update([
                 'status' => 4,
             ]);
-
             $telefoneTecnico = str_replace(['(', ')', '-', ' '], ['', '', '', ''],  $order->tecnico->cell);
             $telefoneOwner = str_replace(['(', ')', '-', ' '], ['', '', '', ''],  $order->owner->cell);
 
@@ -157,6 +156,9 @@ class OrderController extends Controller
                     "phone" => "55$telefoneOwner",
                     "message" => "Prezado Criador,
                     A amostra do animal $animal->animal_name foi recebida e APROVADA para realização do exame de DNA no Laboratório Loci"
+                ]);
+                $order->update([
+                    'status' => 4,
                 ]);
             }
             if ($request->value == 6) {
