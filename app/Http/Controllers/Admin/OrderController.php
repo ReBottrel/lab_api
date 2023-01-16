@@ -617,7 +617,7 @@ class OrderController extends Controller
     }
     public function exportFilter(Request $request)
     {
-        $animals = OrderRequestPayment::whereBetween('updated_at', [$request->get('from'), $request->get('to')])->where('payment_status', 1)->get();
+        $animals = OrderRequestPayment::whereBetween('created_at', [$request->get('from'), $request->get('to')])->where('payment_status', 1)->get();
         $newdata = [];
         foreach ($animals as $order) {
             $newdata[] = [
