@@ -35,55 +35,6 @@
                                 $status = 'Aguardando cadastro';
                             @endphp
                             @if ($animal)
-                                {{-- @if ($get)
-                                    @if ($get->status)
-                                        @if ($status == 1)
-                                            @php
-                                                $status = 'Aguardando amostra';
-                                            @endphp
-                                        @elseif($get->status == 2)
-                                            @php
-                                                $status = 'Amostra recebida';
-                                            @endphp
-                                        @elseif($get->status == 3)
-                                            @php
-                                                $status = 'Em análise';
-                                            @endphp
-                                        @elseif($get->status == 4)
-                                            @php
-                                                $status = 'Análise concluída';
-                                            @endphp
-                                        @elseif($get->status == 5)
-                                            @php
-                                                $status = 'Resultado disponível';
-                                            @endphp
-                                        @elseif($get->status == 6)
-                                            @php
-                                                $status = 'Análise reprovada';
-                                            @endphp
-                                        @elseif($get->status == 7)
-                                            @php
-                                                $status = 'Análise Aprovada';
-                                            @endphp
-                                        @elseif($get->status == 8)
-                                            @php
-                                                $status = 'Recoleta solicitada';
-                                            @endphp
-                                        @elseif($get->status == 9)
-                                            @php
-                                                $status = 'Amostra paga';
-                                            @endphp
-                                        @elseif($get->status == 10)
-                                            @php
-                                                $status = 'Pedido Concluído';
-                                            @endphp
-                                        @elseif($get->status == 11)
-                                            @php
-                                                $status = 'Aguardando Pagamento';
-                                            @endphp
-                                        @endif
-                                    @endif
-                                @else --}}
                                 @if ($animal->status)
                                     @if ($status == 1)
                                         @php
