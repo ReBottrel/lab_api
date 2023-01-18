@@ -686,7 +686,7 @@ class OrderController extends Controller
             $newdata[] = [
                 'id' => $order->id,
                 'Criador' => $order->owner_name,
-                'Status de pagamento' => $order->payment_status = 1 ? 'Pago' : 'Pendente',
+                'Status de pagamento' => $order->payment_status == 1 ? 'Pago' : 'Pendente',
                 'E-mail' => $order->email,
                 'Categoria de Exame' => $order->category,
                 'Produto' => $order->animal,
