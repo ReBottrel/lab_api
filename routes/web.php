@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\OwnerController;
 use App\Http\Controllers\Admin\ConfigController;
 use App\Http\Controllers\Admin\AddressController;
 use App\Http\Controllers\Admin\AnimaisController;
+use App\Http\Controllers\Admin\ApiMangalargaController;
 use App\Http\Controllers\Admin\TecnicoController;
 use App\Http\Controllers\User\UserDadosController;
 use App\Http\Controllers\User\UserOrderController;
@@ -191,5 +192,10 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::get('get-breeds/{id}', [SpeciesBreedsController::class, 'getBreed'])->name('get.breed');
     Route::post('get-pai', [AnimaisController::class, 'getPai'])->name('get.pai');
 
+    
     Route::get('export-order', [OrderController::class, 'exportOrders']);
+    Route::get('export-pendentes', [OrderController::class, 'exportPedentes']);
+
 });
+
+Route::get('mangalarga-api', [ApiMangalargaController::class, 'getApi'])->name('api.manga');

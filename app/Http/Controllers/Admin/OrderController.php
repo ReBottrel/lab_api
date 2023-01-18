@@ -677,4 +677,37 @@ class OrderController extends Controller
 
         return response()->download(public_path('arquivos/' . $name), $name, $http_response_header)->deleteFileAfterSend(true);
     }
+
+    public function exportPedentes()
+    {
+        $orders = OrderRequestPayment::whereNotNull('payment_id')->get();
+        $newdata = [];
+        foreach ($orders as $order) {
+            $newdata[] = [
+                'id' => $order->id,
+                'Criador' => $order->owner_name,
+                'Status de pagamento' => $order->payment_status = 1 ? 'Pago' : 'Pendente',
+                'E-mail' => $order->email,
+                'Categoria de Exame' => $order->category,
+                'Produto' => $order->animal,
+                'Valor do pagamento' => $order->value,
+                'ID de Pagamento' => $order->payment_id,
+                'Data de criação' => date('d/m/Y', strtotime($order->created_at)),
+                'Data de pagamento' => date('d/m/Y', strtotime($order->created_at)),
+            ];
+        }
+        $date = date('d-m-y h:i:s');
+        $name =  'relatorio-pedentes.xlsx';
+
+        $orders = collect($newdata);
+
+        $http_response_header = [
+            'Content-Type' => 'application/vnd.ms-excel',
+
+        ];
+
+        (new FastExcel($orders))->export('arquivos/' . $name);
+
+        return response()->download(public_path('arquivos/' . $name), $name, $http_response_header)->deleteFileAfterSend(true);
+    }
 }
