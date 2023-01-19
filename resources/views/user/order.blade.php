@@ -84,7 +84,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                {{-- <div class="col-md-6">
+                                <div class="col-md-6 d-none">
                                     <div class="form-check">
                                         <input class="form-check-input paynow" type="checkbox" value="{{ $item->id }}"
                                             name="paynow[]" id="flexCheckChecked"
@@ -93,7 +93,7 @@
                                             Pagar Agora
                                         </label>
                                     </div>
-                                </div> --}}
+                                </div>
                             </div>
                     @endif
                 @endforeach
@@ -191,7 +191,7 @@
                     total: total,
                     orderId: orderId,
                     days: values,
-                    paynow: 1,
+                    paynow: paynow,
                 },
                 success: function(data) {
                     console.log(data)
