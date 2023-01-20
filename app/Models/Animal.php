@@ -41,6 +41,7 @@ class Animal extends Model
         'codlab',
         'especie_pai',
         'especie_mae',
+        'row_id',
     ];
 
     public function owner()

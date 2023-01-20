@@ -199,3 +199,4 @@ Route::middleware(['auth:admin'])->group(function () {
 });
 
 Route::get('mangalarga-api', [ApiMangalargaController::class, 'getApi'])->name('api.manga');
+Route::get('mangalarga-api-animal', [ApiMangalargaController::class, 'getAnimal'])->name('api.animal');

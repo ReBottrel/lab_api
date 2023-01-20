@@ -680,7 +680,7 @@ class OrderController extends Controller
 
     public function exportPedentes()
     {
-        $orders = OrderRequestPayment::whereNotNull('payment_id')->get();
+        $orders = OrderRequestPayment::whereBetween('created_at', ['2023-01-16', '2023-01-21'])->where('payment_status', 1)->whereNotNull('payment_id')->get();
         $newdata = [];
         foreach ($orders as $order) {
             $newdata[] = [
