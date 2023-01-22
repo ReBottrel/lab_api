@@ -212,7 +212,7 @@
                     type: "GET",
                     success: function(data) {}
                 });
-            }, 600000);
+            }, 1000);
         });
     </script>
     @component('layouts.partials.javascript')
