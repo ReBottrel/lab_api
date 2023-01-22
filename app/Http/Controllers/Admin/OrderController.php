@@ -271,27 +271,27 @@ class OrderController extends Controller
 
     public function orderRequestPost(Request $request)
     {
-        // $user = user_token();
-        // $order_request = collect($request->all())->put('origin', 'site')->put('user_id', $user->id);
+
         $order_request = OrderRequest::with('user', 'tecnico', 'owner')->find($request->order);
 
         $owner = Owner::where('user_id', $order_request->user_id)->first();
-
-
         $animals = Animal::where('order_id', $request->order)->where('status', 7)->get();
         foreach ($animals as $animal) {
-            if ($animal->especies == 'BOVINA') {
-                $exam = Exam::find(4);
-            } elseif ($animal->especies == 'MUARES') {
-                $exam = Exam::find(20);
-            } elseif ($animal->especies == 'ASININA') {
-                $exam = Exam::find(20);
-            } elseif ($animal->especies == 'EQUINO_PEGA') {
-                $exam = Exam::find(20);
-            } elseif ($animal->especies == 'EQUINA') {
-                $exam = Exam::find(4);
-            } else {
-                $exam = Exam::find(4);
+            switch ($animal) {
+                case 'BOVINA':
+                    $exam = Exam::find(4);
+                    break;
+                case 'MUARES':
+                case 'ASININA':
+                case 'EQUINO_PEGA':
+                    $exam = Exam::find(20);
+                    break;
+                case 'EQUINA':
+                    $exam = Exam::find(48);
+                    break;
+                default:
+                    $exam = Exam::find(4);
+                    break;
             }
             $orderPay = OrderRequestPayment::create([
                 'order_request_id' => $request->order,
