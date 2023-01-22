@@ -22,7 +22,7 @@ class OrderController extends Controller
 
     public function order()
     {
-        $orders = OrderRequest::where('status', '!=', 0)->paginate(10);
+        $orders = OrderRequest::where('status', '!=', 0)->orderBy('id', 'desc')->paginate(10);
         return view('admin.order', get_defined_vars());
     }
     public function orderEmail()
@@ -74,26 +74,29 @@ class OrderController extends Controller
         $order = OrderRequest::with('owner')->find($request->id);
         $user = Owner::find($request->owner);
         if ($user->user_id != null) {
-            foreach ($order->data_g['data_table'] as $data) {
+            if ($order->data_g != null) {
 
-                $animal =  Animal::create([
-                    'user_id' => $request->owner,
-                    'order_id' => $order->id,
-                    'animal_name' => $data['produto'],
-                    'register_number_brand' => $data['id'],
-                    'sex' => $data['sexo'],
-                    'birth_date' => $data['nascimento'],
-                    'registro_pai' => $data['registro_pai'],
-                    'pai' => $data['pai'],
-                    'registro_mae' => $data['registro_mae'],
-                    'mae' => $data['mae'],
-                ]);
+                foreach ($order->data_g['data_table'] as $data) {
 
-                PedidoAnimal::create([
-                    'id_pedido' => $order->id,
-                    'id_animal' => $animal->id,
-                    'status' => 1,
-                ]);
+                    $animal =  Animal::create([
+                        'user_id' => $request->owner,
+                        'order_id' => $order->id,
+                        'animal_name' => $data['produto'],
+                        'register_number_brand' => $data['id'],
+                        'sex' => $data['sexo'],
+                        'birth_date' => $data['nascimento'],
+                        'registro_pai' => $data['registro_pai'],
+                        'pai' => $data['pai'],
+                        'registro_mae' => $data['registro_mae'],
+                        'mae' => $data['mae'],
+                    ]);
+
+                    PedidoAnimal::create([
+                        'id_pedido' => $order->id,
+                        'id_animal' => $animal->id,
+                        'status' => 1,
+                    ]);
+                }
             }
 
             $order->update([
