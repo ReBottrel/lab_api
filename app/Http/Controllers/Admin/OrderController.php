@@ -287,7 +287,7 @@ class OrderController extends Controller
                     $exam = Exam::find(20);
                     break;
                 case 'EQUINA':
-                    $exam = Exam::find(48);
+                    $exam = Exam::find(4);
                     break;
                 default:
                     $exam = Exam::find(4);
