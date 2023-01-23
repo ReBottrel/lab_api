@@ -32,7 +32,7 @@
                                     $get = App\Models\PedidoAnimal::where('id_animal', $animal->id)->first();
                                 }
                                 
-                                $status = 'Aguardando cadastro';
+                                $status = 'Aguardando amostra';
                             @endphp
                             @if ($animal)
                                 @if ($animal->status)
@@ -98,52 +98,7 @@
                                     <span>STATUS:
                                         {{ $status }}</span>
                                 </li>
-                                {{-- <li class="list-group-item">
-                                    @if ($status == 'Aguardando amostra')
-                                        <div>
-
-                                            <button class="btn btn-primary amostra" data-value="2"
-                                                data-id="{{ $animal->id }}">Amostra
-                                                Recebida</button>
-                                        </div>
-                                    @endif
-                                    @if ($status == 'Amostra recebida')
-                                        <div class="row">
-                                            <div class="col-3">
-                                                <button class="btn btn-success amostra-ok" data-order="{{ $order->id }}"
-                                                    data-value="7" data-id="{{ $animal->id }}">Amostra
-                                                    Aprovada</button>
-                                            </div>
-                                            <div class="col-3">
-                                                <button class="btn btn-danger amostra-reprovada"
-                                                    data-order="{{ $order->id }}" data-value="6"
-                                                    data-id="{{ $animal->id }}">Amostra
-                                                    Reprovada</button>
-                                            </div>
-                                        </div>
-                                    @endif
-                                    @if (($status == 'Análise Aprovada') | ($status == 'Aguardando Pagamento'))
-                                        <div class="row">
-                                            <div class="col-3">
-                                                <button class="btn text-white btn-success amostra-paga" data-value="9"
-                                                    data-id="{{ $animal->id }}">Amostra Paga</button>
-                                            </div>
-                                        </div>
-                                    @endif
-                                    @if ($status == 'Análise reprovada')
-                                        <div>
-                                            <button class="btn btn-primary recoleta" data-value="8"
-                                                data-id="{{ $animal->id }}">Solicitar Recoleta</button>
-                                        </div>
-                                    @endif
-                                    @if ($status == 'Amostra paga')
-                                        <div>
-                                            <button class="btn btn-primary pedido-concluido" data-value="10"
-                                                data-id="{{ $animal->id }}">Pedido Concluído</button>
-                                        </div>
-                                    @endif
-
-                                </li> --}}
+ 
                                 <li class="list-group-item">
                                     <label for="exampleFormControlInput1" class="form-label">Status do pedido</label>
                                     <select class="form-select status-select" data-order="{{ $order->id }}"
