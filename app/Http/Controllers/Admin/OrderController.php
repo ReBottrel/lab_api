@@ -417,6 +417,14 @@ class OrderController extends Controller
             return response()->json([get_defined_vars()]);
         }
     }
+    public function searchNumber(Request $request)
+    {
+        if ($request->ajax()) {
+            $orders = OrderRequest::with('user', 'orderRequestPayment')->where('status', '!=', 0)->where('id', $request->search)->get();
+            $viewRender = view('admin.includes.filter-search', get_defined_vars())->render();
+            return response()->json([get_defined_vars()]);
+        }
+    }
 
     public function orderCreate()
     {

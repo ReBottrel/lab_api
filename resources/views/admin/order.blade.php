@@ -41,6 +41,14 @@
                     </div>
 
                 </div>
+                <div class="row my-3">
+                    <div class="col-6">
+                        <form>
+                            <label for="exampleFormControlInput1" class="form-label">Buscar numero do pedido</label>
+                            <input class="form-control number-search" type="search" placeholder="">
+                        </form>
+                    </div>
+                </div>
                 <div class="row">
                     <div>
                         <p>Filtro por data de pagamento</p>
@@ -187,6 +195,7 @@
                 });
             });
 
+
             $('.status-payment').change(function() {
                 var status = $(this).val();
                 $.ajax({
@@ -203,6 +212,7 @@
                 });
             });
 
+
             $('.search').keyup(function() {
                 var search = $(this).val();
                 $.ajax({
@@ -218,6 +228,23 @@
                     }
                 });
             });
+
+            $('.number-search').keyup(function() {
+                var search = $(this).val();
+                $.ajax({
+                    url: "{{ route('filter.search.number') }}",
+                    type: "POST",
+                    data: {
+                        _token: "{{ csrf_token() }}",
+                        search: search
+                    },
+                    success: function(data) {
+                        console.log(data);
+                        $('.filter').html(data[0].viewRender);
+                    }
+                });
+            });
+
             $(document).on('click', '.buscar', function() {
                 var inicio = $('#inicio').val();
                 var fim = $('#fim').val();
