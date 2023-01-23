@@ -16,7 +16,8 @@ class ApiMangalargaController extends Controller
     }
     public function getApi()
     {
-        $coletas = $this->fetchDataFromApi('coletas', 18, ['dataColetaInicio' => '2023-01-15T00:00:00']);
+        $coletas = $this->fetchDataFromApi('coletas', 18, ['dataColetaInicio' => '2023-01-10T00:00:00']);
+        // dd($coletas);
         foreach ($coletas as $coleta) {
             $order = OrderRequest::firstOrCreate([
                 'collection_number' => $coleta->rowidColeta

@@ -215,6 +215,7 @@
 
             $('.search').keyup(function() {
                 var search = $(this).val();
+           
                 $.ajax({
                     url: "{{ route('filter.search') }}",
                     type: "POST",
@@ -229,7 +230,7 @@
                 });
             });
 
-            $('.number-search').keyup(function() {
+            $('.number-search').on('input', function() {
                 var search = $(this).val();
                 $.ajax({
                     url: "{{ route('filter.search.number') }}",
