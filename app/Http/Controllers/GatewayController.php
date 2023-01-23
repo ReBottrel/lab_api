@@ -42,12 +42,10 @@ class GatewayController extends Controller
 
 
         $order = OrderRequest::with('orderRequestPayment', 'tecnico', 'owner')->find($request->order_id);
-        // \Log::info($order);
-        // dd('die');
         $data = [
             "amount" => 10000,
             "currency" => "BRL",
-            "description" => "Pagamento de Exames",
+            "description" => "Pagamento de Exames Numero do pedido: $order->id",
             "capture" => 1,
             "statement_descriptor" => "Lab Loci",
             "installment_plan" => [
@@ -182,7 +180,8 @@ class GatewayController extends Controller
 
     public function success($id)
     {
-        $pixreponse = PaymentReturn::where('order_request_id', $id)->orderBy('created_at', 'desc')->first();
+        $pixreponse = PaymentReturn::where('order_request_id', $id)->orderBy('created_at', 'desc')->firstOrFail();
+        // $pixreponse = OrderRequest::with('payments')->find($id);
         return view('user.success_order', get_defined_vars());
     }
     public function reverse(Request $request)

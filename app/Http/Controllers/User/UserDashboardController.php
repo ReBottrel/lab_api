@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\User;
 
+use App\Models\Exam;
+use App\Models\Cupom;
+use App\Models\Animal;
 use App\Models\OrderRequest;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use App\Models\Animal;
-use App\Models\Cupom;
-use App\Models\Exam;
+use App\Models\PaymentReturn;
 use App\Models\OrderRequestPayment;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
 class UserDashboardController extends Controller
@@ -24,6 +25,8 @@ class UserDashboardController extends Controller
     public function orders($id)
     {
         $order = OrderRequest::with('user', 'orderRequestPayment')->find($id);
+        $payment = PaymentReturn::where('order_request_id', $id)->orderBy('created_at', 'desc')->firstOrFail();
+        // dd($order);
         return view('user.order', get_defined_vars());
     }
 

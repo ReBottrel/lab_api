@@ -52,4 +52,10 @@ class OrderRequest extends Model
     {
         return $this->hasMany(Animal::class, 'order_id');
     }
+    public function payments()
+    {
+        return $this->hasOne(PaymentReturn::class, 'order_request_id');
+    }
+   
+
 }
