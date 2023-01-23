@@ -43,6 +43,14 @@
                                 ->get();
                         }
                     @endphp
+                    @php
+                        $status = 'Aguardando Pagamento';
+                        if ($item->payment_status == 1) {
+                            $status = 'Pagamento Confirmado';
+                        } elseif ($item->payment_status == 2) {
+                            $status = 'Pagamento Recusado';
+                        }
+                    @endphp
                     @if ($item->payment_status != 2)
                         <form action="" method="post">
                             @csrf
@@ -56,7 +64,9 @@
                                     <p>Tipo de Exame: <span>{{ $item->category }}</span></p>
                                 </div>
                                 <div class="col-md-6">
-                                    <p>Status de Pagamento: <span>Aguardando Pagamento</span></p>
+                                    <p>Status de Pagamento: <span
+                                            @if ($item->payment_status == 1) class="bg-success" @endif>{{ $status }}</span>
+                                    </p>
                                 </div>
                                 <div class="col-md-6">
                                     <p>Valor: <span
