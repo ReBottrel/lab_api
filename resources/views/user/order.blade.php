@@ -65,7 +65,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <p>Status de Pagamento: <span
-                                            @if ($item->payment_status == 1) class="bg-success text-white" @endif>{{ $status }}</span>
+                                            @if ($item->payment_status == 1) class="bg-success text-white p-3" @endif>{{ $status }}</span>
                                     </p>
                                 </div>
                                 <div class="col-md-6">
