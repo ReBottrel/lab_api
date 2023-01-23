@@ -39,7 +39,7 @@ class GatewayController extends Controller
         \Log::channel('iopay_inp')->info($request->all());
         // dd($request->all());
 
-        
+
 
         $order = OrderRequest::with('orderRequestPayment', 'tecnico', 'owner')->find($request->order_id);
         // \Log::info($order);
@@ -217,14 +217,15 @@ class GatewayController extends Controller
             \Log::channel('iopay_notify_payment')->info(['order request', $orderRequest]);
             foreach ($orderRequest as $item) {
                 if ($item->paynow == 1) {
-                    $order = OrderRequest::where('id', $item->order_request_id)->first();
-                    $item->update([
-                        'payment_status' => 1
-                    ]);
+                    $order = OrderRequest::where('id', $item->order_request_id)->firstOrFail();
+
                     if ($order->requests == null) {
-                        $animal = Animal::where('id', $item->animal_id)->first();
+                        $animal = Animal::where('id', $item->animal_id)->firstOrFail();
                         $animal->update([
                             'status' => 9
+                        ]);
+                        $item->update([
+                            'payment_status' => 1
                         ]);
                         $days = '';
 
@@ -276,8 +277,8 @@ class GatewayController extends Controller
     public function buyer($info_add)
     {
         $user = auth()->user();
-        if(empty($user->info)) UserInfo::create(collect($info_add)->put('user_id', $user->id)->toArray());
-        if(!empty($user->info)) UserInfo::where('user_id', $user->id)->update(collect($info_add)->toArray());
+        if (empty($user->info)) UserInfo::create(collect($info_add)->put('user_id', $user->id)->toArray());
+        if (!empty($user->info)) UserInfo::where('user_id', $user->id)->update(collect($info_add)->toArray());
         // $user = user_token();
         // $name = explode(' ', $user->name);
         $user = UserInfo::where('user_id', auth()->user()->id)->first();
