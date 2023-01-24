@@ -215,7 +215,7 @@
 
             $('.search').keyup(function() {
                 var search = $(this).val();
-           
+                $('.filter').empty();
                 $.ajax({
                     url: "{{ route('filter.search') }}",
                     type: "POST",
@@ -232,6 +232,7 @@
 
             $('.number-search').on('input', function() {
                 var search = $(this).val();
+            
                 $.ajax({
                     url: "{{ route('filter.search.number') }}",
                     type: "POST",
