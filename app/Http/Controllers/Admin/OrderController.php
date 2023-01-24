@@ -573,7 +573,7 @@ class OrderController extends Controller
         $order->status = 1;
         $order->creator_number = '' . $code . '00' . $order->id . '';
         $order->save();
-        return redirect()->route('orders.sistema')->with('success', 'Pedido finalizado com sucesso');
+        return redirect()->route('orders.all')->with('success', 'Pedido criado com sucesso');
     }
     public function orderListSistem()
     {
