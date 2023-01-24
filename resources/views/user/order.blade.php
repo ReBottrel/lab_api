@@ -94,22 +94,23 @@
                                         </select>
                                     </div>
                                 </div>
-                                @if ($payment->payment_type == 'boleto')
-                                    <div class="col-md-6">
-                                        <div class="form-check">
-                                            <a href="{{ route('user.success', $order->id) }}"><button type="button"
-                                                    class="btn btn-primary">link do boleto</button></a>
+                                @if ($payment)
+                                    @if ($payment->payment_type == 'boleto')
+                                        <div class="col-md-6">
+                                            <div class="form-check">
+                                                <a href="{{ route('user.success', $order->id) }}"><button type="button"
+                                                        class="btn btn-primary">link do boleto</button></a>
+                                            </div>
                                         </div>
-                                    </div>
-                                @elseif ($payment->payment_type == 'pix')
-                                    <div class="col-md-6">
-                                        <div class="form-check">
-                                            <a href="{{ route('user.success', $order->id) }}"><button type="button"
-                                                    class="btn btn-primary">link da para pix</button></a>
+                                    @elseif ($payment->payment_type == 'pix')
+                                        <div class="col-md-6">
+                                            <div class="form-check">
+                                                <a href="{{ route('user.success', $order->id) }}"><button type="button"
+                                                        class="btn btn-primary">link da para pix</button></a>
+                                            </div>
                                         </div>
-                                    </div>
+                                    @endif
                                 @endif
-
                                 <div class="col-md-6 d-none">
                                     <div class="form-check">
                                         <input class="form-check-input paynow" type="checkbox" value="{{ $item->id }}"
