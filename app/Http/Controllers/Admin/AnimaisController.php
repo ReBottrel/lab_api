@@ -13,6 +13,11 @@ class AnimaisController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function __construct()
+    {
+        ini_set('memory_limit', '-1');
+    }
+
     public function index()
     {
         $animais = Animal::paginate();
@@ -128,5 +133,12 @@ class AnimaisController extends Controller
         $animais = Animal::where('register_number_brand', $request->registro)->first();
         return response()->json($animais);
     }
-   
+
+    public function getRegistros(Request $request)
+    {
+        $query = $request->get('query');
+        $data = Animal::where('animal_name', 'like', "%{$query}%")->take(20)->get();
+
+        return response()->json($data);
+    }
 }

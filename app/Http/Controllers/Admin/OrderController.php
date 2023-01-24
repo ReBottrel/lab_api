@@ -513,7 +513,7 @@ class OrderController extends Controller
             ]);
         }
 
-        return redirect()->back()->with('success', 'Produto adicionado com sucesso');
+        return redirect()->route('admin.order-add-animal', $request->order)->with('success', 'Produto atualizado com sucesso');
     }
     public function orderAddAnimalEdit(Request $request)
     {
@@ -524,6 +524,26 @@ class OrderController extends Controller
             'species' => $species
         ]);
     }
+
+    public function updateAnimalOrder(Request $request)
+    {
+        $animal = Animal::find($request->animal);
+
+        $animal->update([
+            'order_id' => $request->order,
+        ]);
+        return redirect()->route('admin.order-add-animal', $request->order)->with('success', 'Produto atualizado com sucesso');
+    }
+
+    public function addAnimalCreate($id)
+    {
+
+        $order = OrderRequest::find($id);
+        $species = Specie::get();
+        $animals = Animal::where('order_id', $id)->get();
+        return view('admin.orders.create-product', get_defined_vars());
+    }
+
     public function orderAddAnimalDelete($id)
     {
         $animal = Animal::find($id);

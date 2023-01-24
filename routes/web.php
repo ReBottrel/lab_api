@@ -154,10 +154,13 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::get('order-admin-create', [OrderController::class, 'orderCreate'])->name('order.create.painel');
     Route::post('order-admin-store', [OrderController::class, 'requestPost'])->name('order.store.painel');
     Route::get('add-animal-get/{id}', [OrderController::class, 'orderAddAnimal'])->name('admin.order-add-animal');
+    Route::get('add-animal-create/{id}', [OrderController::class, 'addAnimalCreate'])->name('admin.order-create-animal');
+    Route::post('add-animal-update', [OrderController::class, 'updateAnimalOrder'])->name('admin.order-update-animal');
     Route::post('add-animal-post', [OrderController::class, 'orderAddAnimalPost'])->name('admin.order-add-animal-post');
     Route::any('product-delete/{id}', [OrderController::class, 'orderAddAnimalDelete'])->name('admin.produto.delete');
     Route::get('order-admin-end/{id}', [OrderController::class, 'orderEnd'])->name('order.end.painel');
     Route::post('order-edit-animal/{id}', [OrderController::class, 'orderAddAnimalEdit'])->name('order.edit.animal');
+   
 
     Route::get('admin-edit/{id}', [ConfigController::class, 'adminEdit'])->name('config.edit.admin');
     Route::post('admin-update/{id}', [AdminAuthController::class, 'update'])->name('config.update.admin');
@@ -166,6 +169,7 @@ Route::middleware(['auth:admin'])->group(function () {
 
 
     Route::any('order-delete/{id}', [OrderController::class, 'orderDelete'])->name('orders.delete');
+
 
     Route::any('update-mass', [OrderController::class, 'massUpdate']);
 
@@ -196,6 +200,8 @@ Route::middleware(['auth:admin'])->group(function () {
     
     Route::get('export-order', [OrderController::class, 'exportOrders']);
     Route::get('export-pendentes', [OrderController::class, 'exportPedentes']);
+
+    Route::get('/get-registros', [AnimaisController::class, 'getRegistros'])->name('get.registros.animais');
 
 });
 

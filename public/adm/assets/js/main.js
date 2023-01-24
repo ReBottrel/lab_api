@@ -125,9 +125,12 @@ $(document).ready(function () {
 
     });
 
+
     $('.js-example-basic-single').select2({
         width: '100%',
     });
+
+    
     $('#cep').mask('99999-999');
     $('#fone').mask('(99) 99999-9999');
     $('#cell').mask('(99) 99999-9999');
