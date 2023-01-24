@@ -26,7 +26,7 @@ class UserDashboardController extends Controller
     {
         $order = OrderRequest::with('user', 'orderRequestPayment')->find($id);
 
-        $payment = PaymentReturn::where('order_request_id', $id)->orderBy('created_at', 'desc')->firstOrFail();
+        $payment = PaymentReturn::where('order_request_id', $id)->orderBy('created_at', 'desc')->first();
 
         return view('user.order', get_defined_vars());
     }
