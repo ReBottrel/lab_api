@@ -453,12 +453,58 @@ class OrderController extends Controller
                 'creator_number' => 0,
                 'tipo' => $request->tipo
             ]);
-
-            return redirect()->route('admin.order-add-animal', $order_request->id);
+            switch ($order_request->tipo) {
+                case 1:
+                    return redirect()->route('admin.order-dna-animal', $order_request->id);
+                    break;
+                case 2:
+                    return redirect()->route('admin.order-homozigose-animal', $order_request->id);
+                    break;
+                case 3:
+                    return redirect()->route('admin.order-beta-caseina-animal', $order_request->id);
+                    break;
+                case 4:
+                    return redirect()->route('admin.order-sorologia-animal', $order_request->id);
+                    break;
+                case 5:
+                    return redirect()->route('admin.order-parentesco-animal', $order_request->id);
+                    break;
+                default:
+                    return redirect()->route('admin.order-dna-animal', $order_request->id);
+                    break;
+            }
         }
         return redirect()->back()->with('error', 'Proprietário não possui cadastro no sistema');
     }
-    public function orderAddAnimal($id)
+    public function orderDnaAnimal($id)
+    {
+        $order = OrderRequest::find($id);
+        $species = Specie::get();
+        $animals = Animal::where('order_id', $id)->get();
+        return view('admin.order-add-animal', get_defined_vars());
+    }
+    public function orderHomozigoseAnimal($id)
+    {
+        $order = OrderRequest::find($id);
+        $species = Specie::get();
+        $animals = Animal::where('order_id', $id)->get();
+        return view('admin.order-add-animal', get_defined_vars());
+    }
+    public function orderSorologiaAnimal($id)
+    {
+        $order = OrderRequest::find($id);
+        $species = Specie::get();
+        $animals = Animal::where('order_id', $id)->get();
+        return view('admin.order-add-animal', get_defined_vars());
+    }
+    public function orderBetaAnimal($id)
+    {
+        $order = OrderRequest::find($id);
+        $species = Specie::get();
+        $animals = Animal::where('order_id', $id)->get();
+        return view('admin.order-add-animal', get_defined_vars());
+    }
+    public function orderParentescoAnimal($id)
     {
         $order = OrderRequest::find($id);
         $species = Specie::get();

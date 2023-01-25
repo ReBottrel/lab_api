@@ -153,7 +153,12 @@ Route::middleware(['auth:admin'])->group(function () {
 
     Route::get('order-admin-create', [OrderController::class, 'orderCreate'])->name('order.create.painel');
     Route::post('order-admin-store', [OrderController::class, 'requestPost'])->name('order.store.painel');
-    Route::get('add-animal-get/{id}', [OrderController::class, 'orderAddAnimal'])->name('admin.order-add-animal');
+    Route::get('add-animal-dna/{id}', [OrderController::class, 'orderDnaAnimal'])->name('admin.order-dna-animal');
+    Route::get('add-animal-sorologia/{id}', [OrderController::class, 'orderSorologiaAnimal'])->name('admin.order-sorologia-animal');
+    Route::get('add-animal-beta-caseina/{id}', [OrderController::class, 'orderBetaAnimal'])->name('admin.order-beta-caseina-animal');
+    Route::get('add-animal-homozigose/{id}', [OrderController::class, 'orderHomozigoseAnimal'])->name('admin.order-homozigose-animal');
+    Route::get('add-animal-parentesco/{id}', [OrderController::class, 'orderParentescoAnimal'])->name('admin.order-parentesco-animal');
+
     Route::get('add-animal-create/{id}', [OrderController::class, 'addAnimalCreate'])->name('admin.order-create-animal');
     Route::post('add-animal-update', [OrderController::class, 'updateAnimalOrder'])->name('admin.order-update-animal');
     Route::post('add-animal-post', [OrderController::class, 'orderAddAnimalPost'])->name('admin.order-add-animal-post');
