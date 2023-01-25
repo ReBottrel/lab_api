@@ -277,7 +277,7 @@ class OrderController extends Controller
         $owner = Owner::where('user_id', $order_request->user_id)->first();
         $animals = Animal::where('order_id', $request->order)->where('status', 7)->get();
         foreach ($animals as $animal) {
-            switch ($animal) {
+            switch ($animal->especies) {
                 case 'BOVINA':
                     $exam = Exam::find(4);
                     break;
