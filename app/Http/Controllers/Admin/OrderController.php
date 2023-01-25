@@ -577,6 +577,7 @@ class OrderController extends Controller
 
         $animal->update([
             'order_id' => $request->order,
+            'status' => 1,
         ]);
         return redirect()->route('admin.order-add-animal', $request->order)->with('success', 'Produto atualizado com sucesso');
     }
