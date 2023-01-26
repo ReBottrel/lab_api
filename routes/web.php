@@ -160,6 +160,7 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::get('add-animal-parentesco/{id}', [OrderController::class, 'orderParentescoAnimal'])->name('admin.order-parentesco-animal');
 
     Route::get('add-animal-create/{id}', [OrderController::class, 'addAnimalCreate'])->name('admin.order-create-animal');
+    Route::get('add-parentesco-create/{id}', [OrderController::class, 'addAnimalParentescoCreate'])->name('admin.order-create-parentesco');
     Route::post('add-animal-update', [OrderController::class, 'updateAnimalOrder'])->name('admin.order-update-animal');
     Route::post('add-animal-post', [OrderController::class, 'orderAddAnimalPost'])->name('admin.order-add-animal-post');
     Route::any('product-delete/{id}', [OrderController::class, 'orderAddAnimalDelete'])->name('admin.produto.delete');

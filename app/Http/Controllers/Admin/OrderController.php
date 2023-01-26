@@ -558,8 +558,27 @@ class OrderController extends Controller
                 'especie_mae' => $request->especie_mae,
             ]);
         }
+        switch ($order->tipo) {
+            case 1:
+                return redirect()->route('admin.order-dna-animal', $order->id)->with('success', 'Produto atualizado com sucesso');
+                break;
+            case 2:
+                return redirect()->route('admin.order-homozigose-animal', $order->id)->with('success', 'Produto atualizado com sucesso');
+                break;
+            case 3:
+                return redirect()->route('admin.order-beta-caseina-animal', $order->id)->with('success', 'Produto atualizado com sucesso');
+                break;
+            case 4:
+                return redirect()->route('admin.order-sorologia-animal', $order->id)->with('success', 'Produto atualizado com sucesso');
+                break;
+            case 5:
+                return redirect()->route('admin.order-parentesco-animal', $order->id)->with('success', 'Produto atualizado com sucesso');
+                break;
+            default:
+                return redirect()->route('admin.order-dna-animal', $order->id)->with('success', 'Produto atualizado com sucesso');
+                break;
+        }
 
-        return redirect()->route('admin.order-add-animal', $request->order)->with('success', 'Produto atualizado com sucesso');
     }
     public function orderAddAnimalEdit(Request $request)
     {
@@ -584,11 +603,17 @@ class OrderController extends Controller
 
     public function addAnimalCreate($id)
     {
-
         $order = OrderRequest::find($id);
         $species = Specie::get();
         $animals = Animal::where('order_id', $id)->get();
         return view('admin.orders.create-product', get_defined_vars());
+    }
+    public function addAnimalParentescoCreate($id)
+    {
+        $order = OrderRequest::find($id);
+        $species = Specie::get();
+        $animals = Animal::where('order_id', $id)->get();
+        return view('admin.orders.create-parentesco', get_defined_vars());
     }
 
     public function orderAddAnimalDelete($id)
