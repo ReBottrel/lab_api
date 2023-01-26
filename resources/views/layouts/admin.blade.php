@@ -205,17 +205,7 @@
             });
         </script>
     @endif
-    <script>
-        $(document).ready(function() {
-            setInterval(function() {
-                $.ajax({
-                    url: "{{ route('api.manga') }}",
-                    type: "GET",
-                    success: function(data) {}
-                });
-            }, 600000);
-        });
-    </script>
+ 
     @component('layouts.partials.javascript')
     @endcomponent
 </body>
