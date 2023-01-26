@@ -75,6 +75,8 @@ Route::middleware(['auth:web'])->group(function () {
 
 
 Route::middleware(['auth:admin'])->group(function () {
+    Route::get('new-orders', [OrderController::class, 'getNewOrders'])->name('get.new.orders');
+
     Route::get('painel', [Admin::class, 'index'])->name('admin');
     Route::get('order-detail/{id}', [OrderController::class, 'orderDetail'])->name('order.detail');
     Route::get('order-json/{id}', [HomeController::class, 'orderJson'])->name('order.json');

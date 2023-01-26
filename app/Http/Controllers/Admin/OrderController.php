@@ -25,6 +25,11 @@ class OrderController extends Controller
         $orders = OrderRequest::where('status', '!=', 0)->orderBy('id', 'desc')->paginate(10);
         return view('admin.order', get_defined_vars());
     }
+    public function getNewOrders()
+    {
+        $orders = OrderRequest::where('status', '!=', 1)->latest()->get();
+        return response()->json($orders);
+    }
     public function orderEmail()
     {
         $orders = OrderRequest::where('origin', 'API')->where('status', '!=', 0)->paginate(10);
@@ -578,7 +583,6 @@ class OrderController extends Controller
                 return redirect()->route('admin.order-dna-animal', $order->id)->with('success', 'Produto atualizado com sucesso');
                 break;
         }
-
     }
     public function orderAddAnimalEdit(Request $request)
     {
@@ -598,7 +602,27 @@ class OrderController extends Controller
             'order_id' => $request->order,
             'status' => 1,
         ]);
-        return redirect()->route('admin.order-add-animal', $request->order)->with('success', 'Produto atualizado com sucesso');
+        $order = OrderRequest::find($request->order);
+        switch ($order->tipo) {
+            case 1:
+                return redirect()->route('admin.order-dna-animal', $request->order)->with('success', 'Produto atualizado com sucesso');
+                break;
+            case 2:
+                return redirect()->route('admin.order-homozigose-animal', $request->order)->with('success', 'Produto atualizado com sucesso');
+                break;
+            case 3:
+                return redirect()->route('admin.order-beta-caseina-animal', $request->order)->with('success', 'Produto atualizado com sucesso');
+                break;
+            case 4:
+                return redirect()->route('admin.order-sorologia-animal', $request->order)->with('success', 'Produto atualizado com sucesso');
+                break;
+            case 5:
+                return redirect()->route('admin.order-parentesco-animal', $request->order)->with('success', 'Produto atualizado com sucesso');
+                break;
+            default:
+                return redirect()->route('admin.order-dna-animal', $request->order)->with('success', 'Produto atualizado com sucesso');
+                break;
+        }
     }
 
     public function addAnimalCreate($id)

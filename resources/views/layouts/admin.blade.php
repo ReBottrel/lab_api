@@ -13,7 +13,8 @@
     <link rel="stylesheet" href="{{ asset('adm/assets/fonts/font-awesome.min.css') }}">
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="{{ asset('adm/assets/fonts/fontawesome5-overrides.min.css') }}">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
     <script src="https://kit.fontawesome.com/0ab2bcde1c.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="{{ asset('adm/assets/css/style.min.css') }}">
 </head>
@@ -205,7 +206,34 @@
             });
         </script>
     @endif
- 
+    <script>
+        $(document).ready(function() {
+            // chama a função a cada 1 segundo
+            setInterval(getOrders, 1000);
+            var lastData = null;
+
+            function getOrders() {
+                $.ajax({
+                    url: "{{ route('get.new.orders') }}",
+                    type: "GET",
+                    dataType: "json",
+                    success: function(data) {
+                        //verifica se os dados são novos
+                        if (lastData != data) {
+                            lastData = data;
+                            if (data.length > 0) {
+                                $('.badge-counter').html(data.length);
+                            }
+                        }
+                    }
+                });
+            }
+            //zerar a contagem de novos pedidos ao clicar no badge
+            $('.badge-counter').click(function() {
+                $('.badge-counter').html(0);
+            });
+        });
+    </script>
     @component('layouts.partials.javascript')
     @endcomponent
 </body>
