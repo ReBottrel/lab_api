@@ -16,6 +16,7 @@ class ApiMangalargaController extends Controller
     }
     public function getApi()
     {
+        \Log::info('passei pelo cron de api');
         $coletas = $this->fetchDataFromApi('coletas', 18, 1, ['dataEnvioInicio' => '2023-01-26T00:00:00']);
         // dd($coletas);
         foreach ($coletas as $coleta) {
