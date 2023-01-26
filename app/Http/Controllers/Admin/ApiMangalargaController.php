@@ -59,6 +59,7 @@ class ApiMangalargaController extends Controller
 
     public function getResenha()
     {
+        \Log::info('passei pelo cron');
         $coletas = $this->fetchDataFromApi('coletas', 18, 2, ['dataEnvioInicio' => '2023-01-26T00:00:00']);
         foreach ($coletas as $coleta) {
             $order = OrderRequest::firstOrCreate([
