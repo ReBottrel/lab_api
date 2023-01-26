@@ -16,8 +16,10 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')->hourly();
-        $schedule->command('order:searchmail')->hourly();
-        $schedule->command('order:resend_charge')->hourly();
+        // $schedule->command('order:searchmail')->hourly();
+        // $schedule->command('order:resend_charge')->hourly();
+        $schedule->command('api:orders')->everyMinute();
+        // $schedule->call(route('api.resenha'))->everyTwoMinutes();
     }
 
     /**
@@ -27,7 +29,7 @@ class Kernel extends ConsoleKernel
      */
     protected function commands()
     {
-        $this->load(__DIR__.'/Commands');
+        $this->load(__DIR__ . '/Commands');
 
         require base_path('routes/console.php');
     }
