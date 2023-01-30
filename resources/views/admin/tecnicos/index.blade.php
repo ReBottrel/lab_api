@@ -20,7 +20,7 @@
 
             </div>
             <div class="card-body">
-                <div class="table-responsive">
+                <div class="">
                     <table class="table table-striped">
                         <thead>
                             <tr>
@@ -66,7 +66,7 @@
     <script>
         $(document).ready(function() {
 
-            $('.delete').on('click', function() {
+            $(document).on('click', '.delete', function() {
                 var id = $(this).data('id');
                 var url = "{{ route('techinical.delete', ':id') }}";
                 url = url.replace(':id', id);
