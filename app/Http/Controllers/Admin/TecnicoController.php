@@ -89,7 +89,9 @@ class TecnicoController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $tecnico = Tecnico::find($id);
+        $tecnico->delete();
+        return response()->json($tecnico);
     }
     public function search(Request $request)
     {

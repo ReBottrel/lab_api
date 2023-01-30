@@ -46,7 +46,7 @@
                                             <ul class="dropdown-menu">
                                                 <a href="{{ route('techinical.edit', $tecnico->id) }}"
                                                     class="dropdown-item">Editar</a>
-                                                <a href="" class="dropdown-item">Detalhes</a>
+                                                <a data-id="{{ $tecnico->id }}" class="dropdown-item delete">Excluir</a>
                                             </ul>
                                         </div>
 
@@ -65,6 +65,49 @@
 @section('js')
     <script>
         $(document).ready(function() {
+
+            $('.delete').on('click', function() {
+                var id = $(this).data('id');
+                var url = "{{ route('techinical.delete', ':id') }}";
+                url = url.replace(':id', id);
+                Swal.fire({
+                    title: 'Você tem certeza?',
+                    text: "A remoção do técnico pode ser irreversivel!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Sim, delete isso!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: url,
+                            type: "POST",
+                            data: {
+                                _token: "{{ csrf_token() }}"
+                            },
+                            success: function(data) {
+
+                                if (data.success) {
+
+                                }
+                            }
+                        });
+                        Swal.fire(
+                            'Deletado!',
+                            'Técnico deletado com sucesso!.',
+                            'success'
+                        ).then((result) => {
+                            if (result.isConfirmed) {
+                                location.reload();
+                            }
+                        })
+                        
+                    }
+                })
+
+            });
+
             $('.buscar-tecnico').on('keyup', function() {
                 var search = $(this).val();
                 $.ajax({

@@ -224,8 +224,11 @@
             var mae = 0;
             $('.add-mae').on('click', function() {
                 mae++;
-                $('#mae').append(`<div class="row my-4">
-                                        <div>Mae ${mae}</div>
+                $('#mae').append(`<div class="row my-4" id="eleme-mae">
+                        <div class="row">
+                            <div class="col-md-6">Mae ${mae}</div><div class="col-md-6"><button type="button" id="remove-mae" class="btn btn-danger">Remover mae</button></div>
+                            </div>
+                                       
                                         <div class="col-md-12 mae">
                                             <div class="mb-3">
                                                 <label for="exampleFormControlInput1" class="form-label">Numero de
@@ -259,8 +262,10 @@
             var pai = 0;
             $('.add-pai').on('click', function() {
                 pai++;
-                $('#pai').append(`<div class="row my-4">
-                                        <div>Pai ${pai}</div>
+                $('#pai').append(`<div class="row my-4" id="elem">
+                    <div class="row">
+                            <div class="col-md-6">Pai ${pai}</div><div class="col-md-6"><button type="button" id="remove-pai" class="btn btn-danger">Remover pai</button></div>
+                            </div>
                                         <div class="col-md-12 pai">
                                             <div class="mb-3">
                                                 <label for="exampleFormControlInput1" class="form-label">Numero de
@@ -291,6 +296,12 @@
                                             </div>
                                         </div>
                                     </div>`);
+            });
+            $(document).on('click', '#remove-pai', function() {
+                $(this).closest('#elem').remove();
+            });
+            $(document).on('click', '#remove-mae', function() {
+                $(this).closest('#eleme-mae').remove();
             });
             $(document).ready(function() {
                 $('#search-input').on('keyup', function() {

@@ -142,6 +142,7 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::get('techinical-edit/{id}', [TecnicoController::class, 'edit'])->name('techinical.edit');
     Route::post('techinical-update/{id}', [TecnicoController::class, 'update'])->name('techinical.update');
     Route::post('techinical-search', [TecnicoController::class, 'search'])->name('techinical.search');
+    Route::any('techinical-delete/{id}', [TecnicoController::class, 'destroy'])->name('techinical.delete');
 
     Route::post('owner-access', [OwnerController::class, 'ownerAcess'])->name('owner.access');
 
