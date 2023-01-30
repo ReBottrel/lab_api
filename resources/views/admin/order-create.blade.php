@@ -73,9 +73,9 @@
                 console.log(tipo)
                 if (tipo == 'Selecione o tipo de exame') {
                     Swal.fire(
-                        'Erro',
+                        'Atenção',
                         'Selecione um tipo de exame',
-                        'error'
+                        'warning'
                     )
                 }else{
                     $('form').submit();

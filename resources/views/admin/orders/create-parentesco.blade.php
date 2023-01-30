@@ -47,7 +47,12 @@
                                     <input type="text" name="animal_name" id="animal_name" class="form-control">
                                 </div>
                             </div>
-
+                            <div class="col-md-12">
+                                <div class="mb-3">
+                                    <label for="exampleFormControlInput1" class="form-label">Registro do animal</label>
+                                    <input type="text"  class="form-control">
+                                </div>
+                            </div>
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="exampleFormControlInput1" class="form-label">ID do animal</label>
@@ -111,7 +116,7 @@
                                     <input type="text" name="age" id="age" class="form-control">
                                 </div>
                             </div>
-                            <div class="row">
+                            <div class="row mb-4">
                                 <div class="col-md-4">
                                     <button type="button" class="btn btn-primary add-mae">ADD MÂE</button>
                                 </div>
