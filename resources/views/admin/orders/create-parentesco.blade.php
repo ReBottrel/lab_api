@@ -34,7 +34,7 @@
                 <div class="mt-4">
                     <h5>Cadastrar novo animal</h5>
                 </div>
-                <form action="{{ route('admin.order-add-animal-post') }}" method="post">
+                <form action="{{ route('store.animal.parentesco') }}" id="animal" method="post">
                     @csrf
                     <input type="hidden" name="order" value="{{ $order->id }}">
                     <div class="row">
@@ -133,84 +133,7 @@
 
                                 </div>
                             </div>
-                            {{-- <div class="col-md-6 type-verify d-none">
-                                <div class="mb-3">
-                                    <label for="exampleFormControlInput1" class="form-label">Tipo de verificação</label>
-                                    <select class="form-select verify-type" name="extra_verify">
-                                        <option>Selecione a verificação</option>
-                                        <option value="ASIGN" data-verify="1">ASIGN</option>
-                                        <option value="ASIMD" data-verify="2">ASIMD</option>
-                                        <option value="ASIPD" data-verify="3">ASIPD</option>
-                                        <option value="ASITR" data-verify="4">ASITR</option>
-                                        <option value="BOVGN" data-verify="1">BOVGN</option>
-                                        <option value="BOVMD" data-verify="2">BOVMD</option>
-                                        <option value="BOVPD" data-verify="3">BOVPD</option>
-                                        <option value="BOVTR" data-verify="4">BOVTR</option>
-                                        <option value="CPGN" data-verify="1">CPGN</option>
-                                        <option value="CAPMD" data-verify="2">CAPMD</option>
-                                        <option value="CAPPD" data-verify="3">CAPPD</option>
-                                        <option value="CAPTR" data-verify="4">CAPTR</option>
-                                        <option value="EQUGN" data-verify="1">EQUGN</option>
-                                        <option value="EQUMD" data-verify="2">EQUMD</option>
-                                        <option value="EQUPD" data-verify="3">EQUPD</option>
-                                        <option value="EQUTR" data-verify="4">EQUTR</option>
-                                        <option value="MUAGN" data-verify="1">MUAGN</option>
-                                        <option value="MUAMD" data-verify="2">MUAMD</option>
-                                        <option value="MUAPD" data-verify="3">MUAPD</option>
-                                        <option value="MUATR" data-verify="4">MUATR</option>
-                                    </select>
-                                </div>
-                            </div> --}}
-                            {{-- <div class="col-md-6 pai">
-                                <div class="mb-3">
-                                    <label for="exampleFormControlInput1" class="form-label">Numero de registro do
-                                        pai</label>
-                                    <input type="text" name="registro_pai" id="registro_pai"
-                                        class="form-control registro_pai">
-                                </div>
-                            </div>
-                            <div class="col-md-6 pai">
-                                <div class="mb-3">
-                                    <label for="exampleFormControlInput1" class="form-label">Espécie do pai</label>
-                                    <select class="form-select" name="especie_pai">
-                                        <option>Selecione a espécie</option>
-                                        @foreach ($species as $specie)
-                                            <option value="{{ $specie->name }}">{{ $specie->name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-6 pai">
-                                <div class="mb-3">
-                                    <label for="exampleFormControlInput1" class="form-label">Nome do pai</label>
-                                    <input type="text" name="pai" id="pai" class="form-control">
-                                </div>
-                            </div>
-                            <div class="col-md-6 mae">
-                                <div class="mb-3">
-                                    <label for="exampleFormControlInput1" class="form-label">Numero de registro da
-                                        mãe</label>
-                                    <input type="text" name="registro_mae" id="registro_mae"
-                                        class="form-control registro_mae">
-                                </div>
-                            </div>
-                            <div class="col-md-6 mae">
-                                <div class="mb-3">
-                                    <label for="exampleFormControlInput1" class="form-label">Espécie da mãe</label>
-                                    <select class="form-select" name="especie_mae">
-                                        <option>Selecione a espécie</option>
-                                        @foreach ($species as $specie)
-                                            <option value="{{ $specie->name }}">{{ $specie->name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-6 mae">
-                                <div class="mb-3">
-                                    <label for="exampleFormControlInput1" class="form-label">Nome da mãe</label>
-                                    <input type="text" name="mae" id="mae" class="form-control">
-                                </div>
-                            </div> --}}
+                 
 
 
                             <div class="modal-footer">
@@ -239,7 +162,7 @@
                                                 <label for="exampleFormControlInput1" class="form-label">Numero de
                                                     registro da
                                                     mãe</label>
-                                                <input type="text" name="registro_mae" id="registro_mae"
+                                                <input type="text" name="registro_mae[]" id="registro_mae"
                                                     class="form-control registro_mae">
                                             </div>
                                         </div>
@@ -247,8 +170,8 @@
                                             <div class="mb-3">
                                                 <label for="exampleFormControlInput1" class="form-label">Espécie da
                                                     mãe</label>
-                                                <select class="form-select" name="especie_mae">
-                                                    <option>Selecione a espécie</option>
+                                                <select class="form-select" name="especie_mae[]">
+                                                    <option value="">Selecione a espécie</option>
                                                     @foreach ($species as $specie)
                                                         <option value="{{ $specie->name }}">{{ $specie->name }}</option>
                                                     @endforeach
@@ -258,7 +181,7 @@
                                             <div class="mb-3">
                                                 <label for="exampleFormControlInput1" class="form-label">Nome da
                                                     mãe</label>
-                                                <input type="text" name="mae" id="mae"
+                                                <input type="text" name="mae[]" id="mae"
                                                     class="form-control">
                                             </div>
                                         </div>
@@ -276,7 +199,7 @@
                                                 <label for="exampleFormControlInput1" class="form-label">Numero de
                                                     registro do
                                                     pai</label>
-                                                <input type="text" name="registro_pai" id="registro_pai"
+                                                <input type="text" name="registro_pai[]" id="registro_pai"
                                                     class="form-control registro_pai">
                                             </div>
                                         </div>
@@ -284,7 +207,7 @@
                                             <div class="mb-3">
                                                 <label for="exampleFormControlInput1" class="form-label">Espécie do
                                                     pai</label>
-                                                <select class="form-select" name="especie_pai">
+                                                <select class="form-select" name="especie_pai[]">
                                                     <option>Selecione a espécie</option>
                                                     @foreach ($species as $specie)
                                                         <option value="{{ $specie->name }}">{{ $specie->name }}</option>
@@ -296,12 +219,13 @@
                                             <div class="mb-3">
                                                 <label for="exampleFormControlInput1" class="form-label">Nome do
                                                     pai</label>
-                                                <input type="text" name="pai" id="pai"
+                                                <input type="text" name="pai[]" id="pai"
                                                     class="form-control">
                                             </div>
                                         </div>
                                     </div>`);
             });
+
             $(document).on('click', '#remove-pai', function() {
                 $(this).closest('#elem').remove();
             });
@@ -454,6 +378,9 @@
                 });
 
             });
+
+   
+
 
 
         });

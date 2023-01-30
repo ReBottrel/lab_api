@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\OwnerController;
 use App\Http\Controllers\Admin\ConfigController;
 use App\Http\Controllers\Admin\AddressController;
 use App\Http\Controllers\Admin\AnimaisController;
+use App\Http\Controllers\Admin\AnimalOrderController;
 use App\Http\Controllers\Admin\ApiMangalargaController;
 use App\Http\Controllers\Admin\TecnicoController;
 use App\Http\Controllers\User\UserDadosController;
@@ -211,6 +212,8 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::get('export-pendentes', [OrderController::class, 'exportPedentes']);
 
     Route::get('/get-registros', [AnimaisController::class, 'getRegistros'])->name('get.registros.animais');
+
+    Route::post('store-animal-parentesco', [AnimalOrderController::class, 'storeAnimalParentesco'])->name('store.animal.parentesco');
 
 });
 
