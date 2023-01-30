@@ -12,7 +12,7 @@
 
                 <ul class="dropdown-menu">
                     <a href="{{ route('techinical.edit', $tecnico->id) }}" class="dropdown-item">Editar</a>
-                    <a href="" class="dropdown-item">Detalhes</a>
+                    <a data-id="{{ $tecnico->id }}" class="dropdown-item delete">Excluir</a>
                 </ul>
             </div>
 
