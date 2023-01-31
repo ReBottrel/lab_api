@@ -120,6 +120,7 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::post('filter-status', [OrderController::class, 'filter'])->name('filter.status');
     Route::post('filter-search', [OrderController::class, 'search'])->name('filter.search');
     Route::post('filter-search-number', [OrderController::class, 'searchNumber'])->name('filter.search.number');
+    Route::post('filter-search-animal', [OrderController::class, 'searchAnimal'])->name('filter.search.animal');
     Route::post('filter-payment', [OrderController::class, 'filterPayment'])->name('filter.payment');
     Route::get('filter-date', [OrderController::class, 'dateFilter'])->name('filter.date');
 

@@ -48,6 +48,12 @@
                             <input class="form-control number-search" type="search" placeholder="">
                         </form>
                     </div>
+                    <div class="col-6">
+                        <form>
+                            <label for="exampleFormControlInput1" class="form-label">Buscar pelo animal</label>
+                            <input class="form-control animal-search" type="search" placeholder="Buscar por animal">
+                        </form>
+                    </div>
                 </div>
                 <div class="row">
                     <div>
@@ -179,23 +185,9 @@
 @section('js')
     <script>
         $(document).ready(function() {
-            $('.status-filter').change(function() {
-                var status = $(this).val();
-                $.ajax({
-                    url: "{{ route('filter.status') }}",
-                    type: "POST",
-                    data: {
-                        _token: "{{ csrf_token() }}",
-                        status: status
-                    },
-                    success: function(data) {
-                        console.log(data);
-                        $('.filter').html(data[0].viewRender);
-                    }
-                });
+            $('form').on('keypress', function(e) {
+                return e.which !== 13;
             });
-
-
             $('.status-payment').change(function() {
                 var status = $(this).val();
                 $.ajax({
@@ -232,13 +224,30 @@
 
             $('.number-search').on('input', function() {
                 var search = $(this).val();
-            
+
                 $.ajax({
                     url: "{{ route('filter.search.number') }}",
                     type: "POST",
                     data: {
                         _token: "{{ csrf_token() }}",
                         search: search
+                    },
+                    success: function(data) {
+                        console.log(data);
+                        $('.filter').html(data[0].viewRender);
+                    }
+                });
+            });
+
+            $('.animal-search').on('input', function() {
+
+                var search = $(this).val();
+                $.ajax({
+                    url: "{{ route('filter.search.animal') }}",
+                    type: "POST",
+                    data: {
+                        _token: "{{ csrf_token() }}",
+                        animal: search
                     },
                     success: function(data) {
                         console.log(data);

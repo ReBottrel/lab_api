@@ -430,6 +430,14 @@ class OrderController extends Controller
             return response()->json([get_defined_vars()]);
         }
     }
+    public function searchAnimal(Request $request)
+    {
+        if ($request->ajax()) {
+            $animals = Animal::with('order')->where('animal_name', $request->animal)->get();
+            $viewRender = view('admin.includes.search-animal', get_defined_vars())->render();
+            return response()->json([get_defined_vars()]);
+        }
+    }
 
     public function orderCreate()
     {
