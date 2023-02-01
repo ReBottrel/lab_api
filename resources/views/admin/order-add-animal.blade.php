@@ -36,6 +36,16 @@
                         </thead>
                         <tbody>
                             @forelse ($animals as $item)
+                            @php
+                                $url = '';
+                                if($order->tipo == 1)
+                                {
+                                    // $url = route('admin.order-edit-animal', $item->id);
+                                }elseif($order->tipo == 2)
+                                {
+                                    $url = route('show.animal.homozigose', $item->id);
+                                }
+                            @endphp
                                 <tr>
                                     <th scope="row">{{ $item->animal_name }}</th>
                                     <td>{{ $item->register_number_brand }}</td>
@@ -48,9 +58,7 @@
 
                                             </div>
                                             <div class="mx-2">
-                                                <button type="button" class="btn btn-primary edit" data-bs-toggle="modal"
-                                                    data-bs-target="#exampleModal"
-                                                    data-id="{{ $item->id }}">Editar</button>
+                                               <a href="{{ $url }}"><button type="button" class="btn btn-primary edit" >Editar</button></a> 
                                             </div>
                                         </div>
                                     </td>

@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\Fur;
 use App\Models\Owner;
 use App\Models\Animal;
+use App\Models\Specie;
+use App\Models\FurParent;
 use App\Models\OrderRequest;
 use Illuminate\Http\Request;
 use App\Models\AnimalToParent;
 use App\Http\Controllers\Controller;
-use App\Models\FurParent;
 
 class AnimalOrderController extends Controller
 {
@@ -117,7 +119,7 @@ class AnimalOrderController extends Controller
         $animal = $request->id ? Animal::findOrFail($request->id) : new Animal();
         $animal->fill($data)->save();
 
-        $parents = FurParent::create([
+        $parents = FurParent::updateOrCreate(['animal_id' => $animal->id,], [
             'animal_id' => $animal->id,
             'father_fur' => $request->father_fur,
             'mother_fur' => $request->mother_fur,
@@ -149,5 +151,26 @@ class AnimalOrderController extends Controller
         }
 
         return redirect()->route($route, $order->id)->with('success', 'Produto atualizado com sucesso');
+    }
+
+    public function showHomozigose($id)
+    {
+        $animal = Animal::findOrFail($id);
+        $order = OrderRequest::findOrFail($animal->order_id);
+        $owner = Owner::findOrFail($order->owner_id);
+        $species = Specie::get();
+        $furs = Fur::get();
+        $parents = FurParent::where('animal_id', $animal->id)->first();
+        return view('admin.orders.edit-homozigose', get_defined_vars());
+    }
+    public function editHomozigose($id)
+    {
+        $animal = Animal::findOrFail($id);
+        $order = OrderRequest::findOrFail($animal->order_id);
+        $owner = Owner::findOrFail($order->owner_id);
+        $species = Specie::get();
+        $furs = Fur::get();
+        $parents = FurParent::where('animal_id', $animal->id)->first();
+        return response()->json(get_defined_vars());
     }
 }
