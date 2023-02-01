@@ -6,7 +6,7 @@
             <div class="card-body">
                 <div>
                     <h3 class="text-center">Politicas de privacidade</h3>
-                    <p>Finalidade: O LOCI LAB coleta e armazena informações pessoais de seus clientes para realizar testes
+                    <p>Finalidade: A LOCI LAB coleta e armazena informações pessoais de seus clientes para realizar testes
                         de genética animal e fornecer resultados precisos e confiáveis. Também usamos informações de
                         pagamento para processar transações financeiras.
                     </p>
