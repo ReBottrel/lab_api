@@ -40,6 +40,7 @@ Auth::routes();
 Route::post('login-post', [LoginController::class, 'login'])->name('login.custom');
 
 Route::get('/', [HomeController::class, 'index'])->name('loja');
+Route::get('privacy-and-policies', [HomeController::class, 'privacy'])->name('privacy');
 
 Route::get('teste-zap-api', [TesteController::class, 'testeZapApi']);
 

@@ -115,7 +115,7 @@
                             Links Úteis
                         </h6>
                         <p>
-                            <a href="#!" class="text-reset">Politicas de privacidade</a>
+                            <a href="{{ route('privacy') }}" class="text-reset">Politicas de privacidade</a>
                         </p>
                         <p>
                             <a href="#!" class="text-reset">Termos e condições</a>
