@@ -224,6 +224,7 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::get('edit-animal-homozigose/{id}', [AnimalOrderController::class, 'editHomozigose'])->name('edit.animal.homozigose');
 
     Route::get('fur', [FurController::class, 'index'])->name('fur');
+    Route::post('fur-store', [FurController::class, 'store'])->name('fur.store');
     
 
 });
