@@ -163,6 +163,14 @@ class AnimalOrderController extends Controller
         $parents = FurParent::where('animal_id', $animal->id)->first();
         return view('admin.orders.edit-homozigose', get_defined_vars());
     }
+    public function showDna($id)
+    {
+        $animal = Animal::findOrFail($id);
+        $order = OrderRequest::findOrFail($animal->order_id);
+        $owner = Owner::findOrFail($order->owner_id);
+        $species = Specie::get();
+        return view('admin.orders.edit-dna', get_defined_vars());
+    }
     public function editHomozigose($id)
     {
         $animal = Animal::findOrFail($id);

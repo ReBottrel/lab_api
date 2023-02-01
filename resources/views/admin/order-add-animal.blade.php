@@ -40,7 +40,7 @@
                                 $url = '';
                                 if($order->tipo == 1)
                                 {
-                                    // $url = route('admin.order-edit-animal', $item->id);
+                                    $url = route('show.animal.dna', $item->id);
                                 }elseif($order->tipo == 2)
                                 {
                                     $url = route('show.animal.homozigose', $item->id);

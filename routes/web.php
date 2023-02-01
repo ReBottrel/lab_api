@@ -220,6 +220,7 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::post('store-animal-parentesco', [AnimalOrderController::class, 'storeAnimalParentesco'])->name('store.animal.parentesco');
     Route::post('store-animal-homozigose', [AnimalOrderController::class, 'storeAnimalHomozigose'])->name('store.animal.homozigose');
     Route::get('show-animal-homozigose/{id}', [AnimalOrderController::class, 'showHomozigose'])->name('show.animal.homozigose');
+    Route::get('show-animal-dna/{id}', [AnimalOrderController::class, 'showDna'])->name('show.animal.dna');
     Route::get('edit-animal-homozigose/{id}', [AnimalOrderController::class, 'editHomozigose'])->name('edit.animal.homozigose');
 
     Route::get('fur', [FurController::class, 'index'])->name('fur');
