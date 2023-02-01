@@ -3,9 +3,9 @@
     <div class="container">
         <div class="card">
             <div class="card-header">
-                <h1>Pelos</h1>
+                <h1>Pelagem</h1>
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                    Criar Pelo
+                    Criar pelagem
                 </button>
             </div>
             <div>
@@ -28,7 +28,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td>Sem pelo</td>
+                                <td>Sem pelagem</td>
                             </tr>
                         @endforelse
                     </tbody>
@@ -42,7 +42,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Cadastrar raça</h1>
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Cadastrar pelagem</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form action="{{ route('fur.store') }}" method="post">
@@ -50,7 +50,7 @@
                     <div class="modal-body">
                         <div class="row">
                             <div class="mb-3">
-                                <label for="exampleFormControlInput1" class="form-label">Pelo</label>
+                                <label for="exampleFormControlInput1" class="form-label">pelagem</label>
                                 <input type="text" class="form-control" name="name">
                             </div>
                         </div>
