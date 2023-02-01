@@ -14,24 +14,10 @@
                         <h4>Técnico: {{ $order->technical_manager }}</h4>
                     </div>
                 </div>
-                @php
-                    $rota = '';
-                    switch ($order->tipo) {
-                        case 1:
-                            $rota = "/add-animal-create/$order->id";
-                            break;
-                        case 5:
-                            $rota = "/add-parentesco-create/$order->id";
-                            break;
-                    
-                        default:
-                            $rota = '#';
-                            break;
-                    }
-                @endphp
+
                 <div class="my-5">
                     <div class="my-3">
-                        <a href="{{ $rota }}"><button class="btn btn-primary">Criar
+                        <a href="{{ route('admin.order-create-animal', $order->id) }}"><button class="btn btn-primary">Criar
                                 ou Adicionar Produto</button></a>
                     </div>
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\Fur;
 use App\Models\Exam;
 use App\Models\User;
 use App\Models\Owner;
@@ -9,10 +10,10 @@ use App\Models\Animal;
 use App\Models\Specie;
 use App\Models\Tecnico;
 use App\Models\OrderRequest;
+use App\Models\PedidoAnimal;
 use Illuminate\Http\Request;
 use App\Models\OrderRequestPayment;
 use App\Http\Controllers\Controller;
-use App\Models\PedidoAnimal;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 use Rap2hpoutre\FastExcel\FastExcel;
@@ -633,20 +634,34 @@ class OrderController extends Controller
         }
     }
 
-    public function addAnimalCreate($id)
+    public function addAnimalToOrder($id)
     {
         $order = OrderRequest::find($id);
         $species = Specie::get();
+        $furs = Fur::get();
         $animals = Animal::where('order_id', $id)->get();
-        return view('admin.orders.create-product', get_defined_vars());
+        switch ($order->tipo) {
+            case 1:
+                return view('admin.orders.create-product', get_defined_vars());
+                break;
+            case 2:
+                return view('admin.orders.create-homozigose', get_defined_vars());
+                break;
+            case 3:
+                return redirect()->route('admin.order-beta-caseina-animal', $order->id)->with('success', 'Produto atualizado com sucesso');
+                break;
+            case 4:
+                return redirect()->route('admin.order-sorologia-animal', $order->id)->with('success', 'Produto atualizado com sucesso');
+                break;
+            case 5:
+                return view('admin.orders.create-parentesco', get_defined_vars());
+                break;
+            default:
+                return view('admin.orders.create-product', get_defined_vars());
+                break;
+        }
     }
-    public function addAnimalParentescoCreate($id)
-    {
-        $order = OrderRequest::find($id);
-        $species = Specie::get();
-        $animals = Animal::where('order_id', $id)->get();
-        return view('admin.orders.create-parentesco', get_defined_vars());
-    }
+
 
     public function orderAddAnimalDelete($id)
     {

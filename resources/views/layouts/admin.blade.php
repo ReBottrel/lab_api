@@ -64,6 +64,7 @@
                                     </li>
                                     <li><a class="dropdown-item" href="{{ route('species') }}">Espécie</a></li>
                                     <li><a class="dropdown-item" href="{{ route('breeds') }}">Raça</a></li>
+                                    <li><a class="dropdown-item" href="{{ route('fur') }}">Pelo</a></li>
                                 @endif
                             </ul>
                         </li>
@@ -206,34 +207,7 @@
             });
         </script>
     @endif
-    <script>
-        $(document).ready(function() {
-            // chama a função a cada 1 segundo
-            setInterval(getOrders, 1000);
-            var lastData = null;
-
-            function getOrders() {
-                $.ajax({
-                    url: "{{ route('get.new.orders') }}",
-                    type: "GET",
-                    dataType: "json",
-                    success: function(data) {
-                        //verifica se os dados são novos
-                        if (lastData != data) {
-                            lastData = data;
-                            if (data.length > 0) {
-                                $('.badge-counter').html(data.length);
-                            }
-                        }
-                    }
-                });
-            }
-            //zerar a contagem de novos pedidos ao clicar no badge
-            $('.badge-counter').click(function() {
-                $('.badge-counter').html(0);
-            });
-        });
-    </script>
+  
     @component('layouts.partials.javascript')
     @endcomponent
 </body>

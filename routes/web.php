@@ -22,6 +22,7 @@ use App\Http\Controllers\User\Auth\LoginController;
 use App\Http\Controllers\User\UserDashboardController;
 use App\Http\Controllers\Admin\HomeController as Admin;
 use App\Http\Controllers\Admin\Auth\AdminAuthController;
+use App\Http\Controllers\Admin\FurController;
 use App\Http\Controllers\Admin\SpeciesBreedsController;
 
 /*
@@ -165,7 +166,8 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::get('add-animal-homozigose/{id}', [OrderController::class, 'orderHomozigoseAnimal'])->name('admin.order-homozigose-animal');
     Route::get('add-animal-parentesco/{id}', [OrderController::class, 'orderParentescoAnimal'])->name('admin.order-parentesco-animal');
 
-    Route::get('add-animal-create/{id}', [OrderController::class, 'addAnimalCreate'])->name('admin.order-create-animal');
+    Route::get('add-animal-create/{id}', [OrderController::class, 'addAnimalToOrder'])->name('admin.order-create-animal');
+    // Route::get('add-animal-create/{id}', [OrderController::class, 'addAnimalCreate'])->name('admin.order-create-animal');
     Route::get('add-parentesco-create/{id}', [OrderController::class, 'addAnimalParentescoCreate'])->name('admin.order-create-parentesco');
     Route::post('add-animal-update', [OrderController::class, 'updateAnimalOrder'])->name('admin.order-update-animal');
     Route::post('add-animal-post', [OrderController::class, 'orderAddAnimalPost'])->name('admin.order-add-animal-post');
@@ -216,6 +218,10 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::get('/get-registros', [AnimaisController::class, 'getRegistros'])->name('get.registros.animais');
 
     Route::post('store-animal-parentesco', [AnimalOrderController::class, 'storeAnimalParentesco'])->name('store.animal.parentesco');
+    Route::post('store-animal-homozigose', [AnimalOrderController::class, 'storeAnimalHomozigose'])->name('store.animal.homozigose');
+
+    Route::get('fur', [FurController::class, 'index'])->name('fur');
+    
 
 });
 
