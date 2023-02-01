@@ -648,7 +648,7 @@ class OrderController extends Controller
                 return view('admin.orders.create-homozigose', get_defined_vars());
                 break;
             case 3:
-                return redirect()->route('admin.order-beta-caseina-animal', $order->id)->with('success', 'Produto atualizado com sucesso');
+                return view('admin.orders.create-beta', get_defined_vars());
                 break;
             case 4:
                 return redirect()->route('admin.order-sorologia-animal', $order->id)->with('success', 'Produto atualizado com sucesso');

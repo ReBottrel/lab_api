@@ -36,16 +36,16 @@
                         </thead>
                         <tbody>
                             @forelse ($animals as $item)
-                            @php
-                                $url = '';
-                                if($order->tipo == 1)
-                                {
-                                    $url = route('show.animal.dna', $item->id);
-                                }elseif($order->tipo == 2)
-                                {
-                                    $url = route('show.animal.homozigose', $item->id);
-                                }
-                            @endphp
+                                @php
+                                    $url = '';
+                                    if ($order->tipo == 1) {
+                                        $url = route('show.animal.dna', $item->id);
+                                    } elseif ($order->tipo == 2) {
+                                        $url = route('show.animal.homozigose', $item->id);
+                                    } elseif ($order->tipo == 3) {
+                                        $url = route('show.animal.dna', $item->id);
+                                    }
+                                @endphp
                                 <tr>
                                     <th scope="row">{{ $item->animal_name }}</th>
                                     <td>{{ $item->register_number_brand }}</td>
@@ -58,7 +58,8 @@
 
                                             </div>
                                             <div class="mx-2">
-                                               <a href="{{ $url }}"><button type="button" class="btn btn-primary edit" >Editar</button></a> 
+                                                <a href="{{ $url }}"><button type="button"
+                                                        class="btn btn-primary edit">Editar</button></a>
                                             </div>
                                         </div>
                                     </td>
