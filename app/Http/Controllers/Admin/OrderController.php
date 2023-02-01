@@ -651,7 +651,7 @@ class OrderController extends Controller
                 return view('admin.orders.create-beta', get_defined_vars());
                 break;
             case 4:
-                return redirect()->route('admin.order-sorologia-animal', $order->id)->with('success', 'Produto atualizado com sucesso');
+                return redirect()->route('admin.order-sorologia-animal', $order->id)->with('error', 'Em desenvolvimento');
                 break;
             case 5:
                 return view('admin.orders.create-parentesco', get_defined_vars());
