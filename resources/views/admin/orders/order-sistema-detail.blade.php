@@ -23,6 +23,10 @@
                 <div class="row">
                     <div class="col">
                         @foreach ($animals as $animal)
+                            @php
+                                $datas = App\Models\DataColeta::where('id_animal', $animal->id)->first();
+                                
+                            @endphp
                             @if ($animal)
                                 @if ($animal->status == 1)
                                     @php
@@ -81,6 +85,35 @@
                                         {{ $status }}</span>
                                 </li>
                                 <li class="list-group-item">
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <label for="exampleFormControlInput1" class="form-label">Data de
+                                                recebimento</label>
+                                            <input type="text" class="form-control datas data-1"
+                                                data-id="{{ $animal->id }}" data-type="data_recebimento"
+                                                id="data-rece-{{ $animal->id }}"
+                                                value="{{ $datas->data_recebimento ?? '' }}" placeholder="">
+                                        </div>
+                                        <div class="col-4">
+                                            <label for="exampleFormControlInput1" class="form-label">Data de
+                                                coleta</label>
+                                            <input type="text" class="form-control datas data-1"
+                                                id="data-coleta-{{ $animal->id }}" data-type="data_coleta"
+                                                data-id="{{ $animal->id }}" value="{{ $datas->data_coleta ?? '' }}"
+                                                placeholder="">
+                                        </div>
+                                        <div class="col-4">
+                                            <label for="exampleFormControlInput1" class="form-label">Data de
+                                                chamado</label>
+                                            <input type="text" class="form-control datas data-1"
+                                                data-id="{{ $animal->id }}" data-type="data_laboratorio"
+                                                id="data-chamado-{{ $animal->id }}"
+                                                value="{{ $datas->data_laboratorio ?? '' }}" placeholder="">
+                                        </div>
+
+                                    </div>
+                                </li>
+                                <li class="list-group-item">
                                     <label for="exampleFormControlInput1" class="form-label">Status do pedido</label>
                                     <select class="form-select status-select" data-order="{{ $order->id }}"
                                         data-id="{{ $animal->id ?? '' }}" aria-label="Default select example">
@@ -93,7 +126,7 @@
                                         @endif
                                     </select>
                                 </li>
-  
+
                                 @if ($status != 'Aguardando amostra' && $status != 'Aguardando cadastro')
                                     <li class="list-group-item">
                                         <div class="row">
@@ -172,6 +205,13 @@
 
 @section('js')
     <script>
+        $(document).ready(function() {
+            $('.datas').mask('00/00/0000');
+            $('.cpf-tech').mask('000.000.000-00', {
+                reverse: true
+            });
+
+        });
         $(document).on('blur', '.cpf-tech', function() {
             var id = $(this).data('id');
             $.ajax({
@@ -200,27 +240,136 @@
                 }
             });
         });
-        $(document).on('change', '.status-select', function() {
+
+        $(document).on('blur', '.data-1', function() {
             var id = $(this).data('id');
-            if ($(this).val() == 6 | $(this).val() == 7) {
-                var order = $(this).data('order');
-            }
+            var data1 = $(`#data-rece-${id}`).val();
             $.ajax({
-                url: `/amostra/${id}`,
+                url: `/data-store-resultado`,
                 type: 'POST',
+
                 data: {
-                    value: $(this).val(),
-                    order: order
+                    id_animal: id,
+                    data_recebimento: data1
                 },
                 success: function(data) {
                     console.log(data);
-                    window.location.reload();
+                }
+            });
+
+        });
+        $(document).on('blur', '.data-2', function() {
+            var id = $(this).data('id');
+            var data2 = $(`#data-coleta-${id}`).val();
+            $.ajax({
+                url: `/data-store-resultado`,
+                type: 'POST',
+
+                data: {
+                    id_animal: id,
+                    data_coleta: data2
                 },
-                error: function(er) {
-                    console.log('erro');
+                success: function(data) {
+                    console.log(data);
+                }
+            });
+
+        });
+        $(document).on('blur', '.data-3', function() {
+            var id = $(this).data('id');
+            var data3 = $(`#data-chamado-${id}`).val();
+            $.ajax({
+                url: `/data-store-resultado`,
+                type: 'POST',
+
+                data: {
+                    id_animal: id,
+                    data_laboratorio: data3
+                },
+                success: function(data) {
+                    console.log(data);
                 }
             });
         });
+        $(document).on('change', '.status-select', function() {
+            var id = $(this).data('id');
+            var data1 = $(`#data-rece-${id}`).val();
+            var data2 = $(`#data-coleta-${id}`).val();
+            var data3 = $(`#data-chamado-${id}`).val();
+            console.log(data1);
+            var isValid = true;
+            if (!data1) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Preencha a data de recebimento!',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.reload();
+                    }
+                });
+                isValid = false;
+            } else if (!data2) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Preencha a data de coleta!',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.reload();
+                    }
+                });
+                isValid = false;
+            } else if (!data3) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Preencha a data do chamado!',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.reload();
+                    }
+                });
+                isValid = false;
+            }
+
+            if (!isValid) {
+                return false;
+            }
+
+
+            var order;
+            if ($(this).val() == 6 || $(this).val() == 7) {
+                order = $(this).data('order');
+            }
+            if (isValid == true) {
+                $.ajax({
+                    url: `/amostra/${id}`,
+                    type: 'POST',
+                    data: {
+                        value: $(this).val(),
+                        order: order
+                    },
+                    success: function(data) {
+                        console.log(data);
+                        window.location.reload();
+                    },
+                    error: function(er) {
+
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Verifique se o criador ou técnico está associado ou telefona está correto!',
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.reload();
+                            }
+                        });
+                    }
+                });
+            }
+        });
+
 
         $(document).on('click', '.gerar', function() {
             var id = $(this).data('id');

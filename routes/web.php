@@ -22,6 +22,7 @@ use App\Http\Controllers\User\Auth\LoginController;
 use App\Http\Controllers\User\UserDashboardController;
 use App\Http\Controllers\Admin\HomeController as Admin;
 use App\Http\Controllers\Admin\Auth\AdminAuthController;
+use App\Http\Controllers\Admin\DataColetaController;
 use App\Http\Controllers\Admin\FurController;
 use App\Http\Controllers\Admin\SpeciesBreedsController;
 
@@ -226,6 +227,9 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::get('fur', [FurController::class, 'index'])->name('fur');
     Route::post('fur-store', [FurController::class, 'store'])->name('fur.store');
     
+
+  
+    Route::post('/data-store-resultado', [DataColetaController::class, 'updateData'])->name('datas.resultado.store');
 
 });
 
