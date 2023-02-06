@@ -461,6 +461,7 @@ class OrderController extends Controller
                 'technical_manager' => $tecnico->professional_name,
                 'creator' => $owner->owner_name,
                 'owner_id' => $request->owner,
+                'collection_date' => $request->collection_date,
                 'id_tecnico' => $request->tecnico,
                 'status' => 5,
                 'origin' => 'sistema',
@@ -578,7 +579,7 @@ class OrderController extends Controller
             'id_animal' => $create->id,
             'id_order' => $order->id,
             'data_coleta' => date('d/m/Y', strtotime($request->data_coleta)),
-            'data_recebimento' => date('d/m/Y', strtotime($request->data_recebimento)),
+            'data_recebimento' => date('d/m/Y', strtotime($order->collection_date)),
             'data_laboratorio' => date('d/m/Y', strtotime($request->data_laboratorio)),
         ]);
 

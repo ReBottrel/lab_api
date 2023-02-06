@@ -37,7 +37,7 @@
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="exampleFormControlInput1" class="form-label">Data de recebimento</label>
-                                <input type="date" class="form-control">
+                                <input type="date" class="form-control" name="collection_date">
                             </div>
                         </div>
                         <div class="col-md-6">
