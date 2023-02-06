@@ -122,7 +122,8 @@
                                                 @if ($animal)
                                                     @foreach ($samples as $sample)
                                                         <option value="{{ $sample->id }}"
-                                                            @if ($datas->tipo == $sample->id) selected @endif>
+                                                            @if ($datas) @if ($datas->tipo == $sample->id) selected @endif
+                                                            @endif>
                                                             {{ $sample->name }}
                                                         </option>
                                                     @endforeach
