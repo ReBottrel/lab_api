@@ -14,6 +14,7 @@ use App\Models\PedidoAnimal;
 use Illuminate\Http\Request;
 use App\Models\OrderRequestPayment;
 use App\Http\Controllers\Controller;
+use App\Models\DataColeta;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 use Rap2hpoutre\FastExcel\FastExcel;
@@ -572,6 +573,15 @@ class OrderController extends Controller
                 'especie_mae' => $request->especie_mae,
             ]);
         }
+
+        $datacoleta = DataColeta::create([
+            'id_animal' => $create->id,
+            'id_order' => $order->id,
+            'data_coleta' => date('d/m/Y', strtotime($request->data_coleta)),
+            'data_recebimento' => date('d/m/Y', strtotime($request->data_recebimento)),
+            'data_laboratorio' => date('d/m/Y', strtotime($request->data_laboratorio)),
+        ]);
+
         switch ($order->tipo) {
             case 1:
                 return redirect()->route('admin.order-dna-animal', $order->id)->with('success', 'Produto atualizado com sucesso');

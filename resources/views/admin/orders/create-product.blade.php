@@ -102,7 +102,19 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="exampleFormControlInput1" class="form-label">Data de coleta</label>
-                                    <input type="date" name="" id="" class="form-control">
+                                    <input type="date" name="data_coleta" id="" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="exampleFormControlInput1" class="form-label">Data de recebimento</label>
+                                    <input type="date" name="data_recebimento" id="" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="exampleFormControlInput1" class="form-label">Data do chamado</label>
+                                    <input type="date" name="data_laboratorio" id="" class="form-control">
                                 </div>
                             </div>
                             <div class="col-md-6">
