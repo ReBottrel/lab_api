@@ -15,5 +15,6 @@ class DataColeta extends Model
         'data_coleta',
         'data_laboratorio',
         'data_recebimento',
+        'tipo'
     ];
 }

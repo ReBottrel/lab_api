@@ -55,6 +55,19 @@ class DataColetaController extends Controller
         return response()->json($datas);
     }
 
+    public function updateTipo(Request $request)
+    {
+        $data = [];
+        if ($request->has('tipo')) {
+            $data['tipo'] = $request->tipo;
+        }
+
+        $datas = DataColeta::updateOrCreate(
+            ['id_animal' => $request->id_animal],
+            $data
+        );
+        return response()->json($datas);
+    }
    
     /**
      * Display the specified resource.

@@ -101,6 +101,18 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-3">
+                                    <label for="exampleFormControlInput1" class="form-label">Tipo de coleta</label>
+                                    <select class="form-select" name="tipo">
+                                        @foreach ($samples as $sample)
+                                        <option value="{{ $sample->id }}">{{ $sample->name }}</option>
+                                        @endforeach
+                                       
+
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
                                     <label for="exampleFormControlInput1" class="form-label">Data de coleta</label>
                                     <input type="date" name="data_coleta" id="" class="form-control">
                                 </div>

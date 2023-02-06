@@ -114,6 +114,24 @@
                                     </div>
                                 </li>
                                 <li class="list-group-item">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <label for="exampleFormControlInput1" class="form-label">Tipo de coleta</label>
+                                            <select class="form-select sample-select" data-order="{{ $order->id }}"
+                                                data-id="{{ $animal->id ?? '' }}" aria-label="Default select example">
+                                                @if ($animal)
+                                                    @foreach ($samples as $sample)
+                                                        <option value="{{ $sample->id }}"
+                                                            @if ($datas->tipo == $sample->id) selected @endif>
+                                                            {{ $sample->name }}
+                                                        </option>
+                                                    @endforeach
+                                                @endif
+                                            </select>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="list-group-item">
                                     <label for="exampleFormControlInput1" class="form-label">Status do pedido</label>
                                     <select class="form-select status-select" data-order="{{ $order->id }}"
                                         data-id="{{ $animal->id ?? '' }}" aria-label="Default select example">
@@ -212,6 +230,22 @@
             });
 
         });
+        $(document).on('change', '.sample-select', function() {
+            var id = $(this).data('id');
+            var order = $(this).data('order');
+            $.ajax({
+                url: `/sample-update`,
+                type: 'POST',
+                data: {
+                    tipo: $(this).val(),
+                    id_animal: id,
+                    order: order
+                },
+                success: function(data) {
+                    console.log(data);
+                }
+            });
+        });
         $(document).on('blur', '.cpf-tech', function() {
             var id = $(this).data('id');
             $.ajax({
@@ -298,7 +332,7 @@
             var data3 = $(`#data-chamado-${id}`).val();
             console.log(data1);
             var isValid = true;
-        
+
             var order;
             if ($(this).val() == 6 || $(this).val() == 7) {
                 order = $(this).data('order');

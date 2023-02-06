@@ -70,29 +70,7 @@ class AnimalOrderController extends Controller
             }
         }
 
-        $route = '';
-        switch ($order->tipo) {
-            case 1:
-                $route = 'admin.order-dna-animal';
-                break;
-            case 2:
-                $route = 'admin.order-homozigose-animal';
-                break;
-            case 3:
-                $route = 'admin.order-beta-caseina-animal';
-                break;
-            case 4:
-                $route = 'admin.order-sorologia-animal';
-                break;
-            case 5:
-                $route = 'admin.order-parentesco-animal';
-                break;
-            default:
-                $route = 'admin.order-dna-animal';
-                break;
-        }
-
-        return redirect()->route($route, $order->id)->with('success', 'Produto atualizado com sucesso');
+        return redirect()->route('admin.order-animal', [$order->id, $order->tipo]);
     }
 
     public function storeAnimalHomozigose(Request $request)
@@ -128,29 +106,7 @@ class AnimalOrderController extends Controller
         ]);
 
 
-        $route = '';
-        switch ($order->tipo) {
-            case 1:
-                $route = 'admin.order-dna-animal';
-                break;
-            case 2:
-                $route = 'admin.order-homozigose-animal';
-                break;
-            case 3:
-                $route = 'admin.order-beta-caseina-animal';
-                break;
-            case 4:
-                $route = 'admin.order-sorologia-animal';
-                break;
-            case 5:
-                $route = 'admin.order-parentesco-animal';
-                break;
-            default:
-                $route = 'admin.order-dna-animal';
-                break;
-        }
-
-        return redirect()->route($route, $order->id)->with('success', 'Produto atualizado com sucesso');
+        return redirect()->route('admin.order-animal', [$order->id, $order->tipo]);
     }
 
     public function showHomozigose($id)

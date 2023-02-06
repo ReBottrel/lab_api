@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 use App\Models\OrderRequestPayment;
 use App\Http\Controllers\Controller;
 use App\Models\DataColeta;
+use App\Models\Sample;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 use Rap2hpoutre\FastExcel\FastExcel;
@@ -46,6 +47,7 @@ class OrderController extends Controller
     public function orderSistemaDetail($id)
     {
         $order = OrderRequest::find($id);
+        $samples = Sample::get();
         $stats = [
             1 => 'Aguardando amostra',
             2 => 'Amostra recebida',
@@ -62,6 +64,27 @@ class OrderController extends Controller
         ];
         $animals = Animal::where('order_id', $id)->get();
         return view('admin.orders.order-sistema-detail', get_defined_vars());
+    }
+    public function orderDetail($id)
+    {
+        $order = OrderRequest::find($id);
+        $samples = Sample::get();
+        $stats = [
+            1 => 'Aguardando amostra',
+            2 => 'Amostra recebida',
+            3 => 'Em análise',
+            4 => 'Análise concluída',
+            5 => 'Resultado disponível',
+            6 => 'Análise reprovada',
+            7 => 'Análise Aprovada',
+            8 => 'Recoleta solicitada',
+            9 => 'Amostra paga',
+            10 => 'Pedido Concluído',
+            11 => 'Aguardando Pagamento'
+
+        ];
+        // $animals = Animal::where('order_id', $id)->get();
+        return view('admin.order-detail', get_defined_vars());
     }
 
     public function recivedOrder(Request $request, $id)
@@ -233,25 +256,7 @@ class OrderController extends Controller
         return response()->json($animal);
     }
 
-    public function orderDetail($id)
-    {
-        $order = OrderRequest::find($id);
-        $stats = [
-            1 => 'Aguardando amostra',
-            2 => 'Amostra recebida',
-            3 => 'Em análise',
-            4 => 'Análise concluída',
-            5 => 'Resultado disponível',
-            6 => 'Análise reprovada',
-            7 => 'Análise Aprovada',
-            8 => 'Recoleta solicitada',
-            9 => 'Amostra paga',
-            10 => 'Pedido Concluído',
-            11 => 'Aguardando Pagamento'
 
-        ];
-        return view('admin.order-detail', get_defined_vars());
-    }
 
     public function owner($id)
     {
@@ -469,63 +474,38 @@ class OrderController extends Controller
                 'creator_number' => 0,
                 'tipo' => $request->tipo
             ]);
-            switch ($order_request->tipo) {
-                case 1:
-                    return redirect()->route('admin.order-dna-animal', $order_request->id);
-                    break;
-                case 2:
-                    return redirect()->route('admin.order-homozigose-animal', $order_request->id);
-                    break;
-                case 3:
-                    return redirect()->route('admin.order-beta-caseina-animal', $order_request->id);
-                    break;
-                case 4:
-                    return redirect()->route('admin.order-sorologia-animal', $order_request->id);
-                    break;
-                case 5:
-                    return redirect()->route('admin.order-parentesco-animal', $order_request->id);
-                    break;
-                default:
-                    return redirect()->route('admin.order-dna-animal', $order_request->id);
-                    break;
-            }
+            return redirect()->route('admin.order-animal', [$order_request->id, $request->tipo]);
         }
         return redirect()->back()->with('error', 'Proprietário não possui cadastro no sistema');
     }
-    public function orderDnaAnimal($id)
+
+    public function orderAnimal($id, $type)
     {
         $order = OrderRequest::find($id);
         $species = Specie::get();
         $animals = Animal::where('order_id', $id)->get();
-        return view('admin.order-add-animal', get_defined_vars());
-    }
-    public function orderHomozigoseAnimal($id)
-    {
-        $order = OrderRequest::find($id);
-        $species = Specie::get();
-        $animals = Animal::where('order_id', $id)->get();
-        return view('admin.order-add-animal', get_defined_vars());
-    }
-    public function orderSorologiaAnimal($id)
-    {
-        $order = OrderRequest::find($id);
-        $species = Specie::get();
-        $animals = Animal::where('order_id', $id)->get();
-        return view('admin.order-add-animal', get_defined_vars());
-    }
-    public function orderBetaAnimal($id)
-    {
-        $order = OrderRequest::find($id);
-        $species = Specie::get();
-        $animals = Animal::where('order_id', $id)->get();
-        return view('admin.order-add-animal', get_defined_vars());
-    }
-    public function orderParentescoAnimal($id)
-    {
-        $order = OrderRequest::find($id);
-        $species = Specie::get();
-        $animals = Animal::where('order_id', $id)->get();
-        return view('admin.order-add-animal', get_defined_vars());
+
+        switch ($type) {
+            case 1:
+                $view = 'admin.order-add-animal';
+                break;
+            case 2:
+                $view = 'admin.order-add-animal';
+                break;
+            case 3:
+                $view = 'admin.order-add-animal';
+                break;
+            case 4:
+                $view = 'admin.order-add-animal';
+                break;
+            case 5:
+                $view = 'admin.order-add-animal';
+                break;
+            default:
+                $view = 'admin.order-add-animal';
+        }
+
+        return view($view, get_defined_vars());
     }
 
     public function orderAddAnimalPost(Request $request)
@@ -562,6 +542,7 @@ class OrderController extends Controller
                 'data_coleta' => date('d/m/Y', strtotime($request->data_coleta)),
                 'data_recebimento' => date('d/m/Y', strtotime($order->collection_date)),
                 'data_laboratorio' => date('d/m/Y', strtotime($request->data_laboratorio)),
+                'tipo' => $request->tipo
             ]);
         } else {
             $create = Animal::create($data);
@@ -571,29 +552,11 @@ class OrderController extends Controller
                 'data_coleta' => date('d/m/Y', strtotime($request->data_coleta)),
                 'data_recebimento' => date('d/m/Y', strtotime($order->collection_date)),
                 'data_laboratorio' => date('d/m/Y', strtotime($request->data_laboratorio)),
+                'tipo' => $request->tipo
             ]);
         }
 
-        switch ($order->tipo) {
-            case 1:
-                return redirect()->route('admin.order-dna-animal', $order->id)->with('success', 'Produto atualizado com sucesso');
-                break;
-            case 2:
-                return redirect()->route('admin.order-homozigose-animal', $order->id)->with('success', 'Produto atualizado com sucesso');
-                break;
-            case 3:
-                return redirect()->route('admin.order-beta-caseina-animal', $order->id)->with('success', 'Produto atualizado com sucesso');
-                break;
-            case 4:
-                return redirect()->route('admin.order-sorologia-animal', $order->id)->with('success', 'Produto atualizado com sucesso');
-                break;
-            case 5:
-                return redirect()->route('admin.order-parentesco-animal', $order->id)->with('success', 'Produto atualizado com sucesso');
-                break;
-            default:
-                return redirect()->route('admin.order-dna-animal', $order->id)->with('success', 'Produto atualizado com sucesso');
-                break;
-        }
+        return redirect()->route('admin.order-animal', [$order->id, $order->tipo]);
     }
     public function orderAddAnimalEdit(Request $request)
     {
@@ -614,26 +577,7 @@ class OrderController extends Controller
             'status' => 1,
         ]);
         $order = OrderRequest::find($request->order);
-        switch ($order->tipo) {
-            case 1:
-                return redirect()->route('admin.order-dna-animal', $request->order)->with('success', 'Produto atualizado com sucesso');
-                break;
-            case 2:
-                return redirect()->route('admin.order-homozigose-animal', $request->order)->with('success', 'Produto atualizado com sucesso');
-                break;
-            case 3:
-                return redirect()->route('admin.order-beta-caseina-animal', $request->order)->with('success', 'Produto atualizado com sucesso');
-                break;
-            case 4:
-                return redirect()->route('admin.order-sorologia-animal', $request->order)->with('success', 'Produto atualizado com sucesso');
-                break;
-            case 5:
-                return redirect()->route('admin.order-parentesco-animal', $request->order)->with('success', 'Produto atualizado com sucesso');
-                break;
-            default:
-                return redirect()->route('admin.order-dna-animal', $request->order)->with('success', 'Produto atualizado com sucesso');
-                break;
-        }
+        return redirect()->route('admin.order-animal', [$order->id, $order->tipo]);
     }
 
     public function addAnimalToOrder($id)
@@ -642,6 +586,7 @@ class OrderController extends Controller
         $species = Specie::get();
         $furs = Fur::get();
         $animals = Animal::where('order_id', $id)->get();
+        $samples = Sample::get();
         switch ($order->tipo) {
             case 1:
                 return view('admin.orders.create-product', get_defined_vars());
