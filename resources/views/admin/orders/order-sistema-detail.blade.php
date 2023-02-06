@@ -298,46 +298,7 @@
             var data3 = $(`#data-chamado-${id}`).val();
             console.log(data1);
             var isValid = true;
-            if (!data1) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'Preencha a data de recebimento!',
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        window.location.reload();
-                    }
-                });
-                isValid = false;
-            } else if (!data2) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'Preencha a data de coleta!',
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        window.location.reload();
-                    }
-                });
-                isValid = false;
-            } else if (!data3) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'Preencha a data do chamado!',
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        window.location.reload();
-                    }
-                });
-                isValid = false;
-            }
-
-            if (!isValid) {
-                return false;
-            }
-
-
+        
             var order;
             if ($(this).val() == 6 || $(this).val() == 7) {
                 order = $(this).data('order');
