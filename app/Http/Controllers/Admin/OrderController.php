@@ -530,58 +530,49 @@ class OrderController extends Controller
 
     public function orderAddAnimalPost(Request $request)
     {
-        $order = OrderRequest::find($request->order);
-        $owner = Owner::find($order->owner_id);
+        $order = OrderRequest::findOrFail($request->order);
+        $owner = Owner::findOrFail($order->owner_id);
+
+        $data = [
+            'user_id' => $owner->user_id,
+            'order_id' => $request->order,
+            'register_number_brand' => $request->register_number_brand,
+            'animal_name' => $request->animal_name,
+            'especies' => $request->especies,
+            'breed' => $request->breed,
+            'sex' => $request->sex,
+            'age' => $request->age,
+            'birth_date' => $request->birth_date,
+            'chip_number' => $request->chip_number,
+            'registro_pai' => $request->registro_pai,
+            'pai' => $request->pai,
+            'registro_mae' => $request->registro_mae,
+            'mae' => $request->mae,
+            'owner_id' => $owner->id,
+            'especie_pai' => $request->especie_pai,
+            'especie_mae' => $request->especie_mae,
+        ];
+
         if ($request->id) {
-            $animal = Animal::find($request->id);
-            $animal->update([
-                'user_id' => $owner->user_id,
-                'order_id' => $request->order,
-                'register_number_brand' => $request->register_number_brand,
-                'animal_name' => $request->animal_name,
-                'especies' => $request->especies,
-                'breed' => $request->breed,
-                'sex' => $request->sex,
-                'age' => $request->age,
-                'birth_date' => $request->birth_date,
-                'chip_number' => $request->chip_number,
-                'registro_pai' => $request->registro_pai,
-                'pai' => $request->pai,
-                'registro_mae' => $request->registro_mae,
-                'mae' => $request->mae,
-                'owner_id' => $owner->id,
-                'especie_pai' => $request->especie_pai,
-                'especie_mae' => $request->especie_mae,
+            $animal = Animal::findOrFail($request->id);
+            $animal->update($data);
+            $datacoleta = DataColeta::create([
+                'id_animal' => $request->id,
+                'id_order' => $order->id,
+                'data_coleta' => date('d/m/Y', strtotime($request->data_coleta)),
+                'data_recebimento' => date('d/m/Y', strtotime($order->collection_date)),
+                'data_laboratorio' => date('d/m/Y', strtotime($request->data_laboratorio)),
             ]);
         } else {
-            $create = Animal::create([
-                'user_id' => $owner->user_id,
-                'order_id' => $request->order,
-                'register_number_brand' => $request->register_number_brand,
-                'animal_name' => $request->animal_name,
-                'especies' => $request->especies,
-                'breed' => $request->breed,
-                'sex' => $request->sex,
-                'age' => $request->age,
-                'birth_date' => $request->birth_date,
-                'chip_number' => $request->chip_number,
-                'registro_pai' => $request->registro_pai,
-                'pai' => $request->pai,
-                'registro_mae' => $request->registro_mae,
-                'mae' => $request->mae,
-                'owner_id' => $owner->id,
-                'especie_pai' => $request->especie_pai,
-                'especie_mae' => $request->especie_mae,
+            $create = Animal::create($data);
+            $datacoleta = DataColeta::create([
+                'id_animal' => $create->id,
+                'id_order' => $order->id,
+                'data_coleta' => date('d/m/Y', strtotime($request->data_coleta)),
+                'data_recebimento' => date('d/m/Y', strtotime($order->collection_date)),
+                'data_laboratorio' => date('d/m/Y', strtotime($request->data_laboratorio)),
             ]);
         }
-
-        $datacoleta = DataColeta::create([
-            'id_animal' => $create->id,
-            'id_order' => $order->id,
-            'data_coleta' => date('d/m/Y', strtotime($request->data_coleta)),
-            'data_recebimento' => date('d/m/Y', strtotime($order->collection_date)),
-            'data_laboratorio' => date('d/m/Y', strtotime($request->data_laboratorio)),
-        ]);
 
         switch ($order->tipo) {
             case 1:
