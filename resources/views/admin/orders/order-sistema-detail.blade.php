@@ -130,6 +130,12 @@
                                                 @endif
                                             </select>
                                         </div>
+                                        <div class="col-md-4">
+                                            <span></span>
+                                        </div>
+                                        <div class="col-md-4 mt-4">
+                                           <a href="{{ route('animais.show', $animal->id) }}"> <button class="btn btn-primary">EDITAR ANIMAL</button></a>
+                                        </div>
                                     </div>
                                 </li>
                                 <li class="list-group-item">
