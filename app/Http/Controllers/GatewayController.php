@@ -36,7 +36,7 @@ class GatewayController extends Controller
 
     public function payment(Request $request)
     {
-        \Log::channel('iopay_inp')->info($request->all());
+     
         // dd($request->all());
 
 
