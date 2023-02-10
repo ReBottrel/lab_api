@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TesteController;
 use App\Http\Controllers\AnimalController;
 use App\Http\Controllers\GatewayController;
+use App\Http\Controllers\Admin\FurController;
 use App\Http\Controllers\Loja\HomeController;
 use App\Http\Controllers\Admin\CupomController;
 use App\Http\Controllers\Admin\ExameController;
@@ -13,18 +14,19 @@ use App\Http\Controllers\Admin\OwnerController;
 use App\Http\Controllers\Admin\ConfigController;
 use App\Http\Controllers\Admin\AddressController;
 use App\Http\Controllers\Admin\AnimaisController;
-use App\Http\Controllers\Admin\AnimalOrderController;
-use App\Http\Controllers\Admin\ApiMangalargaController;
 use App\Http\Controllers\Admin\TecnicoController;
 use App\Http\Controllers\User\UserDadosController;
 use App\Http\Controllers\User\UserOrderController;
 use App\Http\Controllers\User\Auth\LoginController;
-use App\Http\Controllers\User\UserDashboardController;
-use App\Http\Controllers\Admin\HomeController as Admin;
-use App\Http\Controllers\Admin\Auth\AdminAuthController;
+use App\Http\Controllers\Veterinario\VetController;
 use App\Http\Controllers\Admin\DataColetaController;
-use App\Http\Controllers\Admin\FurController;
+use App\Http\Controllers\Admin\AnimalOrderController;
+use App\Http\Controllers\User\UserDashboardController;
+use App\Http\Controllers\Admin\ApiMangalargaController;
+use App\Http\Controllers\Admin\HomeController as Admin;
 use App\Http\Controllers\Admin\SpeciesBreedsController;
+use App\Http\Controllers\Veterinario\ResenhaController;
+use App\Http\Controllers\Admin\Auth\AdminAuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -228,8 +230,13 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::post('/data-store-resultado', [DataColetaController::class, 'updateData'])->name('datas.resultado.store');
     Route::post('/sample-update', [DataColetaController::class, 'updateTipo'])->name('datas.sample.store');
     
-
+    Route::get('teste-draw', [TesteController::class, 'index']);
+    Route::post('teste-draw-store', [TesteController::class, 'store'])->name('teste.draw');
+    Route::get('teste-draw-show', [TesteController::class, 'show'])->name('teste.draw.show');
 });
+
+Route::get('vet-index', [VetController::class, 'index'])->name('vet.index');
+Route::get('resenha-step-1', [ResenhaController::class, 'step1'])->name('resenha.step1');
 
 Route::get('mangalarga-api', [ApiMangalargaController::class, 'getApi'])->name('api.manga');
 Route::get('mangalarga-api-animal', [ApiMangalargaController::class, 'getAnimal'])->name('api.animal');
