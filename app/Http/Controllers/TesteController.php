@@ -29,7 +29,7 @@ class TesteController extends Controller
     }
     public function show()
     {
-        $data = ResenhaAnimal::find(15);
+        $data = ResenhaAnimal::find(17);
         return view('admin.teste-img', get_defined_vars());
     }
 }

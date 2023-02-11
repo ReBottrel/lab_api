@@ -219,6 +219,36 @@ body {
     }
 }
 
-#c {
-    // margin-left: 33px;
+.buttons {
+    display: flex;
+    // justify-content: space-between;
+    // align-items: center;
+    margin-top: 20px;
+    flex-wrap: wrap;
+
+    .btn {
+        background: #684286;
+        color: #fff;
+        border: 0;
+        padding: 20px;
+        border-radius: 5px;
+        font-size: 14px;
+        font-weight: 700;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: all 0.3s ease-in-out;
+
+        &:hover {
+            background: #fff;
+            color: #684286;
+            border: 1px solid #684286;
+        }
+    }
+    #salvar{
+        background-color: green;
+    }
+}
+
+canvas {
+    border: 1px solid red;
 }

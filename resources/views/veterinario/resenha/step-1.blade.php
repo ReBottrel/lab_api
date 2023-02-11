@@ -4,15 +4,22 @@
     <canvas id="c"></canvas>
 
     <div class="bg-white">
-        <div>
-            <p>Adicionar imagem</p>
+        <div class="buttons justify-content-between p-2">
             <div>
                 <button class="btn btn-primary" onclick="addImage()">Imagem 1</button>
             </div>
             <div>
                 <button class="btn btn-primary" onclick="addCircle()">Imagem 2</button>
             </div>
-
+            <div>
+                <button class="btn btn-primary" onclick="draw()">Desenhar</button>
+            </div>
+            <div>
+                <button class="btn btn-success" onclick="cancelDraw()">sair do desenho</button>
+            </div>
+            <div>
+                <button class="btn btn-success" id="salvar">SALVAR</button>
+            </div>
         </div>
     </div>
 @endsection
@@ -24,53 +31,44 @@
         canvas.setWidth(window.innerWidth);
         canvas.setHeight(600);
 
-        // Adicionar imagem de fundo
-        var imgElement = new Image();
-        imgElement.src = '{{ asset('vet/img/step-1.png') }}';
-        imgElement.onload = function() {
-            var imgInstance = new fabric.Image(imgElement, {
-                width: canvas.getWidth(),
-                height: canvas.getHeight(),
-                selectable: false,
-                evented: false
-            });
-            canvas.add(imgInstance);
-            canvas.sendToBack(imgInstance);
-        };
 
+        canvas.setBackgroundImage('{{ asset('vet/img/step-1.png') }}', function() {
+            let img = canvas.backgroundImage;
+            img.originX = 'left';
+            img.originY = 'top';
+            img.scaleX = canvas.getWidth() / img.width;
+            img.scaleY = canvas.getHeight() / img.height;
+            canvas.renderAll();
+        });
 
         window.addEventListener('resize', function() {
             imgInstance.set({
                 width: canvas.getWidth(),
                 height: canvas.getHeight()
             });
+
             canvas.renderAll();
         });
 
-        canvas.on('mouse:down', function (options) {
-        var pointer = canvas.getPointer(options.e);
-        var points = [pointer.x, pointer.y, pointer.x, pointer.y];
+        function draw() {
+            canvas.isDrawingMode = true;
+            canvas.freeDrawingBrush.width = 5;
+            canvas.freeDrawingBrush.color = '#000';
+            canvas.on('path:created', function(e) {
 
-        var line = new fabric.Line(points, {
-          strokeWidth: 5,
-          stroke: 'black',
-          originX: 'center',
-          originY: 'center',
-          selectable: false,
-        });
+                e.path.set();
+                canvas.renderAll();
 
-        canvas.add(line);
 
-        canvas.on('mouse:move', function (options) {
-          var pointer = canvas.getPointer(options.e);
-          line.set({ x2: pointer.x, y2: pointer.y });
-          canvas.renderAll();
-        });
-      });
+            });
+        }
 
-      canvas.on('mouse:up', function (options) {
-        canvas.off('mouse:move');
-      });
+        function cancelDraw() {
+            canvas.isDrawingMode = false;
+        }
+
+
+
 
         function addImage() {
             var imgElement = new Image();
