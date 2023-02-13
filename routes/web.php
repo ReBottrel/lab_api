@@ -241,6 +241,7 @@ Route::middleware(['auth:admin'])->group(function () {
 
 Route::get('vet-index', [VetController::class, 'index'])->name('vet.index');
 Route::get('resenha-step-1', [ResenhaController::class, 'step1'])->name('resenha.step1');
+Route::get('resenha-step-2', [ResenhaController::class, 'step2'])->name('resenha.step2');
 
 Route::get('mangalarga-api', [ApiMangalargaController::class, 'getApi'])->name('api.manga');
 Route::get('mangalarga-api-animal', [ApiMangalargaController::class, 'getAnimal'])->name('api.animal');

@@ -23,7 +23,7 @@
                 <button class="undo-draw" onclick="undo()"><i class="fa-solid fa-eraser"></i></button>
             </div>
             <div>
-                <button class="btn btn-success" id="salvar">Próximo</button>
+                <button class="btn btn-success" id="salvar">SALVAR</button>
             </div>
         </div>
     </div>
@@ -80,7 +80,7 @@
             ctx.restore();
         }
 
-        canvas.setBackgroundImage('{{ asset('vet/img/step-1.png') }}', function() {
+        canvas.setBackgroundImage('{{ asset('vet/img/step-2.jpg') }}', function() {
             let img = canvas.backgroundImage;
             img.originX = 'left';
             img.originY = 'top';
@@ -170,18 +170,17 @@
                 quality: 1
             });
             console.log(canvasImage)
-            window.location.href = '{{ route('resenha.step2') }}'
-            // $.ajax({
-            //     url: '{{ route('teste.draw') }}',
-            //     type: 'POST',
-            //     data: {
-            //         _token: '{{ csrf_token() }}',
-            //         data: canvasImage
-            //     },
-            //     success: function(data) {
-            //         console.log(data);
-            //     }
-            // });
+            $.ajax({
+                url: '{{ route('teste.draw') }}',
+                type: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    data: canvasImage
+                },
+                success: function(data) {
+                    console.log(data);
+                }
+            });
         });
     </script>
 @endsection
