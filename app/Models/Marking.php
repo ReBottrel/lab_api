@@ -12,5 +12,6 @@ class Marking extends Model
     protected $fillable = [
         'mark_name',
         'mark_path',
+        'categorie'
     ];
 }

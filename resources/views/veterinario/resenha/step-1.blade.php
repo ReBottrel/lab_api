@@ -3,14 +3,16 @@
 @section('content')
     <canvas id="c"></canvas>
 
+    <div class="images">
+        @foreach ($marcas as $marca)
+            <div id="add-image">
+                <img src="{{ asset('storage/' . $marca->mark_path) }}" alt="">
+            </div>
+        @endforeach
+    </div>
     <div class="bg-white">
         <div class="buttons justify-content-between p-2">
-            <div>
-                <button class="btn btn-primary" onclick="addImage()">Imagem 1</button>
-            </div>
-            <div>
-                <button class="btn btn-primary" onclick="addCircle()">Imagem 2</button>
-            </div>
+
             <div>
                 <button class="btn btn-primary" onclick="draw()">Desenhar</button>
             </div>
@@ -39,6 +41,8 @@
             }
             isRedoing = false;
         });
+
+
 
         var isRedoing = false;
         var h = [];
@@ -124,9 +128,10 @@
         }
 
 
-        function addImage() {
+
+        function addImage(imgPath) {
             var imgElement = new Image();
-            imgElement.src = '{{ asset('adm/assets/img/donkey.png') }}';
+            imgElement.src = imgPath;
             imgElement.onload = function() {
                 var image = new fabric.Image(imgElement, {
                     left: 100,
@@ -138,6 +143,15 @@
             };
         }
 
+        const addImageDivs = document.querySelectorAll("#add-image");
+
+        addImageDivs.forEach(function(div) {
+            div.addEventListener("click", function() {
+                var imgSrc = this.querySelector("img").src;
+                addImage(imgSrc);
+            });
+        });
+
         function addCircle() {
             var circle = new fabric.Circle({
                 left: 200,
@@ -147,6 +161,7 @@
             });
             canvas.add(circle);
         }
+
 
         // Salvar
         $('#salvar').click(function() {

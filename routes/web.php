@@ -7,6 +7,7 @@ use App\Http\Controllers\AnimalController;
 use App\Http\Controllers\GatewayController;
 use App\Http\Controllers\Admin\FurController;
 use App\Http\Controllers\Loja\HomeController;
+use App\Http\Controllers\Admin\MarkController;
 use App\Http\Controllers\Admin\CupomController;
 use App\Http\Controllers\Admin\ExameController;
 use App\Http\Controllers\Admin\OrderController;
@@ -233,6 +234,9 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::get('teste-draw', [TesteController::class, 'index']);
     Route::post('teste-draw-store', [TesteController::class, 'store'])->name('teste.draw');
     Route::get('teste-draw-show', [TesteController::class, 'show'])->name('teste.draw.show');
+
+    Route::get('marks', [MarkController::class, 'index'])->name('marks');
+    Route::post('marks-store', [MarkController::class, 'store'])->name('marks.store');
 });
 
 Route::get('vet-index', [VetController::class, 'index'])->name('vet.index');

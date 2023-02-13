@@ -65,6 +65,7 @@
                                     <li><a class="dropdown-item" href="{{ route('species') }}">Espécie</a></li>
                                     <li><a class="dropdown-item" href="{{ route('breeds') }}">Raça</a></li>
                                     <li><a class="dropdown-item" href="{{ route('fur') }}">Pelagem</a></li>
+                                    <li><a class="dropdown-item" href="{{ route('marks') }}">Marcas da Resenha</a></li>
                                 @endif
                             </ul>
                         </li>

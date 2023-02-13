@@ -267,6 +267,7 @@ canvas {
     right: 10px;
     display: none;
 }
+
 .undo-draw {
     background-color: transparent;
     color: #000;
@@ -279,4 +280,35 @@ canvas {
     bottom: 160px;
     left: 10px;
     display: none;
+}
+
+.images {
+
+    width: 100%;
+    display: flex;
+    padding: 10px;
+    background: #fff;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+    overflow-x: scroll;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: center;
+    position: relative;
+
+    img {
+        border: solid 1px #684286   ;
+        width: 100px;
+        height: 100px;
+        padding: 10px;
+        border-radius: 5px;
+        margin-right: 10px;
+        cursor: pointer;
+        transition: all 0.3s ease-in-out;
+
+        &:hover {
+            transform: scale(1.1);
+        }
+    }
 }
