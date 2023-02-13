@@ -244,11 +244,39 @@ body {
             border: 1px solid #684286;
         }
     }
-    #salvar{
+
+    #salvar {
         background-color: green;
     }
 }
 
 canvas {
     border: 1px solid red;
+}
+
+.confirm-draw {
+    background-color: transparent;
+    color: #11f049;
+    border: 0;
+    padding: 20px;
+    border-radius: 5px;
+    font-size: 2.3em;
+    font-weight: 700;
+    position: absolute;
+    bottom: 160px;
+    right: 10px;
+    display: none;
+}
+.undo-draw {
+    background-color: transparent;
+    color: #000;
+    border: 0;
+    padding: 20px;
+    border-radius: 5px;
+    font-size: 2.3em;
+    font-weight: 700;
+    position: absolute;
+    bottom: 160px;
+    left: 10px;
+    display: none;
 }
