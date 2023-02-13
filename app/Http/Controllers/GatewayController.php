@@ -288,6 +288,7 @@ class GatewayController extends Controller
                 "last_name" => collect(auth()->user()->name)->forget(0)->join(' '),
                 "email" => 'locilab@gmail.com',
                 "taxpayer_id" => $documents,
+                "customer_type" => strlen($documents) == 11 ? "person_natural" : "person_legal",
                 "phone_number" => $user->phone,
                 "gender" => "male",
                 "address" =>  [
