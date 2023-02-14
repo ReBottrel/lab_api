@@ -38,18 +38,27 @@
                         password: $('#password').val(),
                         _token: "{{ csrf_token() }}"
                     },
+                    beforeSend: function() {
+                        Swal.fire({
+                            title: 'Aguarde...',
+                            allowOutsideClick: false,
+                            onBeforeOpen: () => {
+                                Swal.showLoading()
+                            },
+                        })
+                    },
                     success: function(data) {
                         console.log(data);
-                        if (data.status == 200) {
-                            window.location.href = "{{ route('vet.index') }}";
-                        } else {
+                        if (data.success) {
                             Swal.fire({
-                                icon: 'error',
-                                title: 'Oops...',
-                                text: 'Algo deu errado!',
-                                footer: '<a href>Why do I have this issue?</a>'
+                                icon: 'success',
+                                title: 'Sucesso!',
+                                text: 'Login efetuado com sucesso!',
                             })
+                            window.location.href = "{{ route('vet.index') }}";
                         }
+
+
                     },
                     error: function(data) {
                         console.log(data);
@@ -57,7 +66,7 @@
                             icon: 'error',
                             title: 'Oops...',
                             text: 'Login ou senha incorretos!',
-                            
+
                         })
 
                     }

@@ -2,17 +2,14 @@
 
 namespace App\Http\Controllers\Veterinario;
 
+use App\Models\Veterinario;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
 class AuthVetController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('guest:veterinario');
-    }
-
+  
     public function showLoginForm()
     {
         return view('veterinario.auth.login');
@@ -39,11 +36,36 @@ class AuthVetController extends Controller
     {
         return view('veterinario.auth.cadastro');
     }
+    public function registerStore(Request $request)
+    {
+        $this->validate($request, [
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:veterinarios',
+            'password' => 'required|string|min:6|confirmed',
+            'cpf' => 'required|max:255',
+            'portaria' => 'required|max:255',
+        ]);
 
-    public function logout()
+        try {
+            $user = Veterinario::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => bcrypt($request->password),
+                'cpf' => $request->cpf,
+                'portaria' => $request->portaria,
+            ]);
+
+            auth()->login($user);
+            return response()->json(['success' => 'Cadastro realizado com sucesso'], 200);
+        } catch (\Exception $e) {
+            // tratamento de exceção
+            return response()->json(['error' => 'Cadastro não realizado'], 401);
+        }
+    }
+
+    public function sair(Request $request)
     {
         Auth::guard('veterinario')->logout();
         return redirect()->route('vet.login');
     }
-
 }

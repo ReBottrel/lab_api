@@ -21,5 +21,7 @@ class Veterinario extends Authenticatable
         'token_expires_in',
         'status',
         'association_id',
+        'cpf',
+        'portaria',
     ];
 }

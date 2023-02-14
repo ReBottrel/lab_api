@@ -22,6 +22,9 @@ class RedirectIfAuthenticated
         if ($guard == "admin" && Auth::guard($guard)->check()) {
             return redirect('painel');
         }
+        if ($guard == "veterinario" && Auth::guard($guard)->check()) {
+            return redirect('vet-index');
+        }
         if (Auth::guard($guard)->check()) {
             return redirect('/user-dashboard');
         }

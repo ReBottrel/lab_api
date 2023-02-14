@@ -95,6 +95,9 @@
             $('.home').click(function() {
                 window.location.href = "{{ route('vet.index') }}";
             });
+            $('.user').click(function() {
+                $('.user-configs').toggleClass('user-configs-active');
+            });
         });
     </script>
     @yield('js')

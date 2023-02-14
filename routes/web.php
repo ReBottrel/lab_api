@@ -243,11 +243,16 @@ Route::middleware(['auth:admin'])->group(function () {
 Route::get('vet-login', [AuthVetController::class, 'showLoginForm'])->name('vet.login');
 Route::post('vet-login-post', [AuthVetController::class, 'login'])->name('vet.login.submit');
 Route::get('vet-register', [AuthVetController::class, 'showRegisterForm'])->name('vet.register');
+Route::post('vet-register-post', [AuthVetController::class, 'registerStore'])->name('vet.register.submit');
+
 
 Route::middleware(['auth:veterinario'])->group(function () {
+
     Route::get('vet-index', [VetController::class, 'index'])->name('vet.index');
     Route::get('resenha-step-1', [ResenhaController::class, 'step1'])->name('resenha.step1');
     Route::get('resenha-step-2', [ResenhaController::class, 'step2'])->name('resenha.step2');
+
+    Route::any('vet-logout', [AuthVetController::class, 'sair'])->name('vet.logout');
 });
 
 

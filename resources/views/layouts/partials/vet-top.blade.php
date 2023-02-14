@@ -19,3 +19,15 @@
         </div>
     </div>
 </div>
+<div class="user-configs">
+    <div class="row">
+        <div class="col-12">
+            <div class="user-configs-item">
+                <a href="{{ route('vet.logout') }}">
+                    <i class="fa-solid fa-sign-out"></i>
+                    <span>Logout</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
