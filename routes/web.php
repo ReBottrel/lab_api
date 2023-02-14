@@ -198,6 +198,7 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::get('animal-get-status/{id}', [AnimaisController::class, 'getStatus'])->name('animais.get.status');
     Route::post('animal-status-update/{id}', [AnimaisController::class, 'statusUpdate'])->name('animais.status.update');
     Route::get('animais-complete', [AnimaisController::class, 'getAnimal'])->name('animais.get.complete');
+    Route::post('animal-delete', [AnimaisController::class, 'destroy'])->name('animais.delete');
 
     Route::get('cupons', [CupomController::class, 'index'])->name('cupons');
     Route::post('cupons-store', [CupomController::class, 'store'])->name('cupons.store');

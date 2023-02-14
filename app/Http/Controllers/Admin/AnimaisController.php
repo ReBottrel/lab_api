@@ -90,11 +90,11 @@ class AnimaisController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request)
     {
-        $animal = Animal::find($id);
+        $animal = Animal::find($request->id);
         $animal->delete();
-        return redirect()->route('animais')->with('success', 'Animal excluído com sucesso!');
+        return response()->json(['success' => 'Animal deletado com sucesso!']);
     }
     public function search(Request $request)
     {

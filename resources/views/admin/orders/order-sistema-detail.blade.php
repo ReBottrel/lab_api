@@ -76,9 +76,11 @@
                                 <li class="list-group-item"><span>SEXO: {{ $animal->sex }}</span></li>
                                 <li class="list-group-item"><span>NASCIMENTO: {{ $animal->birth_date }}</span></li>
                                 <li class="list-group-item"><span>PAI: {{ $animal->pai }}</span></li>
-                                <li class="list-group-item"><span>REGISTRO DO PAI: {{ $animal->registro_pai }}</span></li>
+                                <li class="list-group-item"><span>REGISTRO DO PAI: {{ $animal->registro_pai }}</span>
+                                </li>
                                 <li class="list-group-item"><span>MÃE: {{ $animal->mae }}</span></li>
-                                <li class="list-group-item"><span>REGISTRO DA MÃE: {{ $animal->registro_mae }}</span></li>
+                                <li class="list-group-item"><span>REGISTRO DA MÃE: {{ $animal->registro_mae }}</span>
+                                </li>
                                 <li class="list-group-item"><span>Obs: {{ $animal->description ?? '' }}</span></li>
 
                                 <li
@@ -118,7 +120,8 @@
                                 <li class="list-group-item">
                                     <div class="row">
                                         <div class="col-md-4">
-                                            <label for="exampleFormControlInput1" class="form-label">Tipo de coleta</label>
+                                            <label for="exampleFormControlInput1" class="form-label">Tipo de
+                                                coleta</label>
                                             <select class="form-select sample-select" data-order="{{ $order->id }}"
                                                 data-id="{{ $animal->id ?? '' }}" aria-label="Default select example">
                                                 @if ($animal)
@@ -132,11 +135,13 @@
                                                 @endif
                                             </select>
                                         </div>
-                                        <div class="col-md-4">
-                                            <span></span>
+                                        <div class="col-md-4 mt-4">
+                                            <button class="btn btn-danger excluir-animal"
+                                                data-id="{{ $animal->id }}">EXCLUIR ANIMAL</button>
                                         </div>
                                         <div class="col-md-4 mt-4">
-                                           <a href="{{ route('animais.show', $animal->id) }}"> <button class="btn btn-primary">EDITAR ANIMAL</button></a>
+                                            <a href="{{ route('animais.show', $animal->id) }}"> <button
+                                                    class="btn btn-primary">EDITAR ANIMAL</button></a>
                                         </div>
                                     </div>
                                 </li>
@@ -147,7 +152,8 @@
                                         @if ($animal)
                                             @foreach ($stats as $key => $stat)
                                                 <option value="{{ $key }}"
-                                                    @if ($animal->status == $key) selected @endif>{{ $stat }}
+                                                    @if ($animal->status == $key) selected @endif>
+                                                    {{ $stat }}
                                                 </option>
                                             @endforeach
                                         @endif
@@ -237,6 +243,39 @@
             $('.cpf-tech').mask('000.000.000-00', {
                 reverse: true
             });
+
+        });
+        $(document).on('click', '.excluir-animal', function() {
+            var id = $(this).data('id');
+            Swal.fire({
+                title: 'Você tem certeza?',
+                text: "Esse processo pode ser irreversível!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sim, deletar!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: `/animal-delete/`,
+                        type: 'POST',
+                        data: {
+                            id: id
+                        },
+                        success: function(data) {
+                            console.log(data);
+                            Swal.fire(
+                                'Deletado!',
+                                'Animal deletado com sucesso.',
+                                'success'
+                            )
+                            location.reload();
+                        }
+                    });
+
+                }
+            })
 
         });
         $(document).on('change', '.sample-select', function() {
