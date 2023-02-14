@@ -298,7 +298,7 @@ canvas {
     position: relative;
 
     img {
-        border: solid 1px #684286   ;
+        border: solid 1px #684286;
         width: 100px;
         height: 100px;
         padding: 10px;
@@ -309,6 +309,171 @@ canvas {
 
         &:hover {
             transform: scale(1.1);
+        }
+    }
+}
+
+.login-form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: #684286;
+
+    .login-form-content {
+        background: #fff;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        margin: 40px;
+
+        .login-form-content-title {
+            font-size: 18px;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+
+        .login-form-content-input {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 20px;
+
+            label {
+                font-size: 14px;
+                font-weight: 700;
+                text-transform: uppercase;
+                margin-bottom: 5px;
+            }
+
+            input {
+                padding: 10px;
+                border: 1px solid #684286;
+                border-radius: 5px;
+                font-size: 14px;
+                font-weight: 700;
+
+            }
+        }
+
+        .login-form-content-btn {
+            background: #684286;
+            color: #fff;
+            border: 0;
+            padding: 20px;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+
+            &:hover {
+                background: #fff;
+                color: #684286;
+                border: 1px solid #684286;
+            }
+        }
+    }
+
+
+}
+
+.cadastro-link {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 40px 0;
+
+    p {
+        color: #616161;
+        font-size: 14px;
+        font-weight: 700;
+        text-transform: uppercase;
+        text-decoration: none;
+        transition: all 0.3s ease-in-out;
+
+        &:hover {
+            color: #fff;
+        }
+    }
+
+    a {
+        color: #684286;
+        font-size: 14px;
+        font-weight: 700;
+        text-transform: uppercase;
+        text-decoration: none;
+        transition: all 0.3s ease-in-out;
+
+        &:hover {
+            color: #fff;
+        }
+    }
+}
+
+.cadastro-vet {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: #684286;
+
+    .cadastro-vet-content {
+        background: #fff;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        margin: 40px;
+
+        .cadastro-vet-content-title {
+            font-size: 18px;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+
+        .cadastro-vet-content-input {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 20px;
+
+            label {
+                font-size: 14px;
+                font-weight: 700;
+                text-transform: uppercase;
+                margin-bottom: 5px;
+            }
+
+            input {
+                padding: 10px;
+                border: 1px solid #684286;
+                border-radius: 5px;
+                font-size: 14px;
+                font-weight: 700;
+
+            }
+        }
+
+        .cadastro-vet-content-btn {
+            background: #684286;
+            color: #fff;
+            border: 0;
+            padding: 20px;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+
+            &:hover {
+                background: #fff;
+                color: #684286;
+                border: 1px solid #684286;
+            }
         }
     }
 }

@@ -28,6 +28,7 @@ use App\Http\Controllers\Admin\HomeController as Admin;
 use App\Http\Controllers\Admin\SpeciesBreedsController;
 use App\Http\Controllers\Veterinario\ResenhaController;
 use App\Http\Controllers\Admin\Auth\AdminAuthController;
+use App\Http\Controllers\Veterinario\AuthVetController;
 
 /*
 |--------------------------------------------------------------------------
@@ -174,7 +175,7 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::any('product-delete/{id}', [OrderController::class, 'orderAddAnimalDelete'])->name('admin.produto.delete');
     Route::get('order-admin-end/{id}', [OrderController::class, 'orderEnd'])->name('order.end.painel');
     Route::post('order-edit-animal/{id}', [OrderController::class, 'orderAddAnimalEdit'])->name('order.edit.animal');
-   
+
 
     Route::get('admin-edit/{id}', [ConfigController::class, 'adminEdit'])->name('config.edit.admin');
     Route::post('admin-update/{id}', [AdminAuthController::class, 'update'])->name('config.update.admin');
@@ -211,7 +212,7 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::get('get-breeds/{id}', [SpeciesBreedsController::class, 'getBreed'])->name('get.breed');
     Route::post('get-pai', [AnimaisController::class, 'getPai'])->name('get.pai');
 
-    
+
     Route::get('export-order', [OrderController::class, 'exportOrders']);
     Route::get('export-pendentes', [OrderController::class, 'exportPedentes']);
 
@@ -225,12 +226,12 @@ Route::middleware(['auth:admin'])->group(function () {
 
     Route::get('fur', [FurController::class, 'index'])->name('fur');
     Route::post('fur-store', [FurController::class, 'store'])->name('fur.store');
-    
 
-  
+
+
     Route::post('/data-store-resultado', [DataColetaController::class, 'updateData'])->name('datas.resultado.store');
     Route::post('/sample-update', [DataColetaController::class, 'updateTipo'])->name('datas.sample.store');
-    
+
     Route::get('teste-draw', [TesteController::class, 'index']);
     Route::post('teste-draw-store', [TesteController::class, 'store'])->name('teste.draw');
     Route::get('teste-draw-show', [TesteController::class, 'show'])->name('teste.draw.show');
@@ -239,9 +240,17 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::post('marks-store', [MarkController::class, 'store'])->name('marks.store');
 });
 
-Route::get('vet-index', [VetController::class, 'index'])->name('vet.index');
-Route::get('resenha-step-1', [ResenhaController::class, 'step1'])->name('resenha.step1');
-Route::get('resenha-step-2', [ResenhaController::class, 'step2'])->name('resenha.step2');
+Route::get('vet-login', [AuthVetController::class, 'showLoginForm'])->name('vet.login');
+Route::post('vet-login-post', [AuthVetController::class, 'login'])->name('vet.login.submit');
+Route::get('vet-register', [AuthVetController::class, 'showRegisterForm'])->name('vet.register');
+
+Route::middleware(['auth:veterinario'])->group(function () {
+    Route::get('vet-index', [VetController::class, 'index'])->name('vet.index');
+    Route::get('resenha-step-1', [ResenhaController::class, 'step1'])->name('resenha.step1');
+    Route::get('resenha-step-2', [ResenhaController::class, 'step2'])->name('resenha.step2');
+});
+
+
 
 Route::get('mangalarga-api', [ApiMangalargaController::class, 'getApi'])->name('api.manga');
 Route::get('mangalarga-api-animal', [ApiMangalargaController::class, 'getAnimal'])->name('api.animal');

@@ -1,5 +1,6 @@
 @extends('layouts.veterinario')
 @section('content')
+    @include('layouts.partials.vet-top')
     <div class="main">
         <div class="content row justify-content-around">
             <div class="col-4 menu-content" id="resenha">

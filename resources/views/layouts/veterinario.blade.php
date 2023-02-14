@@ -13,27 +13,7 @@
 </head>
 
 <body>
-    <div class="top">
-        <div class="row align-items-center">
-            <div class="col-4">
-                <div class="menu">
-                    <button class="btn-menu btn-menu-close"><i class="fas fa-bars"></i></button>
-                </div>
-            </div>
-            <div class="col-4">
-                <div class="logo">
-                    <img src="{{ asset('vet/img/logo.svg') }}" alt="">
-                </div>
-            </div>
-            <div class="col-4 d-flex justify-content-end">
-                <div class="user">
-                    <div class="user-icon">
-                        <i class="fa-solid fa-user"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+
     <div>
         @yield('content')
     </div>
@@ -105,6 +85,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
     <script src="{{ asset('adm/assets/js/fabric.min.js') }}"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <script>
         $(document).ready(function() {
             $('.btn-menu').click(function() {

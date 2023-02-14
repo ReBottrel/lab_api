@@ -44,6 +44,10 @@ return [
             'driver' => 'session',
             'provider' => 'admins',
         ],
+        'veterinario' => [
+            'driver' => 'session',
+            'provider' => 'veterinarios',
+        ],
     ],
 
     /*
@@ -71,6 +75,10 @@ return [
         'admins' => [
             'driver' => 'eloquent',
             'model' => App\Models\Admin::class,
+        ],
+        'veterinarios' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Veterinario::class,
         ],
 
         // 'users' => [
@@ -115,5 +123,6 @@ return [
     */
 
     'password_timeout' => 10800,
+    
 
 ];

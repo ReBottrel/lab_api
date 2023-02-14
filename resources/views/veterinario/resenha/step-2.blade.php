@@ -1,6 +1,7 @@
 @extends('layouts.veterinario')
 
 @section('content')
+    @include('layouts.partials.vet-top')
     <canvas id="c"></canvas>
 
     <div class="images">

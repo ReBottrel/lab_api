@@ -79,6 +79,8 @@
                                 <li class="list-group-item"><span>REGISTRO DO PAI: {{ $animal->registro_pai }}</span></li>
                                 <li class="list-group-item"><span>MÃE: {{ $animal->mae }}</span></li>
                                 <li class="list-group-item"><span>REGISTRO DA MÃE: {{ $animal->registro_mae }}</span></li>
+                                <li class="list-group-item"><span>Obs: {{ $animal->description ?? '' }}</span></li>
+
                                 <li
                                     class="list-group-item text-uppercase @if ($status == 'Análise Aprovada') bg-success @elseif($status == 'Amostra paga') bg-success @elseif($status == 'Análise reprovada') bg-danger @elseif($status == 'Recoleta solicitada') bg-warning @else bg-primary @endif  text-white">
                                     <span>STATUS:
