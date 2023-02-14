@@ -41,7 +41,7 @@ class ApiMangalargaController extends Controller
             'rowidColeta' => $order->collection_number
         ]);
         foreach ($animals as $animal) {
-           $data = Animal::firstOrCreate([
+            $data = Animal::firstOrCreate([
                 'register_number_brand' => $animal->rowidAnimal
             ], [
                 'order_id' => $order->id,
@@ -56,9 +56,13 @@ class ApiMangalargaController extends Controller
                 'mae' => $animal->nomeMae,
                 'row_id' => $order->collection_number,
             ]);
-            
+            if ($data->status == 6) {
+                $data->status = 1;
+                $data->order_id = $order->id;
+                $data->save();
+            }
         }
-   
+
         \Log::info($data->toArray());
     }
 
@@ -86,7 +90,7 @@ class ApiMangalargaController extends Controller
             'rowidColeta' => $order->collection_number
         ]);
         foreach ($animals as $animal) {
-          $data2 =  Animal::firstOrCreate([
+            $data2 =  Animal::firstOrCreate([
                 'register_number_brand' => $animal->rowidAnimal
             ], [
                 'order_id' => $order->id,
@@ -101,6 +105,11 @@ class ApiMangalargaController extends Controller
                 'mae' => $animal->nomeMae,
                 'row_id' => $order->collection_number,
             ]);
+            if ($data2->status == 6) {
+                $data2->status = 1;
+                $data2->order_id = $order->id;
+                $data2->save();
+            }
         }
         \Log::info($data2->toArray());
     }
