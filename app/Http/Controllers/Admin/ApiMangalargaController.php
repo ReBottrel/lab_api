@@ -7,6 +7,7 @@ use App\Models\OrderRequest;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Http;
+use Maatwebsite\Excel\Concerns\ToArray;
 
 class ApiMangalargaController extends Controller
 {
@@ -40,7 +41,7 @@ class ApiMangalargaController extends Controller
             'rowidColeta' => $order->collection_number
         ]);
         foreach ($animals as $animal) {
-            Animal::firstOrCreate([
+           $data = Animal::firstOrCreate([
                 'register_number_brand' => $animal->rowidAnimal
             ], [
                 'order_id' => $order->id,
@@ -55,7 +56,10 @@ class ApiMangalargaController extends Controller
                 'mae' => $animal->nomeMae,
                 'row_id' => $order->collection_number,
             ]);
+            
         }
+   
+        \Log::info($data->toArray());
     }
 
     public function getResenha()
@@ -82,7 +86,7 @@ class ApiMangalargaController extends Controller
             'rowidColeta' => $order->collection_number
         ]);
         foreach ($animals as $animal) {
-            Animal::firstOrCreate([
+          $data2 =  Animal::firstOrCreate([
                 'register_number_brand' => $animal->rowidAnimal
             ], [
                 'order_id' => $order->id,
@@ -98,6 +102,7 @@ class ApiMangalargaController extends Controller
                 'row_id' => $order->collection_number,
             ]);
         }
+        \Log::info($data2->toArray());
     }
 
     private function fetchDataFromApi($resource, $id, $tipo, $query = [])
