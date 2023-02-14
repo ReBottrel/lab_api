@@ -76,7 +76,16 @@
                         },
                         success: function(data) {
                             console.log(data);
-                            window.location.href = "{{ route('vet.index') }}";
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Sucesso!',
+                                text: 'Cadastro realizado com sucesso!',
+                                showConfirmButton: false,
+                                timer: 1500
+                            }).then((result) => {
+                                window.location.href = "{{ route('vet.login') }}";
+                            })
+
 
                         },
                         error: function(data) {

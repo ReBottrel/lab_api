@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthVetController extends Controller
 {
-  
+
     public function showLoginForm()
     {
         return view('veterinario.auth.login');
@@ -46,21 +46,17 @@ class AuthVetController extends Controller
             'portaria' => 'required|max:255',
         ]);
 
-        try {
-            $user = Veterinario::create([
-                'name' => $request->name,
-                'email' => $request->email,
-                'password' => bcrypt($request->password),
-                'cpf' => $request->cpf,
-                'portaria' => $request->portaria,
-            ]);
 
-            auth()->login($user);
-            return response()->json(['success' => 'Cadastro realizado com sucesso'], 200);
-        } catch (\Exception $e) {
-            // tratamento de exceção
-            return response()->json(['error' => 'Cadastro não realizado'], 401);
-        }
+        $user = Veterinario::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => bcrypt($request->password),
+            'cpf' => $request->cpf,
+            'portaria' => $request->portaria,
+        ]);
+
+        auth()->login($user);
+        return response()->json(['success' => 'Cadastro realizado com sucesso'], 200);
     }
 
     public function sair(Request $request)
