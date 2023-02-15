@@ -120,6 +120,14 @@ class OrderController extends Controller
         ]);
         return redirect()->back()->with('success', 'Proprietário vinculado com sucesso');
     }
+    public function editarTecnico(Request $request, $id)
+    {
+        $order = OrderRequest::find($id);
+        $order->update([
+            'id_tecnico' => $request->tecnico,
+        ]);
+        return redirect()->back()->with('success', 'Técnico vinculado com sucesso');
+    }
 
     public function recivedOrder(Request $request, $id)
     {

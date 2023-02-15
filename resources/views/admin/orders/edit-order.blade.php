@@ -12,7 +12,8 @@
                         <h4>Editar proprietário e técnico</h4>
                     </div>
                     <div class="col-md-6">
-                        <form action="" method="post">
+                        <form action="{{ route('order.owner.update', $order->id) }}" method="post">
+                            @csrf
                             <div>
                                 <p>Proprietário do pedido: {{ $order->creator }}</p>
                                 <p>Proprietário associado ao pedido: {{ $order->user->name }}</p>
@@ -31,14 +32,15 @@
                         </form>
                     </div>
                     <div class="col-md-6">
-                        <form action="" method="post">
+                        <form action="{{ route('order.tecnico.update', $order->id) }}" method="post">
+                            @csrf
                             <div>
                                 <p>Técnico do pedido: {{ $order->technical_manager }}</p>
                                 <p>Técnico associado ao pedido: {{ $order->tecnico->professional_name }}</p>
                             </div>
                             <div>
                                 <label for="">Trocar proprietário</label>
-                                <select class="js-example-basic-single" name="owner">
+                                <select class="js-example-basic-single" name="tecnico">
                                     @foreach ($tecnicos as $tecnico)
                                         <option value="{{ $tecnico->id }}">{{ $tecnico->professional_name }}</option>
                                     @endforeach

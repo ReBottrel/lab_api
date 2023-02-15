@@ -107,6 +107,7 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::get('order-sistema-detail/{id}', [OrderController::class, 'orderSistemaDetail'])->name('order.sistema.detail');
     Route::get('order-edit/{id}', [OrderController::class, 'editOrder'])->name('order.edit');
     Route::post('order-owner-update/{id}', [OrderController::class, 'editarProprietario'])->name('order.owner.update');
+    Route::post('order-tecnico-update/{id}', [OrderController::class, 'editarTecnico'])->name('order.tecnico.update');
 
 
     Route::get('owner/{id}', [OrderController::class, 'owner'])->name('orders.owner');
