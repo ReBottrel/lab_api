@@ -52,6 +52,18 @@
                         </form>
                     </div>
                 </div>
+                <form action="{{ route('order.order.update', $order->id) }}" method="post">
+                    @csrf
+                    <div class="row">
+                        <div class="mb-3 col-md-6">
+                            <label for="exampleFormControlInput1" class="form-label">Matricula do proprietário</label>
+                            <input type="text" class="form-control" name="creator_number" value="{{ $order->creator_number }}">
+                        </div>
+                        <div>
+                            <button class="btn btn-primary">SALVAR</button>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

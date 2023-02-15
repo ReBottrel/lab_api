@@ -128,6 +128,14 @@ class OrderController extends Controller
         ]);
         return redirect()->back()->with('success', 'Técnico vinculado com sucesso');
     }
+    public function updateOrderData(Request $request, $id)
+    {
+        $order = OrderRequest::find($id);
+        $order->update([
+            'creator_number' => $request->creator_number,
+        ]);
+        return redirect()->back()->with('success', 'Dados atualizados com sucesso');
+    }
 
     public function recivedOrder(Request $request, $id)
     {
