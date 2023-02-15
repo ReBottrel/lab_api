@@ -87,6 +87,40 @@ class OrderController extends Controller
         return view('admin.order-detail', get_defined_vars());
     }
 
+    public function editOrder($id)
+    {
+        $order = OrderRequest::with('animals', 'datacoleta', 'user', 'tecnico')->find($id);
+        $samples = Sample::get();
+        $users = User::get();
+        $tecnicos = Tecnico::get();
+        $stats = [
+            1 => 'Aguardando amostra',
+            2 => 'Amostra recebida',
+            3 => 'Em análise',
+            4 => 'Análise concluída',
+            5 => 'Resultado disponível',
+            6 => 'Análise reprovada',
+            7 => 'Análise Aprovada',
+            8 => 'Recoleta solicitada',
+            9 => 'Amostra paga',
+            10 => 'Pedido Concluído',
+            11 => 'Aguardando Pagamento'
+
+        ];
+
+        return view('admin.orders.edit-order', get_defined_vars());
+    }
+
+    public function editarProprietario(Request $request, $id)
+    {
+        $order = OrderRequest::find($id);
+        $order->update([
+            'owner_id' => $request->owner,
+            'user_id' => $request->owner,
+        ]);
+        return redirect()->back()->with('success', 'Proprietário vinculado com sucesso');
+    }
+
     public function recivedOrder(Request $request, $id)
     {
 

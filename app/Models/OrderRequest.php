@@ -56,6 +56,8 @@ class OrderRequest extends Model
     {
         return $this->hasOne(PaymentReturn::class, 'order_request_id');
     }
-   
-
+    public function datacoleta()
+    {
+        return $this->hasOne(DataColeta::class, 'id_order');
+    }
 }

@@ -105,6 +105,9 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::get('orders-email', [OrderController::class, 'orderEmail'])->name('orders.email');
     Route::get('orders-sistema', [OrderController::class, 'orderSistema'])->name('orders.sistema');
     Route::get('order-sistema-detail/{id}', [OrderController::class, 'orderSistemaDetail'])->name('order.sistema.detail');
+    Route::get('order-edit/{id}', [OrderController::class, 'editOrder'])->name('order.edit');
+    Route::post('order-owner-update/{id}', [OrderController::class, 'editarProprietario'])->name('order.owner.update');
+
 
     Route::get('owner/{id}', [OrderController::class, 'owner'])->name('orders.owner');
 
