@@ -545,9 +545,145 @@ canvas {
             background-color: #684286;
             color: #fff;
         }
-        a{
+
+        a {
             color: #684286;
             text-decoration: none;
         }
+    }
+}
+
+.btn-select {
+    background: #684286;
+    color: #fff;
+    border: 0;
+    padding: 20px;
+    border-radius: 5px;
+    font-size: 14px;
+    width: 100%;
+    font-weight: 700;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+
+    &:hover {
+        background: #fff;
+        color: #684286;
+        border: 1px solid #684286;
+    }
+}
+
+.main-select {
+    display: grid;
+    align-items: center;
+    margin: 0 20px;
+    height: 50vh;
+}
+
+.btn-create {
+    background: #8BC540;
+    color: #fff;
+    border: 0;
+    padding: 30px 20px;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: 700;
+    width: 100%;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+
+    &:hover {
+        background: #fff;
+        color: #684286;
+        border: 1px solid #684286;
+    }
+}
+
+.hidden {
+    display: none;
+}
+
+.cad-animal {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: #684286;
+
+    .cad-animal-content {
+        background: #fff;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        margin: 0;
+
+        .cad-animal-content-title {
+            font-size: 18px;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+
+        .cad-animal-content-input {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 20px;
+
+            label {
+                font-size: 14px;
+                font-weight: 700;
+                text-transform: uppercase;
+                margin-bottom: 5px;
+            }
+
+            input {
+                padding: 14px;
+                border: 1px solid #684286;
+                border-radius: 5px;
+                font-size: 14px;
+                font-weight: 700;
+
+            }
+        }
+
+        .cad-animal-content-btn {
+            background: #684286;
+            color: #fff;
+            border: 0;
+            padding: 20px;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+
+            &:hover {
+                background: #fff;
+                color: #684286;
+                border: 1px solid #684286;
+            }
+        }
+    }
+}
+
+.btnNext {
+    background: #ae67e4;
+    color: #fff;
+    border: 0;
+    padding: 20px;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+
+    &:hover {
+        background: #fff;
+        color: #684286;
+        border: 1px solid #684286;
     }
 }

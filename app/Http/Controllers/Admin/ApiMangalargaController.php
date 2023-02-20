@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\User;
+use App\Models\Owner;
 use App\Models\Animal;
 use App\Models\OrderRequest;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Tecnico;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 use Maatwebsite\Excel\Concerns\ToArray;
 
@@ -13,23 +17,74 @@ class ApiMangalargaController extends Controller
 {
     public function __construct()
     {
-        ini_set('max_execution_time', 300);
+        ini_set('max_execution_time', 700);
     }
     public function getApi()
     {
         \Log::info('passei pelo cron de api');
-        $coletas = $this->fetchDataFromApi('coletas', 18, 1, ['dataEnvioInicio' => '2023-02-12T00:00:00']);
+        $coletas = $this->fetchDataFromApi('coletas', 18, 1, ['dataEnvioInicio' => '2023-02-17T00:00:00']);
         // dd($coletas);
         foreach ($coletas as $coleta) {
+            $user = User::where('email', $coleta->cliente->email)->first();
+            $tecnico = Tecnico::where('professional_name', $coleta->tecnico)->first();
+            if (!$tecnico) {
+                $tecnicoc = Tecnico::create([
+                    'name' => $coleta->tecnico,
+                ]);
+            }
+            if (!$user) {
+                $userc = User::create([
+                    'name' => $coleta->cliente->nome,
+                    'email' => $coleta->cliente->email,
+                    'password' => Hash::make($coleta->cliente->cpf_Cnpj),
+                    'permission' => 1,
+                ]);
+
+                $userc->info()->create([
+                    'user_id' => $userc->id,
+                    'document' => $coleta->cliente->cpf_Cnpj,
+                    'phone' => $coleta->cliente->telefones[0]->telefone,
+                    'cellphone' => $coleta->cliente->telefones[1]->telefone,
+                    'number' => $coleta->cliente->enderecos[0]->numero,
+                    'address' => $coleta->cliente->enderecos[0]->logradouro,
+                    'complement' => $coleta->cliente->enderecos[0]->complemento,
+                    'district' => $coleta->cliente->enderecos[0]->bairro,
+                    'city' => $coleta->cliente->enderecos[0]->cidade,
+                    'state' => $coleta->cliente->enderecos[0]->uf,
+                    'zip_code' => $coleta->cliente->enderecos[0]->cep,
+                ]);
+                $owner = Owner::create([
+                    'user_id' => $userc->id,
+                    'document' => $coleta->cliente->cpf_Cnpj,
+                    'owner_name' => $coleta->cliente->nome,
+                    'email' => $coleta->cliente->email,
+                    'fone' => $coleta->cliente->telefones[0]->telefone,
+                    'cell' => $coleta->cliente->telefones[1]->telefone,
+                    'whatsapp' => $coleta->cliente->telefones[1]->telefone,
+                    'zip_code' => $coleta->cliente->enderecos[0]->cep,
+                    'address' => $coleta->cliente->enderecos[0]->logradouro,
+                    'number' => $coleta->cliente->enderecos[0]->numero,
+                    'complement' => $coleta->cliente->enderecos[0]->complemento,
+                    'district' => $coleta->cliente->enderecos[0]->bairro,
+                    'city' => $coleta->cliente->enderecos[0]->cidade,
+                    'state' => $coleta->cliente->enderecos[0]->uf,
+                    'status' => 1,
+                    'propriety' =>  $coleta->cliente->fazendas[0]->nome,
+                ]);
+            }
             $order = OrderRequest::firstOrCreate([
                 'collection_number' => $coleta->rowidColeta
             ], [
                 'origin' => 'API',
-                'creator' => $coleta->proprietario,
+                'user_id' => $user->id ?? $userc->id,
+                'creator' => $coleta->cliente->nome,
+                'creator_number' => $coleta->cliente->matricula,
                 'technical_manager' => $coleta->tecnico,
                 'collection_date' => $coleta->dataColeta,
+                'id_tecnico' => $tecnico->id ?? $tecnicoc->id,
                 'status' => 1,
             ]);
+
             $this->createAnimals($order);
         }
         return response()->json('ok');
@@ -69,15 +124,65 @@ class ApiMangalargaController extends Controller
     public function getResenha()
     {
         \Log::info('passei pelo cron');
-        $coletas = $this->fetchDataFromApi('coletas', 18, 2, ['dataEnvioInicio' => '2023-02-12T00:00:00']);
+        $coletas = $this->fetchDataFromApi('coletas', 18, 2, ['dataEnvioInicio' => '2023-02-18T00:00:00']);
         foreach ($coletas as $coleta) {
+            $user = User::where('email', $coleta->cliente->email)->first();
+            $tecnico = Tecnico::where('professional_name', $coleta->tecnico)->first();
+            if (!$tecnico) {
+                $tecnicoc = Tecnico::create([
+                    'name' => $coleta->tecnico,
+                ]);
+            }
+            if (!$user) {
+                $userc = User::create([
+                    'name' => $coleta->cliente->nome,
+                    'email' => $coleta->cliente->email,
+                    'password' => Hash::make($coleta->cliente->cpf_Cnpj),
+                    'permission' => 1,
+                ]);
+
+                $userc->info()->create([
+                    'user_id' => $userc->id,
+                    'document' => $coleta->cliente->cpf_Cnpj,
+                    'phone' => $coleta->cliente->telefones[0]->telefone,
+                    'cellphone' => $coleta->cliente->telefones[1]->telefone,
+                    'number' => $coleta->cliente->enderecos[0]->numero,
+                    'address' => $coleta->cliente->enderecos[0]->logradouro,
+                    'complement' => $coleta->cliente->enderecos[0]->complemento,
+                    'district' => $coleta->cliente->enderecos[0]->bairro,
+                    'city' => $coleta->cliente->enderecos[0]->cidade,
+                    'state' => $coleta->cliente->enderecos[0]->uf,
+                    'zip_code' => $coleta->cliente->enderecos[0]->cep,
+                ]);
+                $owner = Owner::create([
+                    'user_id' => $userc->id,
+                    'document' => $coleta->cliente->cpf_Cnpj,
+                    'owner_name' => $coleta->cliente->nome,
+                    'email' => $coleta->cliente->email,
+                    'fone' => $coleta->cliente->telefones[0]->telefone,
+                    'cell' => $coleta->cliente->telefones[1]->telefone,
+                    'whatsapp' => $coleta->cliente->telefones[1]->telefone,
+                    'zip_code' => $coleta->cliente->enderecos[0]->cep,
+                    'address' => $coleta->cliente->enderecos[0]->logradouro,
+                    'number' => $coleta->cliente->enderecos[0]->numero,
+                    'complement' => $coleta->cliente->enderecos[0]->complemento,
+                    'district' => $coleta->cliente->enderecos[0]->bairro,
+                    'city' => $coleta->cliente->enderecos[0]->cidade,
+                    'state' => $coleta->cliente->enderecos[0]->uf,
+                    'status' => 1,
+                    'propriety' =>  $coleta->cliente->fazendas[0]->nome,
+                ]);
+            }
             $order = OrderRequest::firstOrCreate([
                 'collection_number' => $coleta->rowidColeta
             ], [
                 'origin' => 'API',
-                'creator' => $coleta->proprietario,
+                'user_id' => $user->id ?? $userc->id,
+                'creator' => $coleta->cliente->nome,
+                'creator_number' => $coleta->cliente->matricula,
                 'technical_manager' => $coleta->tecnico,
                 'collection_date' => $coleta->dataColeta,
+                'id_tecnico' => $tecnico->id ?? $tecnicoc->id,
                 'status' => 1,
             ]);
             $this->createResenha($order);

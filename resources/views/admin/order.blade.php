@@ -135,7 +135,7 @@
                                                 @else
                                                     class="text-danger" @endif>T</span>
                                                     / <span
-                                                        @if ($order->owner_id) class="text-success"
+                                                        @if ($order->user_id) class="text-success"
                                                     @else
                                                         class="text-danger" @endif>C</span>
                                                 </p>
@@ -157,7 +157,8 @@
                                                 <a class="dropdown-item" id="show-btn"
                                                     href="{{ route('technical', $order->id) }}">Técnico
                                                     responsável</a>
-                                                <a class="dropdown-item" href="{{ route('order.edit', $order->id) }}" id="show-btn">Editar pedido</a>
+                                                <a class="dropdown-item" href="{{ route('order.edit', $order->id) }}"
+                                                    id="show-btn">Editar pedido</a>
                                                 {{-- @if ($order->status == 2)
                                                     <a class="dropdown-item"
                                                         href="{{ route('order.request.detail', $order->id) }}">Detalhes do

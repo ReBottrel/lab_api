@@ -33,7 +33,7 @@
     <script>
         $(document).ready(function() {
             $(document).on('click', '#resenha', function() {
-                window.location.href = "{{ route('resenha.step1') }}";
+                window.location.href = "{{ route('vet.select') }}";
             });
         });
     </script>

@@ -8,6 +8,10 @@ use Illuminate\Http\Request;
 
 class ResenhaController extends Controller
 {
+    public function animalCreate()
+    {
+        return view('veterinario.resenha.animal-create');
+    }
     public function step1()
     {
         $marcas = Marking::where('categorie', 1)->get();

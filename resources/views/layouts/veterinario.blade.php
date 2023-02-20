@@ -38,46 +38,7 @@
                     </div>
 
                 </div>
-                <div class="menu-mobile-body-item">
-                    <div class="menu-mobile-body-item-icon">
-                        <i class="fa-solid fa-user"></i>
-                    </div>
-                    <div class="menu-mobile-body-item-text">
-                        <p>Perfil</p>
-                    </div>
-                </div>
-                <div class="menu-mobile-body-item">
-                    <div class="menu-mobile-body-item-icon">
-                        <i class="fa-solid fa-user"></i>
-                    </div>
-                    <div class="menu-mobile-body-item-text">
-                        <p>Perfil</p>
-                    </div>
-                </div>
-                <div class="menu-mobile-body-item">
-                    <div class="menu-mobile-body-item-icon">
-                        <i class="fa-solid fa-user"></i>
-                    </div>
-                    <div class="menu-mobile-body-item-text">
-                        <p>Perfil</p>
-                    </div>
-                </div>
-                <div class="menu-mobile-body-item">
-                    <div class="menu-mobile-body-item-icon">
-                        <i class="fa-solid fa-user"></i>
-                    </div>
-                    <div class="menu-mobile-body-item-text">
-                        <p>Perfil</p>
-                    </div>
-                </div>
-                <div class="menu-mobile-body-item">
-                    <div class="menu-mobile-body-item-icon">
-                        <i class="fa-solid fa-user"></i>
-                    </div>
-                    <div class="menu-mobile-body-item-text">
-                        <p>Perfil</p>
-                    </div>
-                </div>
+
             </div>
         </div>
     </div>

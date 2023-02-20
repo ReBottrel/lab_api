@@ -12,4 +12,8 @@ class VetController extends Controller
         return view('veterinario.index');
     }
 
+    public function select()
+    {
+        return view('veterinario.select');
+    }
 }

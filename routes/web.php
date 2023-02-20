@@ -30,6 +30,8 @@ use App\Http\Controllers\Veterinario\ResenhaController;
 use App\Http\Controllers\Admin\Auth\AdminAuthController;
 use App\Http\Controllers\Veterinario\AuthVetController;
 
+use function Ramsey\Uuid\v6;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -252,13 +254,18 @@ Route::get('vet-register', [AuthVetController::class, 'showRegisterForm'])->name
 Route::post('vet-register-post', [AuthVetController::class, 'registerStore'])->name('vet.register.submit');
 
 
-Route::middleware(['auth:veterinario'])->group(function () {
+Route::middleware(['auth:veterinario'])->prefix('vet')->group(function () {
 
-    Route::get('vet-index', [VetController::class, 'index'])->name('vet.index');
+    Route::get('index', [VetController::class, 'index'])->name('vet.index');
+    Route::get('select', [VetController::class, 'select'])->name('vet.select');
+
+    Route::get('animal-create', [ResenhaController::class, 'animalCreate'])->name('animal.create');
+
     Route::get('resenha-step-1', [ResenhaController::class, 'step1'])->name('resenha.step1');
     Route::get('resenha-step-2', [ResenhaController::class, 'step2'])->name('resenha.step2');
 
-    Route::any('vet-logout', [AuthVetController::class, 'sair'])->name('vet.logout');
+
+    Route::any('logout', [AuthVetController::class, 'sair'])->name('vet.logout');
 });
 
 
