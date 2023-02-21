@@ -119,8 +119,6 @@ class ApiMangalargaController extends Controller
                 $data->save();
             }
         }
-
-        \Log::info($data->toArray());
     }
 
     public function getResenha()
@@ -218,7 +216,6 @@ class ApiMangalargaController extends Controller
                 $data2->save();
             }
         }
-        \Log::info($data2->toArray());
     }
 
     private function fetchDataFromApi($resource, $id, $tipo, $query = [])
