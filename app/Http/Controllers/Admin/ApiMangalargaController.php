@@ -119,12 +119,14 @@ class ApiMangalargaController extends Controller
                 $data->save();
             }
         }
+
+        \Log::info($data->toArray());
     }
 
     public function getResenha()
     {
         \Log::info('passei pelo cron');
-        $coletas = $this->fetchDataFromApi('coletas', 18, 2, ['dataEnvioInicio' => '2023-02-12T00:00:00']);
+        $coletas = $this->fetchDataFromApi('coletas', 18, 2, ['dataEnvioInicio' => '2023-02-1T00:00:00']);
         foreach ($coletas as $coleta) {
             $user = User::where('email', $coleta->cliente->email)->first();
             $tecnico = Tecnico::where('professional_name', $coleta->tecnico)->first();
@@ -216,6 +218,7 @@ class ApiMangalargaController extends Controller
                 $data2->save();
             }
         }
+        \Log::info($data2->toArray());
     }
 
     private function fetchDataFromApi($resource, $id, $tipo, $query = [])
