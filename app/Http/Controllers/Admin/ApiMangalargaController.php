@@ -27,6 +27,7 @@ class ApiMangalargaController extends Controller
         foreach ($coletas as $coleta) {
             $user = User::where('email', $coleta->cliente->email)->first();
             $tecnico = Tecnico::where('professional_name', $coleta->tecnico)->first();
+            $owner = Owner::where('email', $coleta->cliente->email)->first();
             if (!$tecnico) {
                 $tecnicoc = Tecnico::create([
                     'name' => $coleta->tecnico,
@@ -53,7 +54,7 @@ class ApiMangalargaController extends Controller
                     'state' => $coleta->cliente->enderecos[0]->uf,
                     'zip_code' => $coleta->cliente->enderecos[0]->cep,
                 ]);
-                $owner = Owner::create([
+                $ownerc = Owner::create([
                     'user_id' => $userc->id,
                     'document' => $coleta->cliente->cpf_Cnpj,
                     'owner_name' => $coleta->cliente->nome,
@@ -83,6 +84,7 @@ class ApiMangalargaController extends Controller
                 'collection_date' => $coleta->dataColeta,
                 'id_tecnico' => $tecnico->id ?? $tecnicoc->id,
                 'status' => 1,
+                'owner_id' => $owner->id ?? $ownerc->id,
             ]);
 
             $this->createAnimals($order);
