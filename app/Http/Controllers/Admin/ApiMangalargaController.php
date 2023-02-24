@@ -22,7 +22,7 @@ class ApiMangalargaController extends Controller
     public function getApi()
     {
         \Log::info('passei pelo cron de api');
-        $coletas = $this->fetchDataFromApi('coletas', 18, 1, ['dataEnvioInicio' => '2023-02-20T00:00:00']);
+        $coletas = $this->fetchDataFromApi('coletas', 18, 1, ['dataEnvioInicio' => '2023-02-17T00:00:00']);
         // dd($coletas);
 
         foreach ($coletas as $coleta) {
@@ -148,7 +148,7 @@ class ApiMangalargaController extends Controller
     public function getResenha()
     {
         \Log::info('passei pelo cron');
-        $coletas = $this->fetchDataFromApi('coletas', 18, 2, ['dataEnvioInicio' => '2023-02-20T00:00:00']);
+        $coletas = $this->fetchDataFromApi('coletas', 18, 2, ['dataEnvioInicio' => '2023-02-17T00:00:00']);
         foreach ($coletas as $coleta) {
             $owner = Owner::where('email', $coleta->cliente->email)->first();
             $user = User::where('email', $coleta->cliente->email)->first();
