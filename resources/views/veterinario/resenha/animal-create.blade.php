@@ -1,6 +1,7 @@
 @extends('layouts.veterinario')
 
 @section('content')
+    @include('veterinario.includes.back-button')
     <div class="">
         <div class="cad-animal">
             <form action="">

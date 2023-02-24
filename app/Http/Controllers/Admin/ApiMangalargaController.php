@@ -22,8 +22,9 @@ class ApiMangalargaController extends Controller
     public function getApi()
     {
         \Log::info('passei pelo cron de api');
-        $coletas = $this->fetchDataFromApi('coletas', 18, 1, ['dataEnvioInicio' => '2023-02-12T00:00:00']);
+        $coletas = $this->fetchDataFromApi('coletas', 18, 1, ['dataEnvioInicio' => '2023-02-20T00:00:00']);
         // dd($coletas);
+
         foreach ($coletas as $coleta) {
             $user = User::where('email', $coleta->cliente->email)->first();
             $tecnico = Tecnico::where('professional_name', $coleta->tecnico)->first();
@@ -87,14 +88,35 @@ class ApiMangalargaController extends Controller
                 'owner_id' => $owner->id ?? $ownerc->id,
             ]);
 
-            $this->createAnimals($order);
+            foreach ($coleta->animais as $animal) {
+                $data = Animal::firstOrCreate([
+                    'register_number_brand' => $animal->rowidAnimal
+                ], [
+                    'order_id' => $order->id,
+                    'animal_name' => $animal->produto,
+                    'sex' => $animal->sexo,
+                    'birth_date' => $animal->dataNascimento,
+                    'description' => $animal->obs,
+                    'status' => 1,
+                    'registro_pai' => $animal->registroPai,
+                    'pai' => $animal->nomePai,
+                    'registro_mae' => $animal->registroMae,
+                    'mae' => $animal->nomeMae,
+                    'row_id' => $order->collection_number,
+                ]);
+                if ($data->status == 6) {
+                    $data->status = 1;
+                    $data->order_id = $order->id;
+                    $data->save();
+                }
+            }
         }
         return response()->json('ok');
     }
 
     public function createAnimals(OrderRequest $order)
     {
-        $animals = $this->fetchDataFromApi('coletas', 18, 1, [
+        $animals =  $this->fetchDataFromApi('coletas', 18, 1, [
             'rowidColeta' => $order->collection_number
         ]);
         foreach ($animals as $animal) {
@@ -102,7 +124,7 @@ class ApiMangalargaController extends Controller
                 'register_number_brand' => $animal->rowidAnimal
             ], [
                 'order_id' => $order->id,
-                'animal_name' => $animal->produto,
+                'animal_name' => $animal->nome,
                 'sex' => $animal->sexo,
                 'birth_date' => $animal->dataNascimento,
                 'description' => $animal->obs,
@@ -126,8 +148,9 @@ class ApiMangalargaController extends Controller
     public function getResenha()
     {
         \Log::info('passei pelo cron');
-        $coletas = $this->fetchDataFromApi('coletas', 18, 2, ['dataEnvioInicio' => '2023-02-1T00:00:00']);
+        $coletas = $this->fetchDataFromApi('coletas', 18, 2, ['dataEnvioInicio' => '2023-02-20T00:00:00']);
         foreach ($coletas as $coleta) {
+            $owner = Owner::where('email', $coleta->cliente->email)->first();
             $user = User::where('email', $coleta->cliente->email)->first();
             $tecnico = Tecnico::where('professional_name', $coleta->tecnico)->first();
             if (!$tecnico) {
@@ -156,7 +179,7 @@ class ApiMangalargaController extends Controller
                     'state' => $coleta->cliente->enderecos[0]->uf,
                     'zip_code' => $coleta->cliente->enderecos[0]->cep,
                 ]);
-                $owner = Owner::create([
+                $ownerc = Owner::create([
                     'user_id' => $userc->id,
                     'document' => $coleta->cliente->cpf_Cnpj,
                     'owner_name' => $coleta->cliente->nome,
@@ -186,14 +209,37 @@ class ApiMangalargaController extends Controller
                 'collection_date' => $coleta->dataColeta,
                 'id_tecnico' => $tecnico->id ?? $tecnicoc->id,
                 'status' => 1,
+                'owner_id' => $owner->id ?? $ownerc->id,
             ]);
-            $this->createResenha($order);
+            // $this->createResenha($order);
+            foreach ($coleta->animais as $animal) {
+                $data2 =  Animal::firstOrCreate([
+                    'register_number_brand' => $animal->rowidAnimal
+                ], [
+                    'order_id' => $order->id,
+                    'animal_name' => $animal->nome,
+                    'sex' => $animal->sexo,
+                    'birth_date' => $animal->dataNascimento,
+                    'description' => $animal->obs,
+                    'status' => 1,
+                    'registro_pai' => $animal->registroPai,
+                    'pai' => $animal->nomePai,
+                    'registro_mae' => $animal->registroMae,
+                    'mae' => $animal->nomeMae,
+                    'row_id' => $order->collection_number,
+                ]);
+                if ($data2->status == 6) {
+                    $data2->status = 1;
+                    $data2->order_id = $order->id;
+                    $data2->save();
+                }
+            }
         }
         return response()->json('ok');
     }
     public function createResenha(OrderRequest $order)
     {
-        $animals = $this->fetchDataFromApi('coletas', 18, 2, [
+        $animals =  $this->fetchDataFromApi('coletas', 18, 2, [
             'rowidColeta' => $order->collection_number
         ]);
         foreach ($animals as $animal) {
@@ -221,10 +267,10 @@ class ApiMangalargaController extends Controller
         \Log::info($data2->toArray());
     }
 
-    private function fetchDataFromApi($resource, $id, $tipo, $query = [])
+    public function fetchDataFromApi($resource, $id, $tipo, $query = [])
     {
         $url = "http://laboratorios.abccmm.org.br/api/$resource/$id/$tipo" . '?' . http_build_query($query);
-        $response = Http::get($url);
+        $response =  Http::get($url);
         return json_decode($response->body());
     }
 }

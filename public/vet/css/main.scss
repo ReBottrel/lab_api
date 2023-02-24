@@ -687,3 +687,28 @@ canvas {
         border: 1px solid #684286;
     }
 }
+
+.button-back {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: transparent;
+
+    a {
+        color: #fff;
+        text-decoration: none;
+        font-size: 1.3em;
+    }
+
+    .btn-back {
+        background: transparent;
+        color: #fff;
+        border: 0;
+        padding: 20px;
+        font-weight: 700;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: all 0.3s ease-in-out;
+
+    }
+}
