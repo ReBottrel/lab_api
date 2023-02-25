@@ -85,7 +85,7 @@ class ApiMangalargaController extends Controller
                 'collection_date' => $coleta->dataColeta,
                 'id_tecnico' => $tecnico->id ?? $tecnicoc->id,
                 'status' => 1,
-                'owner_id' => $owner->id ?? $ownerc->id,
+                'owner_id' => $owner->id ? $owner->id : $ownerc->id,
             ]);
 
             foreach ($coleta->animais as $animal) {
@@ -209,7 +209,7 @@ class ApiMangalargaController extends Controller
                 'collection_date' => $coleta->dataColeta,
                 'id_tecnico' => $tecnico->id ?? $tecnicoc->id,
                 'status' => 1,
-                'owner_id' => $owner->id ?? $ownerc->id,
+                'owner_id' => $owner->id ? $owner->id : $ownerc->id,
             ]);
             // $this->createResenha($order);
             foreach ($coleta->animais as $animal) {
