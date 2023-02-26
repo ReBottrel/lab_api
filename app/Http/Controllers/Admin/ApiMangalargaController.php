@@ -93,7 +93,7 @@ class ApiMangalargaController extends Controller
                     'register_number_brand' => $animal->rowidAnimal
                 ], [
                     'order_id' => $order->id,
-                    'animal_name' => $animal->produto,
+                    'animal_name' => $animal->nome,
                     'sex' => $animal->sexo,
                     'birth_date' => $animal->dataNascimento,
                     'description' => $animal->obs,
