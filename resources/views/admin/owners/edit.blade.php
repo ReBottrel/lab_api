@@ -32,7 +32,7 @@
                         <div class="col-md-4">
                             <div class="mb-3">
                                 <label for="exampleFormControlInput1" class="form-label">CEP</label>
-                                <input type="text" id="cep" name="zip_code" value="{{ $owner->zip_code }}" class="form-control">
+                                <input type="text" name="zip_code" value="{{ $owner->zip_code }}" class="form-control">
                             </div>
                         </div>
                         <div class="col-md-8">
