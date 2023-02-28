@@ -258,6 +258,7 @@ Route::middleware(['auth:veterinario'])->prefix('vet')->group(function () {
 
     Route::get('index', [VetController::class, 'index'])->name('vet.index');
     Route::get('select', [VetController::class, 'select'])->name('vet.select');
+    Route::get('owner', [VetController::class, 'owners'])->name('vet.owner');
 
     Route::get('animal-create', [ResenhaController::class, 'animalCreate'])->name('animal.create');
 

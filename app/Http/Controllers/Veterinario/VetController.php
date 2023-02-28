@@ -16,4 +16,9 @@ class VetController extends Controller
     {
         return view('veterinario.select');
     }
+
+    public function owners()
+    {
+        return view('veterinario.owner');
+    }
 }

@@ -19,7 +19,7 @@
                 window.location.href = "{{ route('vet.select') }}";
             });
             $('.btn-create').click(function() {
-                window.location.href = "{{ route('animal.create') }}";
+                window.location.href = "{{ route('vet.owner') }}";
             });
         });
     </script>
