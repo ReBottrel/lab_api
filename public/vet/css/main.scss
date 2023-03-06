@@ -9,6 +9,7 @@ body {
     font-weight: 400;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+
 }
 
 .top {
@@ -223,13 +224,15 @@ body {
     display: flex;
     // justify-content: space-between;
     // align-items: center;
+    justify-content: end;
     margin-top: 20px;
     flex-wrap: wrap;
 
     .btn {
-        background: #684286;
+        background: #902edb;
         color: #fff;
         border: 0;
+        margin: 0 5px;
         padding: 20px;
         border-radius: 5px;
         font-size: 14px;
@@ -639,7 +642,7 @@ canvas {
             }
 
             input {
-                padding: 14px;
+                padding: 20px 14px !important;
                 border: 1px solid #684286;
                 border-radius: 5px;
                 font-size: 14px;
@@ -683,8 +686,8 @@ canvas {
 
     &:hover {
         background: #fff;
-        color: #684286;
-        border: 1px solid #684286;
+        color: #ae67e4;
+        border: 1px solid #ae67e4;
     }
 }
 
@@ -712,10 +715,41 @@ canvas {
 
     }
 }
-.lt-2{
+
+.lt-2 {
     display: flex;
-    height: 100vh;
+    height: 100%;
+    margin: 0;
+    padding: 20px;
     background: #684286;
     color: #fff;
+
+}
+
+.btnPrev {
+    background: #ae67e4;
+    color: #fff;
+    border: 0;
+    padding: 20px;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+
+    &:hover {
+        background: #fff;
+        color: #ae67e4;
+        border: 1px solid #ae67e4;
+    }
+}
+
+input {
+    padding: 14px !important;
+    border: 1px solid #684286;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: 700;
 
 }
