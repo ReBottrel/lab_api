@@ -206,6 +206,23 @@
                 });
             });
 
+            $('.status-filter').change(function() {
+                var status = $(this).val();
+                $.ajax({
+                    url: "{{ route('filter.status') }}",
+                    type: "POST",
+                    data: {
+                        _token: "{{ csrf_token() }}",
+                        status: status
+                    },
+                    success: function(data) {
+                        console.log(data);
+                        $('.filter').html(data[0].viewRender);
+                    }
+                });
+            });
+
+
 
             $('.search').keyup(function() {
                 var search = $(this).val();
