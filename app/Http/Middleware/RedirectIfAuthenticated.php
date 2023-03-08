@@ -23,7 +23,7 @@ class RedirectIfAuthenticated
             return redirect('painel');
         }
         if ($guard == "veterinario" && Auth::guard($guard)->check()) {
-            return redirect('vet-index');
+            return redirect('vet/index');
         }
         if (Auth::guard($guard)->check()) {
             return redirect('/user-dashboard');

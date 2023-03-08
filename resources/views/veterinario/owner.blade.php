@@ -103,7 +103,7 @@
                                     <button type="button" class="btnPrev btn btn-alt-1">Anterior</button>
                                 </div>
                                 <div class="my-3 text-end">
-                                    <button type="button" class="btnNext btn btn-alt-1">Próximo</button>
+                                    <button type="button" class="btnNext btn btn-alt-1">Finalizar</button>
                                 </div>
                             </div>
                         </fieldset>

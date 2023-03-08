@@ -27,6 +27,30 @@
             </div>
 
         </div>
+        <div class="content row justify-content-around">
+            <div class="col-4 menu-content">
+                <div class="mt-3">
+                    <div>
+                        <img src="{{ asset('vet/img/animais.png') }}" alt="">
+                    </div>
+                    <div>
+                        <p>Proprietário</p>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-4 menu-content">
+                <div class="mt-3">
+                    <div>
+                        <img src="{{ asset('vet/img/animais.png') }}" alt="">
+                    </div>
+                    <div>
+                        <p>Configurações</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
     </div>
 @endsection
 @section('js')

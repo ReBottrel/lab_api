@@ -359,7 +359,7 @@ class OrderController extends Controller
                 'order_request_id' => $request->order,
                 'owner_name' => $order_request->owner->owner_name,
                 'email' => $order_request->owner->email,
-                'location' => $owner->propriety,
+                'location' => $owner->propriety ?? 'Não informado',
                 'exam_id' => $exam->id,
                 'category' => $exam->category,
                 'animal' => $animal->animal_name,
