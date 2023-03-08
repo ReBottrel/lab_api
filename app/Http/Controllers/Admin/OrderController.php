@@ -466,7 +466,7 @@ class OrderController extends Controller
 
     public function filter(Request $request)
     {
-        $animals = Animal::with('order')->where('status', $request->status)->whereNotNull('order_id')->get();
+        $animals = Animal::with('order')->where('status', $request->status)->whereBetween('created_at', [$request->get('start'), $request->get('end')])->whereNotNull('order_id')->get();
         $viewRender = view('admin.includes.filter-status', get_defined_vars())->render();
         return response()->json([get_defined_vars()]);
     }

@@ -22,8 +22,20 @@
                             <input class="form-control search" type="search" placeholder="Buscar pelo nome...">
                         </form>
                     </div>
-                    <div class="col-6">
-                        <form>
+                    <div class="row mt-4">
+                        <div class="col-md-3">
+                            <div class="mb-3">
+                                <label for="exampleFormControlInput1" class="form-label">Inicio</label>
+                                <input type="date" class="form-control" id="inicio-status">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="mb-3">
+                                <label for="exampleFormControlInput1" class="form-label">Fim</label>
+                                <input type="date" class="form-control" id="fim-status">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
                             <label for="exampleFormControlInput1" class="form-label">Filtrar Amostra</label>
                             <select class="form-select status-filter">
                                 <optgroup label="Status">
@@ -37,7 +49,10 @@
                                     <option value="9"> Pagamento confirmado</option>
                                 </optgroup>
                             </select>
-                        </form>
+                        </div>
+                        <div class="col-md-2">
+                            <button class="btn btn-primary btn-se mt-4">BUSCAR</button>
+                        </div>
                     </div>
 
                 </div>
@@ -206,22 +221,32 @@
                 });
             });
 
-            $('.status-filter').change(function() {
-                var status = $(this).val();
+            $(document).on('click', '.btn-se', function() {
+                var status = $('.status-filter').val();
+                var start = $('#inicio-status').val();
+                var end = $('#fim-status').val();
                 $.ajax({
                     url: "{{ route('filter.status') }}",
                     type: "POST",
                     data: {
                         _token: "{{ csrf_token() }}",
-                        status: status
+                        status: status,
+                        start: start,
+                        end: end
+                    },
+                    beforeSend: function() {
+                        $('.btn-se').html('Carregando...');
+                        $('.filter').empty();
+
                     },
                     success: function(data) {
                         console.log(data);
                         $('.filter').html(data[0].viewRender);
+                        $('.btn-se').html('BUSCAR');
                     }
                 });
-            });
 
+            });
 
 
             $('.search').keyup(function() {
