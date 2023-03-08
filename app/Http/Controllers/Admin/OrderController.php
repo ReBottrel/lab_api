@@ -382,7 +382,7 @@ class OrderController extends Controller
         ]);
         $ordernew = OrderRequest::with('user', 'tecnico')->find($request->id);
         $data = [];
-        $email = $owner->email;
+        $email = $order_request->owner->email;
 
         $senha = str_replace(['.', '-', '/'], ['', '', ''], $owner->document);
         $telefone = str_replace(['(', ')', '-', ' '], ['', '', '', ''],  $order_request->owner->cell);
