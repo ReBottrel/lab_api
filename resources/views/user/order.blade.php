@@ -16,30 +16,37 @@
                         if ($animal->especies == 'EQUINA') {
                             $exames = App\Models\Exam::where('category', 'dna')
                                 ->where('requests', 1)
+                                ->where('status', 1)
                                 ->get();
                         } elseif ($animal->especies == 'ASININA') {
                             $exames = App\Models\Exam::where('category', 'dna')
                                 ->where('requests', 2)
+                                ->where('status', 1)
                                 ->get();
                         } elseif ($animal->especies == 'ASININO') {
                             $exames = App\Models\Exam::where('category', 'dna')
                                 ->where('requests', 2)
+                                ->where('status', 1)
                                 ->get();
                         } elseif ($animal->especies == 'MUARES') {
                             $exames = App\Models\Exam::where('category', 'dna')
                                 ->where('requests', 2)
+                                ->where('status', 1)
                                 ->get();
                         } elseif ($animal->especies == 'MUAR') {
                             $exames = App\Models\Exam::where('category', 'dna')
                                 ->where('requests', 2)
+                                ->where('status', 1)
                                 ->get();
                         } elseif ($animal->especies == 'EQUINO_PEGA') {
                             $exames = App\Models\Exam::where('category', 'dna')
                                 ->where('requests', 2)
+                                ->where('status', 1)
                                 ->get();
                         } else {
                             $exames = App\Models\Exam::where('category', 'dna')
                                 ->where('requests', 1)
+                                ->where('status', 1)
                                 ->get();
                         }
                     @endphp
@@ -82,13 +89,15 @@
                                             @if ($item->payment_status == 1) disabled @endif
                                             aria-label="Default select example">
                                             @foreach ($exames as $key => $exame)
-                                                <option data-exame="{{ $exame->id }}"
-                                                    value="{{ $key }}-{{ $item->id }}-{{ $exame->id }}"
-                                                    data-value="{{ $exame->value }}" data-order="{{ $item->id }}"
-                                                    data-id="{{ $order->id }}"
-                                                    @if ($item->exam_id == $exame->id) selected @else @endif>
-                                                    {{ $exame->title }}
-                                                </option>
+                                                @if ($exame->status == 1)
+                                                    <option data-exame="{{ $exame->id }}"
+                                                        value="{{ $key }}-{{ $item->id }}-{{ $exame->id }}"
+                                                        data-value="{{ $exame->value }}" data-order="{{ $item->id }}"
+                                                        data-id="{{ $order->id }}"
+                                                        @if ($item->exam_id == $exame->id) selected @else @endif>
+                                                        {{ $exame->title }}
+                                                    </option>
+                                                @endif
                                             @endforeach
 
                                         </select>
