@@ -4,7 +4,9 @@
     @include('veterinario.includes.back-button')
     <div class="">
         <div class="cad-animal">
-            <form action="">
+            <form action="{{ route('animal.store') }}" method="post">
+                <input type="hidden" name="order" value="{{ $order }}">
+                @csrf
                 <fieldset>
                     <div class="cad-animal-content">
                         <div class="cad-animal-content-title">
@@ -30,26 +32,26 @@
                         </div>
                         <div class="mb-3 cad-animal-content-input">
                             <label for="exampleFormControlInput1" class="form-label">Espécie</label>
-                            <input type="text" class="form-control" name="animal_name">
+                            <input type="text" class="form-control" name="especies">
                         </div>
                         <div class="mb-3 cad-animal-content-input">
                             <label for="exampleFormControlInput1" class="form-label">Raça</label>
-                            <input type="text" class="form-control" name="register_number_brand">
+                            <input type="text" class="form-control" name="breed">
                         </div>
                         <div class="mb-3 cad-animal-content-input">
                             <label for="exampleFormControlInput1" class="form-label">Sexo</label>
-                            <select name="" id="" class="form-control">
-                                <option value="">Macho</option>
-                                <option value="">Fêmea</option>
+                            <select name="sex" id="" class="form-control">
+                                <option value="M">Macho</option>
+                                <option value="F">Fêmea</option>
                             </select>
                         </div>
                         <div class="mb-3 cad-animal-content-input">
                             <label for="exampleFormControlInput1" class="form-label">Idade</label>
-                            <input type="text" class="form-control" name="register_number_brand">
+                            <input type="text" class="form-control" name="age">
                         </div>
                         <div class="mb-3 cad-animal-content-input">
                             <label for="exampleFormControlInput1" class="form-label">Data de nascimento</label>
-                            <input type="date" class="form-control" name="register_number_brand">
+                            <input type="date" class="form-control" name="birth_date">
                         </div>
                     </div>
                     <div class="buttons">
@@ -69,12 +71,50 @@
                             <h2>Informações do animal</h2>
                         </div>
                         <div class="mb-3 cad-animal-content-input">
+                            <label for="exampleFormControlInput1" class="form-label">Numero do chip</label>
+                            <input type="text" class="form-control" name="chip_number">
+                        </div>
+                        <div class="mb-3 cad-animal-content-input">
+                            <label for="exampleFormControlInput1" class="form-label">Pai</label>
+                            <input type="text" class="form-control" name="pai">
+                        </div>
+                       
+                        <div class="mb-3 cad-animal-content-input">
+                            <label for="exampleFormControlInput1" class="form-label">Registro do pai</label>
+                            <input type="text" class="form-control" name="registro_pai">
+                        </div>
+                        <div class="mb-3 cad-animal-content-input">
+                            <label for="exampleFormControlInput1" class="form-label">Pai</label>
+                            <input type="text" class="form-control" name="mae">
+                        </div>
+                       
+                        <div class="mb-3 cad-animal-content-input">
+                            <label for="exampleFormControlInput1" class="form-label">Registro do pai</label>
+                            <input type="text" class="form-control" name="registro_mae">
+                        </div>
+                       
+                    </div>
+                    <div class="buttons">
+                        <div class="my-3 text-end">
+                            <button type="button" class="btnPrev btn btn-alt-1">Anterior</button>
+                        </div>
+                        <div class="my-3 text-end">
+                            <button type="button" class="btnNext btn btn-alt-1">Próximo</button>
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset class="hidden">
+                    <div class="cad-animal-content">
+                        <div class="cad-animal-content-title">
+                            <h2>Informações do animal</h2>
+                        </div>
+                        <div class="mb-3 cad-animal-content-input">
                             <label for="exampleFormControlInput1" class="form-label">Pelagem</label>
-                            <input type="text" class="form-control" name="animal_name">
+                            <input type="text" class="form-control" name="fur">
                         </div>
                         <div class="mb-3 cad-animal-content-input">
                             <label for="exampleFormControlInput1" class="form-label">Observação</label>
-                            <textarea type="text" class="form-control" name="register_number_brand" rows="3"></textarea>
+                            <textarea type="text" class="form-control" name="description" rows="3"></textarea>
                         </div>
                     </div>
                     <div class="buttons">
@@ -82,7 +122,7 @@
                             <button type="button" class="btnPrev btn btn-alt-1">Anterior</button>
                         </div>
                         <div class="my-3 text-end">
-                            <button type="button" class="btnStep btn btn-alt-1">Próximo</button>
+                            <button type="submit" class="btnStep btn btn-alt-1">Próximo</button>
                         </div>
                     </div>
                 </fieldset>
@@ -123,9 +163,6 @@
                         opacity: 1
                     }, 500);
                 });
-            });
-            $(document).on('click', '.btnStep', function(){
-                window.location.href = "{{ route('resenha.step1') }}";
             });
         });
     </script>

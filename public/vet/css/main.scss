@@ -753,3 +753,22 @@ input {
     font-weight: 700;
 
 }
+
+.btn-alt-2{
+    background: #ae67e4;
+    color: #fff;
+    border: 0;
+    padding: 20px;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+
+    &:hover {
+        background: #fff;
+        color: #ae67e4;
+        border: 1px solid #ae67e4;
+    }
+}

@@ -29,6 +29,9 @@ use App\Http\Controllers\Admin\SpeciesBreedsController;
 use App\Http\Controllers\Veterinario\ResenhaController;
 use App\Http\Controllers\Admin\Auth\AdminAuthController;
 use App\Http\Controllers\Veterinario\AuthVetController;
+use App\Http\Controllers\Veterinario\VetAnimalController;
+use App\Http\Controllers\Veterinario\VetOrderController;
+use App\Http\Controllers\Veterinario\VetOwnerController;
 
 use function Ramsey\Uuid\v6;
 
@@ -44,7 +47,7 @@ use function Ramsey\Uuid\v6;
 */
 
 Auth::routes();
-
+Route::get('cep-get', [AddressController::class, 'getCep'])->name('cep.get');
 Route::post('login-post', [LoginController::class, 'login'])->name('login.custom');
 
 Route::get('/', [HomeController::class, 'index'])->name('loja');
@@ -115,7 +118,7 @@ Route::middleware(['auth:admin'])->group(function () {
 
     Route::get('owner/{id}', [OrderController::class, 'owner'])->name('orders.owner');
 
-    Route::get('cep-get', [AddressController::class, 'getCep'])->name('cep.get');
+   
 
     Route::post('owner-store', [OwnerController::class, 'store'])->name('owner.store');
 
@@ -260,9 +263,16 @@ Route::middleware(['auth:veterinario'])->prefix('vet')->group(function () {
     Route::get('select', [VetController::class, 'select'])->name('vet.select');
     Route::get('owner', [VetController::class, 'owners'])->name('vet.owner');
 
-    Route::get('animal-create', [ResenhaController::class, 'animalCreate'])->name('animal.create');
+    Route::get('owner-index', [VetOwnerController::class, 'index'])->name('vet.owner.index');
+    Route::get('owner-create', [VetOwnerController::class, 'create'])->name('vet.owner.create');
+    Route::post('owner-store', [VetOwnerController::class, 'store'])->name('vet.owner.store');
 
-    Route::get('resenha-step-1', [ResenhaController::class, 'step1'])->name('resenha.step1');
+    Route::post('order-store', [VetOrderController::class, 'store'])->name('vet.order.store');
+
+    Route::get('animal-create/{id}', [ResenhaController::class, 'animalCreate'])->name('animal.create');
+    Route::post('animal-store', [ResenhaController::class, 'animalStore'])->name('animal.store');
+
+    Route::get('resenha-step-1/{id}', [ResenhaController::class, 'step1'])->name('resenha.step1');
     Route::get('resenha-step-2', [ResenhaController::class, 'step2'])->name('resenha.step2');
 
 

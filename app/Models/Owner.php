@@ -27,6 +27,7 @@ class Owner extends Model
         'state',
         'status',
         'propriety',
+        'vet_id'
     ];
     public function user()
     {

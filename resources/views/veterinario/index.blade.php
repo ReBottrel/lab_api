@@ -28,7 +28,7 @@
 
         </div>
         <div class="content row justify-content-around">
-            <div class="col-4 menu-content">
+            <div class="col-4 menu-content" id="owner">
                 <div class="mt-3">
                     <div>
                         <img src="{{ asset('vet/img/animais.png') }}" alt="">
@@ -58,6 +58,9 @@
         $(document).ready(function() {
             $(document).on('click', '#resenha', function() {
                 window.location.href = "{{ route('vet.select') }}";
+            });
+            $(document).on('click', '#owner', function() {
+                window.location.href = "{{ route('vet.owner.index') }}";
             });
         });
     </script>

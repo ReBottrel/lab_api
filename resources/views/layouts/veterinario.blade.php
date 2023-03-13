@@ -47,8 +47,11 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-maskmoney/3.0.2/jquery.maskMoney.min.js"></script>
     <script src="{{ asset('adm/assets/js/fabric.min.js') }}"></script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script src="{{ asset('adm/assets/js/main.js') }}"></script>
     <script>
         $(document).ready(function() {
             $('.js-example-basic-single').select2({
@@ -69,6 +72,34 @@
         });
     </script>
     @yield('js')
+    @if (Session::has('success'))
+        <script type="text/javascript">
+            Swal.fire({
+                title: 'Sucesso!',
+                icon: 'success',
+                text: "{{ Session::get('success') }}",
+                timer: 5000,
+                type: 'success'
+            }).then((result) => {
+                // Reload the Page
+                location.reload();
+            });
+        </script>
+    @endif
+    @if (Session::has('error'))
+        <script type="text/javascript">
+            Swal.fire({
+                title: 'Oops!',
+                icon: 'error',
+                text: "{{ Session::get('error') }}",
+                timer: 5000,
+                type: 'error'
+            }).then((result) => {
+                // Reload the Page
+                location.reload();
+            });
+        </script>
+    @endif
 </body>
 
 </html>
