@@ -41,6 +41,13 @@ class VetOwnerController extends Controller
     public function store(Request $request)
     {
         $documents = str_replace(['.', '-', '/'], ['', '', ''],  $request->document);
+        try {
+            $this->validate($request, [
+                'email' => 'required|email|unique:users',
+            ]);
+        } catch (\Throwable $th) {
+            return redirect()->back()->with('error', 'Email já cadastrado!');
+        }
 
         $user = User::create([
             'name' => $request->name,

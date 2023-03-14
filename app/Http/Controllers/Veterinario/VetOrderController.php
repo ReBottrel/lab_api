@@ -38,6 +38,13 @@ class VetOrderController extends Controller
      */
     public function store(Request $request)
     {
+        try {
+            $this->validate($request, [
+                'owner_id' => 'required',
+            ]);
+        } catch (\Throwable $th) {
+            return redirect()->back()->with('error', 'Precisa selecionar um proprietário para continuar!');
+        }
         $owner = Owner::find($request->owner_id);
         $user = User::where('id', $owner->user_id)->first();
         $order = OrderRequest::create([
@@ -46,8 +53,8 @@ class VetOrderController extends Controller
             'technical_manager' => auth()->user()->name,
             'status' => 7,
         ]);
+
         return redirect()->route('animal.create', $order->id);
-   
     }
 
     /**
