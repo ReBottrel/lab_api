@@ -24,4 +24,9 @@ class VetController extends Controller
         $owners = Owner::where('vet_id', auth()->user()->id)->get();
         return view('veterinario.owner', get_defined_vars());
     }
+    public function owners2()
+    {
+        $owners = Owner::where('vet_id', auth()->user()->id)->get();
+        return view('veterinario.owner2', get_defined_vars());
+    }
 }

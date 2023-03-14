@@ -45,6 +45,9 @@ class VetOrderController extends Controller
         } catch (\Throwable $th) {
             return redirect()->back()->with('error', 'Precisa selecionar um proprietário para continuar!');
         }
+
+        // dd($request->prop);
+
         $owner = Owner::find($request->owner_id);
         $user = User::where('id', $owner->user_id)->first();
         $order = OrderRequest::create([
@@ -54,7 +57,8 @@ class VetOrderController extends Controller
             'status' => 7,
         ]);
 
-        if($request->prop == 2){
+        
+        if($request->prop == 1){
             return redirect()->route('animal.create', $order->id);
         }
         else{

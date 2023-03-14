@@ -16,7 +16,7 @@
     <script>
         $(document).ready(function() {
             $('.btn-select').click(function() {
-                window.location.href = "{{ route('vet.owner') }}";
+                window.location.href = "{{ route('vet.owner2') }}";
             });
             $('.btn-create').click(function() {
                 window.location.href = "{{ route('vet.owner') }}";
