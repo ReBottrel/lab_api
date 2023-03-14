@@ -34,8 +34,10 @@ class ResenhaController extends Controller
 
     public function animalStore(Request $request)
     {
+        $order = OrderRequest::find($request->order);
         $animal = Animal::create([
-            'user_id' => auth()->user()->id,
+            'user_id' => $order->user_id,
+            'vet_id' => auth()->user()->id,
             'order_id' => $request->order,
             'register_number_brand' => $request->register_number_brand,
             'animal_name' => $request->animal_name,
