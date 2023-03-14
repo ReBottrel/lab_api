@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Veterinario;
 
+use App\Models\User;
+use App\Models\Owner;
 use App\Models\Animal;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -15,7 +17,7 @@ class VetAnimalController extends Controller
      */
     public function index()
     {
-        $animais = Animal::where('user_id', auth()->user()->id)->get();
+        $animais = Animal::where('vet_id', auth()->user()->id)->get();
         return view('veterinario.animais.index', get_defined_vars());
     }
 
@@ -26,7 +28,8 @@ class VetAnimalController extends Controller
      */
     public function create()
     {
-        return view('veterinario.animais.create');
+        $owners = Owner::where('vet_id', auth()->user()->id)->get();
+        return view('veterinario.animais.create', get_defined_vars());
     }
 
     /**
@@ -37,9 +40,12 @@ class VetAnimalController extends Controller
      */
     public function store(Request $request)
     {
+        $owner = Owner::find($request->owner_id);
+        $user = User::where('id', $owner->user_id)->first();
+
         $animal = Animal::create([
-            'user_id' => auth()->user()->id,
-            // 'order_id' => $request->order,
+            'vet_id' => auth()->user()->id,
+            'user_id' => $user->id,
             'register_number_brand' => $request->register_number_brand,
             'animal_name' => $request->animal_name,
             'especies' => $request->especies,

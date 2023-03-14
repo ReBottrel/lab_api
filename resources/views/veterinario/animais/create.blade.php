@@ -5,7 +5,7 @@
     <div class="">
         <div class="cad-animal">
             <form action="{{ route('vet.animal.store') }}" method="post">
-            
+
                 @csrf
                 <fieldset>
                     <div class="cad-animal-content">
@@ -22,7 +22,7 @@
                         </div>
                     </div>
                     <div class="my-3 text-end">
-                        <button type="button" class="btnNext btn btn-alt-1">Próximo</button>
+                        <button type="button" class="btnNext btn btn-altvet_id-1">Próximo</button>
                     </div>
                 </fieldset>
                 <fieldset class="hidden">
@@ -78,7 +78,7 @@
                             <label for="exampleFormControlInput1" class="form-label">Pai</label>
                             <input type="text" class="form-control" name="pai">
                         </div>
-                       
+
                         <div class="mb-3 cad-animal-content-input">
                             <label for="exampleFormControlInput1" class="form-label">Registro do pai</label>
                             <input type="text" class="form-control" name="registro_pai">
@@ -87,12 +87,12 @@
                             <label for="exampleFormControlInput1" class="form-label">Pai</label>
                             <input type="text" class="form-control" name="mae">
                         </div>
-                       
+
                         <div class="mb-3 cad-animal-content-input">
                             <label for="exampleFormControlInput1" class="form-label">Registro do pai</label>
                             <input type="text" class="form-control" name="registro_mae">
                         </div>
-                       
+
                     </div>
                     <div class="buttons">
                         <div class="my-3 text-end">
@@ -116,6 +116,26 @@
                             <label for="exampleFormControlInput1" class="form-label">Observação</label>
                             <textarea type="text" class="form-control" name="description" rows="3"></textarea>
                         </div>
+                    </div>
+                    <div class="buttons">
+                        <div class="my-3 text-end">
+                            <button type="button" class="btnPrev btn btn-alt-1">Anterior</button>
+                        </div>
+                        <div class="my-3 text-end">
+                            <button type="button" class="btnNext btn btn-alt-1">Próximo</button>
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset class="hidden">
+                    <div class="cad-animal-content">
+                        <div class="cad-animal-content-title">
+                            <h2>Informações do proprietário</h2>
+                        </div>
+                        <select class="js-example-basic-single" name="owner_id">
+                            @foreach ($owners as $owner)
+                                <option value="{{ $owner->id }}">{{ $owner->owner_name }}</option>
+                            @endforeach
+                        </select>
                     </div>
                     <div class="buttons">
                         <div class="my-3 text-end">

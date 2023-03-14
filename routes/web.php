@@ -228,7 +228,7 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::get('export-pendentes', [OrderController::class, 'exportPedentes']);
 
     Route::get('/get-registros', [AnimaisController::class, 'getRegistros'])->name('get.registros.animais');
-
+  
     Route::post('store-animal-parentesco', [AnimalOrderController::class, 'storeAnimalParentesco'])->name('store.animal.parentesco');
     Route::post('store-animal-homozigose', [AnimalOrderController::class, 'storeAnimalHomozigose'])->name('store.animal.homozigose');
     Route::get('show-animal-homozigose/{id}', [AnimalOrderController::class, 'showHomozigose'])->name('show.animal.homozigose');
@@ -272,6 +272,9 @@ Route::middleware(['auth:veterinario'])->prefix('vet')->group(function () {
     Route::get('animal-index', [VetAnimalController::class, 'index'])->name('vet.animal.index');
     Route::get('vet-animal-create', [VetAnimalController::class, 'create'])->name('vet.animal.create');
     Route::post('vet-animal-store', [VetAnimalController::class, 'store'])->name('vet.animal.store');
+
+    Route::get('animal-select/{id}', [ResenhaController::class, 'animalSelect'])->name('vet.animal.select');
+    Route::post('animal-select-store', [ResenhaController::class, 'animalUpdate'])->name('vet.animal.select.store');
 
     Route::get('animal-create/{id}', [ResenhaController::class, 'animalCreate'])->name('animal.create');
     Route::post('animal-store', [ResenhaController::class, 'animalStore'])->name('animal.store');

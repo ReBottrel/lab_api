@@ -4,7 +4,7 @@
     <div class="lt-2 mt-5">
         <div class="container">
             <form action="{{ route('vet.order.store') }}" method="post">
-                <input type="hidden" name="prop" value="1">
+                <input type="hidden" name="prop" value="2">
                 @csrf
                 <div class="my-4">
                     <h3>Selecione o proprietário</h3>

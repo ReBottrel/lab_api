@@ -54,8 +54,15 @@ class VetOrderController extends Controller
             'status' => 7,
         ]);
 
-        return redirect()->route('animal.create', $order->id);
+        if($request->prop == 2){
+            return redirect()->route('animal.create', $order->id);
+        }
+        else{
+            return redirect()->route('vet.animal.select', $order->id);
+        }
+       
     }
+   
 
     /**
      * Display the specified resource.

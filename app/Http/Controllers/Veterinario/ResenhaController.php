@@ -7,6 +7,7 @@ use App\Models\Marking;
 use Illuminate\Http\Request;
 use App\Models\ResenhaAnimal;
 use App\Http\Controllers\Controller;
+use App\Models\OrderRequest;
 
 class ResenhaController extends Controller
 {
@@ -14,6 +15,21 @@ class ResenhaController extends Controller
     {
         $order = $id;
         return view('veterinario.resenha.animal-create', get_defined_vars());
+    }
+
+    public function animalSelect($id)
+    {
+        $order = OrderRequest::find($id);
+        $animals = Animal::where('user_id', $order->user_id)->get();
+        return view('veterinario.animal-select', get_defined_vars());
+    }
+    public function animalUpdate(Request $request)
+    {
+        $animal = Animal::find($request->animal_id);
+        $animal->update([
+            'order_id' => $request->order_id,
+        ]);
+        return redirect()->route('resenha.step1', $animal->id);
     }
 
     public function animalStore(Request $request)
