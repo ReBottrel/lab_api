@@ -81,7 +81,7 @@
             ctx.restore();
         }
 
-        canvas.setBackgroundImage('{{ asset('vet/img/step-2.jpg') }}', function() {
+        canvas.setBackgroundImage('{{ asset('vet/img/step-6.jpg') }}', function() {
             let img = canvas.backgroundImage;
             img.originX = 'left';
             img.originY = 'top';
@@ -172,7 +172,6 @@
                 quality: 1
             });
             console.log(canvasImage)
-
             $.ajax({
                 url: '{{ route('resenha.store.step1') }}',
                 type: 'POST',
@@ -180,10 +179,10 @@
                     _token: '{{ csrf_token() }}',
                     data: canvasImage,
                     animal_id: id,
-                    side: 2,
+                    side: 6,
                 },
                 success: function(data) {
-                    window.location.href = '{{ url('/vet/resenha-step-3') }}' + '/' + id;
+                    window.location.href = '{{ url('/vet/resenha-step-7') }}' + '/' + id;
                 }
             });
         });

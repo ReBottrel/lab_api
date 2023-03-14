@@ -1,7 +1,7 @@
 @extends('layouts.veterinario')
 
 @section('content')
-@include('layouts.partials.vet-top')
+    @include('layouts.partials.vet-top')
     <canvas id="c"></canvas>
 
     <div class="images">
@@ -12,6 +12,7 @@
         @endforeach
     </div>
     <div class="bg-white">
+
         <div class="buttons justify-content-between p-2">
 
             <div>
@@ -24,7 +25,7 @@
                 <button class="undo-draw" onclick="undo()"><i class="fa-solid fa-eraser"></i></button>
             </div>
             <div>
-                <button class="btn btn-success" id="salvar">Próximo</button>
+                <button data-id="{{ $animal }}" class="btn btn-success" id="salvar">Próximo</button>
             </div>
         </div>
     </div>
@@ -42,8 +43,6 @@
             }
             isRedoing = false;
         });
-
-
 
         var isRedoing = false;
         var h = [];
@@ -166,23 +165,26 @@
 
         // Salvar
         $('#salvar').click(function() {
+            var id = $(this).data('id');
             var canvasImage = canvas.toDataURL({
                 format: 'png',
                 quality: 1
             });
             console.log(canvasImage)
-            window.location.href = '{{ route('resenha.step2') }}'
-            // $.ajax({
-            //     url: '{{ route('teste.draw') }}',
-            //     type: 'POST',
-            //     data: {
-            //         _token: '{{ csrf_token() }}',
-            //         data: canvasImage
-            //     },
-            //     success: function(data) {
-            //         console.log(data);
-            //     }
-            // });
+
+            $.ajax({
+                url: '{{ route('resenha.store.step1') }}',
+                type: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    data: canvasImage,
+                    animal_id: id,
+                    side: 1,
+                },
+                success: function(data) {
+                    window.location.href = '{{ url('/vet/resenha-step-2') }}' + '/' + id;
+                }
+            });
         });
     </script>
 @endsection

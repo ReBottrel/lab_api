@@ -273,8 +273,14 @@ Route::middleware(['auth:veterinario'])->prefix('vet')->group(function () {
     Route::post('animal-store', [ResenhaController::class, 'animalStore'])->name('animal.store');
 
     Route::get('resenha-step-1/{id}', [ResenhaController::class, 'step1'])->name('resenha.step1');
-    Route::get('resenha-step-2', [ResenhaController::class, 'step2'])->name('resenha.step2');
+    Route::get('resenha-step-2/{id}', [ResenhaController::class, 'step2'])->name('resenha.step2');
+    Route::get('resenha-step-3/{id}', [ResenhaController::class, 'step3'])->name('resenha.step3');
+    Route::get('resenha-step-4/{id}', [ResenhaController::class, 'step4'])->name('resenha.step4');
+    Route::get('resenha-step-5/{id}', [ResenhaController::class, 'step5'])->name('resenha.step5');
+    Route::get('resenha-step-6/{id}', [ResenhaController::class, 'step6'])->name('resenha.step6');
+    Route::get('resenha-step-7/{id}', [ResenhaController::class, 'step7'])->name('resenha.step7');
 
+    Route::post('resenha-store-step-1', [ResenhaController::class, 'store'])->name('resenha.store.step1');
 
     Route::any('logout', [AuthVetController::class, 'sair'])->name('vet.logout');
 });

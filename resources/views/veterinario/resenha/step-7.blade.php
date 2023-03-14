@@ -24,7 +24,7 @@
                 <button class="undo-draw" onclick="undo()"><i class="fa-solid fa-eraser"></i></button>
             </div>
             <div>
-                <button data-id="{{ $animal }}" class="btn btn-success" id="salvar">Próximo</button>
+                <button data-id="{{ $animal }}" class="btn btn-success" id="salvar">SALVAR</button>
             </div>
         </div>
     </div>
@@ -81,7 +81,7 @@
             ctx.restore();
         }
 
-        canvas.setBackgroundImage('{{ asset('vet/img/step-2.jpg') }}', function() {
+        canvas.setBackgroundImage('{{ asset('vet/img/step-7.jpg') }}', function() {
             let img = canvas.backgroundImage;
             img.originX = 'left';
             img.originY = 'top';
@@ -172,7 +172,6 @@
                 quality: 1
             });
             console.log(canvasImage)
-
             $.ajax({
                 url: '{{ route('resenha.store.step1') }}',
                 type: 'POST',
@@ -180,10 +179,19 @@
                     _token: '{{ csrf_token() }}',
                     data: canvasImage,
                     animal_id: id,
-                    side: 2,
+                    side: 7,
                 },
                 success: function(data) {
-                    window.location.href = '{{ url('/vet/resenha-step-3') }}' + '/' + id;
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Sucesso!',
+                        text: 'Resenha criada com sucesso!',
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = '{{ route('vet.index') }}'
+                        }
+                    })
+
                 }
             });
         });

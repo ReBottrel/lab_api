@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Veterinario;
 use App\Models\Animal;
 use App\Models\Marking;
 use Illuminate\Http\Request;
+use App\Models\ResenhaAnimal;
 use App\Http\Controllers\Controller;
 
 class ResenhaController extends Controller
@@ -39,14 +40,60 @@ class ResenhaController extends Controller
 
         return redirect()->route('resenha.step1', $animal->id);
     }
-    public function step1()
+    public function step1($id)
     {
+        $animal = $id;
         $marcas = Marking::where('categorie', 1)->get();
         return view('veterinario.resenha.step-1', get_defined_vars());
     }
-    public function step2()
+    public function step2($id)
     {
+        $animal = $id;
         $marcas = Marking::where('categorie', 2)->get();
         return view('veterinario.resenha.step-2', get_defined_vars());
+    }
+    public function step3($id)
+    {
+        $animal = $id;
+        $marcas = Marking::where('categorie', 3)->get();
+        return view('veterinario.resenha.step-3', get_defined_vars());
+    }
+    public function step4($id)
+    {
+        $animal = $id;
+        $marcas = Marking::where('categorie', 4)->get();
+        return view('veterinario.resenha.step-4', get_defined_vars());
+    }
+    public function step5($id)
+    {
+        $animal = $id;
+        $marcas = Marking::where('categorie', 5)->get();
+        return view('veterinario.resenha.step-5', get_defined_vars());
+    }
+    public function step6($id)
+    {
+        $animal = $id;
+        $marcas = Marking::where('categorie', 6)->get();
+        return view('veterinario.resenha.step-6', get_defined_vars());
+    }
+    public function step7($id)
+    {
+        $animal = $id;
+        $marcas = Marking::where('categorie', 7)->get();
+        return view('veterinario.resenha.step-7', get_defined_vars());
+    }
+    public function store(Request $request)
+    {
+        $image = $request->input('data');
+
+        // $image = base64_decode($image);
+        $data = ResenhaAnimal::create([
+            'animal_id' => $request->animal_id,
+            'user_id' => auth()->user()->id,
+            'resenha' => $request->side,
+            'localization' => $image,
+        ]);
+
+        return response()->json(['message' => 'Imagem salva com sucesso!']);
     }
 }
