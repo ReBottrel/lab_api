@@ -141,9 +141,7 @@
                     }, 500);
                 });
             });
-            $(document).on('click', '.btnStep', function() {
-                window.location.href = "{{ route('resenha.step1') }}";
-            });
+        
         });
     </script>
 @endsection
