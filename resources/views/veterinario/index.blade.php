@@ -39,7 +39,7 @@
                 </div>
 
             </div>
-            <div class="col-4 menu-content">
+            <div class="col-4 menu-content" id="configs">
                 <div class="mt-3">
                     <div>
                         <img src="{{ asset('vet/img/animais.png') }}" alt="">
@@ -64,6 +64,9 @@
             });
             $(document).on('click', '#animal', function() {
                 window.location.href = "{{ route('vet.animal.index') }}";
+            });
+            $(document).on('click', '#configs', function() {
+                window.location.href = "{{ route('vet.configs') }}";
             });
         });
     </script>

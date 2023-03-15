@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\OrderRequest;
+use function Ramsey\Uuid\v6;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TesteController;
 use App\Http\Controllers\AnimalController;
@@ -26,14 +27,14 @@ use App\Http\Controllers\User\UserDashboardController;
 use App\Http\Controllers\Admin\ApiMangalargaController;
 use App\Http\Controllers\Admin\HomeController as Admin;
 use App\Http\Controllers\Admin\SpeciesBreedsController;
+use App\Http\Controllers\Veterinario\AuthVetController;
 use App\Http\Controllers\Veterinario\ResenhaController;
 use App\Http\Controllers\Admin\Auth\AdminAuthController;
-use App\Http\Controllers\Veterinario\AuthVetController;
-use App\Http\Controllers\Veterinario\VetAnimalController;
 use App\Http\Controllers\Veterinario\VetOrderController;
 use App\Http\Controllers\Veterinario\VetOwnerController;
 
-use function Ramsey\Uuid\v6;
+use App\Http\Controllers\Veterinario\VetAnimalController;
+use App\Http\Controllers\Veterinario\VetConfigController;
 
 /*
 |--------------------------------------------------------------------------
@@ -291,6 +292,9 @@ Route::middleware(['auth:veterinario'])->prefix('vet')->group(function () {
     Route::get('resenha-step-7/{id}', [ResenhaController::class, 'step7'])->name('resenha.step7');
 
     Route::post('resenha-store-step-1', [ResenhaController::class, 'store'])->name('resenha.store.step1');
+
+    Route::get('configs', [VetConfigController::class, 'index'])->name('vet.configs');
+    Route::post('configs-store', [VetConfigController::class, 'updateUser'])->name('vet.configs.store');
 
     Route::any('logout', [AuthVetController::class, 'sair'])->name('vet.logout');
 });
