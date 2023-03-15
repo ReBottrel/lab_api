@@ -25,7 +25,7 @@ class OrderController extends Controller
 
     public function order()
     {
-        $orders = OrderRequest::where('status', '!=', 0)->where('status', '!=', 5)->orderBy('id', 'desc')->paginate(10);
+        $orders = OrderRequest::where('status', '!=', 0)->where('status', '!=', 5)->where('status', '!=', 7)->orderBy('id', 'desc')->paginate(10);
         return view('admin.order', get_defined_vars());
     }
     public function getNewOrders()
