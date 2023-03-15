@@ -84,12 +84,12 @@
                             <input type="text" class="form-control" name="registro_pai">
                         </div>
                         <div class="mb-3 cad-animal-content-input">
-                            <label for="exampleFormControlInput1" class="form-label">Pai</label>
+                            <label for="exampleFormControlInput1" class="form-label">Mãe</label>
                             <input type="text" class="form-control" name="mae">
                         </div>
                        
                         <div class="mb-3 cad-animal-content-input">
-                            <label for="exampleFormControlInput1" class="form-label">Registro do pai</label>
+                            <label for="exampleFormControlInput1" class="form-label">Registro da mãe</label>
                             <input type="text" class="form-control" name="registro_mae">
                         </div>
                        
