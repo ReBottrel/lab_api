@@ -274,6 +274,8 @@ Route::middleware(['auth:veterinario'])->prefix('vet')->group(function () {
     Route::get('animal-index', [VetAnimalController::class, 'index'])->name('vet.animal.index');
     Route::get('vet-animal-create', [VetAnimalController::class, 'create'])->name('vet.animal.create');
     Route::post('vet-animal-store', [VetAnimalController::class, 'store'])->name('vet.animal.store');
+    Route::get('vet-animal-edit/{id}', [VetAnimalController::class, 'edit'])->name('vet.animal.edit');
+    Route::post('vet-animal-update/{id}', [VetAnimalController::class, 'update'])->name('vet.animal.update');
 
     Route::get('animal-select/{id}', [ResenhaController::class, 'animalSelect'])->name('vet.animal.select');
     Route::post('animal-select-store', [ResenhaController::class, 'animalUpdate'])->name('vet.animal.select.store');

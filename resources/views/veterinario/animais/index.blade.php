@@ -43,7 +43,7 @@
                                                         <td>
                                                             <div class="d-flex">
                                                                 <div class="me-2">
-                                                                    <a href="#"
+                                                                    <a href="{{ route('vet.animal.edit', $animal->id) }}"
                                                                         class="btn btn-alt-2">Editar</a>
                                                                 </div>
                                             

@@ -63,7 +63,7 @@ class VetAnimalController extends Controller
             'mae'   => $request->mae,
         ]);
 
-        return redirect()->route('vet.animal.index');
+        return redirect()->route('vet.animal.index')->with('success', 'Animal cadastrado com sucesso!');
     }
 
     /**
@@ -74,7 +74,6 @@ class VetAnimalController extends Controller
      */
     public function show($id)
     {
-        //
     }
 
     /**
@@ -85,7 +84,9 @@ class VetAnimalController extends Controller
      */
     public function edit($id)
     {
-        //
+        $animal = Animal::find($id);
+        $owners = Owner::where('vet_id', auth()->user()->id)->get();
+        return view('veterinario.animais.edit', get_defined_vars());
     }
 
     /**
@@ -97,7 +98,30 @@ class VetAnimalController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $animal = Animal::find($id);
+        $owner = Owner::find($request->owner_id);
+        $user = User::where('id', $owner->user_id)->first();
+
+        $animal->update([
+            'vet_id' => auth()->user()->id,
+            'user_id' => $user->id,
+            'register_number_brand' => $request->register_number_brand,
+            'animal_name' => $request->animal_name,
+            'especies' => $request->especies,
+            'breed' => $request->breed,
+            'sex' => $request->sex,
+            'age' => $request->age,
+            'birth_date' => $request->birth_date,
+            'fur' => $request->fur,
+            'description' => $request->description,
+            'status' => 1,
+            'chip_number' => $request->chip_number,
+            'registro_pai' => $request->registro_pai,
+            'pai' => $request->pai,
+            'registro_mae' => $request->registro_mae,
+            'mae'   => $request->mae,
+        ]);
+        return redirect()->route('vet.animal.index')->with('success', 'Animal alterado com sucesso!');
     }
 
     /**
