@@ -30,7 +30,7 @@
                                                     <th scope="col">Espécie</th>
                                                     <th scope="col">Sexo</th>
                                                     <th scope="col">Pelagem</th>
-                                                    <th scope="col">Ações</th>
+                                                 
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -40,15 +40,7 @@
                                                         <td>{{ $animal->especies }}</td>
                                                         <td>{{ $animal->sex }}</td>
                                                         <td>{{ $animal->fur }}</td>
-                                                        <td>
-                                                            <div class="d-flex">
-                                                                <div class="me-2">
-                                                                    <a href="{{ route('vet.animal.edit', $animal->id) }}"
-                                                                        class="btn btn-alt-2">Editar</a>
-                                                                </div>
-                                            
-                                                            </div>
-                                                        </td>
+                                                    
                                                     </tr>
                                                 @endforeach
                                             </tbody>
