@@ -20,7 +20,7 @@
 
             </div>
             <div class="card-body">
-                <div class="table-responsive">
+                <div class="">
                     <table class="table table-striped">
                         <thead>
                             <tr>
@@ -72,6 +72,7 @@
                                                         >Ver animais</a>
                                                 @endif
                                                 <a href="#" class="dropdown-item">Propriedades</a>
+                                                <a data-id="{{ $owner->id }}" class="dropdown-item delete">Excluir</a>
                                             </ul>
                                         </div>
 
@@ -134,6 +135,52 @@
                         $('.filter').html(data[0].viewRender);
                     }
                 });
+            });
+            $(document).on('click', '.delete', function() {
+                var id = $(this).data('id');
+                Swal.fire({
+                    title: 'Você tem certeza?',
+                    text: "Você não poderá reverter isso!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Sim, deletar!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: "{{ route('owner.delete') }}",
+                            type: "POST",
+                            data: {
+                                id: id,
+                                _token: "{{ csrf_token() }}"
+                            },
+                            success: function(data) {
+                                // console.log(data)
+
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Sucesso',
+                                    text: 'Proprietario deletado com sucesso',
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        window.location.reload();
+                                    }
+                                });
+
+
+                            },
+                            error: function(data) {
+                                console.log(data)
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Oops...',
+                                    text: 'Algo deu errado!',
+                                });
+                            }
+                        });
+                    }
+                })
             });
             // $(document).ready(function() {
             //     $('.buscar-owner').on('keyup', function() {

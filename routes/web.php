@@ -146,10 +146,9 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::get('owner-edit/{id}', [OwnerController::class, 'edit'])->name('owner.edit');
     Route::post('owner-update/{id}', [OwnerController::class, 'update'])->name('owner.update');
     Route::get('owner-create', [OwnerController::class, 'create'])->name('owner.create');
-
     Route::get('owners-delete', [OwnerController::class, 'destroyAll'])->name('owners.delete.all');
-
     Route::get('get-animals/{old_id?}', [OwnerController::class, 'getAnimals'])->name('get.animals');
+    Route::any('owner-delete/', [OwnerController::class, 'destroy'])->name('owner.delete');
 
     Route::get('technical/{id}', [OrderController::class, 'technical'])->name('technical');
     Route::post('technical-add', [OrderController::class, 'technicalStore'])->name('technical.add');

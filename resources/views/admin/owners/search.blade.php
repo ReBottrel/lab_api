@@ -37,6 +37,7 @@
                             Ver animais</a>
                     @endif
                     <a href="#" class="dropdown-item">Propriedades</a>
+                    <a data-id="{{ $owner->id }}" class="dropdown-item delete">Excluir</a>
                 </ul>
             </div>
         </td>

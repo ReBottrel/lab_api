@@ -135,8 +135,11 @@ class OwnerController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request)
     {
+        $owner = Owner::find($request->id);
+        $owner->delete();
+        return response()->json($owner);
     }
     public function destroyAll()
     {
