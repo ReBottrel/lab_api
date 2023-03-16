@@ -22,13 +22,14 @@ class ApiMangalargaController extends Controller
     public function getApi()
     {
         \Log::info('passei pelo cron de api');
-        $coletas = $this->fetchDataFromApi('coletas', 18, 1, ['dataEnvioInicio' => '2023-02-17T00:00:00']);
+        $coletas = $this->fetchDataFromApi('coletas', 18, 1, ['dataEnvioInicio' => '2023-03-01T00:00:00']);
         // dd($coletas);
 
         foreach ($coletas as $coleta) {
             $user = User::where('email', $coleta->cliente->email)->first();
             $tecnico = Tecnico::where('professional_name', $coleta->tecnico)->first();
             $owner = Owner::where('email', $coleta->cliente->email)->first();
+            $ownerid = $owner->id ?? null;
             if (!$tecnico) {
                 $tecnicoc = Tecnico::create([
                     'name' => $coleta->tecnico,
@@ -55,6 +56,7 @@ class ApiMangalargaController extends Controller
                     'state' => $coleta->cliente->enderecos[0]->uf,
                     'zip_code' => $coleta->cliente->enderecos[0]->cep,
                 ]);
+
                 $ownerc = Owner::firstOrCreate([
                     'email' => $coleta->cliente->email,
                 ], [
@@ -74,7 +76,10 @@ class ApiMangalargaController extends Controller
                     'status' => 1,
                     'propriety' =>  $coleta->cliente->fazendas[0]->nome,
                 ]);
+                $ownerid = $ownerc->id;
             }
+            \Log::info($ownerid);
+
             $order = OrderRequest::firstOrCreate([
                 'collection_number' => $coleta->rowidColeta
             ], [
@@ -86,7 +91,7 @@ class ApiMangalargaController extends Controller
                 'collection_date' => $coleta->dataColeta,
                 'id_tecnico' => $tecnico->id ?? $tecnicoc->id,
                 'status' => 1,
-                'owner_id' => $owner->id ? $owner->id : $ownerc->id,
+                'owner_id' => $ownerid,
             ]);
 
             foreach ($coleta->animais as $animal) {
@@ -149,7 +154,7 @@ class ApiMangalargaController extends Controller
     public function getResenha()
     {
 
-        $coletas = $this->fetchDataFromApi('coletas', 18, 2, ['dataEnvioInicio' => '2023-02-25T00:00:00']);
+        $coletas = $this->fetchDataFromApi('coletas', 18, 2, ['dataEnvioInicio' => '2023-03-01T00:00:00']);
         foreach ($coletas as $coleta) {
             // find owner, user, and tecnico by email or create them if they don't exist
             $owner = Owner::firstOrCreate(['email' => $coleta->cliente->email], [

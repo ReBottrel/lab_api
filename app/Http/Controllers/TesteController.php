@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ResenhaAnimal;
+use App\Models\Owner;
 use Illuminate\Http\Request;
+use App\Models\ResenhaAnimal;
 use Illuminate\Support\Facades\Http;
 
 class TesteController extends Controller
@@ -13,23 +14,14 @@ class TesteController extends Controller
         return view('admin.teste');
     }
 
-    public function store(Request $request)
+    public function duplicate()
     {
-        $image = $request->input('data');
-
-        // $image = base64_decode($image);
-        $data = ResenhaAnimal::create([
-            'animal_id' => 2,
-            'user_id' => 1,
-            'resenha' => 1,
-            'localization' => $image,
-        ]);
-
-        return response()->json(['message' => 'Imagem salva com sucesso!']);
-    }
-    public function show()
-    {
-        $data = ResenhaAnimal::find(17);
-        return view('admin.teste-img', get_defined_vars());
+        $owner = Owner::get();
+        $ownernovo = $owner->groupBy('owner_name')->filter(function ($item) {
+            return $item->count() > 1;
+        })->map(function ($item) {
+            return $item->count();
+        });
+        \Log::info($ownernovo->toArray());
     }
 }

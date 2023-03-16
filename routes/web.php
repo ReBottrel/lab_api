@@ -299,7 +299,7 @@ Route::middleware(['auth:veterinario'])->prefix('vet')->group(function () {
     Route::any('logout', [AuthVetController::class, 'sair'])->name('vet.logout');
 });
 
-
+Route::get('duplicados-e-filhos-daputa', [TesteController::class, 'duplicate']);
 
 Route::get('mangalarga-api', [ApiMangalargaController::class, 'getApi'])->name('api.manga');
 Route::get('mangalarga-api-animal', [ApiMangalargaController::class, 'getAnimal'])->name('api.animal');
