@@ -55,11 +55,12 @@ class ApiMangalargaController extends Controller
                     'state' => $coleta->cliente->enderecos[0]->uf,
                     'zip_code' => $coleta->cliente->enderecos[0]->cep,
                 ]);
-                $ownerc = Owner::create([
+                $ownerc = Owner::firstOrCreate([
+                    'email' => $coleta->cliente->email,
+                ], [
                     'user_id' => $userc->id,
                     'document' => $coleta->cliente->cpf_Cnpj,
                     'owner_name' => $coleta->cliente->nome,
-                    'email' => $coleta->cliente->email,
                     'fone' => $coleta->cliente->telefones[0]->telefone,
                     'cell' => $coleta->cliente->telefones[1]->telefone,
                     'whatsapp' => $coleta->cliente->telefones[1]->telefone,
