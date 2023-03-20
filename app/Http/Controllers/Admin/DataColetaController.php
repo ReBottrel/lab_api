@@ -36,7 +36,7 @@ class DataColetaController extends Controller
      */
     public function updateData(Request $request)
     {
-
+ 
         $data = [];
         if ($request->has('data_recebimento')) {
             $data['data_recebimento'] = $request->data_recebimento;

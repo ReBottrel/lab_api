@@ -101,7 +101,7 @@
                                         <div class="col-4">
                                             <label for="exampleFormControlInput1" class="form-label">Data de
                                                 coleta</label>
-                                            <input type="text" class="form-control datas data-1"
+                                            <input type="text" class="form-control datas data-2"
                                                 id="data-coleta-{{ $animal->id }}" data-type="data_coleta"
                                                 data-id="{{ $animal->id }}" value="{{ $datas->data_coleta ?? '' }}"
                                                 placeholder="">
@@ -109,7 +109,7 @@
                                         <div class="col-4">
                                             <label for="exampleFormControlInput1" class="form-label">Data de
                                                 chamado</label>
-                                            <input type="text" class="form-control datas data-1"
+                                            <input type="text" class="form-control datas data-3"
                                                 data-id="{{ $animal->id }}" data-type="data_laboratorio"
                                                 id="data-chamado-{{ $animal->id }}"
                                                 value="{{ $datas->data_laboratorio ?? '' }}" placeholder="">
