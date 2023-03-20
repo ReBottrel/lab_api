@@ -69,8 +69,8 @@ class UserDashboardController extends Controller
 
     public function payments(Request $request)
     {
+        
         $order = OrderRequest::with('orderRequestPayment')->find($request->orderId);
-
 
 
         foreach ($request->days as $key2 => $day) {
@@ -89,7 +89,6 @@ class UserDashboardController extends Controller
                 'paynow' => in_array($payment->id, $request->paynow) ? 1 : 0,
             ]);
         }
-
 
         $value = 0;
 

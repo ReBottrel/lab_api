@@ -144,16 +144,7 @@ class GatewayController extends Controller
 
             ]);
         }
-        // if ($request->payment_type == 'credit') {
-        //     $datapix = PaymentReturn::create([
-        //         'order_request_id' => $request->order_id,
-        //         'user_id' => auth()->user()->id,
-        //         'payment_id' => $response->success->id ?? null,
-        //         'payment_type' => $request->payment_type,
-        //         'pixqrcode' => $response->success->pix_qrcode_url ?? null,
-        //         'pixcode' => $response->success->payment_method->pix_link ?? null,
-        //     ]);
-        // }
+  
         if ($request->payment_type == 'boleto') {
             foreach ($order->orderRequestPayment as $or_payment) {
                 if ($or_payment->paynow == 1) {

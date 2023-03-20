@@ -251,7 +251,7 @@ class OrderController extends Controller
                     A amostra do animal $animal->animal_name foi REPROVADA para a execução do exame de DNA no laboratório Loci.
                     Solicitamos RECOLETAR uma nova amostra, abrir um novo chamado junto a ASSOCIAÇÃO informando que se trata de uma RECOLETA solicitada pelo laboratório e nos encaminhar novamente para execução"
                 ]);
-            }s
+            }
         }
         $animal->update([
             'status' => $request->value,
