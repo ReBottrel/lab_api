@@ -247,12 +247,11 @@ class OrderController extends Controller
             if ($request->value == 6) {
                 $response = Http::post('https://api.z-api.io/instances/3B30881EC3E99084D3D3B6927F6ADC67/token/66E633717A0DCDD3D4A1BC19/send-text', [
                     "phone" => "55$telefoneOwner",
-                    "message" => "Prezado Criador,
-                    A amostra do animal $animal->animal_name  foi REPROVADA para a execução do exame de DNA no laboratório Loci.
-                    Solicitamos RECOLETAR uma nova amostra, abrir um novo chamado junto a ABCCMM informando que se trata de uma RECOLETA solicitada pelo laboratório e nos encaminhar novamente para execução.
-                    "
+                    "message" => "Prezado Técnico,
+                    A amostra do animal $animal->animal_name foi REPROVADA para a execução do exame de DNA no laboratório Loci.
+                    Solicitamos RECOLETAR uma nova amostra, abrir um novo chamado junto a ASSOCIAÇÃO informando que se trata de uma RECOLETA solicitada pelo laboratório e nos encaminhar novamente para execução"
                 ]);
-            }
+            }s
         }
         $animal->update([
             'status' => $request->value,
