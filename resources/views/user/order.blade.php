@@ -43,6 +43,11 @@
                                 ->where('requests', 2)
                                 ->where('status', 1)
                                 ->get();
+                        } elseif ($animal->especies == null) {
+                            $exames = App\Models\Exam::where('category', 'dna')
+                                ->where('requests', 2)
+                                ->where('status', 1)
+                                ->get();
                         } else {
                             $exames = App\Models\Exam::where('category', 'dna')
                                 ->where('requests', 1)

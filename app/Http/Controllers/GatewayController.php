@@ -36,7 +36,7 @@ class GatewayController extends Controller
 
     public function payment(Request $request)
     {
-     
+
         // dd($request->all());
 
 
@@ -98,12 +98,29 @@ class GatewayController extends Controller
                         $days = '20 Dias';
                     } elseif ($or_payment->days == 1) {
                         $days = '24 Horas';
+
+                        $responseOwner = Http::post('https://api.z-api.io/instances/3B30881EC3E99084D3D3B6927F6ADC67/token/66E633717A0DCDD3D4A1BC19/send-text', [
+                            "phone" => "5531989911569",
+                            "message" => "Esse exame foi pago com sucesso, e o prazo e de 24 horas para o animal: $animal->animal_name"
+                        ]);
                     } elseif ($or_payment->days == 2) {
                         $days = '2 Dias';
+                        $responseOwner = Http::post('https://api.z-api.io/instances/3B30881EC3E99084D3D3B6927F6ADC67/token/66E633717A0DCDD3D4A1BC19/send-text', [
+                            "phone" => "5531989911569",
+                            "message" => "Esse exame foi pago com sucesso, e o prazo e de 2 dias para o animal: $animal->animal_name"
+                        ]);
                     } elseif ($or_payment->days == 3) {
                         $days = '5 Dias';
+                        $responseOwner = Http::post('https://api.z-api.io/instances/3B30881EC3E99084D3D3B6927F6ADC67/token/66E633717A0DCDD3D4A1BC19/send-text', [
+                            "phone" => "5531989911569",
+                            "message" => "Esse exame foi pago com sucesso, e o prazo e de 5 dias para o animal: $animal->animal_name"
+                        ]);
                     } elseif ($or_payment->days == 4) {
                         $days = '10 Dias';
+                        $responseOwner = Http::post('https://api.z-api.io/instances/3B30881EC3E99084D3D3B6927F6ADC67/token/66E633717A0DCDD3D4A1BC19/send-text', [
+                            "phone" => "5531989911569",
+                            "message" => "Esse exame foi pago com sucesso, e o prazo e de 10 dias para o animal: $animal->animal_name"
+                        ]);
                     }
                     $telefone = str_replace(['(', ')', '-', ' '], ['', '', '', ''],  $order->tecnico->cell);
                     $response = Http::post('https://api.z-api.io/instances/3B30881EC3E99084D3D3B6927F6ADC67/token/66E633717A0DCDD3D4A1BC19/send-text', [
@@ -144,7 +161,7 @@ class GatewayController extends Controller
 
             ]);
         }
-  
+
         if ($request->payment_type == 'boleto') {
             foreach ($order->orderRequestPayment as $or_payment) {
                 if ($or_payment->paynow == 1) {
@@ -223,12 +240,28 @@ class GatewayController extends Controller
                             $days = '20 Dias';
                         } elseif ($item->days == 1) {
                             $days = '24 Horas';
+                            $responseOwner = Http::post('https://api.z-api.io/instances/3B30881EC3E99084D3D3B6927F6ADC67/token/66E633717A0DCDD3D4A1BC19/send-text', [
+                                "phone" => "5531989911569",
+                                "message" => "Esse exame foi pago com sucesso, e o prazo e de 24 horas para o animal: $animal->animal_name"
+                            ]);
                         } elseif ($item->days == 2) {
                             $days = '2 Dias';
+                            $responseOwner = Http::post('https://api.z-api.io/instances/3B30881EC3E99084D3D3B6927F6ADC67/token/66E633717A0DCDD3D4A1BC19/send-text', [
+                                "phone" => "5531989911569",
+                                "message" => "Esse exame foi pago com sucesso, e o prazo e de 2 dias para o animal: $animal->animal_name"
+                            ]);
                         } elseif ($item->days == 3) {
                             $days = '5 Dias';
+                            $responseOwner = Http::post('https://api.z-api.io/instances/3B30881EC3E99084D3D3B6927F6ADC67/token/66E633717A0DCDD3D4A1BC19/send-text', [
+                                "phone" => "5531989911569",
+                                "message" => "Esse exame foi pago com sucesso, e o prazo e de 5 dias para o animal: $animal->animal_name"
+                            ]);
                         } elseif ($item->days == 4) {
                             $days = '10 Dias';
+                            $responseOwner = Http::post('https://api.z-api.io/instances/3B30881EC3E99084D3D3B6927F6ADC67/token/66E633717A0DCDD3D4A1BC19/send-text', [
+                                "phone" => "5531989911569",
+                                "message" => "Esse exame foi pago com sucesso, e o prazo e de 10 dias para o animal: $animal->animal_name"
+                            ]);
                         }
                         $telefone = str_replace(['(', ')', '-', ' '], ['', '', '', ''],  $order->tecnico->cell);
                         $response = Http::post('https://api.z-api.io/instances/3B30881EC3E99084D3D3B6927F6ADC67/token/66E633717A0DCDD3D4A1BC19/send-text', [
