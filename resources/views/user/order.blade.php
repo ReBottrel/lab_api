@@ -45,7 +45,7 @@
                                 ->get();
                         } elseif ($animal->especies == null) {
                             $exames = App\Models\Exam::where('category', 'dna')
-                                ->where('requests', 2)
+                                ->where('requests', 1)
                                 ->where('status', 1)
                                 ->get();
                         } else {
