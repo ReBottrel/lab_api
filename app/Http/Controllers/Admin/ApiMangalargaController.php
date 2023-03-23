@@ -17,7 +17,7 @@ class ApiMangalargaController extends Controller
 {
     public function __construct()
     {
-        ini_set('max_execution_time', 5000);
+        ini_set('max_execution_time', 8000);
     }
     public function getApi()
     {
@@ -130,7 +130,7 @@ class ApiMangalargaController extends Controller
     public function getResenha()
     {
 
-        $coletas = $this->fetchDataFromApi('coletas', 18, 2, ['dataEnvioInicio' => '2023-03-01T00:00:00']);
+        $coletas = $this->fetchDataFromApi('coletas', 18, 2, ['dataEnvioInicio' => '2023-03-16T00:00:00']);
         foreach ($coletas as $coleta) {
             // find owner, user, and tecnico by email or create them if they don't exist
             $user = User::where('email', $coleta->cliente->email)->first();
