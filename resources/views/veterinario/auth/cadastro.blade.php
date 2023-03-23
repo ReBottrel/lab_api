@@ -28,7 +28,7 @@
 
                 <div id="step2" style="display:none;">
                     <div class="cadastro-vet-content-input">
-                        <label for="name">CPF</label>
+                        <label for="name">CPF/CNPJ</label>
                         <input id="cpf" type="text" name="cpf" autofocus autocomplete="">
                     </div>
                     <div class="cadastro-vet-content-input">

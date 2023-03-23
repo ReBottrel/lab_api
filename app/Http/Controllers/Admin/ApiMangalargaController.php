@@ -77,7 +77,7 @@ class ApiMangalargaController extends Controller
                     'city' => $coleta->cliente->enderecos[0]->cidade,
                     'state' => $coleta->cliente->enderecos[0]->uf,
                     'status' => 1,
-                    'propriety' =>  $coleta->cliente->fazendas[0]->nome,
+                    'propriety' =>  $coleta->cliente->fazendas[0]->nome ?? null,
                 ]);
                 $ownerid = $ownerc->id;
                 \Log::info(['criado', $ownerc]);
@@ -108,7 +108,7 @@ class ApiMangalargaController extends Controller
                     $newAnimal = Animal::create([
                         'register_number_brand' => $animal->rowidAnimal,
                         'order_id' => $order->id,
-                        'animal_name' => $animal->produto,
+                        'animal_name' => $animal->nome,
                         'sex' => $animal->sexo,
                         'birth_date' => $animal->dataNascimento,
                         'description' => $animal->obs,
@@ -185,7 +185,7 @@ class ApiMangalargaController extends Controller
                     'city' => $coleta->cliente->enderecos[0]->cidade,
                     'state' => $coleta->cliente->enderecos[0]->uf,
                     'status' => 1,
-                    'propriety' =>  $coleta->cliente->fazendas[0]->nome,
+                    'propriety' =>  $coleta->cliente->fazendas[0]->nome ?? null,
                 ]);
                 $ownerid = $ownerc->id;
             }
@@ -215,7 +215,7 @@ class ApiMangalargaController extends Controller
                     $newAnimal = Animal::create([
                         'register_number_brand' => $animal->rowidAnimal,
                         'order_id' => $order->id,
-                        'animal_name' => $animal->produto,
+                        'animal_name' => $animal->nome,
                         'sex' => $animal->sexo,
                         'birth_date' => $animal->dataNascimento,
                         'description' => $animal->obs,
