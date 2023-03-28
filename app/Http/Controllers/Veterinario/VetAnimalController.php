@@ -7,6 +7,9 @@ use App\Models\Owner;
 use App\Models\Animal;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Breed;
+use App\Models\Fur;
+use App\Models\Specie;
 
 class VetAnimalController extends Controller
 {
@@ -29,6 +32,9 @@ class VetAnimalController extends Controller
     public function create()
     {
         $owners = Owner::where('vet_id', auth()->user()->id)->get();
+        $especies = Specie::all();
+        $breeds = Breed::all();
+        $furs = Fur::all();
         return view('veterinario.animais.create', get_defined_vars());
     }
 

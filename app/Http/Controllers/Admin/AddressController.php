@@ -16,4 +16,21 @@ class AddressController extends Controller
 
         return response()->json($dados);
     }
+
+    public function estados()
+    {
+        $https = Http::get("https://servicodados.ibge.gov.br/api/v1/localidades/estados");
+
+        $dados = json_decode($https->body());
+
+        return response()->json($dados);
+    }
+    public function cidades(Request $request)
+    {
+        $https = Http::get("https://servicodados.ibge.gov.br/api/v1/localidades/estados/{$request->state_id}/municipios");
+
+        $dados = json_decode($https->body());
+
+        return response()->json($dados);
+    }
 }

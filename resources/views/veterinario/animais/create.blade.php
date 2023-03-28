@@ -32,11 +32,19 @@
                         </div>
                         <div class="mb-3 cad-animal-content-input">
                             <label for="exampleFormControlInput1" class="form-label">Espécie</label>
-                            <input type="text" class="form-control" name="especies">
+                            <select name="especies" id="" class="form-control">
+                                @foreach ($especies as $especie)
+                                    <option value="{{ $especie->id }}">{{ $especie->name }}</option>
+                                @endforeach
+                            </select>
                         </div>
                         <div class="mb-3 cad-animal-content-input">
                             <label for="exampleFormControlInput1" class="form-label">Raça</label>
-                            <input type="text" class="form-control" name="breed">
+                            <select name="raca" id="" class="form-control">
+                                @foreach ($breeds as $raca)
+                                    <option value="{{ $raca->id }}">{{ $raca->name }}</option>
+                                @endforeach
+                            </select>
                         </div>
                         <div class="mb-3 cad-animal-content-input">
                             <label for="exampleFormControlInput1" class="form-label">Sexo</label>
@@ -47,11 +55,11 @@
                         </div>
                         <div class="mb-3 cad-animal-content-input">
                             <label for="exampleFormControlInput1" class="form-label">Idade</label>
-                            <input type="text" class="form-control" name="age">
+                            <input type="text" class="form-control" name="age" id="idade">
                         </div>
                         <div class="mb-3 cad-animal-content-input">
                             <label for="exampleFormControlInput1" class="form-label">Data de nascimento</label>
-                            <input type="date" class="form-control" name="birth_date">
+                            <input type="date" class="form-control" name="birth_date" id="birth_date">
                         </div>
                     </div>
                     <div class="buttons">
@@ -71,35 +79,56 @@
                             <h2>Informações do animal</h2>
                         </div>
                         <div class="mb-3 cad-animal-content-input">
-                            <label for="exampleFormControlInput1" class="form-label">Numero do chip</label>
-                            <input type="text" class="form-control" name="chip_number">
+                            <label for="exampleFormControlInput1" class="form-label">Local onde se encontra</label>
+                            <input type="text" class="form-control" name="animal_name">
                         </div>
                         <div class="mb-3 cad-animal-content-input">
-                            <label for="exampleFormControlInput1" class="form-label">Pai</label>
-                            <input type="text" class="form-control" name="pai">
-                        </div>
-
-                        <div class="mb-3 cad-animal-content-input">
-                            <label for="exampleFormControlInput1" class="form-label">Registro do pai</label>
-                            <input type="text" class="form-control" name="registro_pai">
+                            <label for="exampleFormControlInput1" class="form-label">Estado</label>
+                            <select name="state" id="state" class="form-control">
+                            </select>
                         </div>
                         <div class="mb-3 cad-animal-content-input">
-                            <label for="exampleFormControlInput1" class="form-label">Mãe</label>
-                            <input type="text" class="form-control" name="mae">
+                            <label for="exampleFormControlInput1" class="form-label">Estado</label>
+                            <select name="city" id="city" class="form-control">
+                            </select>
                         </div>
-
                         <div class="mb-3 cad-animal-content-input">
-                            <label for="exampleFormControlInput1" class="form-label">Registro da mãe</label>
-                            <input type="text" class="form-control" name="registro_mae">
+                            <label for="exampleFormControlInput1" class="form-label">Cadastro OESA</label>
+                            <input type="text" class="form-control" name="animal_name">
+                        </div>
+                        <div class="mb-3 cad-animal-content-input">
+                            <label for="exampleFormControlInput1" class="form-label">Numero de animais existente na
+                                propriedade</label>
+                            <input type="text" class="form-control" name="animal_name">
                         </div>
 
                     </div>
+
                     <div class="buttons">
                         <div class="my-3 text-end">
                             <button type="button" class="btnPrev btn btn-alt-1">Anterior</button>
                         </div>
                         <div class="my-3 text-end">
                             <button type="button" class="btnNext btn btn-alt-1">Próximo</button>
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset class="hidden">
+                    <div class="cad-animal-content">
+                        <div class="cad-animal-content-title">
+                            <h2>Informações do animal</h2>
+                        </div>
+                        <div class="mb-3 cad-animal-content-input">
+                            <label for="exampleFormControlInput1" class="form-label">Data da coleta</label>
+                            <input type="date" class="form-control" name="owner_name">
+                        </div>
+                        <div class="mb-3 cad-animal-content-input">
+                            <label for="exampleFormControlInput1" class="form-label">Numero da requisição AIE</label>
+                            <input type="text" class="form-control" name="animal_name">
+                        </div>
+                        <div class="mb-3 cad-animal-content-input">
+                            <label for="exampleFormControlInput1" class="form-label">Numero da requisição MORMO</label>
+                            <input type="text" class="form-control" name="animal_name">
                         </div>
                     </div>
                 </fieldset>
@@ -110,10 +139,14 @@
                         </div>
                         <div class="mb-3 cad-animal-content-input">
                             <label for="exampleFormControlInput1" class="form-label">Pelagem</label>
-                            <input type="text" class="form-control" name="fur">
+                            <select name="fur" id="" class="form-control">
+                                @foreach ($furs as $fur)
+                                    <option value="{{ $fur->id }}">{{ $fur->name }}</option>
+                                @endforeach
+                            </select>
                         </div>
                         <div class="mb-3 cad-animal-content-input">
-                            <label for="exampleFormControlInput1" class="form-label">Observação</label>
+                            <label for="exampleFormControlInput1" class="form-label">Descrição e Observação</label>
                             <textarea type="text" class="form-control" name="description" rows="3"></textarea>
                         </div>
                     </div>
@@ -153,6 +186,46 @@
 @section('js')
     <script>
         $(document).ready(function() {
+
+            $(document).on('blur', '#idade', function() {
+                $('#birth_date').prop('disabled', true);
+            });
+            $(document).on('blur', '#birth_date', function() {
+                $('#idade').prop('disabled', true);
+            });
+
+            $.ajax({
+                url: '{{ route('get.states') }}',
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    $.each(data, function(index, val) {
+                        $('#state').append('<option value="' + val.id + '">' + val.nome +
+                            '</option>');
+                    });
+
+                }
+            });
+            $(document).on('change', '#state', function() {
+                var state_id = $(this).val();
+                $.ajax({
+                    url: '{{ route('get.cities') }}',
+                    type: 'GET',
+                    dataType: 'json',
+                    data: {
+                        state_id: state_id
+                    },
+                    success: function(data) {
+                        $('#city').empty();
+                        $.each(data, function(index, val) {
+                            $('#city').append('<option value="' + val.id + '">' + val
+                                .nome +
+                                '</option>');
+                        });
+                    }
+                });
+            });
+
             $('.btnNext').click(function() {
                 var $this = $(this);
                 var $current = $this.parents('fieldset');
