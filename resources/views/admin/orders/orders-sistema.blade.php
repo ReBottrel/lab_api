@@ -94,11 +94,11 @@
                                                 <a class="dropdown-item" id="show-btn"
                                                     href="{{ route('technical', $order->id) }}">Técnico
                                                     responsável</a>
-                                                @if ($order->status == 2)
+                                                {{-- @if ($order->status == 2)
                                                     <a class="dropdown-item"
                                                         href="{{ route('order.request.detail', $order->id) }}">Detalhes do
                                                         pedido</a>
-                                                @endif
+                                                @endif --}}
                                                 <a class="dropdown-item" id="show-btn"
                                                     href="{{ route('orders.delete', $order->id) }}">Excluir</a>
                                             </ul>
