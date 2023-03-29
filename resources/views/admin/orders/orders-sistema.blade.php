@@ -17,8 +17,8 @@
                                     <option value="0"> Todos</option>
                                     <option value="1"> Aguardando amostra</option>
                                     <option value="2"> Amostra recebida</option>
-                                    <option value="7"> Amostra aprovada</option>
-                                    <option value="6"> Amostra reprovada</option>
+                                    <option value="7"> Análise Aprovada</option>
+                                    <option value="6"> Análise Reprovada</option>
                                     <option value="7"> Aguardando pagamento</option>
                                     <option value="9"> Pagamento confirmado</option>
                                     <option value="10"> Pedido concluído</option>
