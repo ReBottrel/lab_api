@@ -23,6 +23,8 @@ class MarkController extends Controller
             5 => 'Linha inferior',
             6 => 'Membros posteriores visto posterior',
             7 => 'Membros anteriores visto posterior',
+            8 => 'Cabeça',
+            9 => 'Pescoço',
         ];
 
         $marcas = Marking::all();
