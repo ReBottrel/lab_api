@@ -188,7 +188,7 @@
                         text: 'Resenha criada com sucesso!',
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            window.location.href = '{{ route('vet.index') }}'
+                            window.location.href = '{{ url('/vet/order-create') }}' + '/' + id;
                         }
                     })
 

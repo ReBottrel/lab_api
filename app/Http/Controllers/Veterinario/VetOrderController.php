@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Veterinario;
 
 use App\Models\User;
 use App\Models\Owner;
+use App\Models\Animal;
 use App\Models\OrderRequest;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Exam;
 
 class VetOrderController extends Controller
 {
@@ -57,16 +59,20 @@ class VetOrderController extends Controller
             'status' => 7,
         ]);
 
-        
-        if($request->prop == 1){
+
+        if ($request->prop == 1) {
             return redirect()->route('animal.create', $order->id);
-        }
-        else{
+        } else {
             return redirect()->route('vet.animal.select', $order->id);
         }
-       
     }
-   
+    public function createOrder($id)
+    {
+        $animal = Animal::find($id);
+        $exames = Exam::where('category', 'sorologia')->get();
+        return view('veterinario.order.create-order', get_defined_vars());
+    }
+
 
     /**
      * Display the specified resource.

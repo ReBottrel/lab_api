@@ -291,6 +291,8 @@ Route::middleware(['auth:veterinario'])->prefix('vet')->group(function () {
     Route::get('resenha-step-6/{id}', [ResenhaController::class, 'step6'])->name('resenha.step6');
     Route::get('resenha-step-7/{id}', [ResenhaController::class, 'step7'])->name('resenha.step7');
 
+    Route::get('order-create/{id}', [VetOrderController::class, 'createOrder'])->name('vet.order.create');
+
     Route::post('resenha-store-step-1', [ResenhaController::class, 'store'])->name('resenha.store.step1');
 
     Route::get('configs', [VetConfigController::class, 'index'])->name('vet.configs');
