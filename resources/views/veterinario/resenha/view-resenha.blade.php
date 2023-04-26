@@ -129,7 +129,7 @@
             </p>
             <div class="image">
                 @foreach ($resenhas as $key => $resenha)
-                    <div class="side-{{ $resenha->resenha }}">
+                    <div class="side-{{ $key }}">
                         <img src="{{ $resenha->localization }}" alt="">
                     </div>
                 @endforeach
@@ -346,8 +346,8 @@
             </table>
             </p>
             <div class="image down">
-                @foreach ($resenhas as $resenha)
-                    <div class="side-{{ $resenha->resenha }}-down">
+                @foreach ($resenhas as $key => $resenha)
+                    <div class="side-{{ $key }}-down">
                         <img src="{{ $resenha->localization }}" alt="">
                     </div>
                 @endforeach
