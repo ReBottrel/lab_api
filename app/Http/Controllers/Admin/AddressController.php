@@ -20,9 +20,7 @@ class AddressController extends Controller
     public function estados()
     {
         $https = Http::withOptions([
-            'curl' => [
-                CURLOPT_SSL_OPTIONS => CURL_SSLVERSION_TLSv1_2,
-            ],
+            ["verify" => false],
         ])->get("https://servicodados.ibge.gov.br/api/v1/localidades/estados");
 
         $dados = json_decode($https->body());
@@ -32,9 +30,8 @@ class AddressController extends Controller
     public function cidades(Request $request)
     {
         $https = Http::withOptions([
-            'curl' => [
-                CURLOPT_SSL_OPTIONS => CURL_SSLVERSION_TLSv1_2,
-            ],
+            ["verify" => false],
+
         ])->get("https://servicodados.ibge.gov.br/api/v1/localidades/estados/{$request->state_id}/municipios");
 
         $dados = json_decode($https->body());
