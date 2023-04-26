@@ -36,7 +36,7 @@ class AddressController extends Controller
 
         curl_close($curl);
         $dados = json_decode($response);
-      
+        dd($dados);
 
         return response()->json($dados);
     }

@@ -181,19 +181,21 @@
             $(document).on('blur', '#birth_date', function() {
                 $('#idade').prop('disabled', true);
             });
-
             $.ajax({
                 url: '{{ route('get.states') }}',
                 type: 'GET',
                 dataType: 'json',
                 success: function(data) {
+                    $('#state').empty();
                     $.each(data, function(index, val) {
-                        $('#state').append('<option value="' + val.id + '">' + val.nome +
+                        $('#state').append('<option value="' + val.id + '">' + val
+                            .nome +
                             '</option>');
                     });
-
                 }
             });
+
+
             $(document).on('change', '#state', function() {
                 var state_id = $(this).val();
                 $.ajax({
