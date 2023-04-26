@@ -24,7 +24,7 @@
                 <button class="undo-draw" onclick="undo()"><i class="fa-solid fa-eraser"></i></button>
             </div>
             <div>
-                <button data-id="{{ $animal }}" class="btn btn-success" id="salvar">Próximo</button>
+                <button data-id="{{ $pedido->id_animal }}" data-pedido="{{ $pedido->id }}" class="btn btn-success" id="salvar">Próximo</button>
             </div>
         </div>
     </div>
@@ -80,8 +80,8 @@
             ctx.drawImage(img, -size / 2, -size / 2, size, size);
             ctx.restore();
         }
-
-        canvas.setBackgroundImage('{{ asset('vet/img/step-3.jpg') }}', function() {
+        canvas.backgroundColor = "rgba(0, 0, 0, 0)";
+        canvas.setBackgroundImage('{{ asset('vet/img/step-3.png') }}', function() {
             let img = canvas.backgroundImage;
             img.originX = 'left';
             img.originY = 'top';
@@ -166,7 +166,8 @@
 
         // Salvar
         $('#salvar').click(function() {
-            var id = $(this).data('id');
+            var animal = $(this).data('id');
+            var pedido = $(this).data('pedido');
             var canvasImage = canvas.toDataURL({
                 format: 'png',
                 quality: 1
@@ -178,11 +179,12 @@
                 data: {
                     _token: '{{ csrf_token() }}',
                     data: canvasImage,
-                    animal_id: id,
+                    animal_id: animal,
+                    pedido_id: pedido,
                     side: 3,
                 },
                 success: function(data) {
-                    window.location.href = '{{ url('/vet/resenha-step-4') }}' + '/' + id;
+                    window.location.href = '{{ url('/vet/resenha-step-4') }}' + '/' + pedido;
                 }
             });
         });

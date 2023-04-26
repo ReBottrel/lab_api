@@ -44,6 +44,8 @@ class AuthVetController extends Controller
             'password' => 'required|string|min:6|confirmed',
             'cpf' => 'required|max:255',
             'portaria' => 'required|max:255',
+            'crmv' => 'required|max:255',
+            'phone' => 'required|max:255',
         ]);
 
 
@@ -53,6 +55,14 @@ class AuthVetController extends Controller
             'password' => bcrypt($request->password),
             'cpf' => $request->cpf,
             'portaria' => $request->portaria,
+            'crmv' => $request->crmv,
+            'phone' => $request->phone,
+            'address' => $request->address,
+            'number' => $request->number,
+            'district' => $request->district,
+            'city' => $request->city,
+            'state' => $request->state,
+            'cep' => $request->cep,
         ]);
 
         auth()->login($user);

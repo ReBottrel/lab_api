@@ -9,12 +9,12 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <script src="https://kit.fontawesome.com/0ab2bcde1c.js" crossorigin="anonymous"></script>
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.min.css" rel="stylesheet" />
     <link href="{{ asset('vet/css/main.min.css') }}" rel="stylesheet">
 
 </head>
 
 <body>
-
     <div>
         @yield('content')
     </div>
@@ -45,10 +45,12 @@
     </div>
     <script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+ 
     <script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-maskmoney/3.0.2/jquery.maskMoney.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.jquery.min.js"></script>
     <script src="{{ asset('adm/assets/js/fabric.min.js') }}"></script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <script src="{{ asset('adm/assets/js/main.js') }}"></script>

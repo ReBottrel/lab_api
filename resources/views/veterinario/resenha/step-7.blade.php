@@ -24,7 +24,7 @@
                 <button class="undo-draw" onclick="undo()"><i class="fa-solid fa-eraser"></i></button>
             </div>
             <div>
-                <button data-id="{{ $animal }}" class="btn btn-success" id="salvar">SALVAR</button>
+                <button data-id="{{ $pedido->id_animal }}" data-pedido="{{ $pedido->id }}" class="btn btn-success" id="salvar">Próximo</button>
             </div>
         </div>
     </div>
@@ -80,8 +80,8 @@
             ctx.drawImage(img, -size / 2, -size / 2, size, size);
             ctx.restore();
         }
-
-        canvas.setBackgroundImage('{{ asset('vet/img/step-7.jpg') }}', function() {
+        canvas.backgroundColor = "rgba(0, 0, 0, 0)";
+        canvas.setBackgroundImage('{{ asset('vet/img/step-7.png') }}', function() {
             let img = canvas.backgroundImage;
             img.originX = 'left';
             img.originY = 'top';
@@ -166,7 +166,8 @@
 
         // Salvar
         $('#salvar').click(function() {
-            var id = $(this).data('id');
+            var animal = $(this).data('id');
+            var pedido = $(this).data('pedido');
             var canvasImage = canvas.toDataURL({
                 format: 'png',
                 quality: 1
@@ -178,7 +179,8 @@
                 data: {
                     _token: '{{ csrf_token() }}',
                     data: canvasImage,
-                    animal_id: id,
+                    animal_id: animal,
+                    pedido_id: pedido,
                     side: 7,
                 },
                 success: function(data) {
@@ -188,7 +190,7 @@
                         text: 'Resenha criada com sucesso!',
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            window.location.href = '{{ url('/vet/order-create') }}' + '/' + id;
+                            window.location.href = '{{ url('/vet/order-create') }}' + '/' + pedido;
                         }
                     })
 

@@ -295,6 +295,8 @@ Route::middleware(['auth:veterinario'])->prefix('vet')->group(function () {
 
     Route::post('resenha-store-step-1', [ResenhaController::class, 'store'])->name('resenha.store.step1');
 
+    Route::post('order-store-finish', [VetOrderController::class, 'storeOrder'])->name('vet.order.finish');
+
     Route::get('configs', [VetConfigController::class, 'index'])->name('vet.configs');
     Route::post('configs-store', [VetConfigController::class, 'updateUser'])->name('vet.configs.store');
 
@@ -309,3 +311,6 @@ Route::get('get-resenha', [ApiMangalargaController::class, 'getResenha'])->name(
 
 Route::get('get-states', [AddressController::class, 'estados'])->name('get.states');
 Route::get('get-cities', [AddressController::class, 'cidades'])->name('get.cities');
+
+Route::get('view-resenha/{id}', [ResenhaController::class, 'viewResenha'])->name('view.resenha');
+Route::get('resenha-pdf/{id}', [ResenhaController::class, 'gerarPDF'])->name('resenha.pdf');

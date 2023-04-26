@@ -10,7 +10,7 @@ class PedidoAnimal extends Model
     use HasFactory;
 
     protected $table = 'pedido_animals';
-    protected $fillable = ['id_pedido', 'id_animal', 'status'];
+    protected $fillable = ['id_pedido', 'id_animal', 'status', 'owner_id', 'user_id'];
 
 
     public function pedido()

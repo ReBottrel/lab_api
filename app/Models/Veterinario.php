@@ -23,5 +23,15 @@ class Veterinario extends Authenticatable
         'association_id',
         'cpf',
         'portaria',
+        'crmv',
+        'phone',
+        'address',
+        'number',
+        'complement',
+        'district',
+        'city',
+        'state',
+        'cep',
+        
     ];
 }

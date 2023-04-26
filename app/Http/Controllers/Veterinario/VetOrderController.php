@@ -9,6 +9,9 @@ use App\Models\OrderRequest;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Exam;
+use App\Models\ExamToAnimal;
+use App\Models\PedidoAnimal;
+use PhpOffice\PhpSpreadsheet\Calculation\Statistical\Distributions\F;
 
 class VetOrderController extends Controller
 {
@@ -56,6 +59,8 @@ class VetOrderController extends Controller
             'user_id' => $user->id,
             'creator' => $owner->owner_name,
             'technical_manager' => auth()->user()->name,
+            'owner_id' => $owner->id,
+            'id_tecnico' => auth()->user()->id,
             'status' => 7,
         ]);
 
@@ -68,9 +73,39 @@ class VetOrderController extends Controller
     }
     public function createOrder($id)
     {
-        $animal = Animal::find($id);
+        $pedido = PedidoAnimal::find($id);
+        $animal = Animal::find($pedido->id_animal);
         $exames = Exam::where('category', 'sorologia')->get();
         return view('veterinario.order.create-order', get_defined_vars());
+    }
+
+    public function storeOrder(Request $request)
+    {
+
+        $pedido = PedidoAnimal::find($request->pedido);
+        $order = OrderRequest::find($pedido->id_pedido);
+
+        foreach ($request->exames as $exame) {
+            $ex = Exam::find($exame);
+            $exam = ExamToAnimal::create([
+                'exam_id' => $exame,
+                'animal_id' => $pedido->id_animal,
+                'order_id' => $pedido->id_pedido,
+                'status' => 1,
+                'total_price' => $ex->value,
+            ]);
+        }
+
+        $order->update([
+            'status' => 1,
+            'total_price' => $request->total,
+            'origin' => 'app',
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Pedido criado com sucesso!',
+        ]);
     }
 
 
