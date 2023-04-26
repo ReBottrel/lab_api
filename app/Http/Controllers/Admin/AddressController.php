@@ -32,7 +32,7 @@ class AddressController extends Controller
         $https = Http::withoutVerifying()->withOptions([
             ["verify" => false],
 
-        ])->get("https://brasilapi.com.br/api/ibge/municipios/v1/{$request->estado}");
+        ])->get("https://brasilapi.com.br/api/ibge/municipios/v1/{$request->state_id}");
 
         $dados = json_decode($https->body());
 

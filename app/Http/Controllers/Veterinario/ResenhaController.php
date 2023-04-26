@@ -68,10 +68,10 @@ class ResenhaController extends Controller
             'description' => $request->description,
             'status' => 1,
             'chip_number' => $request->chip_number,
-            'registro_pai' => $request->registro_pai,
-            'pai' => $request->pai,
-            'registro_mae' => $request->registro_mae,
-            'mae'   => $request->mae,
+            'oesa_cad' => $request->oesa_cad,
+            'numero_aie' => $request->numero_aie,
+            'numero_mormo' => $request->numero_mormo,
+            'collect_date' => $request->collect_date,
 
         ]);
 
@@ -159,6 +159,4 @@ class ResenhaController extends Controller
         $veterinario = Veterinario::find($pedido->user_id);
         return view('veterinario.resenha.view-resenha', get_defined_vars());
     }
-
-
 }

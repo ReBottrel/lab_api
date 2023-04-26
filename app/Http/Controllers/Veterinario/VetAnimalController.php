@@ -58,6 +58,9 @@ class VetAnimalController extends Controller
             'breed' => $request->breed,
             'sex' => $request->sex,
             'age' => $request->age,
+            'state' => $request->state,
+            'city' => $request->city,
+            'animal_location' => $request->animal_location,
             'birth_date' => $request->birth_date,
             'fur' => $request->fur,
             'description' => $request->description,
@@ -67,6 +70,10 @@ class VetAnimalController extends Controller
             'pai' => $request->pai,
             'registro_mae' => $request->registro_mae,
             'mae'   => $request->mae,
+            'oesa_cad' => $request->oesa_cad,
+            'numero_aie' => $request->numero_aie,
+            'numero_mormo' => $request->numero_mormo,
+            'collect_date' => $request->collect_date,
         ]);
 
         return redirect()->route('vet.animal.index')->with('success', 'Animal cadastrado com sucesso!');

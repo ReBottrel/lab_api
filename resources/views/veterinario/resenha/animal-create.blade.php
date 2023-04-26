@@ -32,7 +32,7 @@
                         </div>
                         <div class="mb-3 cad-animal-content-input">
                             <label for="exampleFormControlInput1" class="form-label">Espécie</label>
-                            <select name="especies" id="" class="form-control">
+                            <select name="species" id="" class="form-control">
                                 @foreach ($especies as $especie)
                                     <option value="{{ $especie->id }}">{{ $especie->name }}</option>
                                 @endforeach
@@ -40,7 +40,7 @@
                         </div>
                         <div class="mb-3 cad-animal-content-input">
                             <label for="exampleFormControlInput1" class="form-label">Raça</label>
-                            <select name="raca" id="" class="form-control">
+                            <select name="breed" id="" class="form-control">
                                 @foreach ($breeds as $raca)
                                     <option value="{{ $raca->id }}">{{ $raca->name }}</option>
                                 @endforeach
@@ -120,15 +120,15 @@
                         </div>
                         <div class="mb-3 cad-animal-content-input">
                             <label for="exampleFormControlInput1" class="form-label">Data da coleta</label>
-                            <input type="date" class="form-control" name="owner_name">
+                            <input type="date" class="form-control" name="collect_date">
                         </div>
                         <div class="mb-3 cad-animal-content-input">
                             <label for="exampleFormControlInput1" class="form-label">Numero da requisição AIE</label>
-                            <input type="text" class="form-control" name="animal_name">
+                            <input type="text" class="form-control" name="numero_aie">
                         </div>
                         <div class="mb-3 cad-animal-content-input">
                             <label for="exampleFormControlInput1" class="form-label">Numero da requisição MORMO</label>
-                            <input type="text" class="form-control" name="animal_name">
+                            <input type="text" class="form-control" name="numero_mormo">
                         </div>
                         <div class="buttons">
                             <div class="my-3 text-end">
@@ -188,7 +188,7 @@
                 success: function(data) {
                     $('#state').empty();
                     $.each(data, function(index, val) {
-                        $('#state').append('<option value="' + val.id + '">' + val
+                        $('#state').append('<option value="' + val.sigla + '">' + val
                             .nome +
                             '</option>');
                     });
@@ -208,7 +208,7 @@
                     success: function(data) {
                         $('#city').empty();
                         $.each(data, function(index, val) {
-                            $('#city').append('<option value="' + val.id + '">' + val
+                            $('#city').append('<option value="' + val.nome + '">' + val
                                 .nome +
                                 '</option>');
                         });

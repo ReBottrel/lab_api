@@ -43,6 +43,10 @@ class Animal extends Model
         'especie_mae',
         'row_id',
         'vet_id',
+        'oesa_cad',
+        'numero_aie',
+        'numero_mormo',
+        'collect_date',
     ];
 
     public function owner()

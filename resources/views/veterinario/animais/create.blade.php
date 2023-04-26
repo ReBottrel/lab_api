@@ -120,15 +120,15 @@
                         </div>
                         <div class="mb-3 cad-animal-content-input">
                             <label for="exampleFormControlInput1" class="form-label">Data da coleta</label>
-                            <input type="date" class="form-control" name="owner_name">
+                            <input type="date" class="form-control" name="collect_date">
                         </div>
                         <div class="mb-3 cad-animal-content-input">
                             <label for="exampleFormControlInput1" class="form-label">Numero da requisição AIE</label>
-                            <input type="text" class="form-control" name="animal_name">
+                            <input type="text" class="form-control" name="numero_aie">
                         </div>
                         <div class="mb-3 cad-animal-content-input">
                             <label for="exampleFormControlInput1" class="form-label">Numero da requisição MORMO</label>
-                            <input type="text" class="form-control" name="animal_name">
+                            <input type="text" class="form-control" name="numero_mormo">
                         </div>
                     </div>
                 </fieldset>
@@ -199,13 +199,16 @@
                 type: 'GET',
                 dataType: 'json',
                 success: function(data) {
+                    $('#state').empty();
                     $.each(data, function(index, val) {
-                        $('#state').append('<option value="' + val.id + '">' + val.nome +
+                        $('#state').append('<option value="' + val.sigla + '">' + val
+                            .nome +
                             '</option>');
                     });
-
                 }
             });
+
+
             $(document).on('change', '#state', function() {
                 var state_id = $(this).val();
                 $.ajax({
@@ -218,7 +221,7 @@
                     success: function(data) {
                         $('#city').empty();
                         $.each(data, function(index, val) {
-                            $('#city').append('<option value="' + val.id + '">' + val
+                            $('#city').append('<option value="' + val.nome + '">' + val
                                 .nome +
                                 '</option>');
                         });

@@ -81,6 +81,11 @@
                                 @endphp
                                 <li class="list-group-item"><span>EXAME: {{ $exame->title }}</span></li>
                             @endforeach
+                            <li class="list-group-item"><span>Cadastro oesa: {{ $animal->oesa_cad }}</span></li>
+                            <li class="list-group-item"><span>Numero da portaria AIE: {{ $animal->numero_aie }}</span></li>
+                            <li class="list-group-item"><span>Numero da portaria MORMO: {{ $animal->numero_mormo }}</span></li>
+                            <li class="list-group-item"><span>Resenha:</span> <a href="{{ route('view.resenha', $pedido->id) }}" target="_blank">Clique para abrir</a></li>
+
                             {{-- <li class="list-group-item"><span>PAI: {{ $animal->pai }}</span></li>
                             <li class="list-group-item"><span>REGISTRO DO PAI: {{ $animal->registro_pai }}</span>
                             </li>
@@ -109,7 +114,7 @@
                                             coleta</label>
                                         <input type="text" class="form-control datas data-2"
                                             id="data-coleta-{{ $animal->id }}" data-type="data_coleta"
-                                            data-id="{{ $animal->id }}" value="{{ $datas->data_coleta ?? '' }}"
+                                            data-id="{{ $animal->id }}" value="{{ $datas->data_coleta ?? $animal->collect_date }}"
                                             placeholder="">
                                     </div>
                                     <div class="col-4">
