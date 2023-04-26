@@ -19,28 +19,11 @@ class AddressController extends Controller
 
     public function estados()
     {
-        $curl = curl_init();
+        $https = Http::withoutVerifying()->withOptions([
+            ["verify" => false],
+        ])->get("https://servicodados.ibge.gov.br/api/v1/localidades/estados");
 
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => 'https://servicodados.ibge.gov.br/api/v1/localidades/estados',
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => '',
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 0,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'GET',
-            CURLOPT_SSLVERSION => CURL_SSLVERSION_TLSv1_2,
-            CURLOPT_SSL_VERIFYPEER => false,
-            CURLOPT_SSL_VERIFYHOST => false,
-            
-        ));
-
-        $response = curl_exec($curl);
-
-        curl_close($curl);
-        $dados = json_decode($response);
-        dd($dados);
+        $dados = json_decode($https->body());
 
         return response()->json($dados);
     }
