@@ -2,21 +2,28 @@
 
 namespace App\Http\Controllers\Veterinario;
 
+use App\Models\Fur;
+use App\Models\Breed;
+use App\Models\Owner;
 use App\Models\Animal;
+use App\Models\Specie;
 use App\Models\Marking;
+use App\Models\Veterinario;
+use App\Models\OrderRequest;
+use App\Models\PedidoAnimal;
 use Illuminate\Http\Request;
 use App\Models\ResenhaAnimal;
-use App\Http\Controllers\Controller;
-use App\Models\OrderRequest;
-use App\Models\Owner;
-use App\Models\PedidoAnimal;
-use App\Models\Veterinario;
 use Barryvdh\DomPDF\Facade\Pdf;
+use App\Http\Controllers\Controller;
+
 class ResenhaController extends Controller
 {
     public function animalCreate($id)
     {
         $order = $id;
+        $especies = Specie::all();
+        $breeds = Breed::all();
+        $furs = Fur::all();
         return view('veterinario.resenha.animal-create', get_defined_vars());
     }
 
@@ -64,7 +71,15 @@ class ResenhaController extends Controller
             'mae'   => $request->mae,
         ]);
 
-        return redirect()->route('resenha.step1', $animal->id);
+        $pedido = PedidoAnimal::create([
+            'id_pedido' => $request->order,
+            'id_animal' => $animal->id,
+            'owner_id' => $order->owner_id,
+            'user_id' => auth()->user()->id,
+            'status' => 1,
+        ]);
+
+        return redirect()->route('resenha.step1', $pedido->id);
     }
     public function step1($id)
     {

@@ -13,8 +13,8 @@
                 </select>
             </div>
             <div class="mb-3">
-                <label for="">Data da coleta</label>
-                <input type="text" class="form-control" name="" id="data">
+                {{-- <label for="">Data da coleta</label>
+                <input type="text" class="form-control" name="" id="data"> --}}
                 <input type="hidden" name="" id="total-input">
                 <input type="hidden" name="" id="pedido" value="{{ $pedido->id }}">
             </div>
