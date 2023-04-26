@@ -60,6 +60,9 @@ class ResenhaController extends Controller
             'breed' => $request->breed,
             'sex' => $request->sex,
             'age' => $request->age,
+            'state' => $request->state,
+            'city' => $request->city,
+            'animal_location' => $request->animal_location,
             'birth_date' => $request->birth_date,
             'fur' => $request->fur,
             'description' => $request->description,
@@ -69,6 +72,7 @@ class ResenhaController extends Controller
             'pai' => $request->pai,
             'registro_mae' => $request->registro_mae,
             'mae'   => $request->mae,
+
         ]);
 
         $pedido = PedidoAnimal::create([

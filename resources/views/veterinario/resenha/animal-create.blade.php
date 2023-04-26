@@ -80,7 +80,7 @@
                         </div>
                         <div class="mb-3 cad-animal-content-input">
                             <label for="exampleFormControlInput1" class="form-label">Local onde se encontra</label>
-                            <input type="text" class="form-control" name="animal_name">
+                            <input type="text" class="form-control" name="animal_location">
                         </div>
                         <div class="mb-3 cad-animal-content-input">
                             <label for="exampleFormControlInput1" class="form-label">Estado</label>
@@ -94,12 +94,12 @@
                         </div>
                         <div class="mb-3 cad-animal-content-input">
                             <label for="exampleFormControlInput1" class="form-label">Cadastro OESA</label>
-                            <input type="text" class="form-control" name="animal_name">
+                            <input type="text" class="form-control" name="oesa_cad">
                         </div>
                         <div class="mb-3 cad-animal-content-input">
                             <label for="exampleFormControlInput1" class="form-label">Numero de animais existente na
                                 propriedade</label>
-                            <input type="text" class="form-control" name="animal_name">
+                            <input type="text" class="form-control" name="number_existing_equines">
                         </div>
 
                     </div>
