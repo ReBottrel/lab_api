@@ -128,7 +128,7 @@
             </table>
             </p>
             <div class="image">
-                @foreach ($resenhas as $resenha)
+                @foreach ($resenhas as $key => $resenha)
                     <div class="side-{{ $resenha->resenha }}">
                         <img src="{{ $resenha->localization }}" alt="">
                     </div>
