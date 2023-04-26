@@ -19,7 +19,7 @@ class AddressController extends Controller
 
     public function estados()
     {
-        $https = Http::withOptions([
+        $https = Http::withoutVerifying()->withOptions([
             ["verify" => false],
         ])->get("https://servicodados.ibge.gov.br/api/v1/localidades/estados");
 
@@ -29,7 +29,7 @@ class AddressController extends Controller
     }
     public function cidades(Request $request)
     {
-        $https = Http::withOptions([
+        $https = Http::withoutVerifying()->withOptions([
             ["verify" => false],
 
         ])->get("https://servicodados.ibge.gov.br/api/v1/localidades/estados/{$request->state_id}/municipios");
