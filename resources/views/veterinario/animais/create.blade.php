@@ -84,37 +84,11 @@
                         </div>
                         <div class="mb-3 cad-animal-content-input">
                             <label for="exampleFormControlInput1" class="form-label">Estado</label>
-                            <option value="AC">Acre</option>
-                            <option value="AL">Alagoas</option>
-                            <option value="AP">Amapá</option>
-                            <option value="AM">Amazonas</option>
-                            <option value="BA">Bahia</option>
-                            <option value="CE">Ceará</option>
-                            <option value="DF">Distrito Federal</option>
-                            <option value="ES">Espírito Santo</option>
-                            <option value="GO">Goiás</option>
-                            <option value="MA">Maranhão</option>
-                            <option value="MT">Mato Grosso</option>
-                            <option value="MS">Mato Grosso do Sul</option>
-                            <option value="MG">Minas Gerais</option>
-                            <option value="PA">Pará</option>
-                            <option value="PB">Paraíba</option>
-                            <option value="PR">Paraná</option>
-                            <option value="PE">Pernambuco</option>
-                            <option value="PI">Piauí</option>
-                            <option value="RJ">Rio de Janeiro</option>
-                            <option value="RN">Rio Grande do Norte</option>
-                            <option value="RS">Rio Grande do Sul</option>
-                            <option value="RO">Rondônia</option>
-                            <option value="RR">Roraima</option>
-                            <option value="SC">Santa Catarina</option>
-                            <option value="SP">São Paulo</option>
-                            <option value="SE">Sergipe</option>
-                            <option value="TO">Tocantins</option>
-                            <option value="EX">Estrangeiro</option>
+                            <select name="state" id="state" class="form-control">
+                            </select>
                         </div>
                         <div class="mb-3 cad-animal-content-input">
-                            <label for="exampleFormControlInput1" class="form-label">Cidade</label>
+                            <label for="exampleFormControlInput1" class="form-label">Estado</label>
                             <select name="city" id="city" class="form-control">
                             </select>
                         </div>
@@ -220,60 +194,69 @@
                 $('#idade').prop('disabled', true);
             });
 
+            $.ajax({
+                url: '{{ route('get.states') }}',
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    $.each(data, function(index, val) {
+                        $('#state').append('<option value="' + val.id + '">' + val.nome +
+                            '</option>');
+                    });
 
+                }
+            });
             $(document).on('change', '#state', function() {
                 var state_id = $(this).val();
-                $('#city').empty();
                 $.ajax({
-                    url: 'http://educacao.dadosabertosbr.com/api/cidades/',
+                    url: '{{ route('get.cities') }}',
                     type: 'GET',
                     dataType: 'json',
                     data: {
                         state_id: state_id
                     },
                     success: function(data) {
+                        $('#city').empty();
                         $.each(data, function(index, val) {
                             $('#city').append('<option value="' + val.id + '">' + val
                                 .nome +
                                 '</option>');
                         });
-
                     }
                 });
             });
-        });
 
-        $('.btnNext').click(function() {
-            var $this = $(this);
-            var $current = $this.parents('fieldset');
-            var $next = $current.next('fieldset');
+            $('.btnNext').click(function() {
+                var $this = $(this);
+                var $current = $this.parents('fieldset');
+                var $next = $current.next('fieldset');
 
-            $current.animate({
-                opacity: 0
-            }, 500, function() {
-                $current.addClass('hidden');
-                $next.removeClass('hidden');
-                $next.animate({
-                    opacity: 1
-                }, 500);
+                $current.animate({
+                    opacity: 0
+                }, 500, function() {
+                    $current.addClass('hidden');
+                    $next.removeClass('hidden');
+                    $next.animate({
+                        opacity: 1
+                    }, 500);
+                });
             });
-        });
 
-        $('.btnPrev').click(function() {
-        var $this = $(this);
-        var $current = $this.parents('fieldset');
-        var $prev = $current.prev('fieldset');
+            $('.btnPrev').click(function() {
+                var $this = $(this);
+                var $current = $this.parents('fieldset');
+                var $prev = $current.prev('fieldset');
 
-        $current.animate({
-            opacity: 0
-        }, 500, function() {
-            $current.addClass('hidden');
-            $prev.removeClass('hidden');
-            $prev.animate({
-                opacity: 1
-            }, 500);
-        });
-        });
+                $current.animate({
+                    opacity: 0
+                }, 500, function() {
+                    $current.addClass('hidden');
+                    $prev.removeClass('hidden');
+                    $prev.animate({
+                        opacity: 1
+                    }, 500);
+                });
+            });
         });
     </script>
 @endsection
