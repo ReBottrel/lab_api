@@ -25,6 +25,7 @@ use App\Http\Controllers\Admin\DataColetaController;
 use App\Http\Controllers\Admin\AnimalOrderController;
 use App\Http\Controllers\User\UserDashboardController;
 use App\Http\Controllers\Admin\ApiMangalargaController;
+use App\Http\Controllers\Admin\AppOrderController;
 use App\Http\Controllers\Admin\HomeController as Admin;
 use App\Http\Controllers\Admin\SpeciesBreedsController;
 use App\Http\Controllers\Veterinario\AuthVetController;
@@ -119,7 +120,9 @@ Route::middleware(['auth:admin'])->group(function () {
 
     Route::get('owner/{id}', [OrderController::class, 'owner'])->name('orders.owner');
 
-   
+    Route::get('orders-vet', [OrderController::class, 'orderVet'])->name('orders.vet');
+    Route::get('orders-vet-detail/{id}', [OrderController::class, 'orderVetDetail'])->name('orders.vet.detail');
+    Route::post('app-order-status/{id}', [AppOrderController::class, 'status'])->name('app.order.status');
 
     Route::post('owner-store', [OwnerController::class, 'store'])->name('owner.store');
 

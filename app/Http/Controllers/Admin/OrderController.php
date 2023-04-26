@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 use App\Models\OrderRequestPayment;
 use App\Http\Controllers\Controller;
 use App\Models\DataColeta;
+use App\Models\ExamToAnimal;
 use App\Models\Sample;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
@@ -44,6 +45,36 @@ class OrderController extends Controller
 
         return view('admin.orders.orders-sistema', get_defined_vars());
     }
+
+    public function orderVet()
+    {
+        $orders = OrderRequest::where('origin', 'app')->where('status', '!=', 0)->where('status', '!=', 5)->where('status', '!=', 7)->orderBy('id', 'desc')->paginate(10);
+        return view('admin.orders.orders-vet', get_defined_vars());
+    }
+    public function orderVetDetail($id)
+    {
+        $order = OrderRequest::find($id);
+        $pedido = PedidoAnimal::where('id_pedido', $id)->first();
+        $animal = Animal::where('id', $pedido->id_animal)->first();
+        $samples = Sample::get();
+        $exames = ExamToAnimal::where('order_id', $id)->get();
+        $stats = [
+            1 => 'Aguardando amostra',
+            2 => 'Amostra recebida',
+            3 => 'Em análise',
+            4 => 'Análise concluída',
+            5 => 'Resultado disponível',
+            6 => 'Análise reprovada',
+            7 => 'Análise Aprovada',
+            8 => 'Recoleta solicitada',
+            9 => 'Amostra paga',
+            10 => 'Pedido Concluído',
+            11 => 'Aguardando Pagamento'
+
+        ];
+        return view('admin.orders.order-vet-detail', get_defined_vars());
+    }
+
     public function orderSistemaDetail($id)
     {
         $order = OrderRequest::find($id);
