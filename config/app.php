@@ -79,6 +79,9 @@ return [
     | to any of the locales which will be supported by the application.
     |
     */
+    'curl_options' => [
+        CURLOPT_SSLVERSION => CURL_SSLVERSION_TLSv1_2,
+    ],
 
     'locale' => 'pt_BR',
 
