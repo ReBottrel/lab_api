@@ -21,7 +21,7 @@ class AddressController extends Controller
     {
         $https = Http::withoutVerifying()->withOptions([
             ["verify" => false],
-        ])->get("https://servicodados.ibge.gov.br/api/v1/localidades/estados");
+        ])->get("https://brasilapi.com.br/api/ibge/uf/v1");
 
         $dados = json_decode($https->body());
 
@@ -32,7 +32,7 @@ class AddressController extends Controller
         $https = Http::withoutVerifying()->withOptions([
             ["verify" => false],
 
-        ])->get("https://servicodados.ibge.gov.br/api/v1/localidades/estados/{$request->state_id}/municipios");
+        ])->get("https://brasilapi.com.br/api/ibge/municipios/v1/{$request->estado}");
 
         $dados = json_decode($https->body());
 
