@@ -149,7 +149,7 @@
                             <label for="exampleFormControlInput1" class="form-label">Pelagem</label>
                             <select name="fur" id="" class="form-control">
                                 @foreach ($furs as $fur)
-                                    <option value="{{ $fur->id }}">{{ $fur->name }}</option>
+                                    <option value="{{ $fur->name }}">{{ $fur->name }}</option>
                                 @endforeach
                             </select>
                         </div>
