@@ -130,6 +130,14 @@
                             <label for="exampleFormControlInput1" class="form-label">Numero da requisição MORMO</label>
                             <input type="text" class="form-control" name="numero_mormo">
                         </div>
+                        <div class="buttons">
+                            <div class="my-3 text-end">
+                                <button type="button" class="btnPrev btn btn-alt-1">Anterior</button>
+                            </div>
+                            <div class="my-3 text-end">
+                                <button type="button" class="btnNext btn btn-alt-1">Próximo</button>
+                            </div>
+                        </div>
                     </div>
                 </fieldset>
                 <fieldset class="hidden">
