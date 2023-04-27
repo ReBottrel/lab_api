@@ -268,8 +268,9 @@ class OrderController extends Controller
             if ($request->value == 7) {
                 $response = Http::post('https://api.z-api.io/instances/3B30881EC3E99084D3D3B6927F6ADC67/token/66E633717A0DCDD3D4A1BC19/send-text', [
                     "phone" => "55$telefoneOwner",
-                    "message" => "Prezado Criador,
-                    A amostra do animal $animal->animal_name foi recebida e APROVADA para realização do exame de DNA no Laboratório Loci"
+                    "message" => "Prezado Criador, a amostra do animal $animal->animal_name foi recebida e APROVADA para
+                    realização do exame de DNA no laboratório Loci.
+                    Em breve você receberá o Link para liberação do pagamento."
                 ]);
                 $order->update([
                     'status' => 4,
