@@ -9,7 +9,7 @@
                         <img src="{{ asset('vet/img/resenha.png') }}" alt="">
                     </div>
                     <div>
-                        <p>Resenha</p>
+                        <p>Criar Resenha</p>
                     </div>
                 </div>
 
@@ -20,14 +20,14 @@
                         <img src="{{ asset('vet/img/animais.png') }}" alt="">
                     </div>
                     <div>
-                        <p>Animais</p>
+                        <p>Criar Pedido</p>
                     </div>
                 </div>
 
             </div>
 
         </div>
-        <div class="content row justify-content-around">
+        {{-- <div class="content row justify-content-around">
             <div class="col-4 menu-content" id="owner">
                 <div class="mt-3">
                     <div>
@@ -50,7 +50,7 @@
                 </div>
 
             </div>
-        </div>
+        </div> --}}
     </div>
 @endsection
 @section('js')
@@ -63,7 +63,7 @@
                 window.location.href = "{{ route('vet.owner.index') }}";
             });
             $(document).on('click', '#animal', function() {
-                window.location.href = "{{ route('vet.animal.index') }}";
+                window.location.href = "{{ route('vet.order.owner.select') }}";
             });
             $(document).on('click', '#configs', function() {
                 window.location.href = "{{ route('vet.configs') }}";

@@ -18,5 +18,6 @@ class Exam extends Model
         'requests',
         'extra_value',
         'status',
+        'type',
     ];
 }

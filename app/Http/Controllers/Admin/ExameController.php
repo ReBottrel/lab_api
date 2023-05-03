@@ -17,7 +17,6 @@ class ExameController extends Controller
     {
         $exames = Exam::paginate(6);
         return view('admin.exames', get_defined_vars());
-        
     }
 
     /**
@@ -46,6 +45,7 @@ class ExameController extends Controller
             'short_description' => $request->short_description,
             'value' => str_replace(['.', ','], ['', '.'], $request->value),
             'extra_value' => str_replace(['.', ','], ['', '.'], $request->extra_value),
+
         ]);
 
         return redirect()->back()->with('success', 'Exame criado com sucesso!');
@@ -92,6 +92,7 @@ class ExameController extends Controller
             'short_description' => $request->short_description,
             'value' => str_replace(['.', ','], ['', '.'], $request->value),
             'extra_value' => str_replace(['.', ','], ['', '.'], $request->extra_value),
+
         ]);
 
         return redirect()->back()->with('success', 'Exame alterado com sucesso!');

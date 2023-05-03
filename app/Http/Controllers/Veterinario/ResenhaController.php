@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Veterinario;
 
 use App\Models\Fur;
+use App\Models\User;
 use App\Models\Breed;
 use App\Models\Owner;
 use App\Models\Animal;
@@ -15,12 +16,14 @@ use Illuminate\Http\Request;
 use App\Models\ResenhaAnimal;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Mail;
+
 
 class ResenhaController extends Controller
 {
     public function animalCreate($id)
     {
-        $order = $id;
+        $pedido = $id;
         $especies = Specie::all();
         $breeds = Breed::all();
         $furs = Fur::all();
@@ -29,29 +32,48 @@ class ResenhaController extends Controller
 
     public function animalSelect($id)
     {
-        $order = OrderRequest::find($id);
-        $animals = Animal::where('user_id', $order->user_id)->get();
+        $pedido = PedidoAnimal::find($id);
+        $owner = Owner::find($pedido->owner_id);
+        $user = User::where('id', $owner->user_id)->first();
+        $animals = Animal::where('user_id', $user->id)->get();
         return view('veterinario.animal-select', get_defined_vars());
     }
+
+
+
     public function animalUpdate(Request $request)
     {
         $animal = Animal::find($request->animal_id);
-        $order = OrderRequest::find($request->order_id);
-        $pedido = PedidoAnimal::create([
-            'id_pedido' => $request->order_id,
+        $pedido = PedidoAnimal::find($request->pedido);
+        $pedido->update([
             'id_animal' => $request->animal_id,
-            'owner_id' => $order->owner_id,
-            'user_id' => auth()->user()->id,
-            'status' => 1,
         ]);
-        return redirect()->route('resenha.step1', $pedido->id);
+        return redirect()->route('animal.update.view', $pedido->id);
+    }
+
+    public function animalUpdateView($id)
+    {
+        $pedido = $id;
+        $animal = Animal::find($id);
+
+        return view('veterinario.resenha.update-animal-select', get_defined_vars());
+    }
+
+    public function UpdateData(Request $request, $id)
+    {
+        $animal = Animal::find($id);
+        $animal->update([
+            'collect_date' => $request->collect_date,
+            'birth_date' => $request->birth_date,
+        ]);
+        return redirect()->route('resenha.step1', $request->pedido);
     }
 
     public function animalStore(Request $request)
     {
         $order = OrderRequest::find($request->order);
+        $pedido = PedidoAnimal::find($request->pedido_id);
         $animal = Animal::create([
-            'user_id' => $order->user_id,
             'vet_id' => auth()->user()->id,
             'order_id' => $request->order,
             'register_number_brand' => $request->register_number_brand,
@@ -72,18 +94,18 @@ class ResenhaController extends Controller
             'numero_aie' => $request->numero_aie,
             'numero_mormo' => $request->numero_mormo,
             'collect_date' => $request->collect_date,
+            'portaria_habilitacao' => $request->portaria_habilitacao,
+            'utility' => $request->utility,
+            'classification' => $request->classification,
+            'number_existing_equines' => $request->number_existing_equines,
 
         ]);
 
-        $pedido = PedidoAnimal::create([
-            'id_pedido' => $request->order,
+        $pedido = $pedido->update([
             'id_animal' => $animal->id,
-            'owner_id' => $order->owner_id,
-            'user_id' => auth()->user()->id,
-            'status' => 1,
         ]);
 
-        return redirect()->route('resenha.step1', $pedido->id);
+        return redirect()->route('resenha.step1', $request->pedido_id);
     }
     public function step1($id)
     {
@@ -147,8 +169,19 @@ class ResenhaController extends Controller
             'pedido' => $request->pedido_id,
         ]);
 
+        // Envio do e-mail
+
+
         return response()->json(['message' => 'Imagem salva com sucesso!']);
     }
+
+    public function finishResenha($id)
+    {
+        $pedido = PedidoAnimal::find($id);
+
+        return view('veterinario.resenha.finish', get_defined_vars());
+    }
+
     public function viewResenha($id)
     {
         $resenhas = ResenhaAnimal::where('pedido', $id)->get();

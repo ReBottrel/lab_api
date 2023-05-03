@@ -47,6 +47,7 @@ class Animal extends Model
         'numero_aie',
         'numero_mormo',
         'collect_date',
+        'portaria_habilitacao',
     ];
 
     public function owner()

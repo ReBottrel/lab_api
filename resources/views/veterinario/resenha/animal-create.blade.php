@@ -5,7 +5,7 @@
     <div class="">
         <div class="cad-animal">
             <form action="{{ route('animal.store') }}" method="post">
-                <input type="hidden" name="order" value="{{ $order }}">
+               <input type="hidden" name="pedido_id" value="{{ $pedido }}">
                 @csrf
                 <fieldset>
                     <div class="cad-animal-content">
@@ -32,9 +32,9 @@
                         </div>
                         <div class="mb-3 cad-animal-content-input">
                             <label for="exampleFormControlInput1" class="form-label">Espécie</label>
-                            <select name="species" id="" class="form-control">
+                            <select name="especies" id="" class="form-control">
                                 @foreach ($especies as $especie)
-                                    <option value="{{ $especie->id }}">{{ $especie->name }}</option>
+                                    <option value="{{ $especie->name }}">{{ $especie->name }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -42,7 +42,7 @@
                             <label for="exampleFormControlInput1" class="form-label">Raça</label>
                             <select name="breed" id="" class="form-control">
                                 @foreach ($breeds as $raca)
-                                    <option value="{{ $raca->id }}">{{ $raca->name }}</option>
+                                    <option value="{{ $raca->name }}">{{ $raca->name }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -53,10 +53,7 @@
                                 <option value="F">Fêmea</option>
                             </select>
                         </div>
-                        <div class="mb-3 cad-animal-content-input">
-                            <label for="exampleFormControlInput1" class="form-label">Idade</label>
-                            <input type="text" class="form-control" name="age" id="idade">
-                        </div>
+
                         <div class="mb-3 cad-animal-content-input">
                             <label for="exampleFormControlInput1" class="form-label">Data de nascimento</label>
                             <input type="date" class="form-control" name="birth_date" id="birth_date">
@@ -88,7 +85,7 @@
                             </select>
                         </div>
                         <div class="mb-3 cad-animal-content-input">
-                            <label for="exampleFormControlInput1" class="form-label">Estado</label>
+                            <label for="exampleFormControlInput1" class="form-label">Municipio</label>
                             <select name="city" id="city" class="form-control">
                             </select>
                         </div>
@@ -130,6 +127,10 @@
                             <label for="exampleFormControlInput1" class="form-label">Numero da requisição MORMO</label>
                             <input type="text" class="form-control" name="numero_mormo">
                         </div>
+                        <div class="mb-3 cad-animal-content-input">
+                            <label for="exampleFormControlInput1" class="form-label">Portaria de habilitação</label>
+                            <input type="text" class="form-control" name="portaria_habilitacao">
+                        </div>
                         <div class="buttons">
                             <div class="my-3 text-end">
                                 <button type="button" class="btnPrev btn btn-alt-1">Anterior</button>
@@ -152,6 +153,14 @@
                                     <option value="{{ $fur->name }}">{{ $fur->name }}</option>
                                 @endforeach
                             </select>
+                        </div>
+                        <div class="mb-3 cad-animal-content-input">
+                            <label for="exampleFormControlInput1" class="form-label">Utilidade</label>
+                            <input type="text" class="form-control" name="utility">
+                        </div>
+                        <div class="mb-3 cad-animal-content-input">
+                            <label for="exampleFormControlInput1" class="form-label">Classificação</label>
+                            <input type="text" class="form-control" name="classification">
                         </div>
                         <div class="mb-3 cad-animal-content-input">
                             <label for="exampleFormControlInput1" class="form-label">Descrição e Observação</label>

@@ -5,7 +5,8 @@
         <div class="container">
             <div id="output"></div>
             <div class="mb-3">
-                <select class="js-example-basic-multiple" id="select-exam" name="exames[]" multiple="multiple">
+                <select class="js-example-basic-single" id="select-exam" name="exame">
+                    <option value="">Selecione o exame</option>
                     @foreach ($exames as $exame)
                         <option data-value="{{ $exame->value }}" value="{{ $exame->id }}">{{ $exame->title }} |
                             {{ 'R$ ' . number_format($exame->value, 2, ',', '.') }} </option>
@@ -38,7 +39,7 @@
 @section('js')
     <script>
         $(document).ready(function() {
-            $('.js-example-basic-multiple').select2({
+            $('.js-example-basic-single').select2({
                 placeholder: "Selecione o exame",
                 allowClear: true,
                 width: '100%',
@@ -47,22 +48,21 @@
         $(document).ready(function() {
             var total = 0;
             $('#select-exam').change(function() {
-                var exames = $('#select-exam').val();
+                var exame = $('#select-exam').val();
                 var total = 0;
-                exames.forEach(element => {
-                    var value = $('option[value=' + element + ']').data('value');
-                    total += value;
-                });
-                if (total > 0) {
-                    $('#create-order').removeClass('d-none');
-                } else {
+                if (!exame) {
                     $('#create-order').addClass('d-none');
+                } else {
+                    $('#create-order').removeClass('d-none');
                 }
+                var value = $('#select-exam option:selected').attr('data-value');
+                total += parseFloat(value);
+
                 $('#total').html('Total: R$ ' + total.toFixed(2).replace('.', ','));
                 $('#total-input').val(total);
             });
             $('#create-order').click(function() {
-                var exames = $('#select-exam').val();
+                var exame = $('#select-exam').val();
                 var total = $('#total-input').val();
                 var pedido = $('#pedido').val();
                 var data = $('#data').val();
@@ -70,19 +70,26 @@
                     url: "{{ route('vet.order.finish') }}",
                     type: "POST",
                     data: {
-                        exames: exames,
+                        exame: exame,
                         total: total,
                         pedido: pedido,
                         data: data,
                         _token: "{{ csrf_token() }}"
                     },
+                    beforeSend: function() {
+                        $('#output').html(
+                            '<div class="alert alert-info" role="alert">Finalizando resenha...</div>'
+                        );
+                        $("#create-order").prop("disabled", true);
+                    },
                     success: function(response) {
                         if (response.success == true) {
                             $('#output').html(
-                                '<div class="alert alert-success" role="alert">Pedido finalizado com sucesso!</div>'
-                                );
+                                '<div class="alert alert-success" role="alert">Resenha finalizada com sucesso!</div>'
+                            );
                             setTimeout(function() {
-                                window.location.href = "{{ route('vet.index') }}";
+                                window.location.href = "{{ url('/vet/finish') }}" +
+                                    '/' + pedido;
                             }, 2000);
                         }
 

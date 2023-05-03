@@ -60,6 +60,11 @@ $(document).ready(function () {
                 console.log(data);
                 for (i in data) {
                     $('#edit-exame').find(`[name="${i}"]`).val(data[i]);
+                    if (data[i] == 'sorologia') {
+                        $('#tipo').removeClass('d-none');
+                    } else if (data[i] == 'dna') {
+                        $('#tipo').addClass('d-none');
+                    }
                 }
             }
         });
@@ -130,7 +135,7 @@ $(document).ready(function () {
         width: '100%',
     });
 
-    
+
     // $('#cep').mask('99999-999');
     $('#fone').mask('(99) 99999-9999');
     $('#cell').mask('(99) 99999-9999');

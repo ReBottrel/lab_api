@@ -9,6 +9,7 @@ use App\Models\OrderRequestPayment;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Models\Animal;
+use App\Models\SorologiaDate;
 use Illuminate\Support\Facades\Http;
 
 class AppOrderController extends Controller
@@ -96,5 +97,32 @@ class AppOrderController extends Controller
         \Log::channel('admins_actions')->info(['Usuário', auth()->user()->name], ['Alterou status de:', $animal->animal_name, 'para', $request->value]);
 
         return response()->json($animal);
+    }
+
+    public function updateData(Request $request)
+    {
+
+        $data = [];
+        if ($request->has('data_recebimento')) {
+            $data['data_recebimento'] = $request->data_recebimento;
+        }
+        if ($request->has('data_resultado')) {
+            $data['data_resultado'] = $request->data_resultado;
+        }
+        if ($request->has('numero_aie')) {
+            $data['numero_aie'] = $request->numero_aie;
+        }
+        if ($request->has('numero_mormo')) {
+            $data['numero_mormo'] = $request->numero_mormo;
+        }
+        if ($request->has('pedido')) {
+            $data['pedido_id'] = $request->pedido;
+        }
+
+        $datas = SorologiaDate::updateOrCreate(
+            ['animal_id' => $request->id_animal],
+            $data
+        );
+        return response()->json($datas);
     }
 }

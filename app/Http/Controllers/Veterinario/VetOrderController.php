@@ -12,6 +12,7 @@ use App\Models\Exam;
 use App\Models\ExamToAnimal;
 use App\Models\PedidoAnimal;
 use PhpOffice\PhpSpreadsheet\Calculation\Statistical\Distributions\F;
+use Illuminate\Support\Facades\Mail;
 
 class VetOrderController extends Controller
 {
@@ -54,23 +55,25 @@ class VetOrderController extends Controller
         // dd($request->prop);
 
         $owner = Owner::find($request->owner_id);
-        $user = User::where('id', $owner->user_id)->first();
-        $order = OrderRequest::create([
-            'user_id' => $user->id,
-            'creator' => $owner->owner_name,
-            'technical_manager' => auth()->user()->name,
-            'owner_id' => $owner->id,
-            'id_tecnico' => auth()->user()->id,
-            'status' => 7,
+        $pedido = PedidoAnimal::create([
+            'owner_id' => $request->owner_id,
+            'user_id' => auth()->user()->id,
+            'status' => 20,
         ]);
 
-
         if ($request->prop == 1) {
-            return redirect()->route('animal.create', $order->id);
+            return redirect()->route('animal.create', $pedido->id);
         } else {
-            return redirect()->route('vet.animal.select', $order->id);
+            return redirect()->route('vet.animal.select', $pedido->id);
         }
     }
+
+    public function ownerSelect()
+    {
+        $owners = Owner::where('vet_id', auth()->user()->id)->get();
+        return view('veterinario.order.select-owner', get_defined_vars());
+    }
+
     public function createOrder($id)
     {
         $pedido = PedidoAnimal::find($id);
@@ -85,22 +88,22 @@ class VetOrderController extends Controller
         $pedido = PedidoAnimal::find($request->pedido);
         $order = OrderRequest::find($pedido->id_pedido);
 
-        foreach ($request->exames as $exame) {
-            $ex = Exam::find($exame);
-            $exam = ExamToAnimal::create([
-                'exam_id' => $exame,
-                'animal_id' => $pedido->id_animal,
-                'order_id' => $pedido->id_pedido,
-                'status' => 1,
-                'total_price' => $ex->value,
-            ]);
-        }
 
-        $order->update([
+        $ex = Exam::find($request->exame);
+        $exam = ExamToAnimal::create([
+            'exam_id' => $request->exame,
+            'animal_id' => $pedido->id_animal,
+            'order_id' => $pedido->id_pedido,
             'status' => 1,
-            'total_price' => $request->total,
-            'origin' => 'app',
+            'total_price' => $ex->value,
         ]);
+
+
+        // Envio do e-mail
+        Mail::send('mails.nova_resenha', ['data' => $request->pedido], function ($message) {
+            $message->to(auth()->user()->email,  auth()->user()->name)
+                ->subject('Nova resenha cadastrada');
+        });
 
         return response()->json([
             'success' => true,
@@ -108,6 +111,40 @@ class VetOrderController extends Controller
         ]);
     }
 
+    public function listItens(Request $request)
+    {
+        $pedidos = PedidoAnimal::where('owner_id', $request->owner)->where('status', 20)->get();
+        $owner = Owner::find($request->owner);
+        return view('veterinario.order.order-new', get_defined_vars());
+    }
+
+    public function createNewOrder(Request $request)
+    {
+        $owner = Owner::find($request->owner);
+        $order = OrderRequest::create([
+            'owner_id' => $request->owner,
+            'creator' => $owner->owner_name,
+            'technical_manager' => auth()->user()->name,
+            'user_id' => $owner->user_id,
+            'id_tecnico' => auth()->user()->id,
+            'status' => 1,
+            'origin' => "app",
+        ]);
+
+        foreach ($request->pedidos as $pedido) {
+            $pedido = PedidoAnimal::find($pedido);
+            $pedido->update([
+                'status' => 1,
+                'id_pedido' => $order->id,
+            ]);
+            $animal = Animal::find($pedido->id_animal);
+            $animal->update([
+                'user_id' => $owner->user_id,
+            ]);
+        }
+
+        return redirect()->route('vet.index')->with('success', 'Pedido criado com sucesso!');
+    }
 
     /**
      * Display the specified resource.

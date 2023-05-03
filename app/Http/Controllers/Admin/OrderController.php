@@ -54,10 +54,10 @@ class OrderController extends Controller
     public function orderVetDetail($id)
     {
         $order = OrderRequest::find($id);
-        $pedido = PedidoAnimal::where('id_pedido', $id)->first();
-        $animal = Animal::where('id', $pedido->id_animal)->first();
+        $pedidos = PedidoAnimal::where('id_pedido', $id)->get();
+        // $animal = Animal::where('id', $pedido->id_animal)->first();
         $samples = Sample::get();
-        $exames = ExamToAnimal::where('order_id', $id)->get();
+   
         $stats = [
             1 => 'Aguardando amostra',
             2 => 'Amostra recebida',

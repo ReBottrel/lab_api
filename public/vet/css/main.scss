@@ -754,7 +754,7 @@ input {
 
 }
 
-.btn-alt-2{
+.btn-alt-2 {
     background: #ae67e4;
     color: #fff;
     border: 0;
@@ -771,4 +771,18 @@ input {
         color: #ae67e4;
         border: 1px solid #ae67e4;
     }
+}
+
+.list-itens {
+    background: #a5a4a4;
+    color: #000000;
+    padding: 20px;
+}
+
+.form-check-label {
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin: 10px;
+
 }

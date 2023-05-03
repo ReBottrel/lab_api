@@ -4,7 +4,7 @@
     <div class="lt-2 mt-5">
         <div class="container">
             <form action="{{ route('vet.animal.select.store') }}" method="post">
-                <input type="hidden" name="order_id" value="{{ $order->id }}">
+                <input type="hidden" name="pedido" value="{{ $pedido->id }}">
                 @csrf
                 <div class="my-4">
                     <h3>Selecione o Animal</h3>

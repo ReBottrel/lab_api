@@ -57,9 +57,11 @@
                                         class="btn btn-sm dropdown-toggle dropdown-toggle-split link-light"
                                         data-bs-toggle="dropdown" aria-expanded="false" type="button"></button>
                                     <div class="dropdown-menu">
-                                        <a class="dropdown-item" data-id="{{ $exame->id }}" data-bs-target="#edit-exame" data-bs-toggle="modal">Editar</a>
+                                        <a class="dropdown-item  edit" data-id="{{ $exame->id }}"
+                                            data-bs-target="#edit-exame" data-bs-toggle="modal">Editar</a>
                                         {{-- <a class="dropdown-item" href="#">Ver</a> --}}
-                                        <a class="dropdown-item btn-delete"  href="{{ route('exame.delete', $exame->id) }}">Excluir</a>
+                                        <a class="dropdown-item btn-delete"
+                                            href="{{ route('exame.delete', $exame->id) }}">Excluir</a>
                                     </div>
                                 </div>
                             </div>
@@ -85,10 +87,12 @@
                     <div class="modal-body">
                         <div>
                             <div style="margin: 0;margin-top: 10px;margin-bottom: 10px;"><label class="form-label">Categoria
-                                    do Exame</label><select class="form-select" name="category">
+                                    do Exame</label><select class="form-select" id="category-create" name="category">
                                     <option value="dna">DNA</option>
                                     <option value="sorologia">SOROLOGIA</option>
-                                </select></div>
+                                </select>
+                            </div>
+                    
                             <div style="margin: 0;margin-top: 10px;margin-bottom: 10px;">
                                 <label class="form-label">Espécie</label>
                                 <select class="form-select" name="animal">
@@ -136,11 +140,14 @@
                     <div class="modal-body">
                         <input type="hidden" name="id">
                         <div>
-                            <div style="margin: 0;margin-top: 10px;margin-bottom: 10px;"><label class="form-label">Categoria
-                                    do Exame</label><select class="form-select" name="category">
+                            <div style="margin: 0;margin-top: 10px;margin-bottom: 10px;"><label
+                                    class="form-label">Categoria
+                                    do Exame</label><select class="form-select" id="category" name="category">
                                     <option value="dna">DNA</option>
-                                    <option value="sorologia">SOROLOGIA</option>
-                                </select></div>
+                                    <option value="sorologia" id="sorologia">SOROLOGIA</option>
+                                </select>
+                            </div>
+                 
                             <div style="margin: 0;margin-top: 10px;margin-bottom: 10px;">
                                 <label class="form-label">Espécie</label>
                                 <select class="form-select" name="animal">
@@ -149,7 +156,8 @@
                                     <option value="asininos_muares">ASININOS E MUARES</option>
                                 </select>
                             </div>
-                            <div style="margin: 0;margin-top: 10px;margin-bottom: 10px;"><label class="form-label">Titulo do
+                            <div style="margin: 0;margin-top: 10px;margin-bottom: 10px;"><label class="form-label">Titulo
+                                    do
                                     exame</label><input class="form-control" type="text" name="title"></div>
                             <div style="margin: 0;margin-top: 10px;margin-bottom: 10px;">
                                 <label class="form-label">Preço do
@@ -175,4 +183,15 @@
             </div>
         </div>
     </div>
+@endsection
+@section('js')
+    <script>
+        $('#category-create').change(function() {
+            if ($(this).val() == 'sorologia') {
+                $('#tipo-create').removeClass('d-none')
+            } else {
+                $('#tipo-create').addClass('d-none')
+            }
+        })
+    </script>
 @endsection

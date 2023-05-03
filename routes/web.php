@@ -246,6 +246,8 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::post('/data-store-resultado', [DataColetaController::class, 'updateData'])->name('datas.resultado.store');
     Route::post('/sample-update', [DataColetaController::class, 'updateTipo'])->name('datas.sample.store');
 
+    Route::post('/data-store-sorologia', [AppOrderController::class, 'updateData'])->name('datas.store');
+
     Route::get('teste-draw', [TesteController::class, 'index']);
     Route::post('teste-draw-store', [TesteController::class, 'store'])->name('teste.draw');
     Route::get('teste-draw-show', [TesteController::class, 'show'])->name('teste.draw.show');
@@ -299,6 +301,16 @@ Route::middleware(['auth:veterinario'])->prefix('vet')->group(function () {
     Route::post('resenha-store-step-1', [ResenhaController::class, 'store'])->name('resenha.store.step1');
 
     Route::post('order-store-finish', [VetOrderController::class, 'storeOrder'])->name('vet.order.finish');
+    Route::get('finish/{id}', [ResenhaController::class, 'finishResenha'])->name('finish');
+
+    Route::get('order-owner-select', [VetOrderController::class, 'ownerSelect'])->name('vet.order.owner.select');
+
+    Route::get('animal-update-view/{id}', [ResenhaController::class, 'animalUpdateView'])->name('animal.update.view');
+    Route::post('animal-update-data/{id}', [ResenhaController::class, 'UpdateData'])->name('animal.update.data');
+
+    Route::post('order-list-itens', [VetOrderController::class, 'listItens'])->name('vet.order.list.itens');
+    Route::post('store-new-order', [VetOrderController::class, 'createNewOrder'])->name('vet.order.store.new');
+
 
     Route::get('configs', [VetConfigController::class, 'index'])->name('vet.configs');
     Route::post('configs-store', [VetConfigController::class, 'updateUser'])->name('vet.configs.store');
