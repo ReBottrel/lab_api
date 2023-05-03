@@ -16,6 +16,8 @@ use Illuminate\Http\Request;
 use App\Models\ResenhaAnimal;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Http\Controllers\Controller;
+use App\Models\Exam;
+use App\Models\ExamToAnimal;
 use Illuminate\Support\Facades\Mail;
 
 
@@ -190,6 +192,8 @@ class ResenhaController extends Controller
         $order = OrderRequest::find($pedido->id_pedido);
         $owner = Owner::find($pedido->owner_id);
         $veterinario = Veterinario::find($pedido->user_id);
+        $exam = ExamToAnimal::where('animal_id', $pedido->id_animal)->first();
+        $exame = Exam::where('id', $exam->exam_id)->first();
         return view('veterinario.resenha.view-resenha', get_defined_vars());
     }
 }
