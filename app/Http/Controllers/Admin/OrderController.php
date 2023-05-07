@@ -17,6 +17,8 @@ use App\Http\Controllers\Controller;
 use App\Models\DataColeta;
 use App\Models\ExamToAnimal;
 use App\Models\Sample;
+use App\Models\UserInfo;
+use App\Models\Veterinario;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 use Rap2hpoutre\FastExcel\FastExcel;
@@ -57,7 +59,7 @@ class OrderController extends Controller
         $pedidos = PedidoAnimal::where('id_pedido', $id)->get();
         // $animal = Animal::where('id', $pedido->id_animal)->first();
         $samples = Sample::get();
-   
+
         $stats = [
             1 => 'Aguardando amostra',
             2 => 'Amostra recebida',
@@ -367,72 +369,152 @@ class OrderController extends Controller
 
         $order_request = OrderRequest::with('user', 'tecnico', 'owner')->find($request->order);
 
-        $owner = Owner::where('user_id', $order_request->user_id)->first();
-        $animals = Animal::where('order_id', $request->order)->where('status', 7)->get();
-        foreach ($animals as $animal) {
-            switch ($animal->especies) {
-                case 'BOVINA':
-                    $exam = Exam::find(4);
-                    break;
-                case 'MUARES':
-                case 'ASININA':
-                case 'EQUINO_PEGA':
-                    $exam = Exam::find(20);
-                    break;
-                case 'EQUINA':
-                    $exam = Exam::find(4);
-                    break;
-                default:
-                    $exam = Exam::find(4);
-                    break;
+        if ($order_request->origin == 'sistema' || $order_request->origin == 'API') {
+
+            $owner = Owner::where('user_id', $order_request->user_id)->first();
+            $animals = Animal::where('order_id', $request->order)->where('status', 7)->get();
+            foreach ($animals as $animal) {
+                switch ($animal->especies) {
+                    case 'BOVINA':
+                        $exam = Exam::find(4);
+                        break;
+                    case 'MUARES':
+                    case 'ASININA':
+                    case 'EQUINO_PEGA':
+                        $exam = Exam::find(20);
+                        break;
+                    case 'EQUINA':
+                        $exam = Exam::find(4);
+                        break;
+                    default:
+                        $exam = Exam::find(4);
+                        break;
+                }
+                $orderPay = OrderRequestPayment::create([
+                    'order_request_id' => $request->order,
+                    'owner_name' => $order_request->owner->owner_name,
+                    'email' => $order_request->owner->email,
+                    'location' => $owner->propriety ?? 'Não informado',
+                    'exam_id' => $exam->id,
+                    'category' => $exam->category,
+                    'animal' => $animal->animal_name,
+                    'title' => $exam->title,
+                    'short_description' => $exam->short_description,
+                    'value' => $exam->value,
+                    'requests' => $exam->requests,
+                    'extra_value' => $exam->extra_value,
+                    'extra_requests' => $request->extra_requests ?? 0,
+                    'animal_id' => $animal->id,
+                    'category_exam' => $animal->especies
+                ]);
+                $animal->update([
+                    'status' => 11,
+                ]);
             }
-            $orderPay = OrderRequestPayment::create([
-                'order_request_id' => $request->order,
-                'owner_name' => $order_request->owner->owner_name,
-                'email' => $order_request->owner->email,
-                'location' => $owner->propriety ?? 'Não informado',
-                'exam_id' => $exam->id,
-                'category' => $exam->category,
-                'animal' => $animal->animal_name,
-                'title' => $exam->title,
-                'short_description' => $exam->short_description,
-                'value' => $exam->value,
-                'requests' => $exam->requests,
-                'extra_value' => $exam->extra_value,
-                'extra_requests' => $request->extra_requests ?? 0,
-                'animal_id' => $animal->id,
-                'category_exam' => $animal->especies
-            ]);
-            $animal->update([
-                'status' => 11,
-            ]);
-        }
 
-        $order_request->update([
-            'status' => 2,
-        ]);
-        $ordernew = OrderRequest::with('user', 'tecnico')->find($request->id);
-        $data = [];
-        $email = $order_request->owner->email;
+            $order_request->update([
+                'status' => 2,
+            ]);
+            $ordernew = OrderRequest::with('user', 'tecnico')->find($request->id);
+            $data = [];
+            $email = $order_request->owner->email;
 
-        $senha = str_replace(['.', '-', '/'], ['', '', ''], $owner->document);
-        $telefone = str_replace(['(', ')', '-', ' '], ['', '', '', ''],  $order_request->owner->cell);
-        $url = route('user.dashboard');
-        $response = Http::post('https://api.z-api.io/instances/3B30881EC3E99084D3D3B6927F6ADC67/token/66E633717A0DCDD3D4A1BC19/send-text', [
-            "phone" => "55$telefone",
-            "message" => "Prezado, Criador!
+            $senha = str_replace(['.', '-', '/'], ['', '', ''], $owner->document);
+            $telefone = str_replace(['(', ')', '-', ' '], ['', '', '', ''],  $order_request->owner->cell);
+            $url = route('user.dashboard');
+            $response = Http::post('https://api.z-api.io/instances/3B30881EC3E99084D3D3B6927F6ADC67/token/66E633717A0DCDD3D4A1BC19/send-text', [
+                "phone" => "55$telefone",
+                "message" => "Prezado, Criador!
             Segue abaixo o Link de acesso para clicar, efetuar o pagamento e liberar o(s) exame(s) para execução.
             Ao acessar, digite seu E-MAIL: $email no campo USUÁRIO e o seu CPF: $senha em senha.
             Selecione os animais para pagamento e defina o prazo de liberação do resultado (temos opções de 20 dias úteis a 24 horas)*.
             *os valores variam conforme o prazo de liberação.
             ",
-            "linkUrl" => $url,
-            "title" => "Locilab",
-            "linkDescription" => "LociLab e a melhor plataforma de exames de DNA do Brasil",
-        ]);
+                "linkUrl" => $url,
+                "title" => "Locilab",
+                "linkDescription" => "LociLab e a melhor plataforma de exames de DNA do Brasil",
+            ]);
 
-        Mail::to($email)->send(new \App\Mail\NewOrder($email, $senha));
-        return view('admin.success-page', get_defined_vars());
+            Mail::to($email)->send(new \App\Mail\NewOrder($email, $senha));
+            return response()->json($ordernew);
+        } elseif ($order_request->origin == 'app') {
+            $owner = Owner::where('id', $order_request->owner_id)->first();
+            $pedidos = PedidoAnimal::where('id_pedido', $request->order)->where('status', 7)->get();
+            foreach ($pedidos as $pedido) {
+                $animal = Animal::where('id', $pedido->id_animal)->first();
+                $exam = ExamToAnimal::where('animal_id', $animal->id)->first();
+                $exame = Exam::where('id', $exam->exam_id)->first();
+                $orderPay = OrderRequestPayment::create([
+                    'order_request_id' => $order_request->id,
+                    'owner_name' => $owner->owner_name,
+                    'email' => $owner->email,
+                    'location' => $animal->animal_location ?? 'Não informado',
+                    'exam_id' => $exam->exam_id,
+                    'category' => $exame->category,
+                    'animal' => $animal->animal_name,
+                    'title' => $exame->title,
+                    'short_description' => $exame->short_description,
+                    'value' => $exame->value,
+                    'requests' => $exame->requests,
+                    'extra_value' => $exame->extra_value,
+                    'animal_id' => $animal->id,
+                    'category_exam' => $animal->especies
+                ]);
+                $pedido->update([
+                    'status' => 11,
+                ]);
+            }
+
+
+            $veterinario = Veterinario::find($order_request->id_tecnico);
+            $senha = str_replace(['.', '-', '/'], ['', '', ''], $veterinario->cpf);
+            $telefone = str_replace(['(', ')', '-', ' '], ['', '', '', ''],  $veterinario->phone);
+            $user = User::where('email', $veterinario->email)->first();
+            if (!$user) {
+                $user = User::create([
+                    'name' => $veterinario->name,
+                    'email' => $veterinario->email,
+                    'password' => bcrypt($senha),
+                    'status' => 0,
+                ]);
+                $userinfo = UserInfo::create([
+                    'user_id' => $user->id,
+                    'document' => $veterinario->cpf,
+                    'aie' => $veterinario->portaria,
+                    'mormo' => $veterinario->portaria,
+                    'crm_uf' => $veterinario->crmv,
+                    'phone' => $veterinario->portaria,
+                    'zip_code' => $veterinario->cep,
+                    'address' => $veterinario->address,
+                    'number' => $veterinario->number,
+                    'complement' => $veterinario->complement,
+                    'district' => $veterinario->district,
+                    'city' => $veterinario->city,
+                    'state' => $veterinario->state,
+                    'status' => 1,
+                ]);
+            }
+            $email = $veterinario->email;
+
+            $url = route('user.dashboard');
+            $response = Http::post('https://api.z-api.io/instances/3B30881EC3E99084D3D3B6927F6ADC67/token/66E633717A0DCDD3D4A1BC19/send-text', [
+                "phone" => "55$telefone",
+                "message" => "Prezado, Veterinário!
+            Segue abaixo o Link de acesso para clicar, efetuar o pagamento e liberar o(s) exame(s) para execução.
+            Ao acessar, digite seu E-MAIL: $email no campo USUÁRIO e o seu CPF: $senha em senha.",
+                "linkUrl" => $url,
+                "title" => "Locilab",
+                "linkDescription" => "LociLab e a melhor plataforma de exames de DNA do Brasil",
+            ]);
+
+            $order_request->update([
+                'status' => 2,
+                'user_id' => $user->id,
+            ]);
+
+            Mail::to($email)->send(new \App\Mail\NewOrder($email, $senha));
+            return response()->json($order_request);
+        }
     }
 
 

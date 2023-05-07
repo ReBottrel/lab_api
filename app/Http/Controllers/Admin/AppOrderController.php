@@ -30,40 +30,12 @@ class AppOrderController extends Controller
             $telefoneTecnico = str_replace(['(', ')', '-', ' '], ['', '', '', ''],  $order->tecnico->cell);
             $telefoneOwner = str_replace(['(', ')', '-', ' '], ['', '', '', ''],  $order->owner->cell);
 
-            if ($request->value == 7) {
-                $response = Http::post('https://api.z-api.io/instances/3B30881EC3E99084D3D3B6927F6ADC67/token/66E633717A0DCDD3D4A1BC19/send-text', [
-                    "phone" => "55$telefoneTecnico",
-                    "message" => "Prezado Técnico,
-                    A amostra do animal $animal->animal_name foi recebida e APROVADA para realização do exame de DNA no Laboratório Loci.
-                    "
-                ]);
-            }
-            if ($request->value == 6) {
-                $response = Http::post('https://api.z-api.io/instances/3B30881EC3E99084D3D3B6927F6ADC67/token/66E633717A0DCDD3D4A1BC19/send-text', [
-                    "phone" => "55$telefoneTecnico",
-                    "message" => "Prezado Técnico,
-                    A amostra do animal $animal->animal_name  foi REPROVADA para a execução do exame de DNA no laboratório Loci.
-                    Solicitamos RECOLETAR uma nova amostra, abrir um novo chamado junto a ABCCMM informando que se trata de uma RECOLETA solicitada pelo laboratório e nos encaminhar novamente para execução.
-                    "
-                ]);
-            }
 
-            if ($request->value == 7) {
-                $response = Http::post('https://api.z-api.io/instances/3B30881EC3E99084D3D3B6927F6ADC67/token/66E633717A0DCDD3D4A1BC19/send-text', [
-                    "phone" => "55$telefoneOwner",
-                    "message" => "Prezado Criador,
-                    A amostra do animal $animal->animal_name foi recebida e APROVADA para realização do exame de DNA no Laboratório Loci"
-                ]);
-                $order->update([
-                    'status' => 4,
-                ]);
-            }
             if ($request->value == 6) {
                 $response = Http::post('https://api.z-api.io/instances/3B30881EC3E99084D3D3B6927F6ADC67/token/66E633717A0DCDD3D4A1BC19/send-text', [
                     "phone" => "55$telefoneOwner",
-                    "message" => "Prezado Técnico,
-                    A amostra do animal $animal->animal_name foi REPROVADA para a execução do exame de DNA no laboratório Loci.
-                    Solicitamos RECOLETAR uma nova amostra, abrir um novo chamado junto a ASSOCIAÇÃO informando que se trata de uma RECOLETA solicitada pelo laboratório e nos encaminhar novamente para execução"
+                    "message" => "Prezado Veterinário, a amostra do animal $animal->animal_name foi reprovada para realização do exame de XXXXXXXXXXXXXX. Solicitamos a coleta de uma nova amostra.
+                    Quando a amostra for APROVADA, nenhuma mensagem é enviada e libera-se para GERAR PAGAMENTO."
                 ]);
             }
         }
