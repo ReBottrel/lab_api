@@ -137,6 +137,7 @@ class VetOrderController extends Controller
             $pedido->update([
                 'status' => 1,
                 'id_pedido' => $order->id,
+                'origin' => 'app',
             ]);
             $animal = Animal::find($pedido->id_animal);
             $animal->update([

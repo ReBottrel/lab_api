@@ -145,6 +145,7 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::post('filter-payment', [OrderController::class, 'filterPayment'])->name('filter.payment');
     Route::get('filter-date', [OrderController::class, 'dateFilter'])->name('filter.date');
 
+    Route::post('filter-vet-status', [AppOrderController::class, 'filter'])->name('filter.vet.status');
 
     Route::get('owners', [OwnerController::class, 'index'])->name('owners');
     Route::get('owner-edit/{id}', [OwnerController::class, 'edit'])->name('owner.edit');

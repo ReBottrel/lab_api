@@ -97,4 +97,12 @@ class AppOrderController extends Controller
         );
         return response()->json($datas);
     }
+
+    public function filter(Request $request)
+    {
+        $pedidos = PedidoAnimal::with('order', 'animal')->where('status', $request->status)->where('origin', 'app')->get();
+        // dd($pedidos);
+        $viewRender = view('admin.includes.vet-filter', get_defined_vars())->render();
+        return response()->json([get_defined_vars()]);
+    }
 }

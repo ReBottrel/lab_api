@@ -4,27 +4,105 @@
         <div class="card">
             <div class="card-body">
                 <div class="row">
-                    <div class="col">
+                    <div class="col-md-6">
                         <h4>Pedidos</h4>
                     </div>
-                    <div class="col">
-                        <form><input class="form-control search" type="search" placeholder="Buscar pelo nome..."></form>
+                    <div class="col-md-6">
+                        <form action="{{ route('export.pay') }}" method="post">
+                            @csrf
+                            <button type="submit" class="btn btn-alt-loci text-white float-end export-pay">Exportar
+                                Relatório de Pedidos Pagos</button>
+                        </form>
                     </div>
-                    <div class="col">
+                </div>
+                <div class="row my-4">
+                    <div class="col-6">
                         <form>
+                            <label for="exampleFormControlInput1" class="form-label">Buscar proprietário</label>
+                            <input class="form-control search" type="search" placeholder="Buscar pelo nome...">
+                        </form>
+                    </div>
+                    <div class="row mt-4">
+                        <div class="col-md-3">
+                            <div class="mb-3">
+                                <label for="exampleFormControlInput1" class="form-label">Inicio</label>
+                                <input type="date" class="form-control" id="inicio-status">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="mb-3">
+                                <label for="exampleFormControlInput1" class="form-label">Fim</label>
+                                <input type="date" class="form-control" id="fim-status">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="exampleFormControlInput1" class="form-label">Filtrar Amostra</label>
                             <select class="form-select status-filter">
                                 <optgroup label="Status">
                                     <option value="0"> Todos</option>
                                     <option value="1"> Aguardando amostra</option>
                                     <option value="2"> Amostra recebida</option>
-                                    <option value="7"> Análise Aprovada</option>
-                                    <option value="6"> Análise Reprovada</option>
-                                    <option value="7"> Aguardando pagamento</option>
-                                    <option value="9"> Pagamento confirmado</option>
+                                    <option value="7"> Amostra aprovada</option>
+                                    <option value="6"> Amostra reprovada</option>
                                     <option value="10"> Pedido concluído</option>
+                                    <option value="11"> Aguardando pagamento</option>
+                                    <option value="9"> Pagamento confirmado</option>
                                 </optgroup>
                             </select>
+                        </div>
+                        <div class="col-md-2">
+                            <button class="btn btn-primary btn-se mt-4">BUSCAR</button>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row my-3">
+                    <div class="col-6">
+                        <form>
+                            <label for="exampleFormControlInput1" class="form-label">Buscar numero do pedido</label>
+                            <input class="form-control number-search" type="search" placeholder="">
                         </form>
+                    </div>
+                    <div class="col-6">
+                        <form>
+                            <label for="exampleFormControlInput1" class="form-label">Buscar pelo animal</label>
+                            <input class="form-control animal-search" type="search" placeholder="Buscar por animal">
+                        </form>
+                    </div>
+                </div>
+                <div class="row">
+                    <div>
+                        <p>Filtro por data de pagamento</p>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label for="exampleFormControlInput1" class="form-label">Inicio</label>
+                            <input type="date" class="form-control" id="inicio">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label for="exampleFormControlInput1" class="form-label">Fim</label>
+                            <input type="date" class="form-control" id="fim">
+                        </div>
+                    </div>
+                    <div class="col-md-2 d-flex btn-buscar">
+                        <div class="">
+                            <button type="button" class="btn btn-primary buscar">BUSCAR</button>
+                        </div>
+                    </div>
+                    <div class="col-md-2 d-none d-flex btn-buscar export">
+                        <div class="">
+                            <form action="{{ route('export.filter') }}" method="post">
+                                @csrf
+                                <input type="hidden" name="from" id="from">
+                                <input type="hidden" name="to" id="to">
+                                <button type="submit" class="btn btn-success export-filter"><i
+                                        class="fa-solid fa-file-excel"></i>
+                                    EXPORTAR</button>
+                            </form>
+
+                        </div>
                     </div>
                 </div>
                 <div class="filter">
@@ -121,7 +199,7 @@
             $('.status-filter').change(function() {
                 var status = $(this).val();
                 $.ajax({
-                    url: "{{ route('filter.status') }}",
+                    url: "{{ route('filter.vet.status') }}",
                     type: "POST",
                     data: {
                         _token: "{{ csrf_token() }}",
