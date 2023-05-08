@@ -85,29 +85,31 @@
                                             class="valor-{{ $item->id }}">{{ 'R$ ' . number_format($item->value, 2, ',', '.') }}</span>
                                     </p>
                                 </div>
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="exampleFormControlInput1" class="form-label">Tempo de
-                                            entrega</label>
+                                @if ($order->origin == 'sistema' || $order->origin == 'API')
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="exampleFormControlInput1" class="form-label">Tempo de
+                                                entrega</label>
 
-                                        <select class="form-select sel-price" name="days[]"
-                                            @if ($item->payment_status == 1) disabled @endif
-                                            aria-label="Default select example">
-                                            @foreach ($exames as $key => $exame)
-                                                @if ($exame->status == 1)
-                                                    <option data-exame="{{ $exame->id }}"
-                                                        value="{{ $key }}-{{ $item->id }}-{{ $exame->id }}"
-                                                        data-value="{{ $exame->value }}" data-order="{{ $item->id }}"
-                                                        data-id="{{ $order->id }}"
-                                                        @if ($item->exam_id == $exame->id) selected @else @endif>
-                                                        {{ $exame->title }}
-                                                    </option>
-                                                @endif
-                                            @endforeach
+                                            <select class="form-select sel-price" name="days[]"
+                                                @if ($item->payment_status == 1) disabled @endif
+                                                aria-label="Default select example">
+                                                @foreach ($exames as $key => $exame)
+                                                    @if ($exame->status == 1)
+                                                        <option data-exame="{{ $exame->id }}"
+                                                            value="{{ $key }}-{{ $item->id }}-{{ $exame->id }}"
+                                                            data-value="{{ $exame->value }}"
+                                                            data-order="{{ $item->id }}" data-id="{{ $order->id }}"
+                                                            @if ($item->exam_id == $exame->id) selected @else @endif>
+                                                            {{ $exame->title }}
+                                                        </option>
+                                                    @endif
+                                                @endforeach
 
-                                        </select>
+                                            </select>
+                                        </div>
                                     </div>
-                                </div>
+                                @endif
                                 @if ($payment)
                                     @if ($payment->payment_type == 'boleto')
                                         <div class="col-md-6">

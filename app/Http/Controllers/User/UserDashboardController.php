@@ -69,17 +69,18 @@ class UserDashboardController extends Controller
 
     public function payments(Request $request)
     {
-        
+
         $order = OrderRequest::with('orderRequestPayment')->find($request->orderId);
 
-
-        foreach ($request->days as $key2 => $day) {
-            $dayexplodido = explode('-', $day);
-            $exame = Exam::find($dayexplodido[2]);
-            $orderRequest = OrderRequestPayment::find($dayexplodido[1])->update([
-                'days' => $dayexplodido[0],
-                'value' => $exame->value,
-            ]);
+        if ($order->origin == 'sistema' || $order->origin == 'API') {
+            foreach ($request->days as $key2 => $day) {
+                $dayexplodido = explode('-', $day);
+                $exame = Exam::find($dayexplodido[2]);
+                $orderRequest = OrderRequestPayment::find($dayexplodido[1])->update([
+                    'days' => $dayexplodido[0],
+                    'value' => $exame->value,
+                ]);
+            }
         }
 
 
