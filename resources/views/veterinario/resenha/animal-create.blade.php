@@ -5,7 +5,7 @@
     <div class="">
         <div class="cad-animal">
             <form action="{{ route('animal.store') }}" method="post">
-               <input type="hidden" name="pedido_id" value="{{ $pedido }}">
+                <input type="hidden" name="pedido_id" value="{{ $pedido }}">
                 @csrf
                 <fieldset>
                     <div class="cad-animal-content">
@@ -156,11 +156,20 @@
                         </div>
                         <div class="mb-3 cad-animal-content-input">
                             <label for="exampleFormControlInput1" class="form-label">Utilidade</label>
-                            <input type="text" class="form-control" name="utility">
+                            <select class="form-select" name="utility" aria-label="Default select example">
+                                <option selected>Selecione </option>
+                                <option value="esporte">Esporte</option>
+                                <option value="exibição">Exibição</option>
+
+                            </select>
                         </div>
                         <div class="mb-3 cad-animal-content-input">
                             <label for="exampleFormControlInput1" class="form-label">Classificação</label>
-                            <input type="text" class="form-control" name="classification">
+                            <select class="form-select" name="classification"aria-label="Default select example">
+                                <option selected>Selecione</option>
+                                <option value="h">h</option>
+                                <option value="hb">hb</option>
+                            </select>
                         </div>
                         <div class="mb-3 cad-animal-content-input">
                             <label for="exampleFormControlInput1" class="form-label">Descrição e Observação</label>

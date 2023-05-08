@@ -113,8 +113,9 @@ class VetOrderController extends Controller
 
     public function listItens(Request $request)
     {
-        $pedidos = PedidoAnimal::where('owner_id', $request->owner)->where('status', 20)->get();
+        $pedidos = PedidoAnimal::where('owner_id', $request->owner)->where('id_animal', '!=', 0)->where('status', 20)->get();
         $owner = Owner::find($request->owner);
+       
         return view('veterinario.order.order-new', get_defined_vars());
     }
 
