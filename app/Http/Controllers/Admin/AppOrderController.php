@@ -34,8 +34,7 @@ class AppOrderController extends Controller
             if ($request->value == 6) {
                 $response = Http::post('https://api.z-api.io/instances/3B30881EC3E99084D3D3B6927F6ADC67/token/66E633717A0DCDD3D4A1BC19/send-text', [
                     "phone" => "55$telefoneOwner",
-                    "message" => "Prezado Veterinário, a amostra do animal $animal->animal_name foi reprovada para realização do exame de XXXXXXXXXXXXXX. Solicitamos a coleta de uma nova amostra.
-                    Quando a amostra for APROVADA, nenhuma mensagem é enviada e libera-se para GERAR PAGAMENTO."
+                    "message" => "Prezado Veterinário, a amostra do animal $animal->animal_name foi reprovada para realização do exame de XXXXXXXXXXXXXX. Solicitamos a coleta de uma nova amostra."
                 ]);
             }
         }
