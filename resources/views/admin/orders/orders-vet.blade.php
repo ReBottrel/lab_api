@@ -198,18 +198,23 @@
         $(document).ready(function() {
             $('.status-filter').change(function() {
                 var status = $(this).val();
-                $.ajax({
-                    url: "{{ route('filter.vet.status') }}",
-                    type: "POST",
-                    data: {
-                        _token: "{{ csrf_token() }}",
-                        status: status
-                    },
-                    success: function(data) {
-                        console.log(data);
-                        $('.filter').html(data[0].viewRender);
-                    }
-                });
+                if (status === 0) {
+                    $('.filter-input').val(''); // Clear filter input
+                    $('.filter-input').trigger('change'); // Trigger change event to update search results
+                } else {
+                    $.ajax({
+                        url: "{{ route('filter.vet.status') }}",
+                        type: "POST",
+                        data: {
+                            _token: "{{ csrf_token() }}",
+                            status: status
+                        },
+                        success: function(data) {
+                            console.log(data);
+                            $('.filter').html(data[0].viewRender);
+                        }
+                    });
+                }
             });
             $('.search').keyup(function() {
                 var search = $(this).val();

@@ -28,7 +28,7 @@ class AppOrderController extends Controller
                 'status' => 4,
             ]);
             $telefoneTecnico = str_replace(['(', ')', '-', ' '], ['', '', '', ''],  $order->tecnico->cell);
-            $telefoneOwner = str_replace(['(', ')', '-', ' '], ['', '', '', ''],  $order->owner->cell);
+            $telefoneOwner = '31992480734';
 
 
             if ($request->value == 6) {
