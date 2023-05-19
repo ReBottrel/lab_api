@@ -130,8 +130,8 @@ class ApiMangalargaController extends Controller
     public function getResenha()
     {
 
-        // $coletas = $this->fetchDataFromApi('coletas', 18, 2, ['dataEnvioInicio' => date('Y-m-d\TH:i:s', strtotime('-1 day'))]);
-        $coletas = $this->fetchDataFromApi('coletas', 18, 2, ['dataEnvioInicio' => '2023-05-10T00:00:00']);
+        $coletas = $this->fetchDataFromApi('coletas', 18, 2, ['dataEnvioInicio' => date('Y-m-d\TH:i:s', strtotime('-1 day'))]);
+        // $coletas = $this->fetchDataFromApi('coletas', 18, 2, ['dataEnvioInicio' => '2023-05-10T00:00:00']);
         foreach ($coletas as $coleta) {
             // find owner, user, and tecnico by email or create them if they don't exist
             $user = User::where('email', $coleta->cliente->email)->first();
