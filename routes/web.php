@@ -2,6 +2,7 @@
 
 use App\Models\OrderRequest;
 use function Ramsey\Uuid\v6;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TesteController;
 use App\Http\Controllers\AnimalController;
@@ -17,6 +18,7 @@ use App\Http\Controllers\Admin\ConfigController;
 use App\Http\Controllers\Admin\AddressController;
 use App\Http\Controllers\Admin\AnimaisController;
 use App\Http\Controllers\Admin\TecnicoController;
+use App\Http\Controllers\Admin\AppOrderController;
 use App\Http\Controllers\User\UserDadosController;
 use App\Http\Controllers\User\UserOrderController;
 use App\Http\Controllers\User\Auth\LoginController;
@@ -25,15 +27,14 @@ use App\Http\Controllers\Admin\DataColetaController;
 use App\Http\Controllers\Admin\AnimalOrderController;
 use App\Http\Controllers\User\UserDashboardController;
 use App\Http\Controllers\Admin\ApiMangalargaController;
-use App\Http\Controllers\Admin\AppOrderController;
 use App\Http\Controllers\Admin\HomeController as Admin;
 use App\Http\Controllers\Admin\SpeciesBreedsController;
 use App\Http\Controllers\Veterinario\AuthVetController;
 use App\Http\Controllers\Veterinario\ResenhaController;
 use App\Http\Controllers\Admin\Auth\AdminAuthController;
 use App\Http\Controllers\Veterinario\VetOrderController;
-use App\Http\Controllers\Veterinario\VetOwnerController;
 
+use App\Http\Controllers\Veterinario\VetOwnerController;
 use App\Http\Controllers\Veterinario\VetAnimalController;
 use App\Http\Controllers\Veterinario\VetConfigController;
 
@@ -232,7 +233,7 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::get('export-pendentes', [OrderController::class, 'exportPedentes']);
 
     Route::get('/get-registros', [AnimaisController::class, 'getRegistros'])->name('get.registros.animais');
-  
+
     Route::post('store-animal-parentesco', [AnimalOrderController::class, 'storeAnimalParentesco'])->name('store.animal.parentesco');
     Route::post('store-animal-homozigose', [AnimalOrderController::class, 'storeAnimalHomozigose'])->name('store.animal.homozigose');
     Route::get('show-animal-homozigose/{id}', [AnimalOrderController::class, 'showHomozigose'])->name('show.animal.homozigose');
