@@ -10,7 +10,7 @@
     </div>
     <section></section>
     <div class="container">
-        <div class="card">
+        <div class="card card-alt">
             <div class="card-header">
                 <div class="row">
                     <div class="col-md-6">
@@ -70,112 +70,118 @@
                                     @endphp
                                 @endif
                             @endif
-                            <ul class="list-group m-3">
-                                <li class="list-group-item"><span>ID: {{ $animal->register_number_brand }}</span></li>
-                                <li class="list-group-item"><span>PRODUTO: {{ $animal->animal_name }}</span></li>
-                                <li class="list-group-item"><span>SEXO: {{ $animal->sex }}</span></li>
-                                <li class="list-group-item"><span>NASCIMENTO: {{ $animal->birth_date }}</span></li>
-                                <li class="list-group-item"><span>PAI: {{ $animal->pai }}</span></li>
-                                <li class="list-group-item"><span>REGISTRO DO PAI: {{ $animal->registro_pai }}</span>
-                                </li>
-                                <li class="list-group-item"><span>MÃE: {{ $animal->mae }}</span></li>
-                                <li class="list-group-item"><span>REGISTRO DA MÃE: {{ $animal->registro_mae }}</span>
-                                </li>
-                                <li class="list-group-item"><span>Obs: {{ $animal->description ?? '' }}</span></li>
+                            <div class="card my-5">
+                                <ul class="list-group m-3">
+                                    <li class="list-group-item"><span>ID: {{ $animal->register_number_brand }}</span></li>
+                                    <li class="list-group-item"><span>PRODUTO: {{ $animal->animal_name }}</span></li>
+                                    <li class="list-group-item"><span>SEXO: {{ $animal->sex }}</span></li>
+                                    <li class="list-group-item"><span>NASCIMENTO: {{ $animal->birth_date }}</span></li>
+                                    <li class="list-group-item"><span>PAI: {{ $animal->pai }}</span></li>
+                                    <li class="list-group-item"><span>REGISTRO DO PAI: {{ $animal->registro_pai }}</span>
+                                    </li>
+                                    <li class="list-group-item"><span>MÃE: {{ $animal->mae }}</span></li>
+                                    <li class="list-group-item"><span>REGISTRO DA MÃE: {{ $animal->registro_mae }}</span>
+                                    </li>
+                                    <li class="list-group-item"><span>Obs: {{ $animal->description ?? '' }}</span></li>
 
-                                <li
-                                    class="list-group-item text-uppercase @if ($status == 'Análise Aprovada') bg-success @elseif($status == 'Amostra paga') bg-success @elseif($status == 'Análise reprovada') bg-danger @elseif($status == 'Recoleta solicitada') bg-warning @else bg-primary @endif  text-white">
-                                    <span>STATUS:
-                                        {{ $status }}</span>
-                                </li>
-                                <li class="list-group-item">
-                                    <div class="row">
-                                        <div class="col-4">
-                                            <label for="exampleFormControlInput1" class="form-label">Data de
-                                                recebimento</label>
-                                            <input type="text" class="form-control datas data-1"
-                                                data-id="{{ $animal->id }}" data-type="data_recebimento"
-                                                id="data-rece-{{ $animal->id }}"
-                                                value="{{ $datas->data_recebimento ?? '' }}" placeholder="">
-                                        </div>
-                                        <div class="col-4">
-                                            <label for="exampleFormControlInput1" class="form-label">Data de
-                                                coleta</label>
-                                            <input type="text" class="form-control datas data-2"
-                                                id="data-coleta-{{ $animal->id }}" data-type="data_coleta"
-                                                data-id="{{ $animal->id }}" value="{{ $datas->data_coleta ?? '' }}"
-                                                placeholder="">
-                                        </div>
-                                        <div class="col-4">
-                                            <label for="exampleFormControlInput1" class="form-label">Data de
-                                                chamado</label>
-                                            <input type="text" class="form-control datas data-3"
-                                                data-id="{{ $animal->id }}" data-type="data_laboratorio"
-                                                id="data-chamado-{{ $animal->id }}"
-                                                value="{{ $datas->data_laboratorio ?? '' }}" placeholder="">
-                                        </div>
-
-                                    </div>
-                                </li>
-                                <li class="list-group-item">
-                                    <div class="row">
-                                        <div class="col-md-4">
-                                            <label for="exampleFormControlInput1" class="form-label">Tipo de
-                                                coleta</label>
-                                            <select class="form-select sample-select" data-order="{{ $order->id }}"
-                                                data-id="{{ $animal->id ?? '' }}" aria-label="Default select example">
-                                                @if ($animal)
-                                                    @foreach ($samples as $sample)
-                                                        <option value="{{ $sample->id }}"
-                                                            @if ($datas) @if ($datas->tipo == $sample->id) selected @endif
-                                                            @endif>
-                                                            {{ $sample->name }}
-                                                        </option>
-                                                    @endforeach
-                                                @endif
-                                            </select>
-                                        </div>
-                                        <div class="col-md-4 mt-4">
-                                            <button class="btn btn-danger excluir-animal"
-                                                data-id="{{ $animal->id }}">EXCLUIR ANIMAL</button>
-                                        </div>
-                                        <div class="col-md-4 mt-4">
-                                            <a href="{{ route('animais.show', $animal->id) }}"> <button
-                                                    class="btn btn-primary">EDITAR ANIMAL</button></a>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li class="list-group-item">
-                                    <label for="exampleFormControlInput1" class="form-label">Status do pedido</label>
-                                    <select class="form-select status-select" data-order="{{ $order->id }}"
-                                        data-id="{{ $animal->id ?? '' }}" aria-label="Default select example">
-                                        @if ($animal)
-                                            @foreach ($stats as $key => $stat)
-                                                <option value="{{ $key }}"
-                                                    @if ($animal->status == $key) selected @endif>
-                                                    {{ $stat }}
-                                                </option>
-                                            @endforeach
-                                        @endif
-                                    </select>
-                                </li>
-
-                                @if ($status != 'Aguardando amostra' && $status != 'Aguardando cadastro')
+                                    <li
+                                        class="list-group-item text-uppercase @if ($status == 'Análise Aprovada') bg-success @elseif($status == 'Amostra paga') bg-success @elseif($status == 'Análise reprovada') bg-danger @elseif($status == 'Recoleta solicitada') bg-warning @else bg-primary @endif  text-white">
+                                        <span>STATUS:
+                                            {{ $status }}</span>
+                                    </li>
                                     <li class="list-group-item">
                                         <div class="row">
                                             <div class="col-4">
-                                                <input type="text" class="form-control chip"
-                                                    value="{{ $animal->chip_number ?? '' }}"
-                                                    data-id="{{ $animal->id ?? '' }}" placeholder="Numero do chip">
+                                                <label for="exampleFormControlInput1" class="form-label">Data de
+                                                    recebimento</label>
+                                                <input type="text" class="form-control datas data-1"
+                                                    data-id="{{ $animal->id }}" data-type="data_recebimento"
+                                                    id="data-rece-{{ $animal->id }}"
+                                                    value="{{ $datas->data_recebimento ?? '' }}" placeholder="">
                                             </div>
                                             <div class="col-4">
-                                                <span>Insira o numero do chip do animal</span>
+                                                <label for="exampleFormControlInput1" class="form-label">Data de
+                                                    coleta</label>
+                                                <input type="text" class="form-control datas data-2"
+                                                    id="data-coleta-{{ $animal->id }}" data-type="data_coleta"
+                                                    data-id="{{ $animal->id }}" value="{{ $datas->data_coleta ?? '' }}"
+                                                    placeholder="">
+                                            </div>
+                                            <div class="col-4">
+                                                <label for="exampleFormControlInput1" class="form-label">Data de
+                                                    chamado</label>
+                                                <input type="text" class="form-control datas data-3"
+                                                    data-id="{{ $animal->id }}" data-type="data_laboratorio"
+                                                    id="data-chamado-{{ $animal->id }}"
+                                                    value="{{ $datas->data_laboratorio ?? '' }}" placeholder="">
+                                            </div>
+
+                                        </div>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <label for="exampleFormControlInput1" class="form-label">Tipo de
+                                                    coleta</label>
+                                                <select class="form-select sample-select" data-order="{{ $order->id }}"
+                                                    data-id="{{ $animal->id ?? '' }}" aria-label="Default select example">
+                                                    @if ($animal)
+                                                        @foreach ($samples as $sample)
+                                                            <option value="{{ $sample->id }}"
+                                                                @if ($datas) @if ($datas->tipo == $sample->id) selected @endif
+                                                                @endif>
+                                                                {{ $sample->name }}
+                                                            </option>
+                                                        @endforeach
+                                                    @endif
+                                                </select>
+                                            </div>
+                                            <div class="col-md-4 mt-4">
+                                                <button class="btn btn-danger excluir-animal"
+                                                    data-id="{{ $animal->id }}">EXCLUIR ANIMAL</button>
+                                            </div>
+                                            <div class="col-md-4 mt-4">
+                                                <a href="{{ route('animais.show', $animal->id) }}"> <button
+                                                        class="btn btn-primary">EDITAR ANIMAL</button></a>
                                             </div>
                                         </div>
                                     </li>
-                                @endif
+                                    <li class="list-group-item">
+                                        <label for="exampleFormControlInput1" class="form-label">Status do pedido</label>
+                                        <select class="form-select status-select" data-order="{{ $order->id }}"
+                                            data-id="{{ $animal->id ?? '' }}" aria-label="Default select example">
+                                            @if ($animal)
+                                                @foreach ($stats as $key => $stat)
+                                                    <option value="{{ $key }}"
+                                                        @if ($animal->status == $key) selected @endif>
+                                                        {{ $stat }}
+                                                    </option>
+                                                @endforeach
+                                            @endif
+                                        </select>
+                                    </li>
 
-                            </ul>
+                                    @if ($status != 'Aguardando amostra' && $status != 'Aguardando cadastro')
+                                        <li class="list-group-item">
+                                            <div class="row">
+                                                <div class="col-4">
+                                                    <input type="text" class="form-control chip"
+                                                        value="{{ $animal->chip_number ?? '' }}"
+                                                        data-id="{{ $animal->id ?? '' }}" placeholder="Numero do chip">
+                                                </div>
+                                                <div class="col-4">
+                                                    <span>Insira o numero do chip do animal</span>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    @endif
+                                    @if ($status == 'Amostra paga')
+                                        <div class="text-center my-4">
+                                            <button class="btn btn-alt-2">GERAR ORDEM DE SERVIÇO</button>
+                                        </div>
+                                    @endif
+                                </ul>
+                            </div>
                         @endforeach
                     </div>
                 </div>

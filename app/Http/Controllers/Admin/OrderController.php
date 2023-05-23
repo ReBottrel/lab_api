@@ -16,6 +16,7 @@ use App\Models\OrderRequestPayment;
 use App\Http\Controllers\Controller;
 use App\Models\DataColeta;
 use App\Models\ExamToAnimal;
+use App\Models\Parceiro;
 use App\Models\Sample;
 use App\Models\UserInfo;
 use App\Models\Veterinario;
@@ -611,9 +612,8 @@ class OrderController extends Controller
 
     public function orderCreate()
     {
-        $owners = Owner::get();
-        // $animals = Animal::get();
-        $tecnicos = Tecnico::get();
+        $parceiros = Parceiro::get();
+
         return view('admin.order-create', get_defined_vars());
     }
 
@@ -635,7 +635,8 @@ class OrderController extends Controller
                 'origin' => 'sistema',
                 'uid' => $request->uid,
                 'creator_number' => 0,
-                'tipo' => $request->tipo
+                'tipo' => $request->tipo,
+                'parceiro' => $request->parceiro
             ]);
             return redirect()->route('admin.order-animal', [$order_request->id, $request->tipo]);
         }
@@ -675,7 +676,8 @@ class OrderController extends Controller
     {
         $order = OrderRequest::findOrFail($request->order);
         $owner = Owner::findOrFail($order->owner_id);
-
+        $randomNumber = mt_rand(0, 1000000);
+        
         $data = [
             'user_id' => $owner->user_id,
             'order_id' => $request->order,
@@ -694,7 +696,10 @@ class OrderController extends Controller
             'owner_id' => $owner->id,
             'especie_pai' => $request->especie_pai,
             'especie_mae' => $request->especie_mae,
+            
         ];
+
+        $data['codlab'] = Animal::where('codlab', $randomNumber)->exists() ? rand(0, 1000000) : $randomNumber;
 
         if ($request->id) {
             $animal = Animal::findOrFail($request->id);
