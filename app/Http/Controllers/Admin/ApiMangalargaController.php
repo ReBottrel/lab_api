@@ -21,7 +21,7 @@ class ApiMangalargaController extends Controller
     }
     public function getApi()
     {
-        \Log::info('passei pelo cron de api');
+    
         $coletas = $this->fetchDataFromApi('coletas', 18, 1, ['dataEnvioInicio' => date('Y-m-d\TH:i:s', strtotime('-1 day'))]);
         // dd($coletas);
 
@@ -29,7 +29,6 @@ class ApiMangalargaController extends Controller
             $user = User::where('email', $coleta->cliente->email)->first();
             $tecnico = Tecnico::where('professional_name', $coleta->tecnico)->first();
             $owner = Owner::where('email', $coleta->cliente->email)->first();
-            \Log::info(['buscado', $owner]);
             $ownerid = $owner->id ?? null;
             if (!$tecnico) {
                 $tecnicoc = Tecnico::create([
@@ -80,7 +79,7 @@ class ApiMangalargaController extends Controller
                     'propriety' =>  $coleta->cliente->fazendas[0]->nome ?? null,
                 ]);
                 $ownerid = $ownerc->id;
-                \Log::info(['criado', $ownerc]);
+             
             }
 
 
@@ -96,6 +95,7 @@ class ApiMangalargaController extends Controller
                 'id_tecnico' => $tecnico->id ?? $tecnicoc->id,
                 'status' => 1,
                 'owner_id' => $ownerid,
+                'parceiro' => 'ABCCMM'
             ]);
 
             foreach ($coleta->animais as $animal) {
@@ -204,6 +204,7 @@ class ApiMangalargaController extends Controller
                 'id_tecnico' => $tecnico->id ?? $tecnicoc->id,
                 'status' => 1,
                 'owner_id' => $ownerid,
+                'parceiro' => 'ABCCMM'
             ]);
 
             foreach ($coleta->animais as $animal) {

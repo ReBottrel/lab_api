@@ -28,7 +28,8 @@ class OrderRequest extends Model
         'id_tecnico',
         'owner_id',
         'uid',
-        'tipo'
+        'tipo',
+        'parceiro',
     ];
 
     public function user()

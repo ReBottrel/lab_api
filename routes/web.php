@@ -32,6 +32,8 @@ use App\Http\Controllers\Admin\SpeciesBreedsController;
 use App\Http\Controllers\Veterinario\AuthVetController;
 use App\Http\Controllers\Veterinario\ResenhaController;
 use App\Http\Controllers\Admin\Auth\AdminAuthController;
+use App\Http\Controllers\Admin\DadosController;
+use App\Http\Controllers\Admin\ParceiroController;
 use App\Http\Controllers\Veterinario\VetOrderController;
 
 use App\Http\Controllers\Veterinario\VetOwnerController;
@@ -256,6 +258,14 @@ Route::middleware(['auth:admin'])->group(function () {
 
     Route::get('marks', [MarkController::class, 'index'])->name('marks');
     Route::post('marks-store', [MarkController::class, 'store'])->name('marks.store');
+
+
+    Route::get('parceiros', [ParceiroController::class, 'index'])->name('parceiros');
+    Route::post('parceiros-store', [ParceiroController::class, 'store'])->name('parceiros.store');
+    Route::post('parceiros-delete', [ParceiroController::class, 'destroy'])->name('parceiros.delete');
+
+    Route::get('get-dados-owner', [DadosController::class, 'getOwner'])->name('get.dados.owner');  
+    Route::get('get-dados-tecnico', [DadosController::class, 'getTecnico'])->name('get.dados.tecnico');  
 });
 
 Route::get('vet-login', [AuthVetController::class, 'showLoginForm'])->name('vet.login');
