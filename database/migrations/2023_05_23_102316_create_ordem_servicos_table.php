@@ -17,14 +17,14 @@ class CreateOrdemServicosTable extends Migration
             $table->id();
             $table->integer('animal_id')->nullable();
             $table->integer('owner_id')->nullable();
-            $table->integer('tecnico_id')->nullable();
+            $table->integer('lote')->nullable();
             $table->string('animal')->nullable();
             $table->string('codlab')->nullable();
             $table->string('id_abccmm')->nullable();
             $table->string('tipo_exame')->nullable();
             $table->string('proprietario')->nullable();
             $table->string('tecnico')->nullable();
-            $table->string('data')->nullable();
+            $table->dateTime('data')->nullable();
             $table->string('status')->nullable();
             $table->string('observacao')->nullable();
             $table->timestamps();

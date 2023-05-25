@@ -81,11 +81,35 @@ a {
 
 }
 
-.btn-alt-2{
+.btn-alt-2 {
     background-color: #694487 !important;
     color: #fff !important;
     padding: 1.5em;
 }
-.card-alt{
+
+.card-alt {
     background-color: #dddfeb;
+}
+
+.ordem-servico {
+    .card {
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 10px;
+        margin-bottom: 10px;
+        background-color: #f9f9f9;
+    }
+
+    .card-title {
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    .card-data {
+        margin-bottom: 5px;
+    }
+
+    .card-label {
+        font-weight: bold;
+    }
 }

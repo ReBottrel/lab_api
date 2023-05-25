@@ -64,6 +64,10 @@
                                     @php
                                         $status = 'Amostra paga';
                                     @endphp
+                                @elseif($animal->status == 10)
+                                    @php
+                                        $status = 'Pedido Concluído';
+                                    @endphp
                                 @elseif($animal->status == 11)
                                     @php
                                         $status = 'Aguardando Pagamento';
@@ -85,7 +89,7 @@
                                     <li class="list-group-item"><span>Obs: {{ $animal->description ?? '' }}</span></li>
 
                                     <li
-                                        class="list-group-item text-uppercase @if ($status == 'Análise Aprovada') bg-success @elseif($status == 'Amostra paga') bg-success @elseif($status == 'Análise reprovada') bg-danger @elseif($status == 'Recoleta solicitada') bg-warning @else bg-primary @endif  text-white">
+                                        class="list-group-item text-uppercase  @if ($status == 'Análise Aprovada') bg-success @elseif($status == 'Pedido Concluído') bg-success @elseif($status == 'Amostra paga') bg-success @elseif($status == 'Análise reprovada') bg-danger @elseif($status == 'Recoleta solicitada') bg-warning @else bg-primary @endif  text-white">
                                         <span>STATUS:
                                             {{ $status }}</span>
                                     </li>
@@ -175,11 +179,7 @@
                                             </div>
                                         </li>
                                     @endif
-                                    @if ($status == 'Amostra paga')
-                                        <div class="text-center my-4">
-                                            <button class="btn btn-alt-2">GERAR ORDEM DE SERVIÇO</button>
-                                        </div>
-                                    @endif
+
                                 </ul>
                             </div>
                         @endforeach
@@ -231,11 +231,51 @@
                                                 class="btn fw-bold link-light" type="button"
                                                 style="background: var(--bs-success);">VER RELATÓRIO DE PEDIDO</button></a>
                                     </div>
+
+                                    <div class="text-center my-4" data-order="{{ $order->id }}" id="criar-ordem">
+                                        <button class="btn btn-alt-2">GERAR ORDEM DE SERVIÇO</button>
+                                    </div>
+
                                 </div>
                             @endif
                         @endif
                     </div>
                     <div class="col"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="modalOrdem" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Gerar Ordem</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="inputs">
+                        <div class="row">
+                            {{-- <div class="col-md-12">
+                                <div class="mb-3">
+                                    <label for="exampleFormControlInput1" class="form-label">CODLAB</label>
+                                    <input type="text" class="form-control" id="codlab">
+                                </div>
+                            </div> --}}
+                            <div class="col-md-12">
+                                <div class="mb-3">
+                                    <label for="exampleFormControlInput1" class="form-label">OBSERVAÇÃO</label>
+                                    <textarea class="form-control" rows="3" id="observacao"></textarea>
+                                </div>
+                            </div>
+                            <input type="hidden" id="animal">
+                            <input type="hidden" id="order-id" value="{{ $order->id }}">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                    <button type="button" id="criar-ordem" class="btn btn-primary">Salvar e gerar</button>
                 </div>
             </div>
         </div>
@@ -248,6 +288,42 @@
             $('.datas').mask('00/00/0000');
             $('.cpf-tech').mask('000.000.000-00', {
                 reverse: true
+            });
+
+            // $(document).on('click', '#modalAnimal', function() {
+            //     var id = $(this).data('order');
+            //     $.ajax({
+            //         url: `{{ route('get.dados.animal') }}`,
+            //         type: 'GET',
+            //         data: {
+            //             id: id
+            //         },
+            //         success: function(data) {
+            //             console.log(data);
+            //             $('#order').val(data.id);
+            //         }
+            //     })
+            // });
+
+            $(document).on('click', '#criar-ordem', function() {
+                var order = $(this).data('order');
+                $.ajax({
+                    url: `{{ route('ordem.servico.store') }}`,
+                    type: 'POST',
+                    data: {
+                
+                        order: order
+                    },
+                    success: function(data) {
+                        console.log(data);
+                        Swal.fire(
+                            'Sucesso!',
+                            'Ordem de serviço gerada com sucesso.',
+                            'success'
+                        )
+                        location.reload();
+                    }
+                });
             });
 
         });

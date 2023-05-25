@@ -10,9 +10,10 @@ class OrdemServico extends Model
     use HasFactory;
 
     protected $fillable = [
+        'order',
         'animal_id',
         'owner_id',
-        'tecnico_id',
+        'lote',
         'animal',
         'codlab',
         'id_abccmm',

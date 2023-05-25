@@ -32,6 +32,7 @@ use App\Http\Controllers\Veterinario\AuthVetController;
 use App\Http\Controllers\Veterinario\ResenhaController;
 use App\Http\Controllers\Admin\Auth\AdminAuthController;
 use App\Http\Controllers\Admin\DadosController;
+use App\Http\Controllers\Admin\OrdemServicoController;
 use App\Http\Controllers\Admin\ParceiroController;
 use App\Http\Controllers\Veterinario\VetOrderController;
 use App\Http\Controllers\Veterinario\VetOwnerController;
@@ -264,7 +265,14 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::post('parceiros-delete', [ParceiroController::class, 'destroy'])->name('parceiros.delete');
 
     Route::get('get-dados-owner', [DadosController::class, 'getOwner'])->name('get.dados.owner');  
-    Route::get('get-dados-tecnico', [DadosController::class, 'getTecnico'])->name('get.dados.tecnico');  
+    Route::get('get-dados-tecnico', [DadosController::class, 'getTecnico'])->name('get.dados.tecnico'); 
+    
+    Route::get('get-dados-animal', [DadosController::class, 'getAnimal'])->name('get.dados.animal');
+
+    Route::post('ordem-servico-store', [OrdemServicoController::class, 'store'])->name('ordem.servico.store');
+    Route::get('order-servico-all', [OrdemServicoController::class, 'index'])->name('ordem.servico.all');
+    Route::get('order-servico-show/{id}', [OrdemServicoController::class, 'show'])->name('ordem.servico.show');
+    Route::get('gerar-barcode/{id}', [OrdemServicoController::class, 'gerarBarCode'])->name('gerar.barcode');
 });
 
 Route::get('vet-login', [AuthVetController::class, 'showLoginForm'])->name('vet.login');

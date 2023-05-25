@@ -3,9 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\Owner;
+use App\Models\Animal;
+use App\Models\Tecnico;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\Tecnico;
 
 class DadosController extends Controller
 {
@@ -33,5 +34,10 @@ class DadosController extends Controller
                 ->get();
         }
         return response()->json($tecnicos);
+    }
+    public function getAnimal(Request $request)
+    {
+        $animal = Animal::find($request->id);
+        return response()->json($animal);
     }
 }

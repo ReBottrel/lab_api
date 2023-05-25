@@ -16,6 +16,7 @@
         "laravel/ui": "3.4.6",
         "maatwebsite/excel": "^3.1",
         "php-imap/php-imap": "^2.0",
+        "picqer/php-barcode-generator": "^2.2",
         "rap2hpoutre/fast-excel": "^4.1",
         "webklex/laravel-imap": "^2.4"
     },
