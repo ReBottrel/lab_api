@@ -14,11 +14,11 @@
                         </div>
                         <div class="mb-3 cad-animal-content-input">
                             <label for="exampleFormControlInput1" class="form-label">Nome do animal</label>
-                            <input type="text" class="form-control" name="animal_name">
+                            <input type="text" class="form-control" name="animal_name" required>
                         </div>
                         <div class="mb-3 cad-animal-content-input">
                             <label for="exampleFormControlInput1" class="form-label">Numero do registro</label>
-                            <input type="text" class="form-control" name="register_number_brand">
+                            <input type="text" class="form-control" name="register_number_brand" required>
                         </div>
                     </div>
                     <div class="my-3 text-end">
@@ -32,7 +32,7 @@
                         </div>
                         <div class="mb-3 cad-animal-content-input">
                             <label for="exampleFormControlInput1" class="form-label">Espécie</label>
-                            <select name="especies" id="" class="form-control">
+                            <select name="especies" id="" class="form-control" required>
                                 @foreach ($especies as $especie)
                                     <option value="{{ $especie->id }}">{{ $especie->name }}</option>
                                 @endforeach
@@ -40,7 +40,7 @@
                         </div>
                         <div class="mb-3 cad-animal-content-input">
                             <label for="exampleFormControlInput1" class="form-label">Raça</label>
-                            <select name="raca" id="" class="form-control">
+                            <select name="raca" id="" class="form-control" required>
                                 @foreach ($breeds as $raca)
                                     <option value="{{ $raca->id }}">{{ $raca->name }}</option>
                                 @endforeach
@@ -48,18 +48,18 @@
                         </div>
                         <div class="mb-3 cad-animal-content-input">
                             <label for="exampleFormControlInput1" class="form-label">Sexo</label>
-                            <select name="sex" id="" class="form-control">
+                            <select name="sex" id="" class="form-control" required>
                                 <option value="M">Macho</option>
                                 <option value="F">Fêmea</option>
                             </select>
                         </div>
-                        <div class="mb-3 cad-animal-content-input">
+                        {{-- <div class="mb-3 cad-animal-content-input">
                             <label for="exampleFormControlInput1" class="form-label">Idade</label>
                             <input type="text" class="form-control" name="age" id="idade">
-                        </div>
+                        </div> --}}
                         <div class="mb-3 cad-animal-content-input">
                             <label for="exampleFormControlInput1" class="form-label">Data de nascimento</label>
-                            <input type="date" class="form-control" name="birth_date" id="birth_date">
+                            <input type="text" class="form-control" name="birth_date" id="birth_date" required>
                         </div>
                     </div>
                     <div class="buttons">
@@ -80,26 +80,26 @@
                         </div>
                         <div class="mb-3 cad-animal-content-input">
                             <label for="exampleFormControlInput1" class="form-label">Local onde se encontra</label>
-                            <input type="text" class="form-control" name="animal_name">
+                            <input type="text" class="form-control" name="animal_name" required>
                         </div>
                         <div class="mb-3 cad-animal-content-input">
                             <label for="exampleFormControlInput1" class="form-label">Estado</label>
-                            <select name="state" id="state" class="form-control">
+                            <select name="state" id="state" class="form-control" required>
                             </select>
                         </div>
                         <div class="mb-3 cad-animal-content-input">
                             <label for="exampleFormControlInput1" class="form-label">Estado</label>
-                            <select name="city" id="city" class="form-control">
+                            <select name="city" id="city" class="form-control" required>
                             </select>
                         </div>
                         <div class="mb-3 cad-animal-content-input">
                             <label for="exampleFormControlInput1" class="form-label">Cadastro OESA</label>
-                            <input type="text" class="form-control" name="animal_name">
+                            <input type="text" class="form-control" name="animal_name" required>
                         </div>
                         <div class="mb-3 cad-animal-content-input">
                             <label for="exampleFormControlInput1" class="form-label">Numero de animais existente na
                                 propriedade</label>
-                            <input type="text" class="form-control" name="animal_name">
+                            <input type="text" class="form-control" name="animal_name" required>
                         </div>
 
                     </div>
@@ -120,15 +120,15 @@
                         </div>
                         <div class="mb-3 cad-animal-content-input">
                             <label for="exampleFormControlInput1" class="form-label">Data da coleta</label>
-                            <input type="date" class="form-control" name="collect_date">
+                            <input type="date" class="form-control" name="collect_date" required>
                         </div>
                         <div class="mb-3 cad-animal-content-input">
                             <label for="exampleFormControlInput1" class="form-label">Numero da requisição AIE</label>
-                            <input type="text" class="form-control" name="numero_aie">
+                            <input type="text" class="form-control" name="numero_aie" required>
                         </div>
                         <div class="mb-3 cad-animal-content-input">
                             <label for="exampleFormControlInput1" class="form-label">Numero da requisição MORMO</label>
-                            <input type="text" class="form-control" name="numero_mormo">
+                            <input type="text" class="form-control" name="numero_mormo" required>
                         </div>
                         <div class="buttons">
                             <div class="my-3 text-end">
@@ -147,7 +147,7 @@
                         </div>
                         <div class="mb-3 cad-animal-content-input">
                             <label for="exampleFormControlInput1" class="form-label">Pelagem</label>
-                            <select name="fur" id="" class="form-control">
+                            <select name="fur" id="" class="form-control" required>
                                 @foreach ($furs as $fur)
                                     <option value="{{ $fur->name }}">{{ $fur->name }}</option>
                                 @endforeach
@@ -155,7 +155,7 @@
                         </div>
                         <div class="mb-3 cad-animal-content-input">
                             <label for="exampleFormControlInput1" class="form-label">Descrição e Observação</label>
-                            <textarea type="text" class="form-control" name="description" rows="3"></textarea>
+                            <textarea type="text" class="form-control" name="description" rows="3" required></textarea>
                         </div>
                     </div>
                     <div class="buttons">
@@ -172,7 +172,7 @@
                         <div class="cad-animal-content-title">
                             <h2>Informações do proprietário</h2>
                         </div>
-                        <select class="js-example-basic-single" name="owner_id">
+                        <select class="js-example-basic-single" name="owner_id" required>
                             @foreach ($owners as $owner)
                                 <option value="{{ $owner->id }}">{{ $owner->owner_name }}</option>
                             @endforeach
@@ -241,7 +241,24 @@
                 var $this = $(this);
                 var $current = $this.parents('fieldset');
                 var $next = $current.next('fieldset');
+                var $inputs = $current.find(
+                    'input[required], select[required], textarea[required]'
+                    ); // Seleciona todos os inputs, selects e textareas obrigatórios dentro do fieldset atual
 
+                // Verifica se algum dos inputs obrigatórios não foi preenchido
+                var isInvalid = false;
+                $inputs.each(function() {
+                    if (!$(this).val().trim()) {
+                        isInvalid = true;
+                        return false; // Sai do loop se encontrar um campo não preenchido
+                    }
+                });
+
+                if (isInvalid) {
+                    alert(
+                    'Por favor, preencha todos os campos obrigatórios.'); // Exibe uma mensagem de alerta
+                    return; // Impede a navegação para a próxima seção
+                }
                 $current.animate({
                     opacity: 0
                 }, 500, function() {
