@@ -176,7 +176,7 @@ class ApiMangalargaController extends Controller
                     'owner_name' => $coleta->cliente->nome,
                     'fone' => $coleta->cliente->telefones[0]->telefone,
                     'cell' => $coleta->cliente->telefones[1]->telefone ?? null,
-                    'whatsapp' => $coleta->cliente->telefones[1]->telefone,
+                    'whatsapp' => $coleta->cliente->telefones[1]->telefone ?? null,
                     'zip_code' => $coleta->cliente->enderecos[0]->cep,
                     'address' => $coleta->cliente->enderecos[0]->logradouro,
                     'number' => $coleta->cliente->enderecos[0]->numero,
