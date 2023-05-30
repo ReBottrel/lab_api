@@ -62,6 +62,7 @@
                                 @if (auth()->user()->permission == 10)
                                     <li><a class="dropdown-item" href="{{ route('animais') }}">Todos os animais</a>
                                     </li>
+                                    <li><a class="dropdown-item" href="{{ route('alelos') }}">Alelos</a></li>
                                     <li><a class="dropdown-item" href="{{ route('species') }}">Espécie</a></li>
                                     <li><a class="dropdown-item" href="{{ route('breeds') }}">Raça</a></li>
                                     <li><a class="dropdown-item" href="{{ route('fur') }}">Pelagem</a></li>

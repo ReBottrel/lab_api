@@ -45,7 +45,7 @@ class OrdemServicoController extends Controller
                 'animal' => $animal->animal_name,
                 'codlab' => $animal->codlab,
                 'id_abccmm' => $animal->register_number_brand,
-                'tipo_exame' => $item->title,
+                'tipo_exame' => 'EQUTR',
                 'proprietario' => $order->creator,
                 'tecnico' => $order->technical_manager,
                 'data' => $data,

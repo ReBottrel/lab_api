@@ -12,9 +12,11 @@
 </head>
 
 <body>
-    <div class="row text-center my-4">
-        <div>
-            <button class="btn btn-primary"><i class="fa-solid fa-print"></i></button>
+    <div class="container">
+        <div class="row text-center no-print my-4">
+            <div>
+                <button type="button" class="btn btn-primary" id="print"><i class="fa-solid fa-print"></i></button>
+            </div>
         </div>
     </div>
     <page size="A4">
@@ -25,7 +27,15 @@
             <p>{{ $ordem->order }}</p>
         </div>
     </page>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#print').on('click', function() {
+                window.print();
+            });
+        });
+    </script>
 </body>
 
 </html>

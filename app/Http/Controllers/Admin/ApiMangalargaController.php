@@ -101,7 +101,7 @@ class ApiMangalargaController extends Controller
             foreach ($coleta->animais as $animal) {
                 $existingAnimal = Animal::where('register_number_brand', $animal->rowidAnimal)->first();
                 if ($existingAnimal) {
-                    $existingAnimal->status = 1;
+                    // $existingAnimal->status = 1;
                     $existingAnimal->order_id = $order->id; // atualize o status como necessário
                     $existingAnimal->save();
                 } else {
@@ -130,8 +130,8 @@ class ApiMangalargaController extends Controller
     public function getResenha()
     {
 
-        $coletas = $this->fetchDataFromApi('coletas', 18, 2, ['dataEnvioInicio' => date('Y-m-d\TH:i:s', strtotime('-1 day'))]);
-        // $coletas = $this->fetchDataFromApi('coletas', 18, 2, ['dataEnvioInicio' => '2023-05-10T00:00:00']);
+        // $coletas = $this->fetchDataFromApi('coletas', 18, 2, ['dataEnvioInicio' => date('Y-m-d\TH:i:s', strtotime('-1 day'))]);
+        $coletas = $this->fetchDataFromApi('coletas', 18, 2, ['dataEnvioInicio' => '2023-05-20T00:00:00']);
         foreach ($coletas as $coleta) {
             // find owner, user, and tecnico by email or create them if they don't exist
             $user = User::where('email', $coleta->cliente->email)->first();
@@ -155,7 +155,6 @@ class ApiMangalargaController extends Controller
                     'user_id' => $userc->id,
                     'document' => $coleta->cliente->cpf_Cnpj,
                     'phone' => $coleta->cliente->telefones[0]->telefone,
-                    'cellphone' => $coleta->cliente->telefones[1]->telefone,
                     'number' => $coleta->cliente->enderecos[0]->numero,
                     'address' => $coleta->cliente->enderecos[0]->logradouro,
                     'complement' => $coleta->cliente->enderecos[0]->complemento,
@@ -176,7 +175,7 @@ class ApiMangalargaController extends Controller
                     'document' => $coleta->cliente->cpf_Cnpj,
                     'owner_name' => $coleta->cliente->nome,
                     'fone' => $coleta->cliente->telefones[0]->telefone,
-                    'cell' => $coleta->cliente->telefones[1]->telefone,
+                    'cell' => $coleta->cliente->telefones[1]->telefone ?? null,
                     'whatsapp' => $coleta->cliente->telefones[1]->telefone,
                     'zip_code' => $coleta->cliente->enderecos[0]->cep,
                     'address' => $coleta->cliente->enderecos[0]->logradouro,
@@ -210,7 +209,7 @@ class ApiMangalargaController extends Controller
             foreach ($coleta->animais as $animal) {
                 $existingAnimal = Animal::where('register_number_brand', $animal->rowidAnimal)->first();
                 if ($existingAnimal) {
-                    $existingAnimal->status = 1;
+                    // $existingAnimal->status = 1;
                     $existingAnimal->order_id = $order->id; // atualize o status como necessário
                     $existingAnimal->save();
                 } else {

@@ -11,20 +11,24 @@ use App\Http\Controllers\Admin\FurController;
 use App\Http\Controllers\Loja\HomeController;
 use App\Http\Controllers\Admin\MarkController;
 use App\Http\Controllers\Admin\CupomController;
+use App\Http\Controllers\Admin\DadosController;
 use App\Http\Controllers\Admin\ExameController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\OwnerController;
+use App\Http\Controllers\Admin\AlelosController;
 use App\Http\Controllers\Admin\ConfigController;
 use App\Http\Controllers\Admin\AddressController;
 use App\Http\Controllers\Admin\AnimaisController;
 use App\Http\Controllers\Admin\TecnicoController;
 use App\Http\Controllers\Admin\AppOrderController;
+use App\Http\Controllers\Admin\ParceiroController;
 use App\Http\Controllers\User\UserDadosController;
 use App\Http\Controllers\User\UserOrderController;
 use App\Http\Controllers\User\Auth\LoginController;
 use App\Http\Controllers\Veterinario\VetController;
 use App\Http\Controllers\Admin\DataColetaController;
 use App\Http\Controllers\Admin\AnimalOrderController;
+use App\Http\Controllers\Admin\OrdemServicoController;
 use App\Http\Controllers\User\UserDashboardController;
 use App\Http\Controllers\Admin\ApiMangalargaController;
 use App\Http\Controllers\Admin\HomeController as Admin;
@@ -32,11 +36,8 @@ use App\Http\Controllers\Admin\SpeciesBreedsController;
 use App\Http\Controllers\Veterinario\AuthVetController;
 use App\Http\Controllers\Veterinario\ResenhaController;
 use App\Http\Controllers\Admin\Auth\AdminAuthController;
-use App\Http\Controllers\Admin\DadosController;
-use App\Http\Controllers\Admin\OrdemServicoController;
-use App\Http\Controllers\Admin\ParceiroController;
-use App\Http\Controllers\Veterinario\VetOrderController;
 
+use App\Http\Controllers\Veterinario\VetOrderController;
 use App\Http\Controllers\Veterinario\VetOwnerController;
 use App\Http\Controllers\Veterinario\VetAnimalController;
 use App\Http\Controllers\Veterinario\VetConfigController;
@@ -53,6 +54,9 @@ use App\Http\Controllers\Veterinario\VetConfigController;
 */
 
 Auth::routes();
+
+
+
 Route::get('cep-get', [AddressController::class, 'getCep'])->name('cep.get');
 Route::post('login-post', [LoginController::class, 'login'])->name('login.custom');
 
@@ -95,6 +99,9 @@ Route::middleware(['auth:web'])->group(function () {
 
 Route::middleware(['auth:admin'])->group(function () {
     Route::get('new-orders', [OrderController::class, 'getNewOrders'])->name('get.new.orders');
+  
+    Route::get('alelos', [AlelosController::class, 'index'])->name('alelos');
+    Route::post('alelos-api', [AlelosController::class, 'api'])->name('alelos.api');
 
     Route::get('painel', [Admin::class, 'index'])->name('admin');
     Route::get('order-detail/{id}', [OrderController::class, 'orderDetail'])->name('order.detail');
