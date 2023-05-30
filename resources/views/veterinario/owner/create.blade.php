@@ -17,15 +17,15 @@
                             </div>
                             <div class="mb-3 cad-animal-content-input">
                                 <label for="exampleFormControlInput1" class="form-label">Nome do proprietário</label>
-                                <input type="text" class="form-control" name="name">
+                                <input type="text" class="form-control" name="name" required>
                             </div>
                             <div class="mb-3 cad-animal-content-input">
                                 <label for="exampleFormControlInput1" class="form-label">Documento (CPF/CNPJ)</label>
-                                <input type="text" class="form-control" id="cpfcnpj" name="document">
+                                <input type="text" class="form-control" id="cpfcnpj" name="document" required>
                             </div>
                             <div class="mb-3 cad-animal-content-input">
                                 <label for="exampleFormControlInput1" class="form-label">Email</label>
-                                <input type="text" class="form-control" name="email">
+                                <input type="text" class="form-control" name="email" required>
                             </div>
                         </div>
                         <div class="buttons">
@@ -41,7 +41,7 @@
                             </div>
                             <div class="mb-3 cad-animal-content-input">
                                 <label for="exampleFormControlInput1" class="form-label">Whatsapp</label>
-                                <input type="text" class="form-control" name="cell">
+                                <input type="text" class="form-control" name="cell" required>
                             </div>
 
                         </div>
@@ -61,35 +61,35 @@
                             </div>
                             <div class="mb-3 cad-animal-content-input">
                                 <label for="zip_code" class="form-label">CEP</label>
-                                <input type="text" class="form-control" name="zip_code" id="cep">
+                                <input type="text" class="form-control" name="zip_code" id="cep" required>
                             </div>
 
                             <div class="mb-3 cad-animal-content-input">
                                 <label for="address" class="form-label">Endereço</label>
-                                <input type="text" class="form-control" name="address" id="address">
+                                <input type="text" class="form-control" name="address" id="address" required>
                             </div>
 
                             <div class="mb-3 cad-animal-content-input">
                                 <label for="number" class="form-label">Número</label>
-                                <input type="text" class="form-control" name="number" id="number">
+                                <input type="text" class="form-control" name="number" id="number" required>
                             </div>
 
                             <div class="mb-3 cad-animal-content-input">
                                 <label for="complement" class="form-label">Complemento</label>
-                                <input type="text" class="form-control" name="complement" id="complement">
+                                <input type="text" class="form-control" name="complement" id="complement" required>
                             </div>
 
                             <div class="mb-3 cad-animal-content-input">
                                 <label for="district" class="form-label">Bairro</label>
-                                <input type="text" class="form-control" name="district" id="bairro">
+                                <input type="text" class="form-control" name="district" id="bairro" required>
                             </div>
                             <div class="mb-3 cad-animal-content-input">
                                 <label for="city" class="form-label">Cidade</label>
-                                <input type="text" class="form-control" name="city" id="cidade">
+                                <input type="text" class="form-control" name="city" id="cidade" required>
                             </div>
                             <div class="mb-3 cad-animal-content-input">
                                 <label for="city" class="form-label">Estado</label>
-                                <input type="text" class="form-control" name="state" id="uf">
+                                <input type="text" class="form-control" name="state" id="uf" required>
                             </div>
 
                         </div>
@@ -114,6 +114,15 @@
                 var $this = $(this);
                 var $current = $this.parents('fieldset');
                 var $next = $current.next('fieldset');
+
+                var $inputs = $current.find('input[required]');
+
+                if ($inputs.filter(function() {
+                        return !this.value.trim();
+                    }).length > 0) {
+                    alert('Preencha todos os campos');
+                    return;
+                }
 
                 $current.animate({
                     opacity: 0
@@ -141,7 +150,7 @@
                     }, 500);
                 });
             });
-        
+
         });
     </script>
 @endsection
