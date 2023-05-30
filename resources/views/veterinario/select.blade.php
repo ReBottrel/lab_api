@@ -2,12 +2,12 @@
 @section('content')
     @include('layouts.partials.vet-top')
     <div class="main-select">
-        <div class="row justify-content-center">
-            <div class="col-6">
+        <div class="d-flex justify-content-center gap-3">
+            <div class="">
                 <button class="btn btn-select">SELECIONAR ANIMAL</button>
             </div>
-            <div class="col-6">
-                <button class="btn btn-create">CRIAR ANIMAL</button>
+            <div class="">
+                <button class="btn btn-create">CADASTRAR ANIMAL</button>
             </div>
         </div>
     </div>

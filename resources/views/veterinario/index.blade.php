@@ -2,27 +2,31 @@
 @section('content')
     @include('layouts.partials.vet-top')
     <div class="main">
-        <div class="content row justify-content-around">
-            <div class="col-4 menu-content" id="resenha">
-                <div class="mt-3">
-                    <div>
-                        <img src="{{ asset('vet/img/resenha.png') }}" alt="">
-                    </div>
-                    <div>
-                        <p>Criar Resenha</p>
-                    </div>
-                </div>
-
+        <div class="main-title">
+            <p>Seja bem vindo! <span>{{ Auth::user()->name }}</span> </p>
+        </div>
+        <div class="content d-flex justify-content-center gap-5">
+            <div class="menu-content" id="resenha">
+                <a href="{{ route('vet.select') }}">
+                    <iconify-icon icon="clarity:list-solid" width="50" height="50">
+                    </iconify-icon>
+                    <p class="mb-0">Criar Resenha</p>
+                </a>
             </div>
-            <div class="col-4 menu-content" id="animal">
-                <div class="mt-3">
+
+            <div class="menu-content" id="animal">
+                <a href="{{ route('vet.order.owner.select') }}">
+                    <iconify-icon icon="mdi:horse-variant-fast" width="50" height="50"></iconify-icon>
+                    <p class="mb-0">Criar Pedido</p>
+                </a>
+                {{-- <div class="mt-3">
                     <div>
                         <img src="{{ asset('vet/img/animais.png') }}" alt="">
                     </div>
                     <div>
                         <p>Criar Pedido</p>
                     </div>
-                </div>
+                </div> --}}
 
             </div>
 

@@ -1,5 +1,1 @@
-<<<<<<< HEAD
-.print p{font-size:12px;margin:0;padding:0}page{background:#fff;display:block;margin:0 auto;margin-bottom:.5cm;border:solid 1px #000}page[size=A4]{width:5cm}@page{margin:0em;margin-left:.5em;margin-right:0em;margin-top:0em}@media print{page{border:none !important}.no-print,.no-print *{display:none !important}.print{display:block;page-break-before:always;margin-top:5em}.print:last-child{page-break-before:avoid}}/*# sourceMappingURL=codebar.min.css.map */
-=======
-.print p{font-size:12px;margin:0;padding:0}page{background:#fff;display:block;margin:0 auto;margin-bottom:.5cm;box-shadow:0 0 .5cm rgba(0,0,0,.5)}page[size=A4]{width:5cm}@page{margin:0em;margin-left:.5em;margin-right:0em;margin-top:0em}
->>>>>>> 3d128055ebd80cdde247d0d0f868c20ce29f7656
+.print p{font-size:12px;margin:0;padding:0}page{background:#fff;display:block;margin:0 auto;margin-bottom:.5cm;border:solid 1px #000}page[size=A4]{width:5cm}@page{margin:0em;margin-left:.5em;margin-right:0em;margin-top:0em}@media print{page{border:none !important}.no-print,.no-print *{display:none !important}.print{display:block;page-break-before:always;margin-top:5em}.print:last-child{page-break-before:avoid}}
