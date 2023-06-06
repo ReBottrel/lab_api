@@ -62,12 +62,27 @@
                                 @if (auth()->user()->permission == 10)
                                     <li><a class="dropdown-item" href="{{ route('animais') }}">Todos os animais</a>
                                     </li>
-                                    <li><a class="dropdown-item" href="{{ route('alelos') }}">Alelos</a></li>
+
                                     <li><a class="dropdown-item" href="{{ route('species') }}">Espécie</a></li>
                                     <li><a class="dropdown-item" href="{{ route('breeds') }}">Raça</a></li>
                                     <li><a class="dropdown-item" href="{{ route('fur') }}">Pelagem</a></li>
                                     <li><a class="dropdown-item" href="{{ route('marks') }}">Marcas da Resenha</a></li>
                                 @endif
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href="#"
+                                style="color: var(--bs-dark);"><i class="fas fa-table"
+                                    style="color: var(--bs-dark);"></i><span>Alelos</span></a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                @if (auth()->user()->permission == 10)
+                                    <li><a class="dropdown-item" href="{{ route('alelos.get.api') }}">Importar API</a>
+                                    </li>
+                                    <li><a class="dropdown-item" href="{{ route('alelos.create') }}">Criar</a>
+                                    </li>
+                                    <li><a class="dropdown-item" href="{{ route('import.txt.view') }}">Importar TXT</a>
+                                    </li>
+                                @endif
+
                             </ul>
                         </li>
                         <li class="nav-item">
@@ -82,7 +97,8 @@
                                 style="color: var(--bs-dark);"><i class="far fa-list-alt"
                                     style="color: var(--bs-dark);"></i><span>Exames</span></a>
                         </li>
-                        <li class="nav-item"><a class="nav-link" href="{{ route('owners') }}"><i class="fas fa-users"
+                        <li class="nav-item"><a class="nav-link" href="{{ route('owners') }}"><i
+                                    class="fas fa-users"
                                     style="color: var(--bs-dark);"></i><span>Proprietarios</span></a>
                         </li>
                         <li class="nav-item"><a class="nav-link" href="{{ route('cupons') }}"
@@ -98,7 +114,8 @@
                                     style="color: var(--bs-dark);"></i><span>Parceiros</span></a>
                         </li>
 
-                        <li class="nav-item"><a class="nav-link" href="{{ route('configs') }}"><i class="fa fa-gear"
+                        <li class="nav-item"><a class="nav-link" href="{{ route('configs') }}"><i
+                                    class="fa fa-gear"
                                     style="color: var(--bs-dark);"></i><span>Configurações</span></a>
                         </li>
                     @endif
@@ -218,7 +235,7 @@
             });
         </script>
     @endif
-  
+
     @component('layouts.partials.javascript')
     @endcomponent
 </body>
