@@ -5,7 +5,7 @@
     @include('layouts.partials.vet-top')
     <div class="container">
         <div class="mt-4">
-            <h3>Ou cadastrar novo proprietário</h3>
+            <h3>Cadastrar novo proprietário</h3>
             <div class="">
                 <form action="{{ route('vet.owner.store') }}" method="post">
                     <input type="hidden" name="user_id" value="{{ auth()->user()->id }}">

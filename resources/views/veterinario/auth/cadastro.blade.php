@@ -50,8 +50,11 @@
                         <label for="name">Estado</label>
                         <input id="state" type="text" name="state" autofocus autocomplete="">
                     </div>
-                    <button type="button" class="btn-next" id="prev1">Anterior</button>
-                    <button type="button" class="btn-next" id="next2">Próximo</button>
+                    <div class="action">
+                        <button type="button" class="btn-next" id="prev1">Anterior</button>
+                        <button type="button" class="btn-next" id="next2">Próximo</button>
+                    </div>
+
                 </div>
                 <div id="step3" style="display:none;">
                     <div class="cadastro-vet-content-input">

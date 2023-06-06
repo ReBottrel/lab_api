@@ -10,7 +10,7 @@
                     <h3>Selecione o proprietário</h3>
                     <select class="js-example-basic-single" name="owner_id">
                         @foreach ($owners as $owner)
-                            <option value="{{ $owner->id }}">{{ $owner->owner_name }}</option>
+                            <option id="select-name" value="{{ $owner->id }}">{{ $owner->owner_name }}</option>
                         @endforeach
                     </select>
                     <div class="my-3">
@@ -31,7 +31,7 @@
             $('.btn-select').click(function() {
                 window.location.href = "{{ route('vet.select') }}";
             });
-       
+
 
             $('.btnNext').click(function() {
                 var $this = $(this);

@@ -15,6 +15,10 @@
 </head>
 
 <body>
+    <div id="spinner-overlay">
+        <div class="spinner"></div>
+    </div>
+
     <div>
         @yield('content')
     </div>
@@ -30,27 +34,25 @@
             </div>
             <div class="menu-mobile-body">
                 <div class="menu-mobile-body-item home">
-
                     <div class="menu-mobile-body-item-icon">
                         <i class="fa-solid fa-home"></i>
                     </div>
                     <div class="menu-mobile-body-item-text">
                         <p>Home</p>
                     </div>
-
                 </div>
-
             </div>
         </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
- 
+
     <script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-maskmoney/3.0.2/jquery.maskMoney.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/iconify-icon@1.0.7/dist/iconify-icon.min.js"></script>
     <script src="{{ asset('adm/assets/js/fabric.min.js') }}"></script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <script src="{{ asset('adm/assets/js/main.js') }}"></script>
@@ -71,6 +73,12 @@
             $('.user').click(function() {
                 $('.user-configs').toggleClass('user-configs-active');
             });
+        });
+
+        /// Spinner
+        window.addEventListener('load', function() {
+            var spinnerOverlay = document.getElementById('spinner-overlay');
+            spinnerOverlay.style.display = 'none';
         });
     </script>
     @yield('js')
