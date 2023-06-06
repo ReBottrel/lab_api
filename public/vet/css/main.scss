@@ -334,7 +334,7 @@ canvas {
         padding: 20px;
         border-radius: 5px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        width: 100%;
+        max-width: 100%;
         margin: 40px;
 
         .login-form-content-title {
@@ -373,7 +373,7 @@ canvas {
         .login-form-content-btn {
             background: #684286;
             color: #fff;
-            border: 0;
+            border: 1px solid #684286;
             padding: 20px;
             border-radius: 5px;
             font-size: 14px;
@@ -856,4 +856,3 @@ input {
         transform: rotate(360deg);
     }
 }
-
