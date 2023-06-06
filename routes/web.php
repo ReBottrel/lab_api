@@ -106,6 +106,8 @@ Route::middleware(['auth:admin'])->group(function () {
         return view('admin.ordem-servico.laudo');
     })->name('laudo');
 
+    Route::get('gerar-pdf', [TesteController::class, 'gerarPdf'])->name('gerar.pdf');
+
     Route::get('alelos-create', [AlelosController::class, 'alelosCreate'])->name('alelos.create');
     Route::get('alelos-get-api', [AlelosController::class, 'alelosApi'])->name('alelos.get.api');
     Route::post('alelos-api', [AlelosController::class, 'api'])->name('alelos.api');

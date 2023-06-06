@@ -41,7 +41,7 @@
                 <h5 class="text-center">Alelos</h5>
             </div>
             <div class="col-3 bg-light border rounded">
-                <div class="d-flex justify-content-between align-items-center">
+                <div class="d-flex justify-content-around align-items-center">
                     <div>
                         <h5 class="text-center">Inclui</h5>
                     </div>
@@ -53,7 +53,7 @@
         </div>
         <div class="row">
             <div class="col-2 bg-light border rounded">
-                <div class="d-flex flex-column text-center">
+                <div class="d-flex flex-column text-center mt-2">
                     @foreach ($animal->alelos as $item)
                         <div>
                             <p>
@@ -67,7 +67,7 @@
             </div>
             <div class="col-2 bg-light border rounded">
                 <div class="d-flex flex-column text-center mae">
-                    <div class="row">
+                    <div class="row mt-2">
                         @foreach ($mae->alelos as $item)
                             <div class="col-6">
                                 @if ($item->alelo1 == '')
@@ -111,7 +111,7 @@
             </div>
             <div class="col-2 bg-light border rounded">
                 <div class="d-flex flex-column text-center pai">
-                    <div class="row">
+                    <div class="row mt-2">
                         @foreach ($pai->alelos as $item)
                             <div class="col-6">
                                 @if ($item->alelo1 == '')
@@ -149,7 +149,7 @@
         $(document).ready(function() {
             $('#analisar').click(function() {
                 let ordem = $(this).data('ordem');
-
+                $('#valores').html('');
                 $.ajax({
                     url: "{{ route('alelo.analise') }}",
                     type: 'POST',
