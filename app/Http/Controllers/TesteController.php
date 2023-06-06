@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Dompdf\Dompdf;
 use App\Models\Owner;
 use App\Models\Animal;
 use Illuminate\Http\Request;
@@ -45,5 +46,24 @@ class TesteController extends Controller
         // $data = collect($data);
 
         // return view('teste', ['data' => $data]);
+    }
+
+    public function gerarPdf()
+    {
+        // Cria uma instância do Dompdf
+        $dompdf = new Dompdf();
+
+        // Define o tamanho e a orientação da página como A4
+        $dompdf->setPaper('A4', 'portrait');
+
+        // Renderiza o HTML em PDF
+        $html = view('admin.ordem-servico.laudo');
+        $dompdf->loadHtml($html);
+        $dompdf->render();
+
+        // Gera o PDF e envia para o navegador
+        $dompdf->stream('documento.pdf');
+       
+       
     }
 }

@@ -48,6 +48,7 @@ class Animal extends Model
         'numero_mormo',
         'collect_date',
         'portaria_habilitacao',
+        'number_definitive'
     ];
 
     public function owner()
@@ -64,4 +65,15 @@ class Animal extends Model
     {
         return $this->belongsTo(OrderRequest::class, 'order_id');
     }
+
+    public function ordemServico()
+    {
+        return $this->hasMany(OrdemServico::class, 'animal_id');
+    }
+
+    public function alelos()
+    {
+        return $this->hasMany(Alelo::class, 'animal_id');
+    }
+
 }

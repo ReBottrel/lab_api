@@ -99,9 +99,27 @@ Route::middleware(['auth:web'])->group(function () {
 
 Route::middleware(['auth:admin'])->group(function () {
     Route::get('new-orders', [OrderController::class, 'getNewOrders'])->name('get.new.orders');
-  
-    Route::get('alelos', [AlelosController::class, 'index'])->name('alelos');
+
+    Route::get('import-txt-view', [AlelosController::class, 'importTxt'])->name('import.txt.view');
+
+    Route::get('laudo', function () {
+        return view('admin.ordem-servico.laudo');
+    })->name('laudo');
+
+    Route::get('gerar-pdf', [TesteController::class, 'gerarPdf'])->name('gerar.pdf');
+
+    Route::get('alelos-create', [AlelosController::class, 'alelosCreate'])->name('alelos.create');
+    Route::get('alelos-get-api', [AlelosController::class, 'alelosApi'])->name('alelos.get.api');
     Route::post('alelos-api', [AlelosController::class, 'api'])->name('alelos.api');
+    Route::post('alelos-store', [AlelosController::class, 'store'])->name('alelos.store');
+    Route::post('animais-alelo-buscar', [AlelosController::class, 'getAnimal'])->name('animais.buscar');
+    Route::post('store-alelos-custom', [AlelosController::class, 'storeAlelo'])->name('alelos.store.custom');
+
+
+
+    Route::post('import-txt', [OrdemServicoController::class, 'importFile'])->name('import.txt');
+    Route::get('alelo-compare/{id}', [OrdemServicoController::class, 'compareAlelo'])->name('alelo.compare');
+    Route::post('alelo-analise', [OrdemServicoController::class, 'analise'])->name('alelo.analise');
 
     Route::get('painel', [Admin::class, 'index'])->name('admin');
     Route::get('order-detail/{id}', [OrderController::class, 'orderDetail'])->name('order.detail');
@@ -272,9 +290,9 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::post('parceiros-store', [ParceiroController::class, 'store'])->name('parceiros.store');
     Route::post('parceiros-delete', [ParceiroController::class, 'destroy'])->name('parceiros.delete');
 
-    Route::get('get-dados-owner', [DadosController::class, 'getOwner'])->name('get.dados.owner');  
-    Route::get('get-dados-tecnico', [DadosController::class, 'getTecnico'])->name('get.dados.tecnico'); 
-    
+    Route::get('get-dados-owner', [DadosController::class, 'getOwner'])->name('get.dados.owner');
+    Route::get('get-dados-tecnico', [DadosController::class, 'getTecnico'])->name('get.dados.tecnico');
+
     Route::get('get-dados-animal', [DadosController::class, 'getAnimal'])->name('get.dados.animal');
 
     Route::post('ordem-servico-store', [OrdemServicoController::class, 'store'])->name('ordem.servico.store');
