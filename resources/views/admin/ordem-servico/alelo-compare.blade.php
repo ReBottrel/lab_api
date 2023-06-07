@@ -136,13 +136,18 @@
                 <div class="row" id="valores">
 
                 </div>
+
             </div>
         </div>
         <div class="d-none" id="resultado">
-            <div class="mensagem p-5"></div>
+            <div class="mensagem px-5 pt-2"></div>
+            <div class="mb-3 px-5 pt-2">
+                <label for="exampleFormControlTextarea1" class="form-label">Observação</label>
+                <textarea class="form-control" id="obs" rows="3"></textarea>
+            </div>
             <div class="d-flex">
                 <div>
-                    <button class="btn btn-primary" id="concluir">GERAR LAUDO</button>
+                    <button class="btn btn-primary" id="gerar-laudo">GERAR LAUDO</button>
                 </div>
             </div>
 
@@ -225,7 +230,6 @@
                                 excluidos = excluidos.replace('M', '');
                             }
 
-                            console.log(response);
 
                             var html = `<div class="row">
                                 <div class="col-6">
@@ -254,25 +258,18 @@
                             });
                             if (paiEmae) {
                                 $('.mensagem').html(
-                                    `<p> 
-                                Conclui-se que o animal  <strong>${response.animal.animal_name}</strong>
-                                não é filho de <strong>${response.animal.mae}</strong>
-                                e <strong>${response.animal.pai}</strong>
-                                </p>`);
+                                    `<textarea class="form-control" id="conclusao" rows="3"> Conclui-se que o animal ${response.animal.animal_name} não é filho de ${response.animal.mae} e ${response.animal.pai}
+                            </textarea>`);
                             }
                             if (naoMae) {
                                 $('.mensagem').html(
-                                    `<p> 
-                                Conclui-se que o animal ${response.animal.animal_name}
-                                não é filho de ${response.animal.mae}.
-                                </p>`);
+                                    `<textarea class="form-control" id="conclusao" rows="3"> Conclui-se que o animal ${response.animal.animal_name} não é filho de ${response.animal.mae}.
+                            </textarea>`);
                             }
                             if (naoPai) {
                                 $('.mensagem').html(
-                                    `<p> 
-                                Conclui-se que o animal ${response.animal.animal_name}
-                                não é filho de ${response.animal.pai}.
-                                </p>`);
+                                    `<textarea class="form-control" id="conclusao" rows="3"> Conclui-se que o animal ${response.animal.animal_name} não é filho de ${response.animal.pai}.
+                            </textarea>`);
                             }
 
                         }
@@ -280,8 +277,26 @@
                     }
                 });
             });
-            $(document).on('click', '#concluir', function() {
-                window.open("{{ route('laudo') }}", '_blank');
+        });
+        $(document).ready(function() {
+            $('#gerar-laudo').click(function() {
+                let ordem = $('#analisar').data('ordem');
+                let obs = $('#obs').val();
+                let conclusao = $('#conclusao').val();
+                $.ajax({
+                    url: "{{ route('gerar.laudo') }}",
+                    type: 'POST',
+                    data: {
+                        _token: "{{ csrf_token() }}",
+                        ordem: ordem,
+                        obs: obs,
+                        conclusao: conclusao,
+                    },
+                    success: function(response) {
+                        console.log(response);
+
+                    }
+                });
             });
         });
     </script>
