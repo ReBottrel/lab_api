@@ -105,6 +105,12 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::get('laudo', function () {
         return view('admin.ordem-servico.laudo');
     })->name('laudo');
+    Route::get('laudo-table', function () {
+        return view('admin.ordem-servico.laudo-table');
+    })->name('laudo-table');
+    Route::get('laudo-html', function () {
+        return view('admin.ordem-servico.laudo-html');
+    })->name('laudo-html');
 
     Route::get('gerar-pdf', [TesteController::class, 'gerarPdf'])->name('gerar.pdf');
 
