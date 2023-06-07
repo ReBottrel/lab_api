@@ -36,7 +36,7 @@ use App\Http\Controllers\Admin\SpeciesBreedsController;
 use App\Http\Controllers\Veterinario\AuthVetController;
 use App\Http\Controllers\Veterinario\ResenhaController;
 use App\Http\Controllers\Admin\Auth\AdminAuthController;
-
+use App\Http\Controllers\Admin\LaudoController;
 use App\Http\Controllers\Veterinario\VetOrderController;
 use App\Http\Controllers\Veterinario\VetOwnerController;
 use App\Http\Controllers\Veterinario\VetAnimalController;
@@ -102,6 +102,7 @@ Route::middleware(['auth:admin'])->group(function () {
 
     Route::get('import-txt-view', [AlelosController::class, 'importTxt'])->name('import.txt.view');
 
+<<<<<<< HEAD
     Route::get('laudo', function () {
         return view('admin.ordem-servico.laudo');
     })->name('laudo');
@@ -111,6 +112,13 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::get('laudo-html', function () {
         return view('admin.ordem-servico.laudo-html');
     })->name('laudo-html');
+=======
+    // Route::get('laudo', function () {
+    //     return view('admin.ordem-servico.laudo');
+    // })->name('laudo');
+
+    Route::post('gerar-laudo', [LaudoController::class, 'store'])->name('gerar.laudo');
+>>>>>>> a655ebda5fe57b3bbb387a4fc7eca057abc43f5c
 
     Route::get('gerar-pdf', [TesteController::class, 'gerarPdf'])->name('gerar.pdf');
 

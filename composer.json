@@ -10,10 +10,11 @@
         "dompdf/dompdf": "^2.0",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
-        "laravel/framework": "^8.75",
+        "laravel/framework": "^9.0",
         "laravel/sanctum": "^2.11",
         "laravel/tinker": "^2.5",
         "laravel/ui": "3.4.6",
+        "lsnepomuceno/laravel-a1-pdf-sign": "^1.0",
         "maatwebsite/excel": "^3.1",
         "php-imap/php-imap": "^2.0",
         "picqer/php-barcode-generator": "^2.2",
@@ -22,11 +23,11 @@
         "webklex/laravel-imap": "^2.4"
     },
     "require-dev": {
-        "facade/ignition": "^2.5",
+        "spatie/laravel-ignition": "^1.0",
         "fakerphp/faker": "^1.9.1",
         "laravel/sail": "^1.0.1",
         "mockery/mockery": "^1.4.4",
-        "nunomaduro/collision": "^5.10",
+        "nunomaduro/collision": "^6.1",
         "phpunit/phpunit": "^9.5.10"
     },
     "autoload": {
