@@ -140,7 +140,12 @@
         </div>
         <div class="d-none" id="resultado">
             <div class="mensagem p-5"></div>
-            <button class="btn btn-primary" id="concluir">CONCLUIR LAUDO</button>
+            <div class="d-flex">
+                <div>
+                    <button class="btn btn-primary" id="concluir">GERAR LAUDO</button>
+                </div>
+            </div>
+
         </div>
     </div>
 @endsection
