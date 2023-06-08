@@ -150,7 +150,7 @@
                     <button class="btn btn-primary" id="gerar-laudo">GERAR LAUDO</button>
                 </div>
             </div>
-
+            <input type="hidden" name="" id="laudo">
         </div>
     </div>
 @endsection
@@ -294,7 +294,7 @@
                     },
                     success: function(response) {
                         console.log(response);
-
+                    $('#laudo').val(response.laudo);
                     }
                 });
             });
