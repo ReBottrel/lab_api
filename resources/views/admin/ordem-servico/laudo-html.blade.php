@@ -17,6 +17,9 @@
         </div>
         <div class="card mb-3">
             <div class="informacoes">
+                <div class="text-center">
+                    <h1>Dados Relativos à Amostra</h1>
+                </div>
                 <div class="row">
                     <div class="col-6">
                         <p><strong>Nome do Animal Testado:</strong> [Nome do Animal Testado]</p>
