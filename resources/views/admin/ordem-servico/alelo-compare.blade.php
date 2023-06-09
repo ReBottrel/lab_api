@@ -283,6 +283,7 @@
                 let ordem = $('#analisar').data('ordem');
                 let obs = $('#obs').val();
                 let conclusao = $('#conclusao').val();
+                let laudo = $('#laudo').val();
                 $.ajax({
                     url: "{{ route('gerar.laudo') }}",
                     type: 'POST',
@@ -291,10 +292,11 @@
                         ordem: ordem,
                         obs: obs,
                         conclusao: conclusao,
+                        laudo: laudo,
                     },
                     success: function(response) {
                         console.log(response);
-                    $('#laudo').val(response.laudo);
+                        $('#laudo').val(response.id);
                     }
                 });
             });

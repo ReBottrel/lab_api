@@ -22,20 +22,37 @@ class LaudoController extends Controller
         $pai = Animal::where('animal_name', $animal->pai)->first();
         $mae = Animal::where('animal_name', $animal->mae)->first();
         $datas = DataColeta::where('id_order', $order->id)->first();
-     
-        $laudo = Laudo::create([
-            'animal_id' => $ordem->animal_id,
-            'mae_id' => $mae->id,
-            'pai_id' => $pai->id,
-            'veterinario' => $ordem->tecnico,
-            'owner_id' => $ordem->owner_id,
-            'data_coleta' => $datas->data_coleta,
-            'data_realizacao' => $datas->data_recebimento,
-            'data_lab' => $datas->data_laboratorio,
-            'codigo_busca' => '123456789',
-            'observacao' => $request->obs,
-            'conclusao' => $request->conclusao,
-        ]);
+        $laudo = Laudo::find($request->laudo);
+        if (!$laudo) {
+            $laudo = Laudo::create([
+                'animal_id' => $ordem->animal_id,
+                'mae_id' => $mae->id,
+                'pai_id' => $pai->id,
+                'veterinario' => $ordem->tecnico,
+                'owner_id' => $ordem->owner_id,
+                'data_coleta' => $datas->data_coleta,
+                'data_realizacao' => $datas->data_recebimento,
+                'data_lab' => $datas->data_laboratorio,
+                'codigo_busca' => '123456789',
+                'observacao' => $request->obs,
+                'conclusao' => $request->conclusao,
+            ]);
+        } else {
+            $laudo->update([
+                'animal_id' => $ordem->animal_id,
+                'mae_id' => $mae->id,
+                'pai_id' => $pai->id,
+                'veterinario' => $ordem->tecnico,
+                'owner_id' => $ordem->owner_id,
+                'data_coleta' => $datas->data_coleta,
+                'data_realizacao' => $datas->data_recebimento,
+                'data_lab' => $datas->data_laboratorio,
+                'codigo_busca' => '123456789',
+                'observacao' => $request->obs,
+                'conclusao' => $request->conclusao,
+            ]);
+        }
+
 
         return response()->json($laudo, 200);
     }
