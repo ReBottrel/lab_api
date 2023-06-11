@@ -63,8 +63,8 @@
                 </span>
                 <p>
                     Utilize um leitor de QRCode ou acesse o site:
-                    <u>portalgeeklab.com.br/portal/validacao</u> e informe o código
-                    <b>Mpbisd4kVwP1 </b>para validar este laudo.
+                    <u>i.locilab.com.br/validacao</u> e informe o código
+                    <b>{{ $laudo->codigo_busca }} </b>para validar este laudo.
                 </p>
             </div>
         </div>
@@ -86,35 +86,35 @@
         <div class="row ">
             <div class="col-5">
                 <strong>Nome do Animal Testado:</strong>
-                <span>SONHADO REAL DE MAUÁ</span>
+                <span>{{ $animal->animal_name }}</span>
             </div>
             <div class="col-4 offset-3">
                 <strong>Espécie:</strong>
-                <span>Equina</span>
+                <span>{{ $animal->especies }}</span>
             </div>
             <div class="col-4">
                 <strong>Número do Registro:</strong>
-                <span>Não informado</span>
+                <span>{{ $animal->number_definitive ?? 'Não informado' }}</span>
             </div>
             <div class="col-4">
                 <strong>Data de Nascimento:</strong>
-                <span>19/02/2022</span>
+                <span>{{ $animal->birth_date }}</span>
             </div>
             <div class="col-4">
                 <strong>Raça:</strong>
-                <span>MANGALARGA MARCHADOR</span>
+                <span>{{ $animal->breed }}</span>
             </div>
             <div class="col-4">
                 <strong>Código Interno:</strong>
-                <span>EQU68946</span>
+                <span>{{ $animal->codlab }}</span>
             </div>
             <div class="col-4 offset-4">
                 <strong>Sexo:</strong>
-                <span>Macho</span>
+                <span>{{ $animal->sex }}</span>
             </div>
             <div class="col-4">
                 <strong>Proprietário:</strong>
-                <span>RODOLFO SARTORE NUNES</span>
+                <span>{{ $owner->owner_name }}</span>
             </div>
             <div class="col-4 offset-4">
                 <strong>Cód. Barras:</strong>
@@ -122,11 +122,11 @@
             </div>
             <div class="col-12">
                 <strong>Endereço:</strong>
-                <span>RUA 25 - 20 - 25.928-060 - Magé - RJ</span>
+                <span>{{ $owner->address }}, {{ $owner->number }}  {{ $owner->complement }} - {{ $owner->city }} - {{ $owner->state }}</span>
             </div>
             <div class="col-4">
                 <strong>Tipo Amostra:</strong>
-                <span>Pelo</span>
+                <span>{{ $datas->tipo }}</span>
             </div>
             <div class="col-4">
                 <strong>Data da Coleta:</strong>
@@ -134,15 +134,15 @@
             </div>
             <div class="col-12">
                 <strong>Responsável pela Coleta/Registro Profissional ou CPF:</strong>
-                <span>MOACYR BARBOSA SOARES NETO - CRMV - 827.224.987-15</span>
+                <span>{{ $tecnico->professional_name }} - {{ $tecnico->document }}</span>
             </div>
             <div class="col-4">
                 <strong>Data do Recebimento</strong>
-                <span>23/02/2022</span>
+                <span>{{ $datas->data_recebimento }}</span>
             </div>
             <div class="col-4 offset-4">
                 <strong>Data de Entrada na Área Técnica:</strong>
-                <span>13/04/2022</span>
+                <span>{{ $datas->data_laboratorio }}</span>
             </div>
             <div class="col-12">
                 <strong>OBSERVAÇÃO:</strong>
@@ -154,7 +154,7 @@
 
             <div class="col-12">
                 <strong>Data da Realização:</strong>
-                <span>19/04/2022</span>
+                <span>{{ $laudo->data_realizacao }}</span>
             </div>
             <div class="col-12">
                 <strong>Metodologia Utilizada:</strong>

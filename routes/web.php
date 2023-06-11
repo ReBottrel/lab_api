@@ -116,6 +116,7 @@ Route::middleware(['auth:admin'])->group(function () {
     // })->name('laudo');
 
     Route::post('gerar-laudo', [LaudoController::class, 'store'])->name('gerar.laudo');
+    Route::get('ver-laudo/{id}', [LaudoController::class, 'show'])->name('ver.laudo');
 
     Route::get('gerar-pdf', [TesteController::class, 'gerarPdf'])->name('gerar.pdf');
 

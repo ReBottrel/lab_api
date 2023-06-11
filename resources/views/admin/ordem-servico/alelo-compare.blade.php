@@ -152,6 +152,21 @@
             </div>
             <input type="hidden" name="" id="laudo">
         </div>
+        <div id="buttons" class="d-none my-3">
+            <div class="d-flex">
+                <div>
+                    <button class="btn btn-primary" id="ver-laudo">
+                        VER LAUDO
+                    </button>
+                    <button class="btn btn-primary" id="imprimir">
+                        ASSINAR E IMPRIMIR LAUDO
+                    </button>
+                    <button class="btn btn-primary" id="finalizar">
+                        FINALIZAR
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
 @endsection
 @section('js')
@@ -296,9 +311,14 @@
                     },
                     success: function(response) {
                         console.log(response);
+                        $('#buttons').removeClass('d-none');
                         $('#laudo').val(response.id);
                     }
                 });
+            });
+            $(document).on('click', '#ver-laudo', function() {
+                let laudo = $('#laudo').val();
+                window.open(`/ver-laudo/${laudo}`, '_blank');
             });
         });
     </script>

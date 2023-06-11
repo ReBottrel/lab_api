@@ -19,6 +19,7 @@ class CreateLaudosTable extends Migration
             $table->integer('mae_id');
             $table->integer('pai_id');
             $table->string('veterinario');
+            $table->integer('veterinario_id');
             $table->integer('owner_id');
             $table->string('data_coleta')->nullable();
             $table->string('data_realizacao')->nullable();
@@ -26,6 +27,7 @@ class CreateLaudosTable extends Migration
             $table->string('codigo_busca')->nullable();
             $table->text('observacao')->nullable();
             $table->text('conclusao')->nullable();
+            $table->string('tipo')->nullable();
             $table->timestamps();
         });
     }

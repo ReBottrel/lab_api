@@ -21,5 +21,7 @@ class Laudo extends Model
         'codigo_busca',
         'observacao',
         'conclusao',
+        'tipo',
+        'veterinario_id'
     ];
 }
