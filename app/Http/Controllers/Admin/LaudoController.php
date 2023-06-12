@@ -3,22 +3,25 @@
 namespace App\Http\Controllers\Admin;
 
 use TCPDF;
+use X509\Signer;
 use Dompdf\Dompdf;
+use X509\PrivateKey;
 use App\Models\Alelo;
 use App\Models\Laudo;
 use App\Models\Owner;
+use X509\Certificate;
 use App\Models\Animal;
 use App\Models\Tecnico;
 use phpseclib\Crypt\RSA;
-use phpseclib3\File\X509;
+use phpseclib\File\ASN1;
+use phpseclib\File\X509;
 use App\Models\DataColeta;
-use phpseclib3\Crypt\Common\PrivateKey;
+use X509\CertificationPath;
 use App\Models\OrdemServico;
 use App\Models\OrderRequest;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
-use LSNepomuceno\LaravelA1PdfSign\Sign\ManageCert;
 
 class LaudoController extends Controller
 {
@@ -68,7 +71,6 @@ class LaudoController extends Controller
         $pai = Animal::with('alelos')->find($laudo->pai_id);
         return view('admin.ordem-servico.laudo', get_defined_vars());
     }
-
     public function gerarPdf($id)
     {
         $laudo = Laudo::find($id);
@@ -92,36 +94,41 @@ class LaudoController extends Controller
 
         // Obtém o conteúdo do PDF gerado
         $output = $dompdf->output();
+
         // Carrega o certificado A1 e a chave privada correspondente (no formato PFX)
-        $certificado = file_get_contents(Storage::path('certificado/LOCI_BIOTECNOLOGIA_LTDA_18496213000111_1661426936642166100.pfx'));
+        $pfxPath = Storage::path('certificado/LOCI_BIOTECNOLOGIA_LTDA_18496213000111_1661426936642166100.pfx');
         $senha = 'Loci4331';
 
-        // Cria uma instância do TCPDF
-        $pdf = new TCPDF();
+        // Read the PFX file
+        $pfxContent = file_get_contents($pfxPath);
 
-
-        // Define o formato do certificado (PFX)
-        $cert_format = 'PFX';
-
-        // Carrega o certificado e a chave privada
+        // Extract the certificate and private key
         $x509 = new X509();
-        $certdata = $x509->loadX509($certificado);
-        $privatekey = new RSA();
-        $privatekey->load($certificado, $cert_format, $senha);
+        $asn1 = new ASN1();
 
-        // Obtém a chave privada em formato PEM
-        $privatekey_pem = $privatekey->toString('PKCS8');
+        // Parse the certificate
+        $cert = $x509->loadX509($pfxContent);
 
-        // Assina o PDF
-        $pdf->setSignature($privatekey_pem, $certdata, $senha, '', 2);
+        // Extract the private key
+        $privateKey = $x509->loadCA($pfxContent, false, $senha);
 
-        // Define o conteúdo do PDF gerado como o documento principal
-        $pdf->SetContent($output);
+        // Create an RSA instance
+        $rsa = new RSA();
 
-        // Define o nome do arquivo de saída
-        $outputFilename = 'caminho/para/salvar/o/pdf-assinado.pdf';
+        // Set the private key
+        $rsa->loadKey($privateKey);
 
-        // Salva o PDF assinado
-        $pdf->Output($outputFilename, 'F');
+        // Sign the PDF content
+        $signature = $rsa->sign($output);
+
+        // Generate a unique filename for the signed PDF
+        $filename = 'signed-pdf-' . time() . '.pdf';
+
+        // Save the signed PDF in the public directory
+        Storage::disk('public')->put($filename, $output);
+
+        // Generate the download response
+        $path = storage_path('app/public/' . $filename);
+        return response()->download($path, $filename);
     }
 }
