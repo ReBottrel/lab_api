@@ -91,13 +91,34 @@ class LaudoController extends Controller
         // Obtém o conteúdo do PDF gerado
         $output = $dompdf->output();
 
-        try {
-            $cert = new ManageCert;
-            $cert->setPreservePfx() // If you need to preserve the PFX certificate file
-                ->fromPfx('certificado/LOCI_BIOTECNOLOGIA_LTDA_18496213000111_1661426936642166100.pfx', 'Loci4331');
-            dd($cert->getCert());
-        } catch (\Throwable $th) {
-           dd($th);
-        }
+        // Carrega o certificado A1 e a chave privada correspondente
+        $certFile =  public_path('certificado/LOCI_BIOTECNOLOGIA_LTDA_18496213000111_1661426936642166100.pfx');
+        $certPassword = 'Loci4331';
+
+        $certData = file_get_contents($certFile);
+        $x509 = new X509();
+        $cert = $x509->loadX509($certData);
+        $pkey = $x509->loadCA($certData, $certPassword);
+
+        // Cria uma instância do TCPDF
+        $tcpdf = new TCPDF();
+       
+        // Configura a aparência e posição da assinatura
+        $tcpdf->addEmptySignatureAppearance(0, 0, 0, 0);
+        $tcpdf->setSignatureAppearance(0, 0, 0, 0);
+
+        // Adiciona a assinatura ao PDF gerado
+        $signature = $tcpdf->setSignature($pkey, $cert, $certPassword);
+        $tcpdf->addSignature($signature, $pkey, $cert, $certPassword);
+     
+        // Obtém o nome do arquivo do PDF
+        $pdfFileName = 'documento.pdf';
+
+        // Salva o PDF com a assinatura em um arquivo
+        $pdfPath =  public_path('pdf/') . $pdfFileName;
+        file_put_contents($pdfPath, $tcpdf->Output('S'));
+
+        // Retorna o caminho completo do arquivo PDF gerado
+        return $pdfPath;
     }
 }
