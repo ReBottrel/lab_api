@@ -98,8 +98,9 @@ class LaudoController extends Controller
 
         $certData = file_get_contents($certFile);
         $x509 = new X509();
-        $cert = $x509->loadX509($certData);
-        $pkey = $x509->loadCA($certData, $certPassword);
+        $x509->load($certData, X509::FORMAT_PFX, $certPassword);
+        $cert = $x509->getCertificate();
+        $pkey = $x509->getPrivateKey();
 
         // Cria uma instância do TCPDF
         $tcpdf = new TCPDF();
