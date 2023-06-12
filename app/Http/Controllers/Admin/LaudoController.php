@@ -96,7 +96,7 @@ class LaudoController extends Controller
         try {
             $cert = new ManageCert;
             $cert->setPreservePfx() // If you need to preserve the PFX certificate file
-                ->fromPfx(Storage::path('certificado/LOCI_BIOTECNOLOGIA_LTDA_18496213000111_1661426936642166100.pfx'), 'loci4331');
+                ->fromPfx(Storage::path('certificado/LOCI_BIOTECNOLOGIA_LTDA_18496213000111_1661426936642166100.pfx'), 'Loci4331');
             dd($cert->getCert());
         } catch (\Throwable $th) {
             dd($th);
