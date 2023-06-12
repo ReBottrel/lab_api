@@ -16,6 +16,7 @@ use App\Models\OrdemServico;
 use App\Models\OrderRequest;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Storage;
 use LSNepomuceno\LaravelA1PdfSign\Sign\ManageCert;
 
 class LaudoController extends Controller
@@ -92,7 +93,7 @@ class LaudoController extends Controller
         $output = $dompdf->output();
 
         // Carrega o certificado A1 e a chave privada correspondente
-        $certFile =  public_path('certificado/LOCI_BIOTECNOLOGIA_LTDA_18496213000111_1661426936642166100.pfx');
+        $certFile =  Storage::path('certificado/LOCI_BIOTECNOLOGIA_LTDA_18496213000111_1661426936642166100.pfx');
         $certPassword = 'Loci4331';
 
         $certData = file_get_contents($certFile);
@@ -102,7 +103,7 @@ class LaudoController extends Controller
 
         // Cria uma instância do TCPDF
         $tcpdf = new TCPDF();
-       
+
         // Configura a aparência e posição da assinatura
         $tcpdf->addEmptySignatureAppearance(0, 0, 0, 0);
         $tcpdf->setSignatureAppearance(0, 0, 0, 0);
@@ -110,7 +111,7 @@ class LaudoController extends Controller
         // Adiciona a assinatura ao PDF gerado
         $signature = $tcpdf->setSignature($pkey, $cert, $certPassword);
         $tcpdf->addSignature($signature, $pkey, $cert, $certPassword);
-     
+
         // Obtém o nome do arquivo do PDF
         $pdfFileName = 'documento.pdf';
 
