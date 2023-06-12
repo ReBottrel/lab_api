@@ -379,7 +379,7 @@
                     <p>
                         Utilize um leitor de QRCode ou acesse o site:
                         <u>https://i.locilab.com.br/validacao</u> e informe o código
-                        <b>Mpbisd4kVwP1 </b>para validar este laudo.
+                        <b>{{ $laudo->codigo_busca }} </b>para validar este laudo.
                     </p>
 
                 </div>
@@ -392,7 +392,7 @@
                 <strong>Verificação de Parentesco com Mãe e Pai</strong>
             </div>
             <div class="text-end">
-                <span><strong>Relat. n</strong> 68947.68946.52503</span>
+                <span><strong>Relat. n</strong> {{ $laudo->id }}</span>
             </div>
             <div class="text-center my-1 text-decoration-underline">
                 <strong>Dados Relativos à Amostra</strong>
@@ -401,69 +401,71 @@
                 <div class="content_1">
                     <div class="">
                         <strong>Nome do Animal Testado:</strong>
-                        <span>teste data 2</span>
+                        <span>{{ $animal->animal_name }}</span>
                     </div>
                     <div class="">
                         <strong>Número do Registro:</strong>
-                        <span>Não informado</span>
+                        <span>{{ $animal->number_definitive ?? 'Não informado' }}</span>
                     </div>
                     <div class="">
                         <strong>Raça:</strong>
-                        <span>MANGALARGA MARCHADOR</span>
+                        <span>{{ $animal->breed }}</span>
                     </div>
                     <div class="">
                         <strong>Sexo:</strong>
-                        <span>Macho</span>
+                        <span>{{ $animal->sex }}</span>
                     </div>
                     <div class="">
                         <strong>Cód. Barras:</strong>
-                        <span>934918</span>
+                        <span>{{ $animal->codlab }}</span>
                     </div>
                     <div class="">
                         <strong>Endereço:</strong>
-                        <span>Rua teste, 104 Piraquara - PR</span>
+                        <span>{{ $owner->address }}, {{ $owner->number }} {{ $owner->complement }} -
+                            {{ $owner->city }} -
+                            {{ $owner->state }}</span>
                     </div>
 
                 </div>
                 <div class="content_2">
                     <div class="">
                         <strong>Tipo Amostra:</strong>
-                        <span>Pelo</span>
+                        <span>{{ $datas->tipo }}</span>
                     </div>
                     <div class="">
                         <strong>Espécie:</strong>
-                        <span>Equina</span>
+                        <span>{{ $animal->especies }}</span>
                     </div>
                     <div class="">
                         <strong>Data de Nascimento:</strong>
-                        <span>19/02/2022</span>
+                        <span>{{ $animal->birth_date }}</span>
                     </div>
                     <div class="">
                         <strong>Código Interno:</strong>
-                        <span>EQU68946</span>
+                        <span>{{ $animal->codlab }}</span>
                     </div>
                     <div class="">
                         <strong>Proprietário:</strong>
-                        <span>FELIPE DA CRUZ M</span>
+                        <span>{{ $owner->owner_name }}</span>
                     </div>
                     <div class="">
                         <strong>Data da Coleta:</strong>
-                        <span>15/03/2022</span>
+                        <span>{{ $animal->collect_date }}</span>
                     </div>
                 </div>
             </div>
             <div>
                 <div class="">
                     <strong>Responsável pela Coleta/Registro Profissional ou CPF:</strong>
-                    <span>FELIPE CRUZ - CRMV - 827.224.987-15</span>
+                    <span>{{ $tecnico->professional_name }} - {{ $tecnico->document }}</span>
                 </div>
                 <div class="">
                     <strong>Data do Recebimento</strong>
-                    <span>23/02/2022</span>
+                    <span>{{ $datas->data_recebimento }}</span>
                 </div>
                 <div class="">
                     <strong>Data de Entrada na Área Técnica:</strong>
-                    <span>13/04/2022</span>
+                    <span>{{ $datas->data_laboratorio }}</span>
                 </div>
                 <div class="">
                     <strong>OBSERVAÇÃO:</strong>

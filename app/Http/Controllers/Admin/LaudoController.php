@@ -12,6 +12,7 @@ use App\Models\OrderRequest;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Tecnico;
+use Dompdf\Dompdf;
 
 class LaudoController extends Controller
 {
@@ -57,6 +58,33 @@ class LaudoController extends Controller
         $owner = Owner::find($laudo->owner_id);
         $datas = DataColeta::where('id_animal', $laudo->animal_id)->first();
         $tecnico = Tecnico::find($laudo->veterinario_id);
+        $mae = Animal::with('alelos')->find($laudo->mae_id);
+        $pai = Animal::with('alelos')->find($laudo->pai_id);
         return view('admin.ordem-servico.laudo', get_defined_vars());
+    }
+
+
+    public function gerarPdf($id)
+    {
+        $laudo = Laudo::find($id);
+        $animal = Animal::find($laudo->animal_id);
+        $owner = Owner::find($laudo->owner_id);
+        $datas = DataColeta::where('id_animal', $laudo->animal_id)->first();
+        $tecnico = Tecnico::find($laudo->veterinario_id);
+        $mae = Animal::with('alelos')->find($laudo->mae_id);
+        $pai = Animal::with('alelos')->find($laudo->pai_id);
+        // Cria uma instância do Dompdf
+        $dompdf = new Dompdf();
+
+        // Define o tamanho e a orientação da página como A4
+        $dompdf->setPaper('A4', 'portrait');
+
+        // Renderiza o HTML em PDF
+        $html = view('admin.ordem-servico.laudo-imp', get_defined_vars());
+        $dompdf->loadHtml($html);
+        $dompdf->render();
+
+        // Gera o PDF e envia para o navegador
+        $dompdf->stream('documento.pdf');
     }
 }

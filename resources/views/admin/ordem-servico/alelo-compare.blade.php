@@ -158,8 +158,8 @@
                     <button class="btn btn-primary" id="ver-laudo">
                         VER LAUDO
                     </button>
-                    <button class="btn btn-primary" id="imprimir">
-                        ASSINAR E IMPRIMIR LAUDO
+                    <button class="btn btn-primary" id="pdf">
+                        GERAR PDF E ASSINAR
                     </button>
                     <button class="btn btn-primary" id="finalizar">
                         FINALIZAR
@@ -320,6 +320,11 @@
                 let laudo = $('#laudo').val();
                 window.open(`/ver-laudo/${laudo}`, '_blank');
             });
+            $(document).on('click', '#pdf', function() {
+                let laudo = $('#laudo').val();
+                window.open(`/gerar-pdf/${laudo}`, '_blank');
+            });
+
         });
     </script>
 @endsection
