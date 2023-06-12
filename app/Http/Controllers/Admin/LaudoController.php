@@ -12,6 +12,7 @@ use App\Models\Tecnico;
 use phpseclib\Crypt\RSA;
 use phpseclib3\File\X509;
 use App\Models\DataColeta;
+use phpseclib3\Crypt\Common\PrivateKey;
 use App\Models\OrdemServico;
 use App\Models\OrderRequest;
 use Illuminate\Http\Request;
