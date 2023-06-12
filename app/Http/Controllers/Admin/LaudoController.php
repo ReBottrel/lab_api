@@ -97,7 +97,7 @@ class LaudoController extends Controller
                 ->fromPfx('certificado/LOCI_BIOTECNOLOGIA_LTDA_18496213000111_1661426936642166100.pfx', 'Loci4331');
             dd($cert->getCert());
         } catch (\Throwable $th) {
-            dd($th); 
+           dd($th);
         }
     }
 }
