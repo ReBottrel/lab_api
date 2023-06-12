@@ -2,17 +2,21 @@
 
 namespace App\Http\Controllers\Admin;
 
+use TCPDF;
+use Dompdf\Dompdf;
 use App\Models\Alelo;
 use App\Models\Laudo;
 use App\Models\Owner;
 use App\Models\Animal;
+use App\Models\Tecnico;
+use phpseclib\Crypt\RSA;
+use phpseclib3\File\X509;
 use App\Models\DataColeta;
 use App\Models\OrdemServico;
 use App\Models\OrderRequest;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\Tecnico;
-use Dompdf\Dompdf;
+use LSNepomuceno\LaravelA1PdfSign\Sign\ManageCert;
 
 class LaudoController extends Controller
 {
@@ -63,7 +67,6 @@ class LaudoController extends Controller
         return view('admin.ordem-servico.laudo', get_defined_vars());
     }
 
-
     public function gerarPdf($id)
     {
         $laudo = Laudo::find($id);
@@ -73,6 +76,7 @@ class LaudoController extends Controller
         $tecnico = Tecnico::find($laudo->veterinario_id);
         $mae = Animal::with('alelos')->find($laudo->mae_id);
         $pai = Animal::with('alelos')->find($laudo->pai_id);
+
         // Cria uma instância do Dompdf
         $dompdf = new Dompdf();
 
@@ -84,7 +88,16 @@ class LaudoController extends Controller
         $dompdf->loadHtml($html);
         $dompdf->render();
 
-        // Gera o PDF e envia para o navegador
-        $dompdf->stream('documento.pdf');
+        // Obtém o conteúdo do PDF gerado
+        $output = $dompdf->output();
+
+        try {
+            $cert = new ManageCert;
+            $cert->setPreservePfx() // If you need to preserve the PFX certificate file
+                ->fromPfx('certificado/LOCI_BIOTECNOLOGIA_LTDA_18496213000111_1661426936642166100.pfx', 'Loci4331');
+            dd($cert->getCert());
+        } catch (\Throwable $th) {
+            dd($th); 
+        }
     }
 }
