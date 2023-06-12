@@ -81,54 +81,33 @@ class LaudoController extends Controller
         $mae = Animal::with('alelos')->find($laudo->mae_id);
         $pai = Animal::with('alelos')->find($laudo->pai_id);
 
-        // Cria uma instância do Dompdf
-        $dompdf = new Dompdf();
+        $pdf = new TCPDF('P', 'mm', 'A4', true, 'UTF-8', false);
 
-        // Define o tamanho e a orientação da página como A4
-        $dompdf->setPaper('A4', 'portrait');
+        // Define informações do documento
+        $pdf->SetCreator('Seu Nome');
+        $pdf->SetAuthor('Seu Nome');
+        $pdf->SetTitle('Título do Documento');
+        $pdf->SetSubject('Assinatura Digital');
 
-        // Renderiza o HTML em PDF
+        // Adiciona uma página
+        $pdf->AddPage();
+
+        // Renderiza o HTML no PDF
         $html = view('admin.ordem-servico.laudo-imp', get_defined_vars());
-        $dompdf->loadHtml($html);
-        $dompdf->render();
+        $pdf->writeHTML($html, true, false, true, false, '');
 
-        // Obtém o conteúdo do PDF gerado
-        $output = $dompdf->output();
-
-        // Carrega o certificado A1 e a chave privada correspondente (no formato PFX)
-        $pfxPath = Storage::path('certificado/LOCI_BIOTECNOLOGIA_LTDA_18496213000111_1661426936642166100.pfx');
-        $senha = 'Loci4331';
-
-        // Read the PFX file
-        $pfxContent = file_get_contents($pfxPath);
-
-        // Extract the certificate and private key
-        $x509 = new X509();
-        $asn1 = new ASN1();
-
-        // Parse the certificate
-        $cert = $x509->loadX509($pfxContent);
-
-        // Extract the private key
-        $privateKey = $x509->loadCA($pfxContent, false, $senha);
-
-        // Create an RSA instance
-        $rsa = new RSA();
-
-        // Set the private key
-        $rsa->loadKey($privateKey);
-
-        // Sign the PDF content
-        $signature = $rsa->sign($output);
-
-        // Generate a unique filename for the signed PDF
+        // Define o nome do arquivo
         $filename = 'signed-pdf-' . time() . '.pdf';
 
-        // Save the signed PDF in the public directory
-        Storage::disk('public')->put($filename, $output);
+        // Carrega o certificado A1 e a chave privada correspondente (no formato PFX)
+        $certificate  = Storage::path('certificado/LOCI_BIOTECNOLOGIA_LTDA_18496213000111_1661426936642166100.pfx');
+        $password  = 'Loci4331';
+        $pdf->setSignature($certificate, $certificate, $password, '', 2, []);
 
-        // Generate the download response
-        $path = storage_path('app/public/' . $filename);
-        return response()->download($path, $filename);
+        // Salva o PDF no diretório público
+        $pdf->Output(public_path($filename), 'F');
+    
+        // Gera a resposta de download
+        return response()->download(public_path($filename), $filename);
     }
 }
