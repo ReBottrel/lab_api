@@ -98,16 +98,19 @@ class LaudoController extends Controller
         // Cria uma instância do TCPDF
         $pdf = new TCPDF();
 
+        // Cria uma instância do TCPDF
+        $pdf = new TCPDF();
+
         // Define o formato do certificado (PFX)
         $cert_format = 'PFX';
 
         // Carrega o certificado e a chave privada
         $x509 = new X509();
         $certdata = $x509->loadX509($certificado);
-        $privatekey = $x509->loadX509($certificado, $cert_format, $senha);
+        $privatekey = new PrivateKey($x509->loadX509($certificado, $cert_format, $senha));
 
         // Obtém a chave privada em formato PEM
-        $privatekey_pem = $x509->asn1map($privatekey[3]['content'][2]['content'][0]['content'][1]['content'][2]['content'][0]['content'], ASN1::PRIVATE_KEY);
+        $privatekey_pem = $privatekey->toString('PKCS8');
 
         // Assina o PDF
         $pdf->setSignature($privatekey_pem, $certdata, $senha, '', 2);
