@@ -91,15 +91,34 @@ class LaudoController extends Controller
 
         // Obtém o conteúdo do PDF gerado
         $output = $dompdf->output();
+        // Carrega o certificado A1 e a chave privada correspondente (no formato PFX)
+        $certificado = file_get_contents(Storage::path('certificado/LOCI_BIOTECNOLOGIA_LTDA_18496213000111_1661426936642166100.pfx'));
+        $senha = 'Loci4331';
 
-        // Carrega o certificado A1 e a chave privada correspondente
-        try {
-            $cert = new ManageCert;
-            $cert->setPreservePfx() // If you need to preserve the PFX certificate file
-                ->fromPfx(Storage::path('certificado/LOCI_BIOTECNOLOGIA_LTDA_18496213000111_1661426936642166100.pfx'), 'Loci4331');
-            dd($cert->getCert());
-        } catch (\Throwable $th) {
-            dd($th);
-        }
+        // Cria uma instância do TCPDF
+        $pdf = new TCPDF();
+
+        // Define o formato do certificado (PFX)
+        $cert_format = 'PFX';
+
+        // Carrega o certificado e a chave privada
+        $x509 = new X509();
+        $certdata = $x509->loadX509($certificado);
+        $privatekey = $x509->loadX509($certificado, $cert_format, $senha);
+
+        // Obtém a chave privada em formato PEM
+        $privatekey_pem = $x509->asn1map($privatekey[3]['content'][2]['content'][0]['content'][1]['content'][2]['content'][0]['content'], ASN1::PRIVATE_KEY);
+
+        // Assina o PDF
+        $pdf->setSignature($privatekey_pem, $certdata, $senha, '', 2);
+
+        // Define o conteúdo do PDF gerado como o documento principal
+        $pdf->SetContent($output);
+
+        // Define o nome do arquivo de saída
+        $outputFilename = 'caminho/para/salvar/o/pdf-assinado.pdf';
+
+        // Salva o PDF assinado
+        $pdf->Output($outputFilename, 'F');
     }
 }
