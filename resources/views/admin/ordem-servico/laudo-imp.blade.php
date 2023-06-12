@@ -480,7 +480,7 @@
 
                 <div class="col-12">
                     <strong>Data da Realização:</strong>
-                    <span>19/04/2022</span>
+                    <span>{{ $laudo->data_realizacao }}</span>
                 </div>
                 <div class="col-12">
                     <strong>Metodologia Utilizada:</strong>
@@ -500,17 +500,17 @@
                     <thead>
                         <tr>
                             <th scope="col">Nome</th>
-                            <th scope="col">REVISTA DA CANAÃ</th>
-                            <th scope="col">teste data 2</th>
-                            <th scope="col">RARO DA CANAÃ</th>
+                            <th scope="col">{{ $mae->animal_name }}</th>
+                            <th scope="col">{{ $animal->animal_name }}</th>
+                            <th scope="col">{{ $pai->animal_name }}</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
                             <th>N Relatório de Ensaio</th>
-                            <th>EQU84990</th>
-                            <th>EQU84989</th>
-                            <th>EQU84992</th>
+                            <th>{{ $mae->codlab }}</th>
+                            <th>{{ $animal->codlab }}</th>
+                            <th>{{ $pai->codlab }}</th>
                         </tr>
                         <tr>
                             <th>Microssatélites</th>
@@ -518,87 +518,52 @@
                             <th>Alelos</th>
                             <th>Alelos</th>
                         </tr>
-                        <tr>
-                            <td>AHT4</td>
-                            <td>H - M</td>
-                            <td>K - M</td>
-                            <td>K - N</td>
-                        </tr>
-                        <tr>
-                            <td>AHT5</td>
-                            <td>J - N</td>
-                            <td>J - N</td>
-                            <td>J - J</td>
-                        </tr>
-                        <tr>
-                            <td>ASB2</td>
-                            <td>C - I</td>
-                            <td>I - M</td>
-                            <td>* - *</td>
-                        </tr>
-                        <tr>
-                            <td>ASB23</td>
-                            <td>J - K</td>
-                            <td>J - K</td>
-                            <td>J - J</td>
-                        </tr>
-                        <tr>
-                            <td>HMS2</td>
-                            <td>H - I</td>
-                            <td>I - K</td>
-                            <td>K - L</td>
-                        </tr>
-                        <tr>
-                            <td>HMS3</td>
-                            <td>O - P</td>
-                            <td>P - P</td>
-                            <td>P - P</td>
-                        </tr>
-                        <tr>
-                            <td>HMS6</td>
-                            <td>O - P</td>
-                            <td>O - O</td>
-                            <td>O - P</td>
-                        </tr>
-                        <tr>
-                            <td>HMS7</td>
-                            <td>K - L</td>
-                            <td>L - N</td>
-                            <td>K - N</td>
-                        </tr>
-                        <tr>
-                            <td>HTG10</td>
-                            <td>* - *</td>
-                            <td>M - O</td>
-                            <td>* - *</td>
-                        </tr>
-                        <tr>
-                            <td>HTG4</td>
-                            <td>L - L</td>
-                            <td>L - M</td>
-                            <td>L - L</td>
-                        </tr>
-                        <tr>
-                            <td>HTG7</td>
-                            <td>O - O</td>
-                            <td>O - O</td>
-                            <td>O - O</td>
-                        </tr>
-                        <tr>
-                            <td>VHL20</td>
-                            <td>L - M</td>
-                            <td>L - M</td>
-                            <td>L - M</td>
-                        </tr>
+                        @foreach ($animal->alelos as $key => $item)
+                            <tr>
+                                <td>{{ $item->marcador }}</td>
+                                <td>
+                                    @if ($mae->alelos[$key]->alelo1 == '')
+                                        *
+                                    @else
+                                        {{ $mae->alelos[$key]->alelo1 }}
+                                        @endif - @if ($mae->alelos[$key]->alelo2 == '')
+                                            *
+                                        @else
+                                            {{ $mae->alelos[$key]->alelo2 }}
+                                        @endif
+                                </td>
+                                <td>
+                                    @if ($item->alelo1 == '')
+                                        *
+                                    @else
+                                        {{ $item->alelo1 }}
+                                        @endif - @if ($item->alelo2 == '')
+                                            *
+                                        @else
+                                            {{ $item->alelo2 }}
+                                        @endif
+                                </td>
+                                <td>
+                                    @if ($pai->alelos[$key]->alelo1 == '')
+                                        *
+                                    @else
+                                        {{ $pai->alelos[$key]->alelo1 }}
+                                        @endif - @if ($pai->alelos[$key]->alelo2 == '')
+                                            *
+                                        @else
+                                            {{ $pai->alelos[$key]->alelo2 }}
+                                        @endif
+                                </td>
+                            </tr>
+                        @endforeach
+
                     </tbody>
                 </table>
             </div>
             <div>
                 <strong>Conclusão</strong>
                 <span>
-                    Conclui-se que o produto teste data 2 está qualificado pela
-                    genitora OLINDA DA GROTA VIVA (149467) e está qualificado pelo genitor
-                    IMPACTO DO LUAL (53753).
+                    {{ $laudo->conclusao }}
                 </span>
             </div>
             <div>
@@ -610,15 +575,16 @@
             </div>
             <div>
                 <span>
-                    GENITORA: animal OLINDA DA GROTA VIVA, número ECVP13-14209, emitido pelo
-                    laboratório Linhagen em 16/05/2017.
+                    GENITORA: animal {{ $mae->animal_name }}, número {{ $mae->codlab }}, emitido pelo
+                    laboratório Linhagen em {{ date('d/m/Y', strtotime($mae->created_at)) }}.
                 </span>
                 <br>
                 <span>
-                    FILHO(A): animal teste data 2, número LO22-68946, emitido pelo
-                    laboratório Loci Genética Laboratorial em 05/05/2022. GENITOR: animal
-                    IMPACTO DO LUAL, número 01516330.ECVP17-26251, emitido pelo laboratório
-                    Linhagen em 30/07/2021.
+                    FILHO(A): animal {{ $animal->animal_name }}, número {{ $animal->codlab }}, emitido pelo
+                    laboratório Loci Genética Laboratorial em {{ date('d/m/Y', strtotime($animal->created_at)) }}.
+                    GENITOR: animal
+                    {{ $pai->animal_name }}, número {{ $pai->codlab }}, emitido pelo laboratório
+                    Linhagen em {{ date('d/m/Y', strtotime($pai->created_at)) }}.
                 </span>
                 <br>
                 <span>
@@ -626,7 +592,12 @@
                     emissores.
                 </span>
             </div>
-            <p>Lagoa Santa, 05 de maio de 2022.</p>
+            @php
+                setlocale(LC_TIME, 'ptb');
+                $date = \Carbon\Carbon::now();
+                $textDate = $date->formatLocalized('%d de %B de %Y');
+            @endphp
+            <p>Lagoa Santa, {{ $textDate }}</p>
             <p>Conferido, liberado e assinado eletronicamente por:</p>
             <div class="assinatura text-center">
                 <img width="100" height="30"
