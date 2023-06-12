@@ -324,7 +324,37 @@
                 let laudo = $('#laudo').val();
                 window.open(`/gerar-pdf/${laudo}`, '_blank');
             });
+            $(document).on('click', '#finalizar', function(){
+                let laudo = $('#laudo').val();
+                $.ajax({
+                    url: "{{ route('finalizar.laudo') }}",
+                    type: 'POST',
+                    data: {
+                        _token: "{{ csrf_token() }}",
+                        laudo: laudo,
+                    },
+                    success: function(response) {
+                        console.log(response);
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Laudo finalizado com sucesso!',
+                            showConfirmButton: true,
+                            timer: 1500,
+                            timerProgressBar: true,
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = "{{ route('ordem.servico.all') }}";
+                            }
+                        }
+                        )
+                    },
 
+                      
+                    
+                });
+            });
         });
+   
+     
     </script>
 @endsection

@@ -21,6 +21,7 @@
         "picqer/php-barcode-generator": "^2.2",
         "rap2hpoutre/fast-excel": "^4.1",
         "realrashid/sweet-alert": "^7.0",
+        "spatie/pdf-to-image": "^2.2",
         "tecnickcom/tcpdf": "^6.6",
         "webklex/laravel-imap": "^2.4"
     },

@@ -3,20 +3,19 @@
 namespace App\Http\Controllers\Admin;
 
 use TCPDF;
-use X509\Signer;
+
 use Dompdf\Dompdf;
-use X509\PrivateKey;
-use App\Models\Alelo;
 use App\Models\Laudo;
+
 use App\Models\Owner;
-use X509\Certificate;
 use App\Models\Animal;
 use App\Models\Tecnico;
 use phpseclib\Crypt\RSA;
 use phpseclib\File\ASN1;
 use phpseclib\File\X509;
+// use X509\CertificationPath;
 use App\Models\DataColeta;
-use X509\CertificationPath;
+use Spatie\PdfToImage\Pdf;
 use App\Models\OrdemServico;
 use App\Models\OrderRequest;
 use Illuminate\Http\Request;
@@ -81,33 +80,92 @@ class LaudoController extends Controller
         $mae = Animal::with('alelos')->find($laudo->mae_id);
         $pai = Animal::with('alelos')->find($laudo->pai_id);
 
-        $pdf = new TCPDF('P', 'mm', 'A4', true, 'UTF-8', false);
+        // Cria uma instância do Dompdf
+        $dompdf = new Dompdf();
 
-        // Define informações do documento
-        $pdf->SetCreator('Seu Nome');
-        $pdf->SetAuthor('Seu Nome');
-        $pdf->SetTitle('Título do Documento');
-        $pdf->SetSubject('Assinatura Digital');
+        // Define o tamanho e a orientação da página como A4
+        $dompdf->setPaper('A4', 'portrait');
 
-        // Adiciona uma página
-        $pdf->AddPage();
+        // Renderiza o HTML em PDF
+        $html = view('admin.ordem-servico.laudo-imp', get_defined_vars())->render();
+        $dompdf->loadHtml($html);
+        $dompdf->render();
 
-        // Renderiza o HTML no PDF
-        $html = view('admin.ordem-servico.laudo-imp', get_defined_vars());
-        $pdf->writeHTML($html, true, false, true, false, '');
+        // Obtém o conteúdo do PDF gerado
+        $output = $dompdf->output();
 
-        // Define o nome do arquivo
-        $filename = 'signed-pdf-' . time() . '.pdf';
+        // Caminho para o certificado A1 e senha
+        $certificadoPath = 'file://'. public_path('certificado/LOCI_BIOTECNOLOGIA_LTDA_18496213000111_1661426936642166100.pfx');
+        $senhaCertificado = 'Loci4331';
 
         // Carrega o certificado A1 e a chave privada correspondente (no formato PFX)
-        $certificate  = Storage::path('certificado/LOCI_BIOTECNOLOGIA_LTDA_18496213000111_1661426936642166100.pfx');
-        $password  = 'Loci4331';
-        $pdf->setSignature($certificate, $certificate, $password, '', 2, []);
+        $pfxContent = file_get_contents($certificadoPath);
 
-        // Salva o PDF no diretório público
-        $pdf->Output(public_path($filename), 'F');
-    
+        // Extrai o certificado e a chave privada
+        $x509 = new X509();
+        $asn1 = new ASN1();
+
+        // Parse o certificado
+        $cert = $x509->loadX509($pfxContent);
+
+        // Extrai a chave privada usando Crypt_RSA
+        $rsa = new RSA();
+        $rsa->loadKey($pfxContent, 'pfx', $senhaCertificado);
+        $privateKey = $rsa->getPrivateKey();
+
+        // Assina o conteúdo do PDF
+        $signature = $rsa->sign($output);
+
+        // Define a assinatura digital no documento PDF
+        $dompdf->getCanvas()->page_text(72, 18, '', null, 10, array(0, 0, 0), 0.5, false, null, 'T', 'M');
+        $dompdf->getCanvas()->page_text(72, 28, '', null, 10, array(0, 0, 0), 0.5, false, null, 'T', 'M');
+        $dompdf->getCanvas()->page_text(72, 38, '', null, 10, array(0, 0, 0), 0.5, false, null, 'T', 'M');
+        $dompdf->getCanvas()->page_text(72, 48, '', null, 10, array(0, 0, 0), 0.5, false, null, 'T', 'M');
+        $dompdf->getCanvas()->page_text(72, 58, '', null, 10, array(0, 0, 0), 0.5, false, null, 'T', 'M');
+        $dompdf->getCanvas()->page_text(72, 68, '', null, 10, array(0, 0, 0), 0.5, false, null, 'T', 'M');
+        $dompdf->getCanvas()->page_text(72, 78, '', null, 10, array(0, 0, 0), 0.5, false, null, 'T', 'M');
+        $dompdf->getCanvas()->page_text(72, 88, '', null, 10, array(0, 0, 0), 0.5, false, null, 'T', 'M');
+        $dompdf->getCanvas()->page_text(72, 98, '', null, 10, array(0, 0, 0), 0.5, false, null, 'T', 'M');
+
+        // Obtém o conteúdo do PDF assinado
+        $outputAssinado = $dompdf->output();
+
+        // Gera um nome de arquivo exclusivo para o PDF assinado
+        $filename = 'signed-pdf-' . time() . '.pdf';
+
+        // Salva o PDF assinado no diretório público
+        Storage::disk('public')->put($filename, $outputAssinado);
+
         // Gera a resposta de download
-        return response()->download(public_path($filename), $filename);
+        $path = Storage::disk('public')->path($filename);
+        return response()->download($path, $filename);
+    }
+
+    public function finalizar(Request $request)
+    {
+        $laudo = Laudo::find($request->laudo);
+      
+        return response()->json($laudo, 200);
+    }
+
+    public function verify()
+    {
+        $pdfPath = public_path('pdf/etiqueta.pdf');
+        // Converter o PDF para uma imagem (a primeira página)
+        $pdf = new Pdf($pdfPath);
+        $pdf->setResolution(300); // Define a resolução da imagem (opcional)
+        $pdf->setOutputFormat('png'); // Define o formato da imagem de saída (opcional)
+        $imagePath = $pdfPath . '.png'; // Caminho para a imagem gerada
+
+        $pdf->saveImage($imagePath);
+
+        // Verificar se o arquivo de imagem foi gerado
+        if (file_exists($imagePath)) {
+            // O documento possui assinatura(s)
+            echo "O documento está assinado.";
+        } else {
+            // O documento não possui assinaturas
+            echo "O documento não está assinado.";
+        }
     }
 }
