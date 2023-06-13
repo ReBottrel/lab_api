@@ -2,9 +2,16 @@
 
 @section('content')
     <div class="container">
-        <div class="mb-3 col-6">
-            <label for="exampleFormControlInput1" class="form-label">Buscar animal pelo nome</label>
-            <input type="text" class="form-control" id="buscar-nome">
+        <div class="row">
+            <div class="mb-3 col-6">
+                <label for="exampleFormControlInput1" class="form-label">Buscar animal pelo nome</label>
+                <select class="js-example-basic-animal" id="buscar-nome">
+
+                </select>
+            </div>
+            <div class="col-2 mt-4">
+                <button class="btn btn-primary" type="button" id="buscar">BUSCAR</button>
+            </div>
         </div>
         <div id="animal-info">
 
@@ -16,7 +23,7 @@
                 @csrf
                 <div class="card px-2">
                     <div id="marcadores">
-                 
+
                     </div>
                     <div>
                         <button type="submit" class="btn btn-primary">SALVAR</button>
@@ -29,8 +36,41 @@
 @section('js')
     <script>
         $(document).ready(function() {
-            $(document).on('blur', '#buscar-nome', function() {
-                var name = $(this).val();
+            $('.js-example-basic-animal').select2({
+                width: "100%",
+                placeholder: "Buscar animal pelo nome",
+                ajax: {
+                    url: "{{ route('get.animals.all') }}",
+                    dataType: "json",
+                    delay: 250,
+                    data: function(params) {
+
+                        return {
+                            q: params.term,
+                            page: params.page
+                        };
+                    },
+                    processResults: function(data) {
+
+                        var mappedData = data.map(function(item) {
+                            return {
+                                id: item.animal_name, // ID da opção
+                                text: item.animal_name // Valor a ser exibido no Select2
+                            };
+                        });
+
+                        return {
+                            results: mappedData
+                        };
+                    },
+                    cache: true
+                },
+                minimumInputLength: 2,
+            });
+
+
+            $(document).on('click', '#buscar', function() {
+                var name = $('#buscar-nome').val();
                 if (name != '') {
                     $.ajax({
                         url: "{{ route('animais.buscar') }}",

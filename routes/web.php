@@ -270,7 +270,8 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::get('get-breeds/{id}', [SpeciesBreedsController::class, 'getBreed'])->name('get.breed');
     Route::post('get-pai', [AnimaisController::class, 'getPai'])->name('get.pai');
     Route::post('get-mae', [AnimaisController::class, 'getMae'])->name('get.mae');
-
+    
+    Route::get('get-animals-all', [AnimaisController::class, 'buscarAnimal'])->name('get.animals.all');
 
     Route::get('export-order', [OrderController::class, 'exportOrders']);
     Route::get('export-pendentes', [OrderController::class, 'exportPedentes']);

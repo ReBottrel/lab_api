@@ -147,4 +147,17 @@ class AnimaisController extends Controller
 
         return response()->json($data);
     }
+
+    public function buscarAnimal(Request $request)
+    {
+        $query = $request->get('q');
+        $results = [];
+
+        if ($query) {
+            $animais = Animal::where('animal_name', 'like', "%{$query}%")
+                ->limit(10)
+                ->get();
+        }
+        return response()->json($animais);
+    }
 }

@@ -105,10 +105,10 @@ class AlelosController extends Controller
 
     public function getAnimal(Request $request)
     {
-        $animal = Animal::where('animal_name', $request->name)->first();
+        $animal = Animal::with('alelos')->where('animal_name', $request->name)->first();
         $especie = $animal->especies ?? 'EQUINA'; // Define 'EQUINA' como valor padrão se $animal->especies for null
         $marcadores = Marcador::where('especie', $especie)->get();
-        $view = view('admin.animais.includes.alelos-render', compact('marcadores'))->render();
+        $view = view('admin.animais.includes.alelos-render', get_defined_vars())->render();
         if ($animal) {
             return response()->json(get_defined_vars());
         }
@@ -118,28 +118,46 @@ class AlelosController extends Controller
 
     public function storeAlelo(Request $request)
     {
-        $animal = Animal::where('animal_name', $request->animal_name)->first();
+        $animal = Animal::with('alelos')->where('animal_name', $request->animal_name)->first();
 
         if ($animal) {
-            if (Alelo::where('animal_id', $animal->id)->exists()) {
-                return response()->json(['error' => 'existe']);
-            }
+            // Verifica se já existem alelos relacionados ao animal
+            if ($animal->alelos->isNotEmpty()) {
+                $alelos1 = $request->input('alelo1', []);
+                $alelos2 = $request->input('alelo2', []);
 
-            $alelos1 = $request->input('alelo1', []);
-            $alelos2 = $request->input('alelo2', []);
+                $alelos1 = array_map('strtoupper', $alelos1);
+                $alelos2 = array_map('strtoupper', $alelos2);
 
-            $alelos1 = array_map('strtoupper', $alelos1);
-            $alelos2 = array_map('strtoupper', $alelos2);
+                foreach ($animal->alelos as $alelo) {
+                    $key = array_search($alelo->marcador, $request->marcador);
 
-            foreach ($alelos1 as $key => $item) {
-                // Verifica se o campo 'alelo1' ou 'alelo2' está preenchido
-                if ($item || $alelos2[$key]) {
-                    Alelo::create([
-                        'animal_id' => $animal->id,
-                        'marcador' => $request->input('marcador.' . $key),
-                        'alelo1' => $item,
-                        'alelo2' => $alelos2[$key],
-                    ]);
+                    // Verifica se o campo 'alelo1' ou 'alelo2' está preenchido
+                    if ($key !== false && ($alelos1[$key] || $alelos2[$key])) {
+                        $alelo->update([
+                            'alelo1' => $alelos1[$key],
+                            'alelo2' => $alelos2[$key],
+                        ]);
+                    }
+                }
+            } else {
+                // Se não existirem alelos, cria novos registros
+                $alelos1 = $request->input('alelo1', []);
+                $alelos2 = $request->input('alelo2', []);
+
+                $alelos1 = array_map('strtoupper', $alelos1);
+                $alelos2 = array_map('strtoupper', $alelos2);
+
+                foreach ($alelos1 as $key => $item) {
+                    // Verifica se o campo 'alelo1' ou 'alelo2' está preenchido
+                    if ($item || $alelos2[$key]) {
+                        Alelo::create([
+                            'animal_id' => $animal->id,
+                            'marcador' => $request->input('marcador.' . $key),
+                            'alelo1' => $item,
+                            'alelo2' => $alelos2[$key],
+                        ]);
+                    }
                 }
             }
 
