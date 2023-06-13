@@ -130,7 +130,13 @@ class AnimaisController extends Controller
 
     public function getPai(Request $request)
     {
-        $animais = Animal::where('register_number_brand', $request->registro)->first();
+        $animais = Animal::where('registro_pai', $request->registro)->first();
+        return response()->json($animais);
+    }
+
+    public function getMae(Request $request)
+    {
+        $animais = Animal::where('registro_mae', $request->registro)->first();
         return response()->json($animais);
     }
 

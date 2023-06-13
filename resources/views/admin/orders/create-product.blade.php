@@ -354,7 +354,7 @@
             $('.registro_mae').on('blur', function() {
                 var registro = $(this).val();
                 $.ajax({
-                    url: '/get-pai/',
+                    url: '/get-mae/',
                     type: 'POST',
                     dataType: 'json',
                     data: {
