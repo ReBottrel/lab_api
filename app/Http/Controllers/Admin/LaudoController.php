@@ -9,18 +9,26 @@ use App\Models\Laudo;
 
 use App\Models\Owner;
 use App\Models\Animal;
+use App\Models\QrCode as ModelQrCode;
 use App\Models\Tecnico;
+use BaconQrCode\Writer;
 use phpseclib\Crypt\RSA;
+// use X509\CertificationPath;
 use phpseclib\File\ASN1;
 use phpseclib\File\X509;
-// use X509\CertificationPath;
 use App\Models\DataColeta;
 use Spatie\PdfToImage\Pdf;
 use App\Models\OrdemServico;
 use App\Models\OrderRequest;
 use Illuminate\Http\Request;
+use BaconQrCode\Renderer\Image\Png;
 use App\Http\Controllers\Controller;
+use BaconQrCode\Renderer\ImageRenderer;
 use Illuminate\Support\Facades\Storage;
+use BaconQrCode\Renderer\Image\ImagickImageBackEnd;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use BaconQrCode\Renderer\RendererStyle\RendererStyle;
+
 
 class LaudoController extends Controller
 {
@@ -33,6 +41,9 @@ class LaudoController extends Controller
         $mae = Animal::where('animal_name', $animal->mae)->first();
         $datas = DataColeta::where('id_order', $order->id)->first();
         $laudo = Laudo::where('animal_id', $ordem->animal_id)->first();
+        $codigo = rand(100000000, 999999999);
+
+
 
         $laudoData = [
             'animal_id' => $ordem->animal_id,
@@ -43,18 +54,47 @@ class LaudoController extends Controller
             'data_coleta' => $datas->data_coleta,
             'data_realizacao' => $datas->data_recebimento,
             'data_lab' => $datas->data_laboratorio,
-            'codigo_busca' => '123456789',
+            'codigo_busca' => Laudo::where('codigo_busca', $codigo)->exists() ? rand(100000000, 999999999) : $codigo,
             'observacao' => $request->obs,
             'conclusao' => $request->conclusao,
             'tipo' => $datas->tipo,
             'veterinario_id' => $order->id_tecnico
         ];
 
+
+
         if ($laudo) {
             $laudo->update($laudoData);
         } else {
             $laudo = Laudo::create($laudoData);
+            // Crie uma instância do escritor
+
+
+
+            $content = 'https://i.locilab.com.br/' . $laudo->codigo_busca;
+            // Crie uma instância do escritor
+            $renderer = new ImageRenderer(
+                new RendererStyle(400),
+                new ImagickImageBackEnd()
+            );
+            $writer = new Writer($renderer);
+            //Escreve o r code em algum diretório
+            //                  codigo          arquivo saida
+            $writer->writeFile($content, 'qrcode.png');
+            $imageData = file_get_contents('qrcode.png');
+
+            // Converta a imagem para base64
+            $base64Image = base64_encode($imageData);
+          
+
+
+            $qrCode = ModelQrCode::create([
+                'laudo_id' => $laudo->id,
+                'qrcode' => $base64Image
+            ]);
         }
+
+
 
         return response()->json($laudo, 200);
     }
@@ -68,6 +108,7 @@ class LaudoController extends Controller
         $tecnico = Tecnico::find($laudo->veterinario_id);
         $mae = Animal::with('alelos')->find($laudo->mae_id);
         $pai = Animal::with('alelos')->find($laudo->pai_id);
+        $qrCode = ModelQrCode::find($laudo->id);
         return view('admin.ordem-servico.laudo', get_defined_vars());
     }
     public function gerarPdf($id)
@@ -79,7 +120,7 @@ class LaudoController extends Controller
         $tecnico = Tecnico::find($laudo->veterinario_id);
         $mae = Animal::with('alelos')->find($laudo->mae_id);
         $pai = Animal::with('alelos')->find($laudo->pai_id);
-
+        $qrCode = ModelQrCode::find($laudo->id);
         // Cria uma instância do Dompdf
         $dompdf = new Dompdf();
 
@@ -95,7 +136,7 @@ class LaudoController extends Controller
         $output = $dompdf->output();
 
         // Caminho para o certificado A1 e senha
-        $certificadoPath = 'file://'. public_path('certificado/LOCI_BIOTECNOLOGIA_LTDA_18496213000111_1661426936642166100.pfx');
+        $certificadoPath = 'file://' . public_path('certificado/LOCI_BIOTECNOLOGIA_LTDA_18496213000111_1661426936642166100.pfx');
         $senhaCertificado = 'Loci4331';
 
         // Carrega o certificado A1 e a chave privada correspondente (no formato PFX)
@@ -144,28 +185,23 @@ class LaudoController extends Controller
     public function finalizar(Request $request)
     {
         $laudo = Laudo::find($request->laudo);
-      
+
         return response()->json($laudo, 200);
     }
 
-    public function verify()
+    public function verify($codigo)
     {
-        $pdfPath = public_path('pdf/etiqueta.pdf');
-        // Converter o PDF para uma imagem (a primeira página)
-        $pdf = new Pdf($pdfPath);
-        $pdf->setResolution(300); // Define a resolução da imagem (opcional)
-        $pdf->setOutputFormat('png'); // Define o formato da imagem de saída (opcional)
-        $imagePath = $pdfPath . '.png'; // Caminho para a imagem gerada
-
-        $pdf->saveImage($imagePath);
-
-        // Verificar se o arquivo de imagem foi gerado
-        if (file_exists($imagePath)) {
-            // O documento possui assinatura(s)
-            echo "O documento está assinado.";
+        $laudo = Laudo::where('codigo_busca', $codigo)->first();
+        if ($laudo) {
+            $animal = Animal::find($laudo->animal_id);
+            $owner = Owner::find($laudo->owner_id);
+            $datas = DataColeta::where('id_animal', $laudo->animal_id)->first();
+            $tecnico = Tecnico::find($laudo->veterinario_id);
+            $mae = Animal::with('alelos')->find($laudo->mae_id);
+            $pai = Animal::with('alelos')->find($laudo->pai_id);
+            return view('admin.ordem-servico.laudo', get_defined_vars());
         } else {
-            // O documento não possui assinaturas
-            echo "O documento não está assinado.";
+            return response()->json(['message' => 'Laudo não encontrado'], 404);
         }
     }
 }

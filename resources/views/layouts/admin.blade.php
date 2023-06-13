@@ -90,6 +90,10 @@
                                     style="color: var(--bs-dark);"></i><span>Ordem de Serviços</span></a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link " href="{{ route('ordem.servico.all') }}"><i class="fas fa-user"
+                                    style="color: var(--bs-dark);"></i><span>Laudos</span></a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link " href="#"><i class="fas fa-user"
                                     style="color: var(--bs-dark);"></i><span>Usuários</span></a>
                         </li>

@@ -172,6 +172,14 @@
 @section('js')
     <script>
         $(document).ready(function() {
+
+            var msg = [
+                `Conclui-se que o animal AnimalFilho não é filho de Mae e Pai`,
+                `Conclui-se que o animal AnimalFilho não é filho de Mae e, é filho de Pai`,
+                `Conclui-se que o animal AnimalFilho não é filho de Pai e, é filho de Mae`,
+                `Conclui-se que o animal AnimalFilho é filho de Mae e filho de Pai`,
+            ];
+
             $('#analisar').click(function() {
                 let ordem = $(this).data('ordem');
                 $('#valores').html('');
@@ -183,7 +191,11 @@
                         ordem: ordem,
                     },
                     success: function(response) {
-
+                        for (e in msg) {
+                            msg[e] = msg[e].replace('AnimalFilho', response.animal.animal_name);
+                            msg[e] = msg[e].replace('Mae', response.animal.mae);
+                            msg[e] = msg[e].replace('Pai', response.animal.pai);
+                        }
                         for (let i = 0; i < response.animal.alelos.length; i++) {
                             var incluidos = '';
                             var excluidos = '';
@@ -248,10 +260,10 @@
 
                             var html = `<div class="row">
                                 <div class="col-6">
-                                    <input class="form-control" id="incluidos" name="incluidos[]" type="text" value="${incluidos}">
+                                    <input class="form-control incluidos" name="incluidos[]" type="text" value="${incluidos}">
                                 </div>
                                 <div class="col-6">
-                                    <input class="form-control excluidos" id="excluidos" name="excluidos[]" type="text" value="${excluidos}">
+                                    <input class="form-control excluidos" name="excluidos[]" type="text" value="${excluidos}">
                                 </div>
                             </div>`;
 
@@ -271,20 +283,30 @@
                                     return false; // interrompe a iteração
                                 }
                             });
-                            if (paiEmae) {
+
+
+                            if (paiEmae == false) {
+
                                 $('.mensagem').html(
-                                    `<textarea class="form-control" id="conclusao" rows="3"> Conclui-se que o animal ${response.animal.animal_name} não é filho de ${response.animal.mae} e ${response.animal.pai}
-                            </textarea>`);
+                                    `<textarea class="form-control" id="conclusao" rows="3">${msg[3]}</textarea>`
+                                );
+                            }
+                            if (paiEmae == true) {
+
+                                $('.mensagem').html(
+                                    `<textarea class="form-control" id="conclusao" rows="3">${msg[0]}</textarea>`
+                                );
                             }
                             if (naoMae) {
+
                                 $('.mensagem').html(
-                                    `<textarea class="form-control" id="conclusao" rows="3"> Conclui-se que o animal ${response.animal.animal_name} não é filho de ${response.animal.mae}.
-                            </textarea>`);
+                                    `<textarea class="form-control" id="conclusao" rows="3">${msg[1]}</textarea>`
+                                );
                             }
                             if (naoPai) {
                                 $('.mensagem').html(
-                                    `<textarea class="form-control" id="conclusao" rows="3"> Conclui-se que o animal ${response.animal.animal_name} não é filho de ${response.animal.pai}.
-                            </textarea>`);
+                                    `<textarea class="form-control" id="conclusao" rows="3">${msg[2]}</textarea>`
+                                );
                             }
 
                         }
@@ -292,7 +314,40 @@
                     }
                 });
             });
+
+            $(document).on('blur', '.incluidos', function() {
+                let valor = $(this).val();
+                switch (valor) {
+                    case 'MP':
+                        $(this).parent().parent().find('.excluidos').val('');
+                        break;
+                    case 'M':
+                        $(this).parent().parent().find('.excluidos').val('P');
+                        break;
+                    case 'P':
+                        $(this).parent().parent().find('.excluidos').val('M');
+                        break;
+                    default:
+                        $(this).parent().parent().find('.excluidos').val('MP');
+                }
+                mpfalse = true;
+                $('.incluidos').each(function() {
+                    var valor = $(this).val();
+                    if (valor !== 'MP') {
+                        mpfalse = false;
+                        return false; // interrompe a iteração
+                    } else if (valor.includes('M') || valor.includes('P')) {
+                        naoMae = true;
+                        naoPai = true;
+                        return false; // interrompe a iteração
+                    }
+                });
+                if (mpfalse == true) {
+                    $('#conclusao').val(msg[3]);
+                }
+            });
         });
+
         $(document).ready(function() {
             $('#gerar-laudo').click(function() {
                 let ordem = $('#analisar').data('ordem');
@@ -324,7 +379,7 @@
                 let laudo = $('#laudo').val();
                 window.open(`/gerar-pdf/${laudo}`, '_blank');
             });
-            $(document).on('click', '#finalizar', function(){
+            $(document).on('click', '#finalizar', function() {
                 let laudo = $('#laudo').val();
                 $.ajax({
                     url: "{{ route('finalizar.laudo') }}",
@@ -343,18 +398,16 @@
                             timerProgressBar: true,
                         }).then((result) => {
                             if (result.isConfirmed) {
-                                window.location.href = "{{ route('ordem.servico.all') }}";
+                                window.location.href =
+                                    "{{ route('ordem.servico.all') }}";
                             }
-                        }
-                        )
+                        })
                     },
 
-                      
-                    
+
+
                 });
             });
         });
-   
-     
     </script>
 @endsection

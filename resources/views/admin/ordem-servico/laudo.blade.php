@@ -56,7 +56,7 @@
                         <tr>
                             <td>
                                 <img width="66" height="66"
-                                    src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEIAAABCCAYAAADjVADoAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA7EAAAOxAGVKw4bAAADRElEQVR4nN1b7W7EMAhLp3v/V95+7ZRrA9hg0m6WJq25hnxAiCHNMcb4HnkcRv1z+er5DEuO9x4qJ8RXptJ/xGtTOxWrYyxg9TuE80QggrxBHYv/0Ulg32dkevgeY20R6EBNoWRHvHbPZZlJgsajWBqRJrs1nV4OM3b4CETTmcFIfMMvunaNY4g0NclrhcIilCZ/W5s7lsbKR6AajnYhmaXs4hFn/A7GYqZeHa9cxiNKwoK6yO7R4QsgmeeJUKw9NsZg6lf64uKvxRptu0f3REQaqVqgbPd4jQ17tBjR7pEaz2vgzgvJF9zBKZh2zfHs2j49jSnodhnRRMz7fQWrwXb7D0quNRFRR6OJiZZUF7zUoYvs0kAGl52AiqUg7HMJL0OVWQ5WHaWFKXDpT5ShYjug8inbkeURmTS6qh00ZokU+lEW8QgLbJ3IUqzfs1trlBW7LA2GYrNZp2yWCq23em/1nIo+V8j6jLQHT8r13g0Z8NfQaPpu51jOkWZ4BJKVZupm5Fj1JBkqyxtHWadM56ND4grYcbxPuu7i/LvbcIFw8+pxPVIe9YeRm4LlI6pW0qlhz0d5RMotX8UaGQth6ntlc3nL+YUFJou9Mz+gynzBPGKONRgNPIE3SBXj8QhvYrKxxmPBEKqO7xzOstW/I/kV84sZ8+VGRGehyFkpw3gvk+JNhGcBzFFeF4OM2qVkRDwiyh9Yz3JnBvYjLWPORyARXEfukP3d66dXPv9dMFuEUoPoOmafPdkRZBmqWQirkSrK+YYIUfSp1EgF7VmtnWef7Ack3XzlY1dkJ0LVOcsXVHcbNCpe8giPPnvRJBsdZphp1nIYC3vzCMW5BpIz3Olb2LPZwzsNP/+vZoQw/RW3u8ST72tEMUelHxd3wJx9onT7TtC+YUy7RmUgHWas5Axw/5T3NaJ30Ox0tg0ErT4io4FOroDUvShGfafrjGj36bCEVB31na4VGEIU5Uaj9tPWsstHMO9HvKXCa8wcppJHoJEqEu12MVRTfuedrjtBt991p4vJNN+NVBjejawlrXgKtUs9bSLG0MUlFNR3uixknZ+naaQ+guW5RveJN/p5AfMO2p7bjyfe6VplrNEsNnsO8sYPZkLt9gC34esAAAAASUVORK5CYIIA" />
+                                    src="data:image/png;base64,{{ $qrCode->qrcode }}" />
                             </td>
                         </tr>
                     </table>

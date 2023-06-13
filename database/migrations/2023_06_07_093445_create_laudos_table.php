@@ -28,6 +28,7 @@ class CreateLaudosTable extends Migration
             $table->text('observacao')->nullable();
             $table->text('conclusao')->nullable();
             $table->string('tipo')->nullable();
+            $table->text('qrcode')->nullable();
             $table->timestamps();
         });
     }

@@ -6,6 +6,7 @@
     "license": "MIT",
     "require": {
         "php": "^7.3|^8.0",
+        "bacon/bacon-qr-code": "^2.0",
         "barryvdh/laravel-dompdf": "^2.0",
         "dompdf/dompdf": "^2.0",
         "fruitcake/laravel-cors": "^2.0",
@@ -21,7 +22,7 @@
         "picqer/php-barcode-generator": "^2.2",
         "rap2hpoutre/fast-excel": "^4.1",
         "realrashid/sweet-alert": "^7.0",
-        "spatie/pdf-to-image": "^2.2",
+        "simplesoftwareio/simple-qrcode": "^4.2",
         "tecnickcom/tcpdf": "^6.6",
         "webklex/laravel-imap": "^2.4"
     },
