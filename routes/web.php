@@ -115,6 +115,11 @@ Route::middleware(['auth:admin'])->group(function () {
     //     return view('admin.ordem-servico.laudo');
     // })->name('laudo');
 
+    // Relatorios de ensaios
+    Route::get('relatorio/aie', function(){
+        return view('admin.ordem-servico.relatorios-de-ensaios.aie');
+    })->name('relatorio.aie');
+
     Route::post('gerar-laudo', [LaudoController::class, 'store'])->name('gerar.laudo');
     Route::get('ver-laudo/{id}', [LaudoController::class, 'show'])->name('ver.laudo');
 
@@ -270,7 +275,7 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::get('get-breeds/{id}', [SpeciesBreedsController::class, 'getBreed'])->name('get.breed');
     Route::post('get-pai', [AnimaisController::class, 'getPai'])->name('get.pai');
     Route::post('get-mae', [AnimaisController::class, 'getMae'])->name('get.mae');
-    
+
     Route::get('get-animals-all', [AnimaisController::class, 'buscarAnimal'])->name('get.animals.all');
 
     Route::get('export-order', [OrderController::class, 'exportOrders']);
