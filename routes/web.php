@@ -116,9 +116,16 @@ Route::middleware(['auth:admin'])->group(function () {
     // })->name('laudo');
 
     // Relatorios de ensaios
-    Route::get('relatorio/aie', function(){
+    Route::get('relatorio/aie', function () {
         return view('admin.ordem-servico.relatorios-de-ensaios.aie');
     })->name('relatorio.aie');
+    Route::get('relatorio/homozigose-tobiana', function () {
+        return view('admin.ordem-servico.relatorios-de-ensaios.homozigose');
+    })->name('relatorio.homozigose');
+    Route::get('relatorio/beta-caseina', function () {
+        return view('admin.ordem-servico.relatorios-de-ensaios.beta-caseina');
+    })->name('relatorio.beta-caseina');
+
 
     Route::post('gerar-laudo', [LaudoController::class, 'store'])->name('gerar.laudo');
     Route::get('ver-laudo/{id}', [LaudoController::class, 'show'])->name('ver.laudo');
