@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use App\Models\OrderRequestPayment;
 use App\Http\Controllers\Controller;
 use App\Models\Alelo;
+use App\Models\DnaVerify;
 use Picqer\Barcode\BarcodeGeneratorPNG;
 
 
@@ -31,10 +32,12 @@ class OrdemServicoController extends Controller
             $animal = Animal::find($item->animal_id);
             $data = Carbon::now()->addWeekdays($exame->days);
             $randomNumber = mt_rand(0, 1000000);
+            $dna_verify = DnaVerify::where('animal_id', $animal->id)->first();
+            $sigla = substr($animal->especies, 0, 3);
 
             if ($animal->codlab == null) {
                 $animal->update([
-                    'codlab' => Animal::where('codlab', $randomNumber)->exists() ? rand(0, 1000000) : $randomNumber,
+                    'codlab' => Animal::where('codlab', $randomNumber)->exists() ? $sigla . rand(0, 1000000) :  $sigla . $randomNumber,
                 ]);
             }
 
@@ -46,7 +49,7 @@ class OrdemServicoController extends Controller
                 'animal' => $animal->animal_name,
                 'codlab' => $animal->codlab,
                 'id_abccmm' => $animal->register_number_brand,
-                'tipo_exame' => 'EQUTR',
+                'tipo_exame' => $dna_verify->verify_code,
                 'proprietario' => $order->creator,
                 'tecnico' => $order->technical_manager,
                 'data' => $data,
@@ -132,9 +135,25 @@ class OrdemServicoController extends Controller
     {
         $ordem = OrdemServico::find($id);
         $animal = Animal::with('alelos')->find($ordem->animal_id);
+        $dna_verify = DnaVerify::where('animal_id', $animal->id)->first();
+        $sigla = substr($animal->especies, 0, 3);
+        $pai = null;
+        $mae = null;
+        switch ($dna_verify->verify_code) {
+            case $sigla . 'PD':
+                $pai = Animal::with('alelos')->where('animal_name', $animal->pai)->first();
+                break;
+            case $sigla . 'MD':
+                $mae = Animal::with('alelos')->where('animal_name', $animal->mae)->first();
+                break;
+            case $sigla . 'TR':
+                $pai = Animal::with('alelos')->where('animal_name', $animal->pai)->first();
+                $mae = Animal::with('alelos')->where('animal_name', $animal->mae)->first();
+                break;
+            default:
+                break;
+        }
 
-        $pai = Animal::with('alelos')->where('animal_name', $animal->pai)->first();
-        $mae = Animal::with('alelos')->where('animal_name', $animal->mae)->first();
 
         return view('admin.ordem-servico.alelo-compare', get_defined_vars());
     }
@@ -143,54 +162,76 @@ class OrdemServicoController extends Controller
     {
         $ordem = OrdemServico::find($request->ordem);
         $animal = Animal::with('alelos')->find($ordem->animal_id);
-
-        $pai = Animal::with('alelos')->where('animal_name', $animal->pai)->first();
-        $mae = Animal::with('alelos')->where('animal_name', $animal->mae)->first();
-
+        $dna_verify = DnaVerify::where('animal_id', $animal->id)->first();
+        $sigla = substr($animal->especies, 0, 3);
+        $pai = null;
+        $mae = null;
+        // $pai = Animal::with('alelos')->where('animal_name', $animal->pai)->first();
+        // $mae = Animal::with('alelos')->where('animal_name', $animal->mae)->first();
+        switch ($dna_verify->verify_code) {
+            case $sigla . 'PD':
+                $pai = Animal::with('alelos')->where('animal_name', $animal->pai)->first();
+                break;
+            case $sigla . 'MD':
+                $mae = Animal::with('alelos')->where('animal_name', $animal->mae)->first();
+                break;
+            case $sigla . 'TR':
+                $pai = Animal::with('alelos')->where('animal_name', $animal->pai)->first();
+                $mae = Animal::with('alelos')->where('animal_name', $animal->mae)->first();
+                break;
+            default:
+                break;
+        }
         $alelosIguaisPai = [];
         $alelosIguaisMae = [];
 
         // Comparar alelos entre pai e animal
-        if ($pai && $pai->alelos) {
-            foreach ($pai->alelos as $paiAlelo) {
-                foreach ($animal->alelos as $animalAlelo) {
-                    if (
-                        $paiAlelo->marcador === $animalAlelo->marcador &&
-                        (
-                            ($paiAlelo->alelo1 === $animalAlelo->alelo1 && ($paiAlelo->alelo1 !== '' || $animalAlelo->alelo1 !== '')) ||
-                            ($paiAlelo->alelo2 === $animalAlelo->alelo1 && ($paiAlelo->alelo2 !== '' || $animalAlelo->alelo1 !== '')) ||
-                            ($paiAlelo->alelo1 === $animalAlelo->alelo2 && ($paiAlelo->alelo1 !== '' || $animalAlelo->alelo2 !== '')) ||
-                            ($paiAlelo->alelo2 === $animalAlelo->alelo2 && ($paiAlelo->alelo2 !== '' || $animalAlelo->alelo2 !== '')) ||
-                            ($mae && $mae->alelos && $mae->alelos->isEmpty() && $paiAlelo->alelo1 === '' && $paiAlelo->alelo2 === '')
-                        )
-                    ) {
-                        $alelosIguaisPai[] = $paiAlelo;
-                        break;
+        if ($pai != null) {
+            if ($pai && $pai->alelos) {
+                foreach ($pai->alelos as $paiAlelo) {
+                    foreach ($animal->alelos as $animalAlelo) {
+                        if (
+                            $paiAlelo->marcador === $animalAlelo->marcador &&
+                            (
+                                ($paiAlelo->alelo1 === $animalAlelo->alelo1 && ($paiAlelo->alelo1 !== '' || $animalAlelo->alelo1 !== '')) ||
+                                ($paiAlelo->alelo2 === $animalAlelo->alelo1 && ($paiAlelo->alelo2 !== '' || $animalAlelo->alelo1 !== '')) ||
+                                ($paiAlelo->alelo1 === $animalAlelo->alelo2 && ($paiAlelo->alelo1 !== '' || $animalAlelo->alelo2 !== '')) ||
+                                ($paiAlelo->alelo2 === $animalAlelo->alelo2 && ($paiAlelo->alelo2 !== '' || $animalAlelo->alelo2 !== '')) ||
+                                ($mae && $mae->alelos && $mae->alelos->isEmpty() && $paiAlelo->alelo1 === '' && $paiAlelo->alelo2 === '')
+                            )
+                        ) {
+                            $alelosIguaisPai[] = $paiAlelo;
+                            break;
+                        }
                     }
                 }
             }
+        } else {
+            $alelosIguaisPai = null;
         }
-
         // Comparar alelos entre mãe e animal
-        if ($mae && $mae->alelos) {
-            foreach ($mae->alelos as $maeAlelo) {
-                foreach ($animal->alelos as $animalAlelo) {
-                    if (
-                        $maeAlelo->marcador === $animalAlelo->marcador &&
-                        (
-                            ($maeAlelo->alelo1 === $animalAlelo->alelo1 && ($maeAlelo->alelo1 == '' || $animalAlelo->alelo1 !== '')) ||
-                            ($maeAlelo->alelo2 === $animalAlelo->alelo1 && ($maeAlelo->alelo2 == '' || $animalAlelo->alelo1 !== '')) ||
-                            ($maeAlelo->alelo1 === $animalAlelo->alelo2 && ($maeAlelo->alelo1 == '' || $animalAlelo->alelo2 !== '')) ||
-                            ($maeAlelo->alelo2 === $animalAlelo->alelo2 && ($maeAlelo->alelo2 == '' || $animalAlelo->alelo2 !== ''))
-                        )
-                    ) {
-                        $alelosIguaisMae[] = $maeAlelo;
-                        break;
+        if ($mae != null) {
+            if ($mae && $mae->alelos) {
+                foreach ($mae->alelos as $maeAlelo) {
+                    foreach ($animal->alelos as $animalAlelo) {
+                        if (
+                            $maeAlelo->marcador === $animalAlelo->marcador &&
+                            (
+                                ($maeAlelo->alelo1 === $animalAlelo->alelo1 && ($maeAlelo->alelo1 == '' || $animalAlelo->alelo1 !== '')) ||
+                                ($maeAlelo->alelo2 === $animalAlelo->alelo1 && ($maeAlelo->alelo2 == '' || $animalAlelo->alelo1 !== '')) ||
+                                ($maeAlelo->alelo1 === $animalAlelo->alelo2 && ($maeAlelo->alelo1 == '' || $animalAlelo->alelo2 !== '')) ||
+                                ($maeAlelo->alelo2 === $animalAlelo->alelo2 && ($maeAlelo->alelo2 == '' || $animalAlelo->alelo2 !== ''))
+                            )
+                        ) {
+                            $alelosIguaisMae[] = $maeAlelo;
+                            break;
+                        }
                     }
                 }
             }
+        } else {
+            $alelosIguaisMae = null;
         }
-
         // $view = view('admin.ordem-servico.include.input-alelo', get_defined_vars())->render();
 
         return response()->json([

@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 use App\Models\OrderRequestPayment;
 use App\Http\Controllers\Controller;
 use App\Models\DataColeta;
+use App\Models\DnaVerify;
 use App\Models\ExamToAnimal;
 use App\Models\Parceiro;
 use App\Models\Sample;
@@ -677,7 +678,10 @@ class OrderController extends Controller
         $order = OrderRequest::findOrFail($request->order);
         $owner = Owner::findOrFail($order->owner_id);
         $randomNumber = mt_rand(0, 1000000);
-        
+        $sigla = substr($request->especies, 0, 3);
+
+
+
         $data = [
             'user_id' => $owner->user_id,
             'order_id' => $request->order,
@@ -696,10 +700,38 @@ class OrderController extends Controller
             'owner_id' => $owner->id,
             'especie_pai' => $request->especie_pai,
             'especie_mae' => $request->especie_mae,
-            
+
         ];
 
-        $data['codlab'] = Animal::where('codlab', $randomNumber)->exists() ? rand(0, 1000000) : $randomNumber;
+        $data['codlab'] = Animal::where('codlab', $randomNumber)->exists() ? $sigla . rand(0, 1000000) : $sigla . $randomNumber;
+
+        if ($request->verify_code == 'semverify') {
+            $tipo = 'EQUTR';
+            switch ($request->especies) {
+                case 'EQUINA':
+                    $tipo = 'EQUTR';
+                    break;
+                case 'MUARES':
+                    $tipo = 'MUATR';
+                    break;
+                case 'ASININA':
+                    $tipo = 'ASITR';
+                    break;
+                case 'EQUINO_PEGA':
+                    $tipo = 'ASITR';
+                    break;
+                case 'BOVINA':
+                    $tipo = 'BOVTR';
+                    break;
+                default:
+                    $tipo = 'EQUTR';
+            }
+        }
+        if ($request->verify_code == 'semverify') {
+            $verify_code = $tipo;
+        } else {
+            $verify_code = $request->verify_code;
+        }
 
         if ($request->id) {
             $animal = Animal::findOrFail($request->id);
@@ -712,6 +744,12 @@ class OrderController extends Controller
                 'data_laboratorio' => date('d/m/Y', strtotime($request->data_laboratorio)),
                 'tipo' => $request->tipo
             ]);
+            // Define o valor de $verify_code com base no parâmetro $request->verify_code
+            $verify = DnaVerify::create([
+                'animal_id' => $request->id,
+                'order_id' => $order->id,
+                'verify_code' => $verify_code,
+            ]);
         } else {
             $create = Animal::create($data);
             $datacoleta = DataColeta::create([
@@ -721,6 +759,12 @@ class OrderController extends Controller
                 'data_recebimento' => date('d/m/Y', strtotime($order->collection_date)),
                 'data_laboratorio' => date('d/m/Y', strtotime($request->data_laboratorio)),
                 'tipo' => $request->tipo
+            ]);
+
+            $verify = DnaVerify::create([
+                'animal_id' => $create->id,
+                'order_id' => $order->id,
+                'verify_code' => $verify_code,
             ]);
         }
 
