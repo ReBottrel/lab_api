@@ -680,8 +680,6 @@ class OrderController extends Controller
         $randomNumber = mt_rand(0, 1000000);
         $sigla = substr($request->especies, 0, 3);
 
-
-
         $data = [
             'user_id' => $owner->user_id,
             'order_id' => $request->order,

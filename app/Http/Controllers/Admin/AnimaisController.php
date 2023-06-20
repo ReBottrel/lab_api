@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Animal;
+use App\Models\Fur;
 use Illuminate\Http\Request;
 
 class AnimaisController extends Controller
@@ -32,7 +33,8 @@ class AnimaisController extends Controller
      */
     public function create()
     {
-        return view('admin.animais.create');
+        $pelagens = Fur::all();
+        return view('admin.animais.create', get_defined_vars());
     }
 
     /**
@@ -43,7 +45,29 @@ class AnimaisController extends Controller
      */
     public function store(Request $request)
     {
-        $animal = Animal::create($request->all());
+        $randomNumber = mt_rand(0, 1000000);
+        $sigla = substr($request->especies, 0, 3);
+
+        $data = [
+            'register_number_brand' => $request->register_number_brand,
+            'animal_name' => $request->animal_name,
+            'especies' => $request->especies,
+            'breed' => $request->breed,
+            'sex' => $request->sex,
+            'age' => $request->age,
+            'birth_date' => $request->birth_date,
+            'fur' => $request->fur,
+            'chip_number' => $request->chip_number,
+            'registro_pai' => $request->registro_pai,
+            'pai' => $request->pai,
+            'registro_mae' => $request->registro_mae,
+            'mae' => $request->mae,
+
+        ];
+
+        $data['codlab'] = Animal::where('codlab', $randomNumber)->exists() ? $sigla . rand(0, 1000000) : $sigla . $randomNumber;
+
+        $animal = Animal::create($data);
         return redirect()->route('animais')->with('success', 'Animal cadastrado com sucesso!');
     }
 

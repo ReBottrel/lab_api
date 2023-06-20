@@ -60,12 +60,19 @@
                                     </select>
                                 </div>
                             </div>
-                            {{-- <div class="col-md-6">
+                            <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label for="exampleFormControlInput1" class="form-label">Data de coleta</label>
-                                    <input type="date" name="" id="birth_date" class="form-control">
+                                    <label for="exampleFormControlInput1" class="form-label">Pelagem</label>
+                                    <select class="form-select" name="fur">
+                                        @foreach ($pelagens as $item)
+                                        <option value="{{ $item->name }}">{{ $item->name }}</option>
+                                        @endforeach
+                                        
+                                        
+                                    </select>
                                 </div>
-                            </div> --}}
+                            </div>
+                       
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="exampleFormControlInput1" class="form-label">Idade</label>
