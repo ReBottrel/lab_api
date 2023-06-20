@@ -79,7 +79,14 @@
             </div>
             <div class="col-3 text-end">
                 <br>
-                <span><strong>Relat. n</strong> 0{{ $laudo->id }}</span>
+                <span><strong>Relat. n</strong>
+                    @if ($mae != null)
+                        {{ substr($$mae->codlab, 3) }}.
+                    @endif
+                    {{ substr($animal->codlab, 3) }}. @if ($pai != null)
+                        {{ substr($pai->codlab, 3) }}
+                    @endif
+                </span>
             </div>
         </div>
         <h6 class="text-center my-3 text-decoration-underline"><strong>Dados Relativos à Amostra</strong></h6>
@@ -128,7 +135,11 @@
             </div>
             <div class="col-4">
                 <strong>Tipo Amostra:</strong>
-                <span>{{ $datas->tipo ?? 'Não informado' }}</span>
+                <span>
+                    @if ($datas->tipo == 1)
+                        Pelo
+                    @endif
+                </span>
             </div>
             <div class="col-4">
                 <strong>Data da Coleta:</strong>
