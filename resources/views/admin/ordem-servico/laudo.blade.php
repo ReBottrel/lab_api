@@ -55,8 +55,7 @@
                     <table border="0" cellspacing="0" cellpadding="0">
                         <tr>
                             <td>
-                                <img width="66" height="66"
-                                    src="data:image/png;base64,{{ $qrCode->qrcode }}" />
+                                <img width="66" height="66" src="data:image/png;base64,{{ $qrCode->qrcode }}" />
                             </td>
                         </tr>
                     </table>
@@ -91,7 +90,7 @@
             </div>
             <div class="col-4 offset-3">
                 <strong>Espécie:</strong>
-                <span>{{ $animal->especies }}</span>
+                <span>{{ $animal->especies ?? 'Não informado' }}</span>
             </div>
             <div class="col-4">
                 <strong>Número do Registro:</strong>
@@ -99,7 +98,7 @@
             </div>
             <div class="col-4">
                 <strong>Data de Nascimento:</strong>
-                <span>{{ $animal->birth_date }}</span>
+                <span>{{ $animal->birth_date ?? 'Não informado' }}</span>
             </div>
             <div class="col-4">
                 <strong>Raça:</strong>
@@ -111,7 +110,7 @@
             </div>
             <div class="col-4 offset-4">
                 <strong>Sexo:</strong>
-                <span>{{ $animal->sex }}</span>
+                <span>{{ $animal->sex ?? 'Não informado' }}</span>
             </div>
             <div class="col-4">
                 <strong>Proprietário:</strong>
@@ -123,16 +122,17 @@
             </div>
             <div class="col-12">
                 <strong>Endereço:</strong>
-                <span>{{ $owner->address }}, {{ $owner->number }} {{ $owner->complement }} - {{ $owner->city }} -
-                    {{ $owner->state }}</span>
+                <span>{{ $owner->address ?? 'Não informado' }}, {{ $owner->number ?? 'Não informado' }}
+                    {{ $owner->complement ?? 'Não informado' }} - {{ $owner->city ?? 'Não informado' }} -
+                    {{ $owner->state ?? 'Não informado' }}</span>
             </div>
             <div class="col-4">
                 <strong>Tipo Amostra:</strong>
-                <span>{{ $datas->tipo }}</span>
+                <span>{{ $datas->tipo ?? 'Não informado' }}</span>
             </div>
             <div class="col-4">
                 <strong>Data da Coleta:</strong>
-                <span>{{ $animal->collect_date }}</span>
+                <span>{{ $animal->collect_date ?? 'Não informado' }}</span>
             </div>
             <div class="col-12">
                 <strong>Responsável pela Coleta/Registro Profissional ou CPF:</strong>
@@ -140,7 +140,7 @@
             </div>
             <div class="col-4">
                 <strong>Data do Recebimento</strong>
-                <span>{{ $datas->data_recebimento }}</span>
+                <span>{{ $datas->data_recebimento ?? 'Não informado' }}</span>
             </div>
             <div class="col-4 offset-4">
                 <strong>Data de Entrada na Área Técnica:</strong>
@@ -156,7 +156,7 @@
 
             <div class="col-12">
                 <strong>Data da Realização:</strong>
-                <span>{{ $laudo->data_realizacao }}</span>
+                <span>{{ $laudo->data_realizacao ?? 'Não informado' }}</span>
             </div>
             <div class="col-12">
                 <strong>Metodologia Utilizada:</strong>
@@ -173,38 +173,64 @@
                 <thead>
                     <tr>
                         <th scope="col">Nome</th>
-                        <th scope="col">{{ $mae->animal_name }}</th>
+                        @if ($mae != null)
+                            <th scope="col">
+                                {{ $mae->animal_name }}
+                            </th>
+                        @endif
                         <th scope="col">{{ $animal->animal_name }}</th>
-                        <th scope="col">{{ $pai->animal_name }}</th>
+                        @if ($pai != null)
+                            <th scope="col">
+
+                                {{ $pai->animal_name }}
+
+                            </th>
+                        @endif
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <th scope="row">N Relatório de Ensaio</th>
-                        <th scope="row">{{ $mae->codlab }}</th>
+                        @if ($mae != null)
+                            <th scope="row">
+                                {{ $mae->codlab }}
+                            </th>
+                        @endif
                         <th scope="row">{{ $animal->codlab }}</th>
-                        <th scope="row">{{ $pai->codlab }}</th>
+                        @if ($pai != null)
+                            <th scope="row">
+                                {{ $pai->codlab }}
+                            </th>
+                        @endif
                     </tr>
                     <tr>
                         <th scope="row">Microssatélites</th>
+                        @if ($mae != null)
+                            <th scope="row">Alelos</th>
+                        @endif
                         <th scope="row">Alelos</th>
-                        <th scope="row">Alelos</th>
-                        <th scope="row">Alelos</th>
+                        @if ($pai != null)
+                            <th scope="row">Alelos</th>
+                        @endif
                     </tr>
                     @foreach ($animal->alelos as $key => $item)
                         <tr>
                             <td>{{ $item->marcador }}</td>
-                            <td>
-                                @if ($mae->alelos[$key]->alelo1 == '')
-                                    *
-                                @else
-                                    {{ $mae->alelos[$key]->alelo1 }}
-                                    @endif - @if ($mae->alelos[$key]->alelo2 == '')
+                            @if ($mae != null)
+                                <td>
+
+                                    @if ($mae->alelos[$key]->alelo1 == '')
                                         *
                                     @else
-                                        {{ $mae->alelos[$key]->alelo2 }}
-                                    @endif
-                            </td>
+                                        {{ $mae->alelos[$key]->alelo1 }}
+                                        @endif - @if ($mae->alelos[$key]->alelo2 == '')
+                                            *
+                                        @else
+                                            {{ $mae->alelos[$key]->alelo2 }}
+                                        @endif
+
+                                </td>
+                            @endif
                             <td>
                                 @if ($item->alelo1 == '')
                                     *
@@ -216,17 +242,21 @@
                                         {{ $item->alelo2 }}
                                     @endif
                             </td>
-                            <td>
-                                @if ($pai->alelos[$key]->alelo1 == '')
-                                    *
-                                @else
-                                    {{ $pai->alelos[$key]->alelo1 }}
-                                    @endif - @if ($pai->alelos[$key]->alelo2 == '')
+                            @if ($pai != null)
+                                <td>
+
+                                    @if ($pai->alelos[$key]->alelo1 == '')
                                         *
                                     @else
-                                        {{ $pai->alelos[$key]->alelo2 }}
-                                    @endif
-                            </td>
+                                        {{ $pai->alelos[$key]->alelo1 }}
+                                        @endif - @if ($pai->alelos[$key]->alelo2 == '')
+                                            *
+                                        @else
+                                            {{ $pai->alelos[$key]->alelo2 }}
+                                        @endif
+
+                                </td>
+                            @endif
                         </tr>
                     @endforeach
 
@@ -247,21 +277,35 @@
             </span>
         </div>
         <div class="mb-3">
-            <span>
-                GENITORA: animal {{ $mae->animal_name }}, número {{ $mae->codlab }}, emitido pelo
-                laboratório Linhagen em {{ date( 'd/m/Y' , strtotime($mae->created_at)) }}.
-            </span>
+            @if ($mae != null)
+                <span>
+                    GENITORA: animal {{ $mae->animal_name }}, número {{ $mae->codlab }}, emitido pelo
+                    laboratório Linhagen em {{ date('d/m/Y', strtotime($mae->created_at)) }}.
+                </span>
+            @endif
             <br>
             <span>
                 FILHO(A): animal {{ $animal->animal_name }}, número {{ $animal->codlab }}, emitido pelo
-                laboratório Loci Genética Laboratorial em {{ date( 'd/m/Y' , strtotime($animal->created_at)) }}. GENITOR: animal
-                {{ $pai->animal_name }}, número {{ $pai->codlab }}, emitido pelo laboratório
-                Linhagen em {{ date( 'd/m/Y' , strtotime($pai->created_at)) }}.
+                laboratório Loci Genética Laboratorial em {{ date('d/m/Y', strtotime($animal->created_at)) }}.
+
             </span>
+            @if ($pai != null)
+                <br>
+                <span>
+                    GENITOR: {{ $pai->animal_name }}, número {{ $pai->codlab }},
+                    emitido pelo laboratório
+                    Linhagen em {{ date('d/m/Y', strtotime($pai->created_at)) }}.
+                </span>
+            @endif
+
             <br>
             <span>
                 Esses laudos são de exclusiva responsabilidade dos laboratórios
                 emissores.
+            </span>
+            <br>
+            <span>
+                {{ $laudo->observacao }}
             </span>
         </div>
         @php

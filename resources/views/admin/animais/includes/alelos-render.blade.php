@@ -14,7 +14,7 @@
      <div class="row">
          <div class="mb-3 col-3">
              <label for="exampleFormControlInput1" class="form-label">Marcador</label>
-             <input type="text" class="form-control" value="{{ $item->gene }}" name="marcador[]">
+             <input type="text" class="form-control" value="{{ $item->gene }}" name="marcador[]" disabled>
          </div>
          <div class="mb-3 col-3">
              <label for="exampleFormControlInput1" class="form-label">Alelo 1</label>

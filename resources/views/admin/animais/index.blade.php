@@ -14,26 +14,16 @@
                                 class="form-control buscar-animal" value="{{ $filters['filter'] ?? '' }}">
                         </form>
                     </div>
-                    {{-- <div class="col-6">
-                        <form>
-                            <select class="form-select status-filter">
-                                <optgroup label="Status">
-                                    <option value="0"> Todos</option>
-                                    <option value="1"> Aguardando amostra</option>
-                                    <option value="2"> Amostra recebida</option>
-                                    <option value="7"> Amostra aprovada</option>
-                                    <option value="6"> Amostra reprovada</option>
-                                    <option value="7"> Aguardando pagamento</option>
-                                    <option value="9"> Pagamento confirmado</option>
-                                    <option value="10"> Pedido concluído</option>
-                                </optgroup>
-                            </select>
-                        </form>
-                    </div> --}}
+
                 </div>
 
             </div>
             <div class="card-body">
+                <div>
+                    <div>
+                        <a href="{{ route('animais.create') }}" class="btn btn-alt-loci text-white">Novo Animal</a>
+                    </div>
+                </div>
                 <div class="table">
                     <table class="table table-striped">
                         <thead>
@@ -103,8 +93,10 @@
 
                                             <ul class="dropdown-menu">
 
-                                                <a href="{{ route('animais.show', $animal->id) }}" class="dropdown-item">Editar</a>
-                                                <a href="{{ route('animais.status', $animal->id) }}" class="dropdown-item">Editar Status</a>
+                                                <a href="{{ route('animais.show', $animal->id) }}"
+                                                    class="dropdown-item">Editar</a>
+                                                <a href="{{ route('animais.status', $animal->id) }}"
+                                                    class="dropdown-item">Editar Status</a>
                                             </ul>
                                         </div>
 

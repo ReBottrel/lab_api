@@ -1,15 +1,15 @@
 @extends('layouts.admin')
 
 @section('content')
-    <input type="hidden" name="id" class="id" value="{{ $animal->id }}">
+    
     <div id="editar-produto">
         <div class="container">
             <div class="card">
                 <div class="card-header">
-                    <h1>Editar Animal</h1>
+                    <h1>Criar Animal</h1>
                 </div>
                 <div class="card-body">
-                    <form action="{{ route('animais.update', $animal->id) }}" method="POST">
+                    <form action="{{ route('animais.store') }}" method="POST">
                         @csrf
                         <div class="row">
                             <div class="col-md-12">
@@ -124,22 +124,5 @@
 @endsection
 
 @section('js')
-    <script>
-        $(document).ready(function() {
-            var id = $('.id').val();
-            console.log(id);
-            $.ajax({
-                url: `{{ url('animal-edit') }}/${id}`,
 
-                type: 'GET',
-                success: (data) => {
-                    console.log(data);
-                    for (i in data) {
-
-                        $('#editar-produto').find(`[name="${i}"]`).val(data[i]);
-                    }
-                }
-            });
-        });
-    </script>
 @endsection

@@ -9,13 +9,13 @@ use App\Models\Laudo;
 
 use App\Models\Owner;
 use App\Models\Animal;
-use App\Models\QrCode as ModelQrCode;
 use App\Models\Tecnico;
 use BaconQrCode\Writer;
 use phpseclib\Crypt\RSA;
-// use X509\CertificationPath;
 use phpseclib\File\ASN1;
+// use X509\CertificationPath;
 use phpseclib\File\X509;
+use App\Models\DnaVerify;
 use App\Models\DataColeta;
 use Spatie\PdfToImage\Pdf;
 use App\Models\OrdemServico;
@@ -23,10 +23,11 @@ use App\Models\OrderRequest;
 use Illuminate\Http\Request;
 use BaconQrCode\Renderer\Image\Png;
 use App\Http\Controllers\Controller;
+use App\Models\QrCode as ModelQrCode;
 use BaconQrCode\Renderer\ImageRenderer;
 use Illuminate\Support\Facades\Storage;
-use BaconQrCode\Renderer\Image\ImagickImageBackEnd;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use BaconQrCode\Renderer\Image\ImagickImageBackEnd;
 use BaconQrCode\Renderer\RendererStyle\RendererStyle;
 
 
@@ -47,8 +48,8 @@ class LaudoController extends Controller
 
         $laudoData = [
             'animal_id' => $ordem->animal_id,
-            'mae_id' => $mae->id,
-            'pai_id' => $pai->id,
+            'mae_id' => $mae->id ?? null,
+            'pai_id' => $pai->id ?? null,
             'veterinario' => $ordem->tecnico,
             'owner_id' => $ordem->owner_id,
             'data_coleta' => $datas->data_coleta,
@@ -85,7 +86,7 @@ class LaudoController extends Controller
 
             // Converta a imagem para base64
             $base64Image = base64_encode($imageData);
-          
+
 
 
             $qrCode = ModelQrCode::create([
@@ -106,8 +107,24 @@ class LaudoController extends Controller
         $owner = Owner::find($laudo->owner_id);
         $datas = DataColeta::where('id_animal', $laudo->animal_id)->first();
         $tecnico = Tecnico::find($laudo->veterinario_id);
-        $mae = Animal::with('alelos')->find($laudo->mae_id);
-        $pai = Animal::with('alelos')->find($laudo->pai_id);
+        $dna_verify = DnaVerify::where('animal_id', $animal->id)->first();
+        $sigla = substr($animal->especies, 0, 3);
+        $pai = null;
+        $mae = null;
+        switch ($dna_verify->verify_code) {
+            case $sigla . 'PD':
+                $pai = Animal::with('alelos')->find($laudo->pai_id);
+                break;
+            case $sigla . 'MD':
+                $mae = Animal::with('alelos')->find($laudo->mae_id);
+                break;
+            case $sigla . 'TR':
+                $pai = Animal::with('alelos')->find($laudo->pai_id);
+                $mae = Animal::with('alelos')->find($laudo->mae_id);
+                break;
+            default:
+                break;
+        }
         $qrCode = ModelQrCode::find($laudo->id);
         return view('admin.ordem-servico.laudo', get_defined_vars());
     }
@@ -118,8 +135,24 @@ class LaudoController extends Controller
         $owner = Owner::find($laudo->owner_id);
         $datas = DataColeta::where('id_animal', $laudo->animal_id)->first();
         $tecnico = Tecnico::find($laudo->veterinario_id);
-        $mae = Animal::with('alelos')->find($laudo->mae_id);
-        $pai = Animal::with('alelos')->find($laudo->pai_id);
+        $dna_verify = DnaVerify::where('animal_id', $animal->id)->first();
+        $sigla = substr($animal->especies, 0, 3);
+        $pai = null;
+        $mae = null;
+        switch ($dna_verify->verify_code) {
+            case $sigla . 'PD':
+                $pai = Animal::with('alelos')->find($laudo->pai_id);
+                break;
+            case $sigla . 'MD':
+                $mae = Animal::with('alelos')->find($laudo->mae_id);
+                break;
+            case $sigla . 'TR':
+                $pai = Animal::with('alelos')->find($laudo->pai_id);
+                $mae = Animal::with('alelos')->find($laudo->mae_id);
+                break;
+            default:
+                break;
+        }
         $qrCode = ModelQrCode::find($laudo->id);
         // Cria uma instância do Dompdf
         $dompdf = new Dompdf();

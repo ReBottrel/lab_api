@@ -238,7 +238,7 @@ class OrdemServicoController extends Controller
             'animal' => $animal,
             'alelos_mae' => $alelosIguaisMae,
             'alelos_pai' => $alelosIguaisPai,
-
+            'dna_verify' => $dna_verify,
         ]);
     }
 

@@ -343,6 +343,14 @@
             white-space: nowrap;
         }
     }
+
+    #animalinfo span {
+        padding: 0;
+        margin: 0;
+        line-height: 0;
+    }
+
+
 </style>
 
 <body>
@@ -374,8 +382,7 @@
                     </p>
                 </div>
                 <div class="qr">
-                    <img width="66" height="66"
-                        src="data:image/png;base64,{{ $qrCode->qrcode }}" />
+                    <img width="66" height="66" src="data:image/png;base64,{{ $qrCode->qrcode }}" />
                     <p>
                         Utilize um leitor de QRCode ou acesse o site:
                         <u>https://i.locilab.com.br/validacao/{{ $laudo->codigo_busca }}</u>
@@ -409,48 +416,49 @@
                     </div>
                     <div class="">
                         <strong>Raça:</strong>
-                        <span>{{ $animal->breed }}</span>
+                        <span>{{ $animal->breed ?? 'Não informado' }}</span>
                     </div>
                     <div class="">
                         <strong>Sexo:</strong>
-                        <span>{{ $animal->sex }}</span>
+                        <span>{{ $animal->sex ?? 'Não informado' }}</span>
                     </div>
                     <div class="">
                         <strong>Cód. Barras:</strong>
-                        <span>{{ $animal->codlab }}</span>
+                        <span>{{ $animal->codlab ?? 'Não informado' }}</span>
                     </div>
                     <div class="">
                         <strong>Endereço:</strong>
-                        <span>{{ $owner->address }}, {{ $owner->number }} {{ $owner->complement }} -
-                            {{ $owner->city }} -
-                            {{ $owner->state }}</span>
+                        <span>{{ $owner->address ?? 'Não informado' }}, {{ $owner->number ?? 'Não informado' }}
+                            {{ $owner->complement }} -
+                            {{ $owner->city ?? 'Não informado' }} -
+                            {{ $owner->state ?? 'Não informado' }}</span>
                     </div>
 
                 </div>
                 <div class="content_2">
                     <div class="">
                         <strong>Tipo Amostra:</strong>
-                        <span>{{ $datas->tipo }}</span>
+                        <span>{{ $datas->tipo ?? 'Não informado' }}</span>
                     </div>
                     <div class="">
                         <strong>Espécie:</strong>
-                        <span>{{ $animal->especies }}</span>
+                        <span>{{ $animal->especies ?? 'Não informado' }}</span>
                     </div>
                     <div class="">
                         <strong>Data de Nascimento:</strong>
-                        <span>{{ $animal->birth_date }}</span>
+                        <span>{{ $animal->birth_date ?? 'Não informado' }}</span>
                     </div>
                     <div class="">
                         <strong>Código Interno:</strong>
-                        <span>{{ $animal->codlab }}</span>
+                        <span>{{ $animal->codlab ?? 'Não informado' }}</span>
                     </div>
                     <div class="">
                         <strong>Proprietário:</strong>
-                        <span>{{ $owner->owner_name }}</span>
+                        <span>{{ $owner->owner_name ?? 'Não informado' }}</span>
                     </div>
                     <div class="">
                         <strong>Data da Coleta:</strong>
-                        <span>{{ $animal->collect_date }}</span>
+                        <span>{{ $animal->collect_date ?? 'Não informado' }}</span>
                     </div>
                 </div>
             </div>
@@ -500,38 +508,64 @@
                     <thead>
                         <tr>
                             <th scope="col">Nome</th>
-                            <th scope="col">{{ $mae->animal_name }}</th>
+                            @if ($mae != null)
+                                <th scope="col">
+                                    {{ $mae->animal_name }}
+                                </th>
+                            @endif
                             <th scope="col">{{ $animal->animal_name }}</th>
-                            <th scope="col">{{ $pai->animal_name }}</th>
+                            @if ($pai != null)
+                                <th scope="col">
+
+                                    {{ $pai->animal_name }}
+
+                                </th>
+                            @endif
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
                             <th>N Relatório de Ensaio</th>
-                            <th>{{ $mae->codlab }}</th>
+                            @if ($mae != null)
+                                <th>
+                                    {{ $mae->codlab }}
+                                </th>
+                            @endif
                             <th>{{ $animal->codlab }}</th>
-                            <th>{{ $pai->codlab }}</th>
+                            @if ($pai != null)
+                                <th>
+                                    {{ $pai->codlab }}
+                                </th>
+                            @endif
                         </tr>
                         <tr>
                             <th>Microssatélites</th>
+                            @if ($mae != null)
+                                <th>Alelos</th>
+                            @endif
                             <th>Alelos</th>
-                            <th>Alelos</th>
-                            <th>Alelos</th>
+                            @if ($pai != null)
+                                <th>Alelos</th>
+                            @endif
                         </tr>
                         @foreach ($animal->alelos as $key => $item)
                             <tr>
                                 <td>{{ $item->marcador }}</td>
-                                <td>
-                                    @if ($mae->alelos[$key]->alelo1 == '')
-                                        *
-                                    @else
-                                        {{ $mae->alelos[$key]->alelo1 }}
-                                        @endif - @if ($mae->alelos[$key]->alelo2 == '')
+                                @if ($mae != null)
+                                    <td>
+
+                                        @if ($mae->alelos[$key]->alelo1 == '')
                                             *
                                         @else
-                                            {{ $mae->alelos[$key]->alelo2 }}
-                                        @endif
-                                </td>
+                                            {{ $mae->alelos[$key]->alelo1 }}
+                                            @endif - @if ($mae->alelos[$key]->alelo2 == '')
+                                                *
+                                            @else
+                                                {{ $mae->alelos[$key]->alelo2 }}
+                                            @endif
+
+                                    </td>
+                                @endif
                                 <td>
                                     @if ($item->alelo1 == '')
                                         *
@@ -543,17 +577,21 @@
                                             {{ $item->alelo2 }}
                                         @endif
                                 </td>
-                                <td>
-                                    @if ($pai->alelos[$key]->alelo1 == '')
-                                        *
-                                    @else
-                                        {{ $pai->alelos[$key]->alelo1 }}
-                                        @endif - @if ($pai->alelos[$key]->alelo2 == '')
+                                @if ($pai != null)
+                                    <td>
+
+                                        @if ($pai->alelos[$key]->alelo1 == '')
                                             *
                                         @else
-                                            {{ $pai->alelos[$key]->alelo2 }}
-                                        @endif
-                                </td>
+                                            {{ $pai->alelos[$key]->alelo1 }}
+                                            @endif - @if ($pai->alelos[$key]->alelo2 == '')
+                                                *
+                                            @else
+                                                {{ $pai->alelos[$key]->alelo2 }}
+                                            @endif
+
+                                    </td>
+                                @endif
                             </tr>
                         @endforeach
 
@@ -573,23 +611,39 @@
                     com base nos seguintes laudos:
                 </span>
             </div>
-            <div>
-                <span>
-                    GENITORA: animal {{ $mae->animal_name }}, número {{ $mae->codlab }}, emitido pelo
-                    laboratório Linhagen em {{ date('d/m/Y', strtotime($mae->created_at)) }}.
-                </span>
+            <style>
+
+            </style>
+            <div id="animalinfo">
+                @if ($mae != null)
+                    <span class="spn">
+                        GENITORA: animal {{ $mae->animal_name }}, número {{ $mae->codlab }}, emitido pelo
+                        laboratório Linhagen em {{ date('d/m/Y', strtotime($mae->created_at)) }}.
+                    </span>
+                @endif
                 <br>
-                <span>
+                <span class="spn">
                     FILHO(A): animal {{ $animal->animal_name }}, número {{ $animal->codlab }}, emitido pelo
                     laboratório Loci Genética Laboratorial em {{ date('d/m/Y', strtotime($animal->created_at)) }}.
-                    GENITOR: animal
-                    {{ $pai->animal_name }}, número {{ $pai->codlab }}, emitido pelo laboratório
-                    Linhagen em {{ date('d/m/Y', strtotime($pai->created_at)) }}.
+
                 </span>
+                @if ($pai != null)
+                    <br>
+                    <span class="spn">
+                        GENITOR: {{ $pai->animal_name }}, número {{ $pai->codlab }},
+                        emitido pelo laboratório
+                        Linhagen em {{ date('d/m/Y', strtotime($pai->created_at)) }}.
+                    </span>
+                @endif
+
                 <br>
-                <span>
+                <span class="spn">
                     Esses laudos são de exclusiva responsabilidade dos laboratórios
                     emissores.
+                </span>
+                <br>
+                <span class="spn">
+                    {{ $laudo->observacao }}
                 </span>
             </div>
             @php
@@ -613,7 +667,7 @@
                 </p>
             </div>
             <div class="text-center">
-                <p>Documento assinado eletronicamente por LOCI BIOTECNOLOGIA LTDA, em {{  date('d/m/Y H:i:s'); }}</p>
+                <p>Documento assinado eletronicamente por LOCI BIOTECNOLOGIA LTDA, em {{ date('d/m/Y H:i:s') }}</p>
             </div>
         </div>
     </page>

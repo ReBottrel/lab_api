@@ -13,7 +13,7 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th scope="col">Numero</th>
+                    <th scope="col">Numero/Pedido</th>
                     <th scope="col">Proprietario</th>
                     <th>Data de criação</th>
                     <th>Ação</th>
@@ -22,7 +22,7 @@
             <tbody>
                 @foreach ($ordemServicos as $item)
                     <tr>
-                        <th scope="row">{{ $item->id }}</th>
+                        <th scope="row">{{ $item->order_id }}</th>
 
                         <td>{{ $item->owner }}</td>
                         <th>{{ date('d/m/Y', strtotime($item->created_at)) }}</th>

@@ -4,16 +4,20 @@
     <div class="container alelos-compare">
         <div class="row justify-content-center align-items-center">
             <div class="col-2 bg-light border rounded text-center">
-                <h5>Animal</h5>
+                <h5>Compare alelos</h5>
             </div>
+            @php
+                $marcadores = [];
+            @endphp
+
             <div class="col-2 bg-light border rounded text-center">
-                <h5>{{ $mae->id ?? 'Sem verificação' }}</h5>
+                <h5>{{ $mae->codlab ?? 'Sem verificação' }}</h5>
             </div>
             <div class="col-3 bg-light border rounded text-center">
-                <h5>{{ $animal->id ?? 'Nao encontrado' }}</h5>
+                <h5>{{ $animal->codlab ?? 'Nao encontrado' }}</h5>
             </div>
             <div class="col-2 bg-light border rounded text-center">
-                <h5>{{ $pai->id ?? 'Sem verificação' }}</h5>
+                <h5>{{ $pai->codlab ?? 'Sem verificação' }}</h5>
             </div>
             <div class="col-3 bg-light border rounded text-center">
                 <button type="button" data-ordem="{{ $ordem->id }}" id="analisar"
@@ -54,9 +58,7 @@
         <div class="row">
             <div class="col-2 bg-light border rounded">
                 <div class="d-flex flex-column text-center mt-2">
-                    @php
-                        $marcadores = [];
-                    @endphp
+
                     @foreach ($animal->alelos as $key => $item)
                         @php
                             $marcadores[] = $item->marcador;
@@ -139,76 +141,79 @@
             <div class="d-flex flex-column text-center pai">
                 <div class="row mt-2">
                     @if ($pai != null)
-                    @foreach ($marcadores as $marcador)
-                        @php
-                            $encontrado = false;
-                        @endphp
-                        @foreach ($pai->alelos as $item)
-                            @if ($item->marcador == $marcador)
-                                @php
-                                    $encontrado = true;
-                                @endphp
-                                <div class="col-6">
-                                    @if ($item->alelo1 == '')
-                                        *
-                                    @else
-                                        <p>{{ $item->alelo1 }}</p>
-                                    @endif
-                                </div>
-                                <div class="col-6">
-                                    @if ($item->alelo2 == '')
-                                        *
-                                    @else
-                                        <p>{{ $item->alelo2 }}</p>
-                                    @endif
-                                </div>
-                            @break
+                        @foreach ($marcadores as $marcador)
+                            @php
+                                $encontrado = false;
+                            @endphp
+                            @foreach ($pai->alelos as $item)
+                                @if ($item->marcador == $marcador)
+                                    @php
+                                        $encontrado = true;
+                                    @endphp
+                                    <div class="col-6">
+                                        @if ($item->alelo1 == '')
+                                            *
+                                        @else
+                                            <p>{{ $item->alelo1 }}</p>
+                                        @endif
+                                    </div>
+                                    <div class="col-6">
+                                        @if ($item->alelo2 == '')
+                                            *
+                                        @else
+                                            <p>{{ $item->alelo2 }}</p>
+                                        @endif
+                                    </div>
+                                @break
+                            @endif
+                        @endforeach
+                        @if (!$encontrado)
+                            <!-- Lógica para o caso de o marcador não ser encontrado na mãe -->
                         @endif
                     @endforeach
-                    @if (!$encontrado)
-                        <!-- Lógica para o caso de o marcador não ser encontrado na mãe -->
-                    @endif
-                @endforeach
-            @endif
-                </div>
-            </div>
-        </div>
-
-        <div class="col-3 bg-light border rounded">
-            <div class="row" id="valores">
-
-            </div>
-
-        </div>
-    </div>
-    <div class="d-none" id="resultado">
-        <div class="mensagem px-5 pt-2"></div>
-        <div class="mb-3 px-5 pt-2">
-            <label for="exampleFormControlTextarea1" class="form-label">Observação</label>
-            <textarea class="form-control" id="obs" rows="3"></textarea>
-        </div>
-        <div class="d-flex">
-            <div>
-                <button class="btn btn-primary" id="gerar-laudo">GERAR LAUDO</button>
-            </div>
-        </div>
-        <input type="hidden" name="" id="laudo">
-    </div>
-    <div id="buttons" class="d-none my-3">
-        <div class="d-flex">
-            <div>
-                <button class="btn btn-primary" id="ver-laudo">
-                    VER LAUDO
-                </button>
-                <button class="btn btn-primary" id="pdf">
-                    GERAR PDF E ASSINAR
-                </button>
-                <button class="btn btn-primary" id="finalizar">
-                    FINALIZAR
-                </button>
+                @endif
             </div>
         </div>
     </div>
+    <div class="@if (empty($marcadores)) @else d-none @endif">
+        <p>O produto não possuí alelos cadastrado <a href="{{ route('alelos.create') }}">Clique aqui para
+                cadastrar</a></p>
+    </div>
+    <div class="col-3 bg-light border rounded">
+        <div class="row" id="valores">
+
+        </div>
+
+    </div>
+</div>
+<div class="d-none" id="resultado">
+    <div class="mensagem px-5 pt-2"></div>
+    <div class="mb-3 px-5 pt-2">
+        <label for="exampleFormControlTextarea1" class="form-label">Observação</label>
+        <textarea class="form-control" id="obs" rows="3"></textarea>
+    </div>
+    <div class="d-flex">
+        <div>
+            <button class="btn btn-primary" id="gerar-laudo">GERAR LAUDO</button>
+        </div>
+    </div>
+    <input type="hidden" name="" id="laudo">
+</div>
+<div id="buttons" class="d-none my-3">
+    <div class="d-flex">
+        <div>
+            <button class="btn btn-primary" id="ver-laudo">
+                VER LAUDO
+            </button>
+            <button class="btn btn-primary" id="pdf">
+                GERAR PDF E ASSINAR
+            </button>
+            <button class="btn btn-primary" id="finalizar">
+                FINALIZAR
+            </button>
+        </div>
+    </div>
+</div>
 </div>
 @endsection
 @section('js')
@@ -220,7 +225,7 @@
             `Conclui-se que o produto AnimalFilho não está qualificado pela genitora Mae e não está qualificado pelo genitor Pai.`,
             `Conclui-se que o produto AnimalFilho não está qualificado pela genitora Mae e está qualificado pelo genitor Pai.`,
             `Conclui-se que o produto AnimalFilho está qualificado pela genitora Mae e não está qualificado pelo genitor Pai.`,
-            `Conclui-se que o produto AnimalFilho qualificado pela genitora Mae e está qualificado pelo genitor Pai.`,
+            `Conclui-se que o produto AnimalFilho está qualificado pela genitora Mae e está qualificado pelo genitor Pai.`,
             `Conclui-se que o produto AnimalFilho não está qualificado pela genitora Mae`,
             `Conclui-se que o produto AnimalFilho não está qualificado pelo genitor Pai.`,
             `Conclui-se que o produto AnimalFilho está qualificado pelo genitor Pai.`,
@@ -261,85 +266,88 @@
                         const marcador = alelo.marcador;
 
 
-
-                        if (vMae == false) {
-                            response.alelos_mae.forEach(function(query) {
-                                if (query.marcador === marcador) {
-                                    if (query.alelo1 === '' && query
-                                        .alelo2 === '') {
-                                        verificaMae = true;
-
-                                    }
-                                    incluidos += 'M';
-                                }
-                            });
+                        if (vMae == true && vPai == true) {
+                            incluidos = '';
+                            excluidos = '';
                         } else {
-                            verificaMae = false;
-                        }
+                            if (vMae == false) {
+                                response.alelos_mae.forEach(function(query) {
+                                    if (query.marcador === marcador) {
+                                        if (query.alelo1 === '' && query
+                                            .alelo2 === '') {
+                                            verificaMae = true;
 
-                        if (vPai == false) {
-                            response.alelos_pai.forEach(function(query) {
-                                if (query.marcador === marcador) {
-                                    if (query.alelo1 === '' && query
-                                        .alelo2 === '') {
-                                        verificaPai = true;
-
+                                        }
+                                        incluidos += 'M';
                                     }
-                                    incluidos += 'P';
-                                }
-                            });
-                        } else {
-                            verificaPai = false;
-                        }
+                                });
+                            } else {
+                                verificaMae = false;
+                            }
 
-                        if (verificaPai) {
-                            incluidos = incluidos.replace('P', '');
-                        }
+                            if (vPai == false) {
+                                response.alelos_pai.forEach(function(query) {
+                                    if (query.marcador === marcador) {
+                                        if (query.alelo1 === '' && query
+                                            .alelo2 === '') {
+                                            verificaPai = true;
 
-                        if (verificaMae) {
-                            incluidos = incluidos.replace('M', '');
-                        }
+                                        }
+                                        incluidos += 'P';
+                                    }
+                                });
+                            } else {
+                                verificaPai = false;
+                            }
 
-                        switch (incluidos) {
+                            if (verificaPai) {
+                                incluidos = incluidos.replace('P', '');
+                            }
 
-                            case 'MP':
-                                excluidos = '';
-                                break;
-                            case 'M':
-                                excluidos = 'P';
-                                if (!response.alelos_pai) {
+                            if (verificaMae) {
+                                incluidos = incluidos.replace('M', '');
+                            }
+
+                            switch (incluidos) {
+
+                                case 'MP':
                                     excluidos = '';
-                                }
-                                break;
-                            case 'P':
-                                excluidos = 'M';
-                                if (!response.alelos_mae) {
-                                    excluidos = '';
-                                }
-                                break;
-                            default:
-                                excluidos = 'MP';
-                                if (!response.alelos_mae) {
+                                    break;
+                                case 'M':
                                     excluidos = 'P';
+                                    if (!response.alelos_pai) {
+                                        excluidos = '';
+                                    }
                                     break;
-                                }
-                                if (!response.alelos_pai) {
+                                case 'P':
                                     excluidos = 'M';
+                                    if (!response.alelos_mae) {
+                                        excluidos = '';
+                                    }
                                     break;
-                                }
-                                break;
-                        }
+                                default:
+                                    excluidos = 'MP';
+                                    if (!response.alelos_mae) {
+                                        excluidos = 'P';
+                                        break;
+                                    }
+                                    if (!response.alelos_pai) {
+                                        excluidos = 'M';
+                                        break;
+                                    }
+                                    break;
+                            }
 
-                        if (verificaPai) {
-                            incluidos = incluidos.replace('P', '');
-                            excluidos = excluidos.replace('P', '');
-                        }
+                            if (verificaPai) {
+                                incluidos = incluidos.replace('P', '');
+                                excluidos = excluidos.replace('P', '');
+                            }
 
-                        if (verificaMae) {
-                            incluidos = incluidos.replace('M', '');
-                            excluidos = excluidos.replace('M', '');
+                            if (verificaMae) {
+                                incluidos = incluidos.replace('M', '');
+                                excluidos = excluidos.replace('M', '');
+                            }
                         }
-
                         const html = `<div class="row">
                         <div class="col-6">
                             <input class="form-control incluidos" name="incluidos[]" type="text" value="${incluidos}">
@@ -352,58 +360,100 @@
                         let paiEmae = false;
                         let naoMae = false;
                         let naoPai = false;
-                        let paiVazio = false;
-                        let maeVazio = false;
 
                         $('#valores').append(html);
+                        if (vMae == true && vPai == true) {
+                            $('.mensagem').html(
+                                `<textarea class="form-control" id="conclusao" rows="3"> </textarea>`
+                            );
+                        }
+                        //faz o loop para verificar se todos os campos estão preenchidos
                         $('.excluidos').each(function() {
                             const valor = $(this).val();
-                            if (valor === 'MP') {
+                            if (valor == 'MP') {
                                 paiEmae = true;
-                                return false; // interrompe a iteração
-                            } else if (valor.includes('M') || valor
-                                .includes('P')) {
+                                return false;
+                            }
+                            if (valor == 'M') {
                                 naoMae = true;
+                                return false;
+                            }
+                            if (valor == 'P') {
                                 naoPai = true;
-                                return false; // interrompe a iteração
-                            } else if (valor === '') {
-                                maeVazio = true;
-                                paiVazio = true;
-                                return false; // interrompe a iteração
+                                return false;
+                            }
+
+                        });
+                        let paimae = false;
+                        let simPai = false;
+                        let simMae = false;
+
+                        let todosPreenchidos = true;
+                        //faz o loop para verificar se todos os campos estão preenchidos
+                        $('.incluidos').each(function() {
+                            const valor = $(this).val();
+
+                            if (valor === '') {
+                                todosPreenchidos = false;
+                                return false;
+                            }
+                            if (valor == 'MP') {
+                                paimae = true;
+                                return false;
+                            }
+                            if (valor == 'P') {
+                                simPai = true;
+                                return false;
+                            }
+                            if (valor == 'M') {
+                                simMae = true;
+                                return false;
                             }
                         });
 
-                        if (!paiEmae) {
+
+                        //verifica pai e mae e exibe o laudo
+                        if (paimae == true && paiEmae == false) {
                             $('.mensagem').html(
                                 `<textarea class="form-control" id="conclusao" rows="3">${msg[3]}</textarea>`
                             );
-                        }
-
-                        if (paiEmae) {
+                        } else if (paimae == true && paiEmae == false) {
+                            console.log('entrei aqui')
+                            $('.mensagem').html(
+                                `<textarea class="form-control" id="conclusao" rows="3">${msg[0]}</textarea>`
+                            );
+                        } else if (paimae == false && paiEmae == true) {
+                            console.log('entrei aqui 2')
                             $('.mensagem').html(
                                 `<textarea class="form-control" id="conclusao" rows="3">${msg[0]}</textarea>`
                             );
                         }
-
-                        if (naoMae) {
+                        //verifica o pai e exibe o laudo
+                        if (simPai == true && naoPai == false) {
                             $('.mensagem').html(
-                                `<textarea class="form-control" id="conclusao" rows="3">${msg[1]}</textarea>`
+                                `<textarea class="form-control" id="conclusao" rows="3">${msg[6]}</textarea>`
+                            );
+                        } else if (simPai == true && naoPai == true) {
+                            $('.mensagem').html(
+                                `<textarea class="form-control" id="conclusao" rows="3">${msg[5]}</textarea>`
+                            );
+                        } else if (simPai == false && naoPai == true) {
+                            $('.mensagem').html(
+                                `<textarea class="form-control" id="conclusao" rows="3">${msg[5]}</textarea>`
                             );
                         }
-
-                        if (naoPai) {
+                        //verifica a mãe e exibe o laudo
+                        if (simMae == true && naoMae == false) {
                             $('.mensagem').html(
-                                `<textarea class="form-control" id="conclusao" rows="3">${msg[2]}</textarea>`
+                                `<textarea class="form-control" id="conclusao" rows="3">${msg[7]}</textarea>`
                             );
-                        }
-                        if (maeVazio) {
+                        } else if (simMae == true && naoMae == true) {
                             $('.mensagem').html(
                                 `<textarea class="form-control" id="conclusao" rows="3">${msg[4]}</textarea>`
                             );
-                        }
-                        if (paiVazio) {
+                        } else if (simMae == false && naoMae == true) {
                             $('.mensagem').html(
-                                `<textarea class="form-control" id="conclusao" rows="3">${msg[5]}</textarea>`
+                                `<textarea class="form-control" id="conclusao" rows="3">${msg[4]}</textarea>`
                             );
                         }
 

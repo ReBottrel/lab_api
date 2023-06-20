@@ -32,7 +32,7 @@ class AnimaisController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.animais.create');
     }
 
     /**
@@ -43,7 +43,8 @@ class AnimaisController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $animal = Animal::create($request->all());
+        return redirect()->route('animais')->with('success', 'Animal cadastrado com sucesso!');
     }
 
     /**

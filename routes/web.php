@@ -259,6 +259,8 @@ Route::middleware(['auth:admin'])->group(function () {
 
 
     Route::get('animais', [AnimaisController::class, 'index'])->name('animais');
+    Route::get('animal-create', [AnimaisController::class, 'create'])->name('animais.create');
+    Route::post('animal-store', [AnimaisController::class, 'store'])->name('animais.store');
     Route::get('search-animal', [AnimaisController::class, 'search'])->name('search.animal');
     Route::get('animal-show/{id}', [AnimaisController::class, 'show'])->name('animais.show');
     Route::get('animal-edit/{id}', [AnimaisController::class, 'edit'])->name('animais.edit');
