@@ -126,7 +126,7 @@ class LaudoController extends Controller
                 break;
         }
         $qrCode = ModelQrCode::where('laudo_id', $laudo->id)->first();
-        dd($qrCode);
+      
         return view('admin.ordem-servico.laudo', get_defined_vars());
     }
     public function gerarPdf($id)
@@ -154,7 +154,7 @@ class LaudoController extends Controller
             default:
                 break;
         }
-        $qrCode = ModelQrCode::find($laudo->id);
+        $qrCode = ModelQrCode::where('laudo_id', $laudo->id)->first();
         // Cria uma instância do Dompdf
         $dompdf = new Dompdf();
 
