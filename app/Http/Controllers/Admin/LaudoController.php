@@ -125,7 +125,7 @@ class LaudoController extends Controller
             default:
                 break;
         }
-        $qrCode = ModelQrCode::find($laudo->id);
+        $qrCode = ModelQrCode::where('laudo_id', $laudo->id)->first();
         dd($qrCode);
         return view('admin.ordem-servico.laudo', get_defined_vars());
     }
