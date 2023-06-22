@@ -11,13 +11,13 @@
             @endphp
 
             <div class="col-2 bg-light border rounded text-center">
-                <h5>{{ $mae->codlab ?? 'Sem verificação' }}</h5>
+                <h5>{{ $mae->id ?? 'Sem verificação' }}</h5>
             </div>
             <div class="col-3 bg-light border rounded text-center">
-                <h5>{{ $animal->codlab ?? 'Nao encontrado' }}</h5>
+                <h5>{{ $animal->id ?? 'Nao encontrado' }}</h5>
             </div>
             <div class="col-2 bg-light border rounded text-center">
-                <h5>{{ $pai->codlab ?? 'Sem verificação' }}</h5>
+                <h5>{{ $pai->id ?? 'Sem verificação' }}</h5>
             </div>
             <div class="col-3 bg-light border rounded text-center">
                 <button type="button" data-ordem="{{ $ordem->id }}" id="analisar"
@@ -263,6 +263,7 @@
                         let excluidos = '';
                         let verificaMae = false;
                         let verificaPai = false;
+
                         const marcador = alelo.marcador;
 
 
@@ -271,33 +272,35 @@
                             excluidos = '';
                         } else {
                             if (vMae == false) {
+                                var tempVerify = true;
                                 response.alelos_mae.forEach(function(query) {
                                     if (query.marcador === marcador) {
-                                        if (query.alelo1 === '' && query
-                                            .alelo2 === '') {
-                                            verificaMae = true;
-
-                                        }
+                                        tempVerify = false;
                                         incluidos += 'M';
                                     }
                                 });
                             } else {
                                 verificaMae = false;
+
+                            }
+                            if (tempVerify) {
+                                verificaMae = true;
                             }
 
                             if (vPai == false) {
+                                var tempVerify = true;
                                 response.alelos_pai.forEach(function(query) {
                                     if (query.marcador === marcador) {
-                                        if (query.alelo1 === '' && query
-                                            .alelo2 === '') {
-                                            verificaPai = true;
-
-                                        }
+                                        tempVerify = false;
                                         incluidos += 'P';
                                     }
                                 });
                             } else {
                                 verificaPai = false;
+                            }
+
+                            if (tempVerify) {
+                                verificaPai = true;
                             }
 
                             if (verificaPai) {

@@ -47,6 +47,17 @@ class UserDashboardController extends Controller
         return view('user.orders-done-detail', get_defined_vars());
     }
 
+    public function updatePayNow(Request $request)
+    {
+        $orderItem = OrderRequestPayment::find($request->id);   
+
+        $orderItem->update([
+            'paynow' => $request->paynow,
+        ]);
+
+        return response()->json($orderItem);
+    }
+
     public function updateValue(Request $request, $id)
     {
 
@@ -83,7 +94,7 @@ class UserDashboardController extends Controller
             }
         }
 
-
+        // dd($request->all());
 
         foreach ($order->orderRequestPayment as $key => $payment) {
             $payment->update([

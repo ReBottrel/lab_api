@@ -407,7 +407,8 @@ class OrderController extends Controller
                     'extra_value' => $exam->extra_value,
                     'extra_requests' => $request->extra_requests ?? 0,
                     'animal_id' => $animal->id,
-                    'category_exam' => $animal->especies
+                    'category_exam' => $animal->especies,
+                    'paynow' => 1,
                 ]);
                 $animal->update([
                     'status' => 11,
@@ -460,7 +461,8 @@ class OrderController extends Controller
                     'requests' => $exame->requests,
                     'extra_value' => $exame->extra_value,
                     'animal_id' => $animal->id,
-                    'category_exam' => $animal->especies
+                    'category_exam' => $animal->especies,
+                    'paynow' => 1,
                 ]);
                 $pedido->update([
                     'status' => 11,

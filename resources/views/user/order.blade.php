@@ -109,6 +109,16 @@
                                             </select>
                                         </div>
                                     </div>
+                                    {{-- <div class="col-md-4">
+                                        <label for="exampleFormControlInput1" class="form-label">Pagar agora ou
+                                            depois</label>
+                                        <select class="form-select paynow" data-id="{{ $item->id }}" name="paynow"
+                                            id="paynow">
+                                            <option value="1" selected>Pagar agora</option>
+                                            <option value="0">Pagar depois</option>
+                                        </select>
+
+                                    </div> --}}
                                 @endif
                                 @if ($payment)
                                     @if ($payment->payment_type == 'boleto')
@@ -129,7 +139,7 @@
                                 @endif
                                 <div class="col-md-6 d-none">
                                     <div class="form-check">
-                                        <input class="form-check-input paynow" type="checkbox" value="{{ $item->id }}"
+                                        <input class="form-check-input" type="checkbox" value="{{ $item->id }}"
                                             name="paynow[]" id="flexCheckChecked"
                                             @if ($item->payment_status == 0) checked @else disabled="disabled" @endif>
                                         <label class="form-check-label" for="flexCheckChecked">
@@ -205,6 +215,7 @@
                 }
             });
         });
+
         $(document).on('click', '.paynow', function() {
             var totalPrice = 0;
             $('.sel-price').each(function() {
