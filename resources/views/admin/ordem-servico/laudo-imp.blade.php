@@ -380,7 +380,7 @@
                     </p>
                 </div>
                 <div class="qr">
-                    <img width="66" height="66" src="data:image/png;base64,{{ $qrCode->qrcode }}" />
+                    <img width="66" height="66" src="data:image/png;base64,{{ $qrCode->qrcode ?? '' }}" />
                     <p>
                         Utilize um leitor de QRCode ou acesse o site:
                         <u>https://i.locilab.com.br/validacao/{{ $laudo->codigo_busca }}</u>
