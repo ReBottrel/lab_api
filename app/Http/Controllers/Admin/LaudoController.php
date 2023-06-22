@@ -126,6 +126,7 @@ class LaudoController extends Controller
                 break;
         }
         $qrCode = ModelQrCode::find($laudo->id);
+        dd($qrCode);
         return view('admin.ordem-servico.laudo', get_defined_vars());
     }
     public function gerarPdf($id)
