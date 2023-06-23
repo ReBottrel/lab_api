@@ -57,13 +57,14 @@ class TesteController extends Controller
         $dompdf->setPaper('A4', 'portrait');
 
         // Renderiza o HTML em PDF
-        $html = view('admin.ordem-servico.laudo');
+        // $html = view('admin.ordem-servico.laudo');
+        $html = view('admin.ordem-servico.laudo-imp-teste');
         $dompdf->loadHtml($html);
         $dompdf->render();
 
         // Gera o PDF e envia para o navegador
         $dompdf->stream('documento.pdf');
-       
-       
+
+
     }
 }
