@@ -67,8 +67,6 @@
         }
     }
 
-
-
     page {
         background: white;
         display: block;
@@ -224,8 +222,8 @@
 
     .informacoes {
         width: 100%;
-        position: relative;
         margin-bottom: 75px;
+        position: relative;
     }
 
     .content_1 {
@@ -330,7 +328,7 @@
         position: absolute;
         top: 0;
         left: 50%;
-        transform: translateX(-50%, -50%);
+        transform: translate(-50%, -50%);
         height: 40px;
     }
 
@@ -396,7 +394,7 @@
                     <img width="66" height="66" src="data:image/png;base64,{{ $qrCode->qrcode ?? '' }}" />
                     <p>
                         Utilize um leitor de QRCode ou acesse o site:
-                        <u>https://i.locilab.com.br/validacao/{{ $laudo->codigo_busca }}</u>
+                        <u>https://i.locilab.com.br/validacao/{{ $laudo->codigo_busca ?? 'cd-busca' }}</u>
                         para validar este laudo.
                     </p>
 
@@ -411,12 +409,12 @@
             </div>
             <div class="text-end">
                 <span><strong>Relat. n</strong>
-                    @if ($mae != null)
+                    {{-- @if ($mae != null)
                         {{ substr($mae->codlab, 3) }}.
                     @endif
                     {{ substr($animal->codlab, 3) }}. @if ($pai != null)
                         {{ substr($pai->codlab, 3) }}
-                    @endif
+                    @endif --}}
                 </span>
             </div>
             <div class="text-center my-1 text-decoration-underline">
@@ -426,7 +424,7 @@
                 <div class="content_1">
                     <p>
                         <strong>Nome do Animal Testado:</strong>
-                        <span>{{ $animal->animal_name }}</span>
+                        <span>{{ $animal->animal_name ?? 'nome do animal' }}</span>
                         <br>
                         <strong>Número do Registro:</strong>
                         <span>{{ $animal->number_definitive ?? 'Não informado' }}</span>
@@ -442,7 +440,7 @@
                         <br>
                         <strong>Endereço:</strong>
                         <span>{{ $owner->address ?? 'Não informado' }}, {{ $owner->number ?? 'Não informado' }}
-                            {{ $owner->complement }} -
+                            {{ $owner->complement ?? 'Não informado' }} -
                             {{ $owner->city ?? 'Não informado' }} -
                             {{ $owner->state ?? 'Não informado' }}
                         </span>
@@ -473,19 +471,19 @@
             <div class="content_3">
                 <p>
                     <strong>Responsável pela Coleta/Registro Profissional ou CPF:</strong>
-                    <span>{{ $tecnico->professional_name }} - {{ $tecnico->document }}</span>
+                    <span>{{ $tecnico->professional_name ?? 'Nao informado' }} -
+                        {{ $tecnico->document ?? 'nao informado' }}</span>
                     <br>
                     <strong>Data do Recebimento</strong>
-                    <span>{{ $datas->data_recebimento }}</span>
+                    <span>{{ $datas->data_recebimento ?? 'nao informado' }}</span>
                     <br>
                     <strong>Data de Entrada na Área Técnica:</strong>
-                    <span>{{ $datas->data_laboratorio }}</span>
+                    <span>{{ $datas->data_laboratorio ?? 'Não informado' }}</span>
                     <br>
                     <strong>OBSERVAÇÃO:</strong>
                     <span>A amostragem foi de exclusiva responsabilidade do cliente.</span>
                 </p>
             </div>
-
             <div class="text-center my-1 text-decoration-underline">
                 <strong>Dados Relativos ao Ensaio</strong>
             </div>
@@ -493,7 +491,7 @@
             <div class="content_4">
                 <p>
                     <strong>Data da Realização:</strong>
-                    <span>{{ $laudo->data_realizacao }}</span>
+                    <span>{{ $laudo->data_realizacao ?? 'teste' }}</span>
                     <br>
                     <strong>Metodologia Utilizada:</strong>
                     <span>
@@ -512,50 +510,50 @@
                     <thead>
                         <tr>
                             <th scope="col">Nome</th>
-                            @if ($mae != null)
+                            {{-- @if ($mae != null)
                                 <th scope="col">
                                     {{ $mae->animal_name }}
                                 </th>
-                            @endif
-                            <th scope="col">{{ $animal->animal_name }}</th>
-                            @if ($pai != null)
+                            @endif --}}
+                            <th scope="col">{{ $animal->animal_name ?? '' }}</th>
+                            {{-- @if ($pai != null)
                                 <th scope="col">
 
                                     {{ $pai->animal_name }}
 
                                 </th>
-                            @endif
+                            @endif --}}
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
                             <th>N Relatório de Ensaio</th>
-                            @if ($mae != null)
+                            {{-- @if ($mae != null)
                                 <th>
                                     {{ $mae->codlab }}
                                 </th>
-                            @endif
-                            <th>{{ $animal->codlab }}</th>
-                            @if ($pai != null)
+                            @endif --}}
+                            <th>{{ $animal->codlab ?? 'codlab' }}</th>
+                            {{-- @if ($pai != null)
                                 <th>
                                     {{ $pai->codlab }}
                                 </th>
-                            @endif
+                            @endif --}}
                         </tr>
                         <tr>
                             <th>Microssatélites</th>
-                            @if ($mae != null)
+                            {{-- @if ($mae != null)
                                 <th>Alelos</th>
                             @endif
                             <th>Alelos</th>
                             @if ($pai != null)
                                 <th>Alelos</th>
-                            @endif
+                            @endif --}}
                         </tr>
-                        @foreach ($animal->alelos as $key => $item)
-                            <tr>
-                                <td>{{ $item->marcador }}</td>
-                                @if ($mae != null)
+                        {{-- @foreach ($animal->alelos as $key => $item) --}}
+                        <tr>
+                            <td>{{ $item->marcador ?? 'marcador' }}</td>
+                            {{-- @if ($mae != null)
                                     <td>
 
                                         @if ($mae->alelos[$key]->alelo1 == '')
@@ -569,9 +567,9 @@
                                             @endif
 
                                     </td>
-                                @endif
-                                <td>
-                                    @if ($item->alelo1 == '')
+                                @endif --}}
+                            <td>
+                                {{-- @if ($item->alelo1 == '')
                                         *
                                     @else
                                         {{ $item->alelo1 }}
@@ -579,9 +577,9 @@
                                             *
                                         @else
                                             {{ $item->alelo2 }}
-                                        @endif
-                                </td>
-                                @if ($pai != null)
+                                        @endif --}}
+                            </td>
+                            {{-- @if ($pai != null)
                                     <td>
 
                                         @if ($pai->alelos[$key]->alelo1 == '')
@@ -595,9 +593,9 @@
                                             @endif
 
                                     </td>
-                                @endif
-                            </tr>
-                        @endforeach
+                                @endif --}}
+                        </tr>
+                        {{-- @endforeach --}}
 
                     </tbody>
                 </table>
@@ -605,7 +603,7 @@
             <div>
                 <strong>Conclusão</strong>
                 <span>
-                    {{ $laudo->conclusao }}
+                    {{ $laudo->conclusao ?? 'conclusao' }}
                 </span>
             </div>
             <div>
@@ -615,22 +613,24 @@
                     com base nos seguintes laudos:
                 </span>
             </div>
+
             <div id="animalinfo mb-1">
                 <p class="spn">
-                    @if ($mae != null)
-                        GENITORA: animal {{ $mae->animal_name }}, número {{ $mae->codlab }}, emitido pelo
-                        laboratório Linhagen em {{ date('d/m/Y', strtotime($mae->created_at)) }}.
-                    @endif
+                    {{-- @if ($mae != null) --}}
+                    GENITORA: animal {{ $mae->animal_name ?? 'teste' }}, número {{ $mae->codlab ?? '123' }}, emitido
+                    pelo
+                    laboratório Linhagen em 23/06/2023{{-- date('d/m/Y',strtotime($mae->created_at)) --}}.
+                    {{-- @endif --}}
                     <br>
-                    FILHO(A): animal {{ $animal->animal_name }}, número {{ $animal->codlab }}, emitido pelo
-                    laboratório Loci Genética Laboratorial em {{ date('d/m/Y', strtotime($animal->created_at)) }}.
-                    @if ($pai != null)
-                        <br>
-                        GENITOR: {{ $pai->animal_name }}, número {{ $pai->codlab }},
-                        emitido pelo laboratório
-                        Linhagen em {{ date('d/m/Y', strtotime($pai->created_at)) }}.
-                    @endif
-
+                    FILHO(A): animal {{ $animal->animal_name ?? 'teste1' }}, número {{ $animal->codlab ?? '213' }},
+                    emitido pelo
+                    laboratório Loci Genética Laboratorial em 23/06/2023 {{-- date('d/m/Y',strtotime($animal->created_at)) --}}.
+                    {{-- @if ($pai != null) --}}
+                    <br>
+                    GENITOR: {{ $pai->animal_name ?? 'teste2' }}, número {{ $pai->codlab ?? '321' }},
+                    emitido pelo laboratório
+                    Linhagen em 23/06/2023{{-- date('d/m/Y',strtotime($pai->created_at)) --}}.
+                    {{-- @endif --}}
                 </p>
             </div>
             <div>
@@ -638,7 +638,7 @@
                     Esses laudos são de exclusiva responsabilidade dos laboratórios
                     emissores.
                     <br>
-                    {{ $laudo->observacao }}
+                    {{ $laudo->observacao ?? 'observacao' }}
                 </span>
             </div>
 
