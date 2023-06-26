@@ -406,3 +406,5 @@ Route::get('get-cities', [AddressController::class, 'cidades'])->name('get.citie
 
 Route::get('view-resenha/{id}', [ResenhaController::class, 'viewResenha'])->name('view.resenha');
 Route::get('resenha-pdf/{id}', [ResenhaController::class, 'gerarPDF'])->name('resenha.pdf');
+
+

@@ -11,13 +11,13 @@
             @endphp
 
             <div class="col-2 bg-light border rounded text-center">
-                <h5>{{ $mae->codlab ?? 'Sem verificação' }}</h5>
+                <h5>{{ $mae->id ?? 'Sem verificação' }}</h5>
             </div>
             <div class="col-3 bg-light border rounded text-center">
-                <h5>{{ $animal->codlab ?? 'Nao encontrado' }}</h5>
+                <h5>{{ $animal->id ?? 'Nao encontrado' }}</h5>
             </div>
             <div class="col-2 bg-light border rounded text-center">
-                <h5>{{ $pai->codlab ?? 'Sem verificação' }}</h5>
+                <h5>{{ $pai->id ?? 'Sem verificação' }}</h5>
             </div>
             <div class="col-3 bg-light border rounded text-center">
                 <button type="button" data-ordem="{{ $ordem->id }}" id="analisar"
@@ -187,7 +187,9 @@
     </div>
 </div>
 <div class="d-none" id="resultado">
-    <div class="mensagem px-5 pt-2"></div>
+    <div class="mensagem px-5 pt-2">
+
+    </div>
     <div class="mb-3 px-5 pt-2">
         <label for="exampleFormControlTextarea1" class="form-label">Observação</label>
         <textarea class="form-control" id="obs" rows="3"></textarea>
@@ -221,17 +223,16 @@
     $(document).ready(function() {
         vMae = false;
         vPai = false;
-        const msg = [
-            `Conclui-se que o produto AnimalFilho não está qualificado pela genitora Mae e não está qualificado pelo genitor Pai.`,
-            `Conclui-se que o produto AnimalFilho não está qualificado pela genitora Mae e está qualificado pelo genitor Pai.`,
-            `Conclui-se que o produto AnimalFilho está qualificado pela genitora Mae e não está qualificado pelo genitor Pai.`,
-            `Conclui-se que o produto AnimalFilho está qualificado pela genitora Mae e está qualificado pelo genitor Pai.`,
-            `Conclui-se que o produto AnimalFilho não está qualificado pela genitora Mae`,
-            `Conclui-se que o produto AnimalFilho não está qualificado pelo genitor Pai.`,
-            `Conclui-se que o produto AnimalFilho está qualificado pelo genitor Pai.`,
-            `Conclui-se que o produto AnimalFilho está qualificado pela genitora Mae`,
+        let msg = [
+            `Conclui-se que o produto AnimalFilho não está qualificado pela genitora Mae e não está qualificado pelo genitor Pai.`, // 0
+            `Conclui-se que o produto AnimalFilho não está qualificado pela genitora Mae e está qualificado pelo genitor Pai.`, // 1
+            `Conclui-se que o produto AnimalFilho está qualificado pela genitora Mae e não está qualificado pelo genitor Pai.`, // 2
+            `Conclui-se que o produto AnimalFilho está qualificado pela genitora Mae e está qualificado pelo genitor Pai.`, // 3
+            `Conclui-se que o produto AnimalFilho não está qualificado pela genitora Mae`, // 4
+            `Conclui-se que o produto AnimalFilho não está qualificado pelo genitor Pai.`, // 5
+            `Conclui-se que o produto AnimalFilho está qualificado pelo genitor Pai.`, // 6
+            `Conclui-se que o produto AnimalFilho está qualificado pela genitora Mae`, // 7
         ];
-
         $('#analisar').click(function() {
             const ordem = $(this).data('ordem');
             $('#valores').html('');
@@ -244,229 +245,142 @@
                 },
                 success: function(response) {
                     console.log(response);
-                    if (response.alelos_mae == null) {
-                        vMae = true;
-                    }
-                    if (response.alelos_pai == null) {
-                        vPai = true;
-                    }
-                    msg.forEach(function(msgItem, index) {
-                        msg[index] = msgItem
-                            .replace('AnimalFilho', response.animal.animal_name)
-                            .replace('Mae', response.animal.mae)
-                            .replace('Pai', response.animal.pai);
-                    });
-
-
-                    response.animal.alelos.forEach(function(alelo) {
-                        let incluidos = '';
-                        let excluidos = '';
-                        let verificaMae = false;
-                        let verificaPai = false;
-
-                        const marcador = alelo.marcador;
-
-
-                        if (vMae == true && vPai == true) {
-                            incluidos = '';
-                            excluidos = '';
-                        } else {
-                            if (vMae == false) {
-                                var tempVerify = true;
-                                response.alelos_mae.forEach(function(query) {
-                                    if (query.marcador === marcador) {
-                                        tempVerify = false;
-                                        incluidos += 'M';
-                                    }
-                                });
-                            } else {
-                                verificaMae = false;
-
-                            }
-                            if (tempVerify) {
-                                verificaMae = true;
-                            }
-
-                            if (vPai == false) {
-                                var tempVerify = true;
-                                response.alelos_pai.forEach(function(query) {
-                                    if (query.marcador === marcador) {
-                                        tempVerify = false;
-                                        incluidos += 'P';
-                                    }
-                                });
-                            } else {
-                                verificaPai = false;
-                            }
-
-                            if (tempVerify) {
-                                verificaPai = true;
-                            }
-
-                            if (verificaPai) {
-                                incluidos = incluidos.replace('P', '');
-                            }
-
-                            if (verificaMae) {
-                                incluidos = incluidos.replace('M', '');
-                            }
-
-                            switch (incluidos) {
-
-                                case 'MP':
-                                    excluidos = '';
-                                    break;
-                                case 'M':
-                                    excluidos = 'P';
-                                    if (!response.alelos_pai) {
-                                        excluidos = '';
-                                    }
-                                    break;
-                                case 'P':
-                                    excluidos = 'M';
-                                    if (!response.alelos_mae) {
-                                        excluidos = '';
-                                    }
-                                    break;
-                                default:
-                                    excluidos = 'MP';
-                                    if (!response.alelos_mae) {
-                                        excluidos = 'P';
-                                        break;
-                                    }
-                                    if (!response.alelos_pai) {
-                                        excluidos = 'M';
-                                        break;
-                                    }
-                                    break;
-                            }
-
-                            if (verificaPai) {
-                                incluidos = incluidos.replace('P', '');
-                                excluidos = excluidos.replace('P', '');
-                            }
-
-                            if (verificaMae) {
-                                incluidos = incluidos.replace('M', '');
-                                excluidos = excluidos.replace('M', '');
-                            }
-                        }
-                        const html = `<div class="row">
-                        <div class="col-6">
-                            <input class="form-control incluidos" name="incluidos[]" type="text" value="${incluidos}">
-                        </div>
-                        <div class="col-6">
-                            <input class="form-control excluidos" name="excluidos[]" type="text" value="${excluidos}">
-                        </div>
-                    </div>`;
-
-                        let paiEmae = false;
-                        let naoMae = false;
-                        let naoPai = false;
-
-                        $('#valores').append(html);
-                        if (vMae == true && vPai == true) {
-                            $('.mensagem').html(
-                                `<textarea class="form-control" id="conclusao" rows="3"> </textarea>`
-                            );
-                        }
-                        //faz o loop para verificar se todos os campos estão preenchidos
-                        $('.excluidos').each(function() {
-                            const valor = $(this).val();
-                            if (valor == 'MP') {
-                                paiEmae = true;
-                                return false;
-                            }
-                            if (valor == 'M') {
-                                naoMae = true;
-                                return false;
-                            }
-                            if (valor == 'P') {
-                                naoPai = true;
-                                return false;
-                            }
-
-                        });
-                        let paimae = false;
-                        let simPai = false;
-                        let simMae = false;
-
-                        let todosPreenchidos = true;
-                        //faz o loop para verificar se todos os campos estão preenchidos
-                        $('.incluidos').each(function() {
-                            const valor = $(this).val();
-
-                            if (valor === '') {
-                                todosPreenchidos = false;
-                                return false;
-                            }
-                            if (valor == 'MP') {
-                                paimae = true;
-                                return false;
-                            }
-                            if (valor == 'P') {
-                                simPai = true;
-                                return false;
-                            }
-                            if (valor == 'M') {
-                                simMae = true;
-                                return false;
-                            }
-                        });
-
-
-                        //verifica pai e mae e exibe o laudo
-                        if (paimae == true && paiEmae == false) {
-                            $('.mensagem').html(
-                                `<textarea class="form-control" id="conclusao" rows="3">${msg[3]}</textarea>`
-                            );
-                        } else if (paimae == true && paiEmae == false) {
-                            console.log('entrei aqui')
-                            $('.mensagem').html(
-                                `<textarea class="form-control" id="conclusao" rows="3">${msg[0]}</textarea>`
-                            );
-                        } else if (paimae == false && paiEmae == true) {
-                            console.log('entrei aqui 2')
-                            $('.mensagem').html(
-                                `<textarea class="form-control" id="conclusao" rows="3">${msg[0]}</textarea>`
-                            );
-                        }
-                        //verifica o pai e exibe o laudo
-                        if (simPai == true && naoPai == false) {
-                            $('.mensagem').html(
-                                `<textarea class="form-control" id="conclusao" rows="3">${msg[6]}</textarea>`
-                            );
-                        } else if (simPai == true && naoPai == true) {
-                            $('.mensagem').html(
-                                `<textarea class="form-control" id="conclusao" rows="3">${msg[5]}</textarea>`
-                            );
-                        } else if (simPai == false && naoPai == true) {
-                            $('.mensagem').html(
-                                `<textarea class="form-control" id="conclusao" rows="3">${msg[5]}</textarea>`
-                            );
-                        }
-                        //verifica a mãe e exibe o laudo
-                        if (simMae == true && naoMae == false) {
-                            $('.mensagem').html(
-                                `<textarea class="form-control" id="conclusao" rows="3">${msg[7]}</textarea>`
-                            );
-                        } else if (simMae == true && naoMae == true) {
-                            $('.mensagem').html(
-                                `<textarea class="form-control" id="conclusao" rows="3">${msg[4]}</textarea>`
-                            );
-                        } else if (simMae == false && naoMae == true) {
-                            $('.mensagem').html(
-                                `<textarea class="form-control" id="conclusao" rows="3">${msg[4]}</textarea>`
-                            );
-                        }
-
-
-                    });
 
                     $('#resultado').removeClass('d-none');
+                    $('#buttons').removeClass('d-none');
+
+                    if (response.laudoMae === null && response.laudoPai === null) {
+                        const html = `<div class="row">
+                    <div class="col-6">
+                        <input class="form-control incluidos" name="incluidos[]" type="text" value="">
+                    </div>
+                    <div class="col-6">
+                        <input class="form-control excluidos" name="excluidos[]" type="text" value="">
+                    </div>
+                </div>`;
+                        $('#valores').append(html);
+                    } else {
+                        let incluidosMae = [];
+                        let excluidosMae = [];
+                        if (response.laudoMae !== null) {
+                            response.laudoMae.forEach(function(query) {
+                                incluidosMae.push(query.include == 'M' ? 'M' : '');
+                                excluidosMae.push(query.include == 'V' ? '' : (query
+                                    .include == '' ? 'M' : ''));
+                            });
+                        }
+
+                        let incluidosPai = [];
+                        let excluidosPai = [];
+                        if (response.laudoPai !== null) {
+                            response.laudoPai.forEach(function(query) {
+                                incluidosPai.push(query.include == 'P' ? 'P' : '');
+                                excluidosPai.push(query.include == 'V' ? '' : (query
+                                    .include == '' ? 'P' : ''));
+                            });
+                        }
+
+                        let length = Math.max(incluidosMae.length, incluidosPai.length);
+                        for (let i = 0; i < length; i++) {
+                            const html = `<div class="row">
+                        <div class="col-6">
+                            <input class="form-control incluidos" name="incluidos[]" type="text" value="${incluidosMae[i] || ''}${incluidosPai[i] || ''}">
+                        </div>
+                        <div class="col-6">
+                            <input class="form-control excluidos" name="excluidos[]" type="text" value="${excluidosMae[i] || ''}${excluidosPai[i] || ''}">
+                        </div>
+                    </div>`;
+                            $('#valores').append(html);
+                        }
+                    }
+                    const msg = [
+                        `Conclui-se que o produto ${response.animal.animal_name} não está qualificado pela genitora ${response.mae ? response.mae.animal_name : ''} (${response.mae && response.mae.number_definitive ? response.mae.number_definitive : '*****'}) e não está qualificado pelo genitor ${response.pai ? response.pai.animal_name : ''} (${response.pai && response.pai.number_definitive ? response.pai.number_definitive : '*****'}).`,
+                        `Conclui-se que o produto ${response.animal.animal_name} não está qualificado pela genitora ${response.mae ? response.mae.animal_name : ''} (${response.mae && response.mae.number_definitive ? response.mae.number_definitive : '*****'}) e está qualificado pelo genitor ${response.pai ? response.pai.animal_name : ''} (${response.pai && response.pai.number_definitive ? response.pai.number_definitive : '*****'}).`,
+                        `Conclui-se que o produto ${response.animal.animal_name} está qualificado pela genitora ${response.mae ? response.mae.animal_name : ''} (${response.mae && response.mae.number_definitive ? response.mae.number_definitive : '*****'}) e não está qualificado pelo genitor ${response.pai ? response.pai.animal_name : ''} (${response.pai && response.pai.number_definitive ? response.pai.number_definitive : '*****'}).`,
+                        `Conclui-se que o produto ${response.animal.animal_name} está qualificado pela genitora ${response.mae ? response.mae.animal_name : ''} (${response.mae && response.mae.number_definitive ? response.mae.number_definitive : '*****'}) e está qualificado pelo genitor ${response.pai ? response.pai.animal_name : ''} (${response.pai && response.pai.number_definitive ? response.pai.number_definitive : '*****'}).`,
+                        `Conclui-se que o produto ${response.animal.animal_name} não está qualificado pela genitora ${response.mae ? response.mae.animal_name : ''} (${response.mae && response.mae.number_definitive ? response.mae.number_definitive : '*****'})`,
+                        `Conclui-se que o produto ${response.animal.animal_name} não está qualificado pelo genitor ${response.pai ? response.pai.animal_name : ''} (${response.pai && response.pai.number_definitive ? response.pai.number_definitive : '*****'}).`,
+                        `Conclui-se que o produto ${response.animal.animal_name} está qualificado pelo genitor ${response.pai ? response.pai.animal_name : ''} (${response.pai && response.pai.number_definitive ? response.pai.number_definitive : '*****'}).`,
+                        `Conclui-se que o produto ${response.animal.animal_name} está qualificado pela genitora ${response.mae ? response.mae.animal_name : ''} (${response.mae && response.mae.number_definitive ? response.mae.number_definitive : '*****'}).`,
+                    ];
+
+
+                    let mpfalse = false;
+                    let naoExisteP = false;
+                    let naoExisteM = false;
+                    let mptrue = false;
+                    let existeP = false;
+                    let existeM = false;
+
+                    $('.excluidos').each(function() {
+                        const excluidos = $(this).val();
+                        if (excluidos === 'MP') {
+                            mpfalse = true;
+                            return false; // interrompe a iteração
+                        }
+                        if (excluidos === 'P') {
+                            naoExisteP = true;
+                            return false; // interrompe a iteração
+                        }
+                        if (excluidos === 'M') {
+                            naoExisteM = true;
+                            return false; // interrompe a iteração
+                        }
+
+                    });
+
+                    $('.incluidos').each(function() {
+                        const incluidos = $(this).val();
+                        if (incluidos === 'MP') {
+                            mptrue = true;
+                            return false; // interrompe a iteração
+                        }
+                        if (incluidos === 'P') {
+                            existeP = true;
+                            return false; // interrompe a iteração
+                        }
+                        if (incluidos === 'M') {
+                            existeM = true;
+                            return false; // interrompe a iteração
+                        }
+
+                    });
+
+                    if (mptrue == true && mpfalse == false && naoExisteP == false &&
+                        naoExisteM == false) {
+                        $('.mensagem').append(msg[3]);
+
+                    } else if (mptrue == true && mpfalse == true) {
+                        $('.mensagem').append(msg[0]);
+                    } else if (mptrue == true && naoExisteP == true) {
+                        $('.mensagem').append(msg[2]);
+                    } else if (mptrue == true && naoExisteM == true) {
+                        $('.mensagem').append(msg[1]);
+                    } else if (mptrue == false && naoExisteM == true && existeP == false && existeM == true) {
+                        $('.mensagem').append(msg[4]);
+                    } else if (mptrue == false && naoExisteM == false && existeP == false && existeM == true) {
+                        $('.mensagem').append(msg[7]);
+                    } else if (mptrue == false && naoExisteP == true && existeM == false && existeP == true) {
+                        $('.mensagem').append(msg[5]);
+                    } else if (mptrue == false && naoExisteP == false && existeM == false && existeP == true) {
+                        $('.mensagem').append(msg[6]);
+                    } else if(mptrue == false && mpfalse == false){
+                        $('.mensagem').append();
+                    }
+
+
+
+                    console.log('mptrue' + mptrue, 'naoExisteP' + naoExisteP, 'naoExisteM' +
+                        naoExisteM, 'mpfalse' + mpfalse, 'existeP' + existeP,
+                        'existeM' + existeM);
+
                 }
             });
         });
+
+
+
+
 
         $(document).on('keyup', '.incluidos', function() {
             const valor = $(this).val();

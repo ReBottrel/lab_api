@@ -17,7 +17,7 @@ class TesteController extends Controller
     }
     public function index()
     {
-        return view('admin.teste');
+        return view('teste');
     }
 
     public function duplicate()
