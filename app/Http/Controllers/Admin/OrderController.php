@@ -623,7 +623,7 @@ class OrderController extends Controller
     public function requestPost(Request $request)
     {
         $owner = Owner::find($request->owner);
-        $tecnico = Tecnico::find($request->tecnico);s
+        $tecnico = Tecnico::find($request->tecnico);
         if ($owner->user_id != null) {
             $order_request = OrderRequest::create([
                 'user_id' => $owner->user_id,
