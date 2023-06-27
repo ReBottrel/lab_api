@@ -607,6 +607,8 @@
                 <span>
                     {{ $laudo->conclusao }}
                 </span>
+                <span>As opiniões e interpretações expressas acima não fazem parte do escopo de acreditação deste
+                    laboratório</span>
             </div>
             <div>
                 <strong>Observação</strong>
