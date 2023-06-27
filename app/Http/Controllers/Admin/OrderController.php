@@ -371,7 +371,7 @@ class OrderController extends Controller
 
         $order_request = OrderRequest::with('user', 'tecnico', 'owner')->find($request->order);
 
-        if ($order_request->origin == 'sistema' || $order_request->origin == 'API') {
+        if ($order_request->origin == 'sistema' || $order_request->origin == 'API' || $order_request->origin == 'email') {
 
             $owner = Owner::where('user_id', $order_request->user_id)->first();
             $animals = Animal::where('order_id', $request->order)->where('status', 7)->get();
@@ -623,7 +623,7 @@ class OrderController extends Controller
     public function requestPost(Request $request)
     {
         $owner = Owner::find($request->owner);
-        $tecnico = Tecnico::find($request->tecnico);
+        $tecnico = Tecnico::find($request->tecnico);s
         if ($owner->user_id != null) {
             $order_request = OrderRequest::create([
                 'user_id' => $owner->user_id,
