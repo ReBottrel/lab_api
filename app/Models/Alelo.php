@@ -14,5 +14,7 @@ class Alelo extends Model
         'marcador',
         'alelo1',
         'alelo2',
+        'lab',
+        'data',
     ];
 }

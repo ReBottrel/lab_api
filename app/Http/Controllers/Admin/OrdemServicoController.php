@@ -239,7 +239,7 @@ class OrdemServicoController extends Controller
                 }
             }
         } else {
-            $laudoMaeInclui = null;
+            $laudoMae = null;
         }
 
         // Comparar alelos entre pai e animal

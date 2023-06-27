@@ -22,6 +22,16 @@
                 <input type="hidden" id="especie">
                 @csrf
                 <div class="card px-2">
+                    <div class="row">
+                        <div class="mb-3 col-6">
+                            <label for="exampleFormControlInput1" class="form-label">Laboratório</label>
+                            <input type="text" name="lab" class="form-control" id="lab">
+                        </div>
+                        <div class="mb-3 col-6">
+                            <label for="exampleFormControlInput1" class="form-label">Data</label>
+                            <input type="date" name="data" class="form-control" id="data">
+                        </div>
+                    </div>
                     <div id="marcadores">
 
                     </div>
@@ -87,7 +97,10 @@
                             `);
                             $('input[name="animal_name"]').val(data.animal.animal_name);
                             $('#animalForm').removeClass('d-none');
+                            $('#lab').val(data.animal.alelos[0].lab);
+                            $('#data').val(data.animal.alelos[0].data);
                             $('#marcadores').html(data.view);
+
                         }
                     });
                 }

@@ -92,6 +92,8 @@ class AlelosController extends Controller
                         'marcador' => $item['marcador'],
                         'alelo1' => $item['alelo1'],
                         'alelo2' => $item['alelo2'],
+                        'lab' => $exameData['laboratorio'],
+                        'data' => $exameData['dataResultado'],
                     ]);
                 }
 
@@ -137,6 +139,8 @@ class AlelosController extends Controller
                         $alelo->update([
                             'alelo1' => $alelos1[$key],
                             'alelo2' => $alelos2[$key],
+                            'lab' => $request->input('lab'),
+                            'data' => $request->input('data'),
                         ]);
                     }
                 }
@@ -156,6 +160,8 @@ class AlelosController extends Controller
                             'marcador' => $request->input('marcador.' . $key),
                             'alelo1' => $item,
                             'alelo2' => $alelos2[$key],
+                            'lab' => $request->input('lab'),
+                            'data' => $request->input('data'),
                         ]);
                     }
                 }

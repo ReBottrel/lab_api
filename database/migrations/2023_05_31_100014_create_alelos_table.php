@@ -19,7 +19,6 @@ class CreateAlelosTable extends Migration
             $table->string('marcador')->nullable();
             $table->string('alelo1')->nullable();
             $table->string('alelo2')->nullable();
-
             $table->timestamps();
         });
     }

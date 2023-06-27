@@ -11,6 +11,7 @@
              @endphp
          @endif
      @endforeach
+
      <div class="row">
          <div class="mb-3 col-3">
              <label for="exampleFormControlInput1" class="form-label">Marcador</label>

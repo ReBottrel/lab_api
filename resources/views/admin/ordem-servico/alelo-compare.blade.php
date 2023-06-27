@@ -223,19 +223,20 @@
     $(document).ready(function() {
         vMae = false;
         vPai = false;
-        let msg = [
-            `Conclui-se que o produto AnimalFilho não está qualificado pela genitora Mae e não está qualificado pelo genitor Pai.`, // 0
-            `Conclui-se que o produto AnimalFilho não está qualificado pela genitora Mae e está qualificado pelo genitor Pai.`, // 1
-            `Conclui-se que o produto AnimalFilho está qualificado pela genitora Mae e não está qualificado pelo genitor Pai.`, // 2
-            `Conclui-se que o produto AnimalFilho está qualificado pela genitora Mae e está qualificado pelo genitor Pai.`, // 3
-            `Conclui-se que o produto AnimalFilho não está qualificado pela genitora Mae`, // 4
-            `Conclui-se que o produto AnimalFilho não está qualificado pelo genitor Pai.`, // 5
-            `Conclui-se que o produto AnimalFilho está qualificado pelo genitor Pai.`, // 6
-            `Conclui-se que o produto AnimalFilho está qualificado pela genitora Mae`, // 7
+        let msgs = [
+            `Conclui-se que o produto AnimalFilho não está qualificado pela genitora Mae (registro_mae) e não está qualificado pelo genitor Pai (registro_pai).`, // 0
+            `Conclui-se que o produto AnimalFilho não está qualificado pela genitora Mae (registro_mae) e está qualificado pelo genitor Pai (registro_pai).`, // 1
+            `Conclui-se que o produto AnimalFilho está qualificado pela genitora Mae (registro_mae) e não está qualificado pelo genitor Pai (registro_pai).`, // 2
+            `Conclui-se que o produto AnimalFilho está qualificado pela genitora Mae (registro_mae) e está qualificado pelo genitor Pai (registro_pai).`, // 3
+            `Conclui-se que o produto AnimalFilho não está qualificado pela genitora Mae (registro_mae).`, // 4
+            `Conclui-se que o produto AnimalFilho não está qualificado pelo genitor Pai (registro_pai).`, // 5
+            `Conclui-se que o produto AnimalFilho está qualificado pelo genitor Pai (registro_pai).`, // 6
+            `Conclui-se que o produto AnimalFilho está qualificado pela genitora Mae (registro_mae)`, // 7
         ];
         $('#analisar').click(function() {
             const ordem = $(this).data('ordem');
             $('#valores').html('');
+            $('.mensagem').html('');
             $.ajax({
                 url: "{{ route('alelo.analise') }}",
                 type: 'POST',
@@ -246,8 +247,15 @@
                 success: function(response) {
                     console.log(response);
 
+                    if (response.laudoMae === null) {
+                        vMae = true;
+                    }
+                    if (response.laudoPai === null) {
+                        vPai = true;
+                    }
+
                     $('#resultado').removeClass('d-none');
-                    $('#buttons').removeClass('d-none');
+                    // $('#buttons').removeClass('d-none');
 
                     if (response.laudoMae === null && response.laudoPai === null) {
                         const html = `<div class="row">
@@ -260,6 +268,7 @@
                 </div>`;
                         $('#valores').append(html);
                     } else {
+
                         let incluidosMae = [];
                         let excluidosMae = [];
                         if (response.laudoMae !== null) {
@@ -305,12 +314,34 @@
                     ];
 
 
+                    let animal_name = response.animal.animal_name;
+                    let pai_name = '';
+                    let pai_registro = '';
+                    let mae_name = '';
+                    let mae_registro = '';
+                    if (vPai == false) {
+                        pai_name = response.pai.animal_name;
+                        pai_registro = response.pai.number_definitive || '*****';
+                    }
+                    if (vMae == false) {
+                        mae_name = response.mae.animal_name;
+                        mae_registro = response.mae.number_definitive || '*****';
+                    }
+
+                    msgs = msgs.map(msg => msg.replace('AnimalFilho', animal_name).replace(
+                        'Pai', pai_name).replace('Mae', mae_name).replace(
+                        'registro_pai', pai_registro).replace('registro_mae',
+                        mae_registro));
+
+
                     let mpfalse = false;
                     let naoExisteP = false;
                     let naoExisteM = false;
                     let mptrue = false;
                     let existeP = false;
                     let existeM = false;
+                    let ms = '';
+                    
 
                     $('.excluidos').each(function() {
                         const excluidos = $(this).val();
@@ -345,9 +376,10 @@
                         }
 
                     });
-
+                  
                     if (mptrue == true && mpfalse == false && naoExisteP == false &&
                         naoExisteM == false) {
+                                
                         $('.mensagem').append(msg[3]);
 
                     } else if (mptrue == true && mpfalse == true) {
@@ -356,180 +388,194 @@
                         $('.mensagem').append(msg[2]);
                     } else if (mptrue == true && naoExisteM == true) {
                         $('.mensagem').append(msg[1]);
-                    } else if (mptrue == false && naoExisteM == true && existeP == false && existeM == true) {
+                    } else if (mptrue == false && naoExisteM == true && existeP == false &&
+                        existeM == true) {
                         $('.mensagem').append(msg[4]);
-                    } else if (mptrue == false && naoExisteM == false && existeP == false && existeM == true) {
+                    } else if (mptrue == false && naoExisteM == false && existeP == false &&
+                        existeM == true) {
                         $('.mensagem').append(msg[7]);
-                    } else if (mptrue == false && naoExisteP == true && existeM == false && existeP == true) {
+                    } else if (mptrue == false && naoExisteP == true && existeM == false &&
+                        existeP == true) {
                         $('.mensagem').append(msg[5]);
-                    } else if (mptrue == false && naoExisteP == false && existeM == false && existeP == true) {
+                    } else if (mptrue == false && naoExisteP == false && existeM == false &&
+                        existeP == true) {
                         $('.mensagem').append(msg[6]);
-                    } else if(mptrue == false && mpfalse == false){
+                    } else if (mptrue == false && mpfalse == false) {
                         $('.mensagem').append();
                     }
 
 
-
-                    console.log('mptrue' + mptrue, 'naoExisteP' + naoExisteP, 'naoExisteM' +
-                        naoExisteM, 'mpfalse' + mpfalse, 'existeP' + existeP,
-                        'existeM' + existeM);
-
                 }
             });
-        });
-
-
-
-
-
-        $(document).on('keyup', '.incluidos', function() {
-            const valor = $(this).val();
-            replaced = valor.toUpperCase();
-            valor1 = $(this).val(replaced);
-            console.log(replaced);
-            switch (replaced) {
-                case 'MP':
-                    $(this).parent().parent().find('.excluidos').val('');
-                    break;
-                case 'M':
-                    if (vPai == true) {
+            $(document).on('keyup', '.incluidos', function() {
+                $('.mensagem').html('');
+                const valor = $(this).val();
+                replaced = valor.toUpperCase();
+                valor1 = $(this).val(replaced);
+                console.log(replaced);
+                switch (replaced) {
+                    case 'MP':
                         $(this).parent().parent().find('.excluidos').val('');
                         break;
-                    } else {
-                        $(this).parent().parent().find('.excluidos').val('P');
-                        break;
-                    }
-
-                    case 'P':
-                        if (vMae == true) {
+                    case 'M':
+                        if (vPai == true) {
                             $(this).parent().parent().find('.excluidos').val('');
                             break;
                         } else {
-                            $(this).parent().parent().find('.excluidos').val('M');
+                            $(this).parent().parent().find('.excluidos').val('P');
                             break;
                         }
 
-                        default:
-                            $(this).parent().parent().find('.excluidos').val('MP');
-            }
+                        case 'P':
+                            if (vMae == true) {
+                                $(this).parent().parent().find('.excluidos').val('');
+                                break;
+                            } else {
+                                $(this).parent().parent().find('.excluidos').val('M');
+                                break;
+                            }
 
-            let mpfalse = true;
-            let naoExisteP = true;
-            let naoExisteM = true;
-            let todosContemP = true;
-            $('.excluidos').each(function() {
-                const excluidos = $(this).val();
-                if (excluidos === 'P') {
-                    naoExisteP = false;
-                    return false; // interrompe a iteração
-                }
-                if (excluidos === 'M') {
-                    naoExisteM = false;
-                    return false; // interrompe a iteração
+                            default:
+                                $(this).parent().parent().find('.excluidos').val('MP');
                 }
 
-            });
-            $('.incluidos').each(function() {
-                const incluidos = $(this).val();
-
-                if (incluidos !== 'MP') {
-                    mpfalse = false;
-                    return false; // interrompe a iteração
-                    // } else if (valor.includes('M') || valor.includes('P')) {
-                    //     naoMae = true;
-                    //     naoPai = true;
-                    //     mpfalse = true;
-                    //     return false; // interrompe a iteração
-                    // }
-                }
-
-            });
-            // if (todosContemP) {
-            //     console.log("Todos os campos contêm a letra 'P'.");
-            // } else {
-            //     console.log("Pelo menos um campo não contém a letra 'P'.");
-            // }
-            if (vPai == false) {
-                if (naoExisteP) {
-                    $('#conclusao').val(msg[6]);
-                } else {
-                    console.log('existe P incluidos')
-                }
-            }
-            if (vMae == false) {
-                if (naoExisteM) {
-                    $('#conclusao').val(msg[7]);
-                } else {
-
-                }
-            }
-            if (mpfalse) {
-                $('#conclusao').val(msg[3]);
-            }
-
-        });
-        $(document).on('keyup', '.excluidos', function() {
-            const valor = $(this).val();
-            replaced = valor.toUpperCase();
-            valor1 = $(this).val(replaced);
-
-            switch (replaced) {
-                case 'MP':
-                    $(this).parent().parent().find('.incluidos').val('');
-                    break;
-                case 'M':
-                    if (vPai == true) {
-                        $(this).parent().parent().find('.incluidos').val('');
-                        break;
-                    } else {
-                        $(this).parent().parent().find('.incluidos').val('P');
-                        break;
+                let mpfalse = true;
+                let naoExisteP = true;
+                let naoExisteM = true;
+                let todosContemP = true;
+                $('.excluidos').each(function() {
+                    const excluidos = $(this).val();
+                    if (excluidos === 'MP') {
+                        mpfalse = false;
+                    }
+                    if (excluidos === 'P') {
+                        naoExisteP = false;
+                    }
+                    if (excluidos === 'M') {
+                        naoExisteM = false;
                     }
 
-                    case 'P':
-                        if (vMae == true) {
+                });
+                $('.incluidos').each(function() {
+                    const incluidos = $(this).val();
+                    if (incluidos !== 'MP') {
+                        mpfalse = false;
+                        return false;
+                    }
+                });
+                if (vPai == false) {
+                    if (naoExisteP) {
+                        $('.mensagem').append(msgs[6]);
+                    } else {
+                        console.log('existe P incluidos')
+                    }
+                }
+                if (vMae == false) {
+                    if (naoExisteM) {
+                        $('.mensagem').append(msgs[7]);
+                    } else {
+
+                    }
+                }
+                if (mpfalse) {
+                    $('.mensagem').append(msgs[3]);
+                }
+
+            });
+            $(document).on('keyup', '.excluidos', function() {
+                $('.mensagem').html('');
+                const valor = $(this).val();
+                replaced = valor.toUpperCase();
+                valor1 = $(this).val(replaced);
+                switch (replaced) {
+                    case 'MP':
+                        $(this).parent().parent().find('.incluidos').val('');
+                        break;
+                    case 'M':
+                        if (vPai == true) {
                             $(this).parent().parent().find('.incluidos').val('');
                             break;
                         } else {
-                            $(this).parent().parent().find('.incluidos').val('M');
+                            $(this).parent().parent().find('.incluidos').val('P');
                             break;
                         }
 
-                        default:
-                            $(this).parent().parent().find('.incluidos').val('MP');
-            }
+                        case 'P':
+                            if (vMae == true) {
+                                $(this).parent().parent().find('.incluidos').val('');
+                                break;
+                            } else {
+                                $(this).parent().parent().find('.incluidos').val('M');
+                                break;
+                            }
 
-            let mpfalse = true;
-            let naoExisteP = true;
-            let naoExisteM = true;
-            let todosContemP = true;
-            $('.excluidos').each(function() {
-                const excluidos = $(this).val();
-                if (excluidos === 'P') {
-                    naoExisteP = false;
-                    return false; // interrompe a iteração
-                }
-                if (excluidos === 'M') {
-                    naoExisteM = false;
-                    return false; // interrompe a iteração
+                            default:
+                                $(this).parent().parent().find('.incluidos').val('MP');
                 }
 
+                let mpfalse = true;
+                let naoExisteP = true;
+                let naoExisteM = true;
+                let todosContemP = true;
+                $('.excluidos').each(function() {
+                    const excluidos = $(this).val();
+                    console.log(excluidos);
+                    if (excluidos == 'MP') {
+                        mpfalse = false;
+
+                    }
+                    if (excluidos === 'P') {
+                        naoExisteP = false;
+
+                    }
+                    if (excluidos === 'M') {
+                        naoExisteM = false;
+
+                    }
+
+                });
+                if (vMae == false && vPai == false) {
+                    if (mpfalse == false) {
+
+                        $('.mensagem').append(msgs[0]);
+                    }
+                    if (naoExisteP == false && naoExisteM == true && mpfalse == true) {
+
+                        $('.mensagem').append(msgs[2]);
+                    }
+                    if (naoExisteM == false && naoExisteP == true && mpfalse == true) {
+
+                        $('.mensagem').append(msgs[1]);
+                    }
+                    if (naoExisteM == false && naoExisteP == false && mpfalse == true) {
+                        $('.mensagem').append(msgs[0]);
+                    }
+
+                    console.log(naoExisteM, naoExisteP, mpfalse);
+                }
+
+                if (vPai == false && vMae == true) {
+                    if (naoExisteP) {
+                        console.log('nao existe P')
+                    } else {
+                        $('.mensagem').append(msgs[5]);
+                    }
+                }
+
+                if (vMae == false && vPai == true) {
+                    if (naoExisteM) {
+                        console.log('nao existe M')
+                    } else {
+                        console.log('entrei aqui também e aqui')
+                        $('.mensagem').append(msgs[4]);
+                    }
+                }
             });
-            if (vPai == false) {
-                if (naoExisteP) {
-                    console.log('nao existe P')
-                } else {
-                    $('#conclusao').val(msg[5]);
-                }
-            }
-            if (vMae == false) {
-                if (naoExisteM) {
-                    console.log('nao existe M')
-                } else {
-                    $('#conclusao').val(msg[4]);
-                }
-            }
         });
+
+
+
+
     });
 
 
