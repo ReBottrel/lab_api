@@ -311,11 +311,25 @@ class OrdemServicoController extends Controller
     public function gerarBarCode($id)
     {
         $ordem = OrdemServico::find($id);
+        $codebar = $this->generateUniqueBarcode();
+        $ordem->update([
+            'bar_code' => $codebar
+        ]);
         $generator = new BarcodeGeneratorPNG();
         $barcode = $generator->getBarcode($ordem->codlab, $generator::TYPE_CODE_128);
 
         $barcodex = base64_encode($barcode);
 
         return view('admin.ordem-servico.bar-code', get_defined_vars());
+    }
+
+    // Gera um código de barras único.
+    private function generateUniqueBarcode()
+    {
+        do {
+            $codebar = mt_rand(1000000, 9999999);
+        } while (OrdemServico::where('bar_code', $codebar)->exists());
+
+        return $codebar;
     }
 }
