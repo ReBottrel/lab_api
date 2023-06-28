@@ -23,5 +23,6 @@ class OrdemServico extends Model
         'data',
         'status',
         'observacao',
+        'data_bar',
     ];
 }

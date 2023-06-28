@@ -2,7 +2,7 @@
 @section('content')
     <div class="container">
         <div>
-            <h3>Ordem de serviço numero: #{{ $ordem->id }}</h3>
+            <h3>Ordem de serviço numero: #{{ $ordem->order_id }}</h3>
         </div>
         <div class="d-flex my-4">
             <div>
@@ -50,13 +50,17 @@
                                         class="fa-solid fa-tag"></i> Imprimir etiqueta</button></a>
                         </div>
                         <div class="mx-2">
-                            <a href="{{ route('alelo.compare', $ordemServico->id) }}"> <button class="btn btn-primary"><i
+                            <a href="{{ route('alelo.compare', $ordemServico->id) }}"> <button class="btn btn-alt-2"><i
                                         class="fa-solid fa-tag"></i> Laudo</button></a>
                         </div>
-                        {{-- <div class="mx-2">
-                            <a href="{{ route('alelo.compare', $ordemServico->id) }}"> <button class="btn btn-primary"><i
-                                        class="fa-solid fa-tag"></i> Importar alelos</button></a>
-                        </div> --}}
+
+                        <div class="mx-2">
+                            <a href="#"> <button id="openModal" data-bs-toggle="modal"
+                                    data-id="{{ $ordemServico->id }}" data-bs-target="#exampleModal"
+                                    class="btn btn-primary"><i class="fa-solid fa-tag"></i>
+                                    Ler código de barras</button></a>
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -69,20 +73,21 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Importar txt</h1>
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Leitura do código de barras</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form action="{{ route('import.txt') }}" method="post" enctype="multipart/form-data">
+                <form>
                     @csrf
+                    <input type="hidden" name="ordem_id" id="ordem_id">
                     <div class="modal-body">
-                        <div class="mb-3">
-                            <label for="formFile" class="form-label">Selecione o arquivo para importar</label>
-                            <input class="form-control" name="file" type="file" id="formFile">
+                        <div class="mb-3 col-4">
+                            <label for="formFile" class="form-label">Data da leitura do código</label>
+                            <input class="form-control" name="file" id="data" type="date">
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-                        <button type="button" class="btn btn-primary" id="enviar">Importar</button>
+                        <button type="button" class="btn btn-primary" id="enviar">Salvar</button>
                     </div>
                 </form>
             </div>
@@ -98,10 +103,34 @@
             tela_impressao.window.print();
             tela_impressao.window.close();
         });
-        $(document).on('click', '#enviar', function(){
-            $(this).attr('disabled', true);
-            $(this).text('Aguarde...');
-            $(this).parents('form').submit();
+        $(document).on('click', '#openModal', function() {
+            let id = $(this).data('id');
+            $('#ordem_id').val(id);
+        });
+
+        $(document).on('click', '#enviar', function() {
+            let data = $('#data').val();
+            let ordem_id = $('#ordem_id').val();
+
+            $.ajax({
+                url: "{{ route('data.bar.store') }}",
+                type: 'POST',
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    ordem_id: ordem_id,
+                    data: data
+                },
+                success: function(data) {
+                    console.log(data);
+                    $('#exampleModal').modal('hide');
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Sucesso!',
+                        text: 'Data salva com sucesso!',
+                    });
+                }
+
+            });
         });
     </script>
 @endsection

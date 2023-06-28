@@ -159,7 +159,14 @@ class OrdemServicoController extends Controller
         return view('admin.ordem-servico.alelo-compare', get_defined_vars());
     }
 
-
+    public function dataBarCode(Request $request)
+    {
+        $ordem = OrdemServico::find($request->ordem_id);
+        $ordem->update([
+            'data_bar' => $request->data
+        ]);
+        return response()->json($ordem);
+    }
 
     public function analise(Request $request)
     {
