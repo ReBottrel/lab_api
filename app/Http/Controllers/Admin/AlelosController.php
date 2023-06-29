@@ -126,7 +126,6 @@ class AlelosController extends Controller
     public function storeAlelo(Request $request)
     {
         $animal = Animal::with('alelos')->where('animal_name', $request->animal_name)->first();
-   
 
         if ($animal) {
             // Verifica se já existem alelos relacionados ao animal
@@ -141,10 +140,10 @@ class AlelosController extends Controller
                     $key = array_search($alelo->marcador, $request->marcador);
 
                     // Verifica se o campo 'alelo1' ou 'alelo2' está preenchido
-                    if ($key !== false && ($alelos1[$key] || $alelos2[$key])) {
+                    if ($key !== false) {
                         $alelo->update([
-                            'alelo1' => $alelos1[$key],
-                            'alelo2' => $alelos2[$key],
+                            'alelo1' => $alelos1[$key] !== null ? $alelos1[$key] : '',
+                            'alelo2' => $alelos2[$key] !== null ? $alelos2[$key] : '',
                             'lab' => $request->input('lab'),
                             'data' => $request->input('data'),
                         ]);
@@ -160,23 +159,25 @@ class AlelosController extends Controller
 
                 foreach ($alelos1 as $key => $item) {
                     // Verifica se o campo 'alelo1' ou 'alelo2' está preenchido
-                    if ($item || $alelos2[$key]) {
+                    if ($item !== null || $alelos2[$key] !== null) {
                         Alelo::create([
                             'animal_id' => $animal->id,
                             'marcador' => $request->input('marcador.' . $key),
-                            'alelo1' => $item,
-                            'alelo2' => $alelos2[$key],
+                            'alelo1' => $item !== null ? $item : '',
+                            'alelo2' => $alelos2[$key] !== null ? $alelos2[$key] : '',
                             'lab' => $request->input('lab'),
                             'data' => $request->input('data'),
                         ]);
                     }
                 }
             }
+
             if ($animal->identificador == null) {
                 $animal->update([
                     'identificador' => $request->input('identificador') ? $request->input('identificador') : 'LO23-' . substr($animal->codlab, 3),
                 ]);
             }
+
             return response()->json(['success' => 'ok']);
         }
     }

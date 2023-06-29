@@ -89,14 +89,14 @@
                                         @php
                                             $encontrado = true;
                                         @endphp
-                                        <div class="col-6">
+                                        <div class="col-6 @if ($item->alelo1 == '') py-2 @endif">
                                             @if ($item->alelo1 == '')
                                                 *
                                             @else
                                                 <p>{{ $item->alelo1 }}</p>
                                             @endif
                                         </div>
-                                        <div class="col-6">
+                                        <div class="col-6 @if ($item->alelo2 == '') py-2 @endif">
                                             @if ($item->alelo2 == '')
                                                 *
                                             @else
@@ -150,14 +150,14 @@
                                     @php
                                         $encontrado = true;
                                     @endphp
-                                    <div class="col-6">
+                                    <div class="col-6 @if ($item->alelo1 == '') py-2 @endif">
                                         @if ($item->alelo1 == '')
                                             *
                                         @else
                                             <p>{{ $item->alelo1 }}</p>
                                         @endif
                                     </div>
-                                    <div class="col-6">
+                                    <div class="col-6 @if ($item->alelo2 == '') py-2 @endif">
                                         @if ($item->alelo2 == '')
                                             *
                                         @else
@@ -268,9 +268,9 @@
                 </div>`;
                         $('#valores').append(html);
                     } else {
-
                         let incluidosMae = [];
                         let excluidosMae = [];
+
                         if (response.laudoMae !== null) {
                             response.laudoMae.forEach(function(query) {
                                 incluidosMae.push(query.include == 'M' ? 'M' : '');
@@ -281,6 +281,7 @@
 
                         let incluidosPai = [];
                         let excluidosPai = [];
+
                         if (response.laudoPai !== null) {
                             response.laudoPai.forEach(function(query) {
                                 incluidosPai.push(query.include == 'P' ? 'P' : '');
@@ -289,18 +290,31 @@
                             });
                         }
 
+                        let marcadores = {};
+
+                        response.laudoMae.forEach(function(query) {
+                            marcadores[query.marcador] = '';
+                        });
+
+                        response.laudoPai.forEach(function(query) {
+                            marcadores[query.marcador] = '';
+                        });
+
                         let length = Math.max(incluidosMae.length, incluidosPai.length);
+
                         for (let i = 0; i < length; i++) {
                             const html = `<div class="row">
-                        <div class="col-6">
-                            <input class="form-control incluidos" name="incluidos[]" type="text" value="${incluidosMae[i] || ''}${incluidosPai[i] || ''}">
-                        </div>
-                        <div class="col-6">
-                            <input class="form-control excluidos" name="excluidos[]" type="text" value="${excluidosMae[i] || ''}${excluidosPai[i] || ''}">
-                        </div>
-                    </div>`;
+        <div class="col-6">
+            <input class="form-control incluidos" name="incluidos[]" type="text" value="${incluidosMae[i] || ''}${incluidosPai[i] || ''}" data-marcador="${response.laudoPai[i] ? response.laudoPai[i].marcador : ''}">
+        </div>
+        <div class="col-6">
+            <input class="form-control excluidos" name="excluidos[]" type="text" value="${excluidosMae[i] == 'M' ? 'M' : ''}${excluidosPai[i] == 'P' ? 'P' : ''}${excluidosPai[i] == 'V' ? '' : ''}" data-marcador="${response.laudoPai[i] ? response.laudoPai[i].marcador : ''}">
+        </div>
+    </div>`;
                             $('#valores').append(html);
                         }
+
+
                     }
                     const msg = [
                         `Conclui-se que o produto ${response.animal.animal_name} não está qualificado pela genitora ${response.mae ? response.mae.animal_name : ''} (${response.mae && response.mae.number_definitive ? response.mae.number_definitive : '*****'}) e não está qualificado pelo genitor ${response.pai ? response.pai.animal_name : ''} (${response.pai && response.pai.number_definitive ? response.pai.number_definitive : '*****'}).`,
@@ -341,21 +355,21 @@
                     let existeP = false;
                     let existeM = false;
                     let ms = '';
-                    
+
 
                     $('.excluidos').each(function() {
                         const excluidos = $(this).val();
                         if (excluidos === 'MP') {
                             mpfalse = true;
-                           
+
                         }
                         if (excluidos === 'P') {
                             naoExisteP = true;
-                           
+
                         }
                         if (excluidos === 'M') {
                             naoExisteM = true;
-                           
+
                         }
 
                     });
@@ -364,22 +378,22 @@
                         const incluidos = $(this).val();
                         if (incluidos === 'MP') {
                             mptrue = true;
-                            
+
                         }
                         if (incluidos === 'P') {
                             existeP = true;
-                          
+
                         }
                         if (incluidos === 'M') {
                             existeM = true;
-                         
+
                         }
 
                     });
                     console.log(mptrue, mpfalse, naoExisteP, naoExisteM, existeP, existeM);
                     if (mptrue == true && mpfalse == false && naoExisteP == false &&
                         naoExisteM == false) {
-                                
+
                         $('.mensagem').append(msg[3]);
 
                     } else if (mptrue == true && mpfalse == true) {
@@ -392,10 +406,10 @@
                         existeM == true) {
                         $('.mensagem').append(msg[4]);
                     } else if (mptrue == false && naoExisteM == false && existeP == false &&
-                        existeM == true ) {
+                        existeM == true) {
                         $('.mensagem').append(msg[7]);
                     } else if (mptrue == false && naoExisteP == true && existeM == false &&
-                        existeP == true ) {
+                        existeP == true) {
                         $('.mensagem').append(msg[5]);
                     } else if (mptrue == false && naoExisteP == false && existeM == false &&
                         existeP == true) {
