@@ -104,7 +104,7 @@
                                     <label for="exampleFormControlInput1" class="form-label">Tipo de coleta</label>
                                     <select class="form-select" name="tipo">
                                         @foreach ($samples as $sample)
-                                            <option value="{{ $sample->id }}">{{ $sample->name }}</option>
+                                            <option value="{{ $sample->name }}">{{ $sample->name }}</option>
                                         @endforeach
 
 

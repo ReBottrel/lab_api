@@ -74,7 +74,7 @@
                     <strong>RELATÓRIO DE ENSAIO</strong>
                 </h5>
                 <h6>
-                    <strong>Verificação de Parentesco com Mãe e Pai</strong>
+                    <strong>@if($examType == 'TR') Verificação de Parentesco com Mãe e Pai @elseif($examType == 'MD') Verificação de Parentesco com Mãe @elseif($examType == 'PD') Verificação de Parentesco com Pai @elseif($examType == 'GN') Genotipagem @endif</strong>
                 </h6>
             </div>
             <div class="col-3 text-end">
@@ -125,7 +125,7 @@
             </div>
             <div class="col-4 offset-4">
                 <strong>Cód. Barras:</strong>
-                <span>{{ $animal->codlab }}</span>
+                <span>{{ $ordem->bar_code }}</span>
             </div>
             <div class="col-12">
                 <strong>Endereço:</strong>
@@ -136,14 +136,13 @@
             <div class="col-4">
                 <strong>Tipo Amostra:</strong>
                 <span>
-                    @if ($datas->tipo == 1)
-                        Pelo
-                    @endif
+                  {{ $datas->tipo }} 
+                  
                 </span>
             </div>
             <div class="col-4">
                 <strong>Data da Coleta:</strong>
-                <span>{{ $animal->collect_date ?? 'Não informado' }}</span>
+                <span>{{ $datas->data_coleta ?? 'Não informado' }}</span>
             </div>
             <div class="col-12">
                 <strong>Responsável pela Coleta/Registro Profissional ou CPF:</strong>
@@ -155,7 +154,7 @@
             </div>
             <div class="col-4 offset-4">
                 <strong>Data de Entrada na Área Técnica:</strong>
-                <span>{{ $datas->data_laboratorio }}</span>
+                <span>{{ date( 'd/m/Y' , strtotime($ordem->data_bar)) }}</span>
             </div>
             <div class="col-12">
                 <strong>OBSERVAÇÃO:</strong>
@@ -167,7 +166,7 @@
 
             <div class="col-12">
                 <strong>Data da Realização:</strong>
-                <span>{{ $laudo->data_realizacao ?? 'Não informado' }}</span>
+                <span>{{date( 'd/m/Y' , strtotime($laudo->created_at)) }}</span>
             </div>
             <div class="col-12">
                 <strong>Metodologia Utilizada:</strong>
@@ -291,21 +290,20 @@
             @if ($mae != null)
                 <span>
                     GENITORA: animal {{ $mae->animal_name }}, número {{ $mae->codlab }}, emitido pelo
-                    laboratório Linhagen em {{ date('d/m/Y', strtotime($mae->created_at)) }}.
+                    {{ $mae->alelos[0]->lab }} em {{ date('d/m/Y', strtotime($mae->alelos[0]->data)) }}.
                 </span>
             @endif
             <br>
             <span>
                 FILHO(A): animal {{ $animal->animal_name }}, número {{ $animal->codlab }}, emitido pelo
-                laboratório Loci Genética Laboratorial em {{ date('d/m/Y', strtotime($animal->created_at)) }}.
+                {{ $animal->alelos[0]->lab }} em {{ date('d/m/Y', strtotime($animal->alelos[0]->data)) }}.
 
             </span>
             @if ($pai != null)
                 <br>
                 <span>
                     GENITOR: {{ $pai->animal_name }}, número {{ $pai->codlab }},
-                    emitido pelo laboratório
-                    Linhagen em {{ date('d/m/Y', strtotime($pai->created_at)) }}.
+                    emitido pelo {{ $pai->alelos[0]->lab }} em {{ date('d/m/Y', strtotime($pai->alelos[0]->data)) }}.
                 </span>
             @endif
 

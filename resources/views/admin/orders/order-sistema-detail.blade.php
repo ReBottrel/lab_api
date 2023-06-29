@@ -131,8 +131,8 @@
                                                     data-id="{{ $animal->id ?? '' }}" aria-label="Default select example">
                                                     @if ($animal)
                                                         @foreach ($samples as $sample)
-                                                            <option value="{{ $sample->id }}"
-                                                                @if ($datas) @if ($datas->tipo == $sample->id) selected @endif
+                                                            <option value="{{ $sample->name }}"
+                                                                @if ($datas) @if ($datas->tipo == $sample->name) selected @endif
                                                                 @endif>
                                                                 {{ $sample->name }}
                                                             </option>

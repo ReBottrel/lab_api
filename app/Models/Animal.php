@@ -48,7 +48,8 @@ class Animal extends Model
         'numero_mormo',
         'collect_date',
         'portaria_habilitacao',
-        'number_definitive'
+        'number_definitive',
+        'identificador'
     ];
 
     public function owner()

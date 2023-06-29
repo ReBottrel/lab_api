@@ -417,7 +417,7 @@
             <div class="text-center">
                 <strong>RELATÓRIO DE ENSAIO</strong>
                 <br>
-                <strong>Verificação de Parentesco com Mãe e Pai</strong>
+                <strong>@if($examType == 'TR') Verificação de Parentesco com Mãe e Pai @elseif($examType == 'MD') Verificação de Parentesco com Mãe @elseif($examType == 'PD') Verificação de Parentesco com Pai @elseif($examType == 'GN') Genotipagem @endif</strong>
             </div>
             <div class="text-end">
                 <span><strong>Relat. n</strong>
@@ -448,7 +448,7 @@
                         <span>{{ $animal->sex ?? 'Não informado' }}</span>
                         <br>
                         <strong>Cód. Barras:</strong>
-                        <span>{{ $animal->codlab ?? 'Não informado' }}</span>
+                        <span>{{ $ordem->bar_code ?? 'Não informado' }}</span>
                         <br>
                         <strong>Endereço:</strong>
                         <span>{{ $owner->address ?? 'Não informado' }}, {{ $owner->number ?? 'Não informado' }}
@@ -467,7 +467,7 @@
                         <span>{{ $animal->especies ?? 'Não informado' }}</span>
                         <br>
                         <strong>Data de Nascimento:</strong>
-                        <span>{{ $animal->birth_date ?? 'Não informado' }}</span>
+                        <span>{{ date( 'd/m/Y' , strtotime($animal->birth_date)) ?? 'Não informado' }}</span>
                         <br>
                         <strong>Código Interno:</strong>
                         <span>{{ $animal->codlab ?? 'Não informado' }}</span>
@@ -476,7 +476,7 @@
                         <span>{{ $owner->owner_name ?? 'Não informado' }}</span>
                         <br>
                         <strong>Data da Coleta:</strong>
-                        <span>{{ $animal->collect_date ?? 'Não informado' }}</span>
+                        <span>{{ $datas->data_coleta ?? 'Não informado' }}</span>
                     </p>
                 </div>
             </div>
@@ -489,7 +489,7 @@
                     <span>{{ $datas->data_recebimento }}</span>
                     <br>
                     <strong>Data de Entrada na Área Técnica:</strong>
-                    <span>{{ $datas->data_laboratorio }}</span>
+                    <span>{{ date( 'd/m/Y' , strtotime($ordem->data_bar)) }}</span>
                     <br>
                     <strong>OBSERVAÇÃO:</strong>
                     <span>A amostragem foi de exclusiva responsabilidade do cliente.</span>
@@ -503,7 +503,7 @@
             <div class="content_4">
                 <p>
                     <strong>Data da Realização:</strong>
-                    <span>{{ $laudo->data_realizacao }}</span>
+                    <span>{{date( 'd/m/Y' , strtotime($laudo->created_at)) }}</span>
                     <br>
                     <strong>Metodologia Utilizada:</strong>
                     <span>
@@ -542,13 +542,13 @@
                             <th>N Relatório de Ensaio</th>
                             @if ($mae != null)
                                 <th>
-                                    {{ $mae->codlab }}
+                                    {{ $mae->identificador }}
                                 </th>
                             @endif
-                            <th>{{ $animal->codlab }}</th>
+                            <th>{{ $animal->identificador }}</th>
                             @if ($pai != null)
                                 <th>
-                                    {{ $pai->codlab }}
+                                    {{ $pai->identificador }}
                                 </th>
                             @endif
                         </tr>
@@ -616,7 +616,7 @@
                 <strong>Conclusão</strong>
                 <span>
                     {{ $laudo->conclusao }}
-                </span>
+                </span> <br>
                 <span>As opiniões e interpretações expressas acima não fazem parte do escopo de acreditação deste
                     laboratório</span>
             </div>
@@ -630,17 +630,24 @@
             <div id="animalinfo mb-1">
                 <p class="spn">
                     @if ($mae != null)
-                        GENITORA: animal {{ $mae->animal_name }}, número {{ $mae->codlab }}, emitido pelo
-                        laboratório Linhagen em {{ date('d/m/Y', strtotime($mae->created_at)) }}.
+                        <span>
+                            GENITORA: animal {{ $mae->animal_name }}, número {{ $mae->identificador }}, emitido pelo laboratório
+                            {{ $mae->alelos[0]->lab }} em {{ date('d/m/Y', strtotime($mae->alelos[0]->data)) }}.
+                        </span>
                     @endif
                     <br>
-                    FILHO(A): animal {{ $animal->animal_name }}, número {{ $animal->codlab }}, emitido pelo
-                    laboratório Loci Genética Laboratorial em {{ date('d/m/Y', strtotime($animal->created_at)) }}.
+                    <span>
+                        FILHO(A): animal {{ $animal->animal_name }}, número {{ $animal->identificador }}, emitido pelo laboratório
+                        {{ $animal->alelos[0]->lab }} em {{ date('d/m/Y', strtotime($animal->alelos[0]->data)) }}.
+
+                    </span>
                     @if ($pai != null)
                         <br>
-                        GENITOR: {{ $pai->animal_name }}, número {{ $pai->codlab }},
-                        emitido pelo laboratório
-                        Linhagen em {{ date('d/m/Y', strtotime($pai->created_at)) }}.
+                        <span>
+                            GENITOR: {{ $pai->animal_name }}, número {{ $pai->identificador }},
+                            emitido pelo laboratório {{ $pai->alelos[0]->lab }} em
+                            {{ date('d/m/Y', strtotime($pai->alelos[0]->data)) }}.
+                        </span>
                     @endif
 
                 </p>
@@ -677,7 +684,7 @@
                 </p>
             </div>
             <div class="rodape">
-                <span style="float: left;">FOR.LRE.02 v.03</span>
+                <span style="float: left;">@if($examType == 'TR') FOR.LRE.02 v.03 @elseif($examType == 'MD') FOR.LRE.02 v.01 @elseif($examType == 'PD') FOR.LRE.01 v.02 @elseif($examType == 'GN') FOR.LRE.01 v.03 @endif</span>
                 <span style="float: none; margin: 0 auto; text-align:center;">Documento assinado eletronicamente por
                     LOCI BIOTECNOLOGIA LTDA, em {{ date('d/m/Y H:i:s') }}</span>
                 <span style="float: right;">Página 1 de 1</span>

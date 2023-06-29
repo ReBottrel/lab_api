@@ -26,11 +26,15 @@
                 @csrf
                 <div class="card px-2">
                     <div class="row">
-                        <div class="mb-3 col-6">
+                        <div class="mb-3 col-4">
                             <label for="exampleFormControlInput1" class="form-label">Laboratório</label>
                             <input type="text" name="lab" class="form-control" id="lab">
                         </div>
-                        <div class="mb-3 col-6">
+                        <div class="mb-3 col-4">
+                            <label for="exampleFormControlInput1" class="form-label">Número</label>
+                            <input type="text" name="identificador" class="form-control" id="identificador">
+                        </div>
+                        <div class="mb-3 col-4">
                             <label for="exampleFormControlInput1" class="form-label">Data</label>
                             <input type="date" name="data" class="form-control" id="data">
                         </div>
@@ -118,6 +122,8 @@
                                 .animal.alelos[0].lab ? data.animal.alelos[0].lab : '');
                             $('#data').val(data.animal.alelos && data.animal.alelos[0] && data
                                 .animal.alelos[0].data ? data.animal.alelos[0].data : '');
+                            $('#identificador').val(data.animal.identificador ? data.animal
+                                .identificador : '');
                             $('#marcadores').html(data.view);
 
                         }

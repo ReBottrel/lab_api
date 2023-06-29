@@ -583,7 +583,7 @@
         $('#gerar-laudo').click(function() {
             let ordem = $('#analisar').data('ordem');
             let obs = $('#obs').val();
-            let conclusao = $('#conclusao').val();
+            let conclusao = $('.mensagem').html();
             let laudo = $('#laudo').val();
             $.ajax({
                 url: "{{ route('gerar.laudo') }}",

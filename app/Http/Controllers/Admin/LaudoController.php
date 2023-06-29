@@ -40,7 +40,7 @@ class LaudoController extends Controller
         $animal = Animal::find($ordem->animal_id);
         $pai = Animal::where('animal_name', $animal->pai)->first();
         $mae = Animal::where('animal_name', $animal->mae)->first();
-        $datas = DataColeta::where('id_order', $order->id)->first();
+        $datas = DataColeta::where('id_animal', $ordem->animal_id)->first();
         $laudo = Laudo::where('animal_id', $ordem->animal_id)->first();
         $codigo = rand(100000000, 999999999);
 
@@ -109,6 +109,8 @@ class LaudoController extends Controller
         $tecnico = Tecnico::find($laudo->veterinario_id);
         $dna_verify = DnaVerify::where('animal_id', $animal->id)->first();
         $sigla = substr($animal->especies, 0, 3);
+        $examType = substr($dna_verify->verify_code, 3, 2);
+        $ordem = OrdemServico::where('animal_id', $laudo->animal_id)->latest()->first();
         $pai = null;
         $mae = null;
         switch ($dna_verify->verify_code) {
@@ -138,6 +140,8 @@ class LaudoController extends Controller
         $tecnico = Tecnico::find($laudo->veterinario_id);
         $dna_verify = DnaVerify::where('animal_id', $animal->id)->first();
         $sigla = substr($animal->especies, 0, 3);
+        $examType = substr($dna_verify->verify_code, 3, 2);
+        $ordem = OrdemServico::where('animal_id', $laudo->animal_id)->latest()->first();
         $pai = null;
         $mae = null;
         switch ($dna_verify->verify_code) {

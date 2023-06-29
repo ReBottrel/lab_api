@@ -126,6 +126,7 @@ class AlelosController extends Controller
     public function storeAlelo(Request $request)
     {
         $animal = Animal::with('alelos')->where('animal_name', $request->animal_name)->first();
+   
 
         if ($animal) {
             // Verifica se já existem alelos relacionados ao animal
@@ -171,7 +172,11 @@ class AlelosController extends Controller
                     }
                 }
             }
-
+            if ($animal->identificador == null) {
+                $animal->update([
+                    'identificador' => $request->input('identificador') ? $request->input('identificador') : 'LO23-' . substr($animal->codlab, 3),
+                ]);
+            }
             return response()->json(['success' => 'ok']);
         }
     }
