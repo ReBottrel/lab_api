@@ -135,7 +135,7 @@ class OrdemServicoController extends Controller
     {
         $ordem = OrdemServico::find($id);
         $animal = Animal::with('alelos')->find($ordem->animal_id);
-        $dna_verify = DnaVerify::where('animal_id', $animal->id)->first();
+        $dna_verify = DnaVerify::where('animal_id', $ordem->animal_id)->first();
         $sigla = substr($animal->especies, 0, 3);
         $pai = null;
         $mae = null;
