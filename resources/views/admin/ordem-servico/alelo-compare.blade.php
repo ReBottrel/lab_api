@@ -347,15 +347,15 @@
                         const excluidos = $(this).val();
                         if (excluidos === 'MP') {
                             mpfalse = true;
-                            return false; // interrompe a iteração
+                           
                         }
                         if (excluidos === 'P') {
                             naoExisteP = true;
-                            return false; // interrompe a iteração
+                           
                         }
                         if (excluidos === 'M') {
                             naoExisteM = true;
-                            return false; // interrompe a iteração
+                           
                         }
 
                     });
@@ -364,19 +364,19 @@
                         const incluidos = $(this).val();
                         if (incluidos === 'MP') {
                             mptrue = true;
-                            return false; // interrompe a iteração
+                            
                         }
                         if (incluidos === 'P') {
                             existeP = true;
-                            return false; // interrompe a iteração
+                          
                         }
                         if (incluidos === 'M') {
                             existeM = true;
-                            return false; // interrompe a iteração
+                         
                         }
 
                     });
-                  
+                    console.log(mptrue, mpfalse, naoExisteP, naoExisteM, existeP, existeM);
                     if (mptrue == true && mpfalse == false && naoExisteP == false &&
                         naoExisteM == false) {
                                 
@@ -392,10 +392,10 @@
                         existeM == true) {
                         $('.mensagem').append(msg[4]);
                     } else if (mptrue == false && naoExisteM == false && existeP == false &&
-                        existeM == true) {
+                        existeM == true ) {
                         $('.mensagem').append(msg[7]);
                     } else if (mptrue == false && naoExisteP == true && existeM == false &&
-                        existeP == true) {
+                        existeP == true ) {
                         $('.mensagem').append(msg[5]);
                     } else if (mptrue == false && naoExisteP == false && existeM == false &&
                         existeP == true) {
