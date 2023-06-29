@@ -438,7 +438,7 @@ class OrderController extends Controller
                 "linkDescription" => "LociLab e a melhor plataforma de exames de DNA do Brasil",
             ]);
 
-            Mail::to($email)->send(new \App\Mail\NewOrder($email, $senha));
+            // Mail::to($email)->send(new \App\Mail\NewOrder($email, $senha));
             return response()->json($ordernew);
         } elseif ($order_request->origin == 'app') {
             $owner = Owner::where('id', $order_request->owner_id)->first();
