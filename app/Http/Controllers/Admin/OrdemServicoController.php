@@ -32,7 +32,7 @@ class OrdemServicoController extends Controller
             $animal = Animal::find($item->animal_id);
             $data = Carbon::now()->addWeekdays($exame->days);
             $randomNumber = mt_rand(0, 1000000);
-            $dna_verify = DnaVerify::where('animal_id', $animal->id)->first();
+            $dna_verify = DnaVerify::where('animal_id', $item->animal_id)->first();
             $sigla = substr($animal->especies, 0, 3);
 
             if ($animal->codlab == null) {
