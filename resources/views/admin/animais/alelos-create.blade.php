@@ -16,6 +16,9 @@
         <div id="animal-info">
 
         </div>
+        <div class="d-none" id="especienull">
+
+        </div>
         <div id="animalForm" class="d-none">
             <form id="form">
                 <input type="hidden" name="animal_name">
@@ -46,6 +49,7 @@
 @section('js')
     <script>
         $(document).ready(function() {
+            let id = 1;
             $('.js-example-basic-animal').select2({
                 width: "100%",
                 placeholder: "Buscar animal pelo nome",
@@ -91,14 +95,29 @@
                         },
                         success: function(data) {
                             console.log(data);
+                            id = data.animal.id;
                             $('#animal-info').fadeIn();
                             $('#animal-info').html(`
                             <p>Nome do animal: ${data.animal.animal_name}</p>
                             `);
+                            if (data.especie == null) {
+                                $('#especienull').removeClass('d-none').append(
+                                    `<div class="alert alert-danger" role="alert">
+                Espécie não cadastrada, por favor cadastre a espécie antes de cadastrar o animal! <a href="{{ url('/animal-show') }}/${id}">Clique aqui para editar o animal</a>
+            </div>`);
+                                $('#animalForm').addClass('d-none');
+                            } else {
+                                $('#especienull').addClass('d-none');
+                                $('#animalForm').removeClass('d-none');
+                                $('#especie').val(data.especie.id);
+                            }
+
                             $('input[name="animal_name"]').val(data.animal.animal_name);
                             $('#animalForm').removeClass('d-none');
-                            $('#lab').val(data.animal.alelos[0].lab);
-                            $('#data').val(data.animal.alelos[0].data);
+                            $('#lab').val(data.animal.alelos && data.animal.alelos[0] && data
+                                .animal.alelos[0].lab ? data.animal.alelos[0].lab : '');
+                            $('#data').val(data.animal.alelos && data.animal.alelos[0] && data
+                                .animal.alelos[0].data ? data.animal.alelos[0].data : '');
                             $('#marcadores').html(data.view);
 
                         }

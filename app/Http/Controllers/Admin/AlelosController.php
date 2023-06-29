@@ -108,8 +108,13 @@ class AlelosController extends Controller
     public function getAnimal(Request $request)
     {
         $animal = Animal::with('alelos')->where('animal_name', $request->name)->first();
-        $especie = $animal->especies ?? 'EQUINA'; // Define 'EQUINA' como valor padrão se $animal->especies for null
-        $marcadores = Marcador::where('especie', $especie)->get();
+        $especie = $animal->especies; // Define 'EQUINA' como valor padrão se $animal->especies for null
+        if ($especie != null) {
+            $marcadores = Marcador::where('especie', $especie)->get();
+        } else {
+            $marcadores = [];
+        }
+
         $view = view('admin.animais.includes.alelos-render', get_defined_vars())->render();
         if ($animal) {
             return response()->json(get_defined_vars());
