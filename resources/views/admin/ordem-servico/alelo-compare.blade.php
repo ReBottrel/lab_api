@@ -290,31 +290,19 @@
                             });
                         }
 
-                        let marcadores = {};
-
-                        response.laudoMae.forEach(function(query) {
-                            marcadores[query.marcador] = '';
-                        });
-
-                        response.laudoPai.forEach(function(query) {
-                            marcadores[query.marcador] = '';
-                        });
-
                         let length = Math.max(incluidosMae.length, incluidosPai.length);
 
                         for (let i = 0; i < length; i++) {
                             const html = `<div class="row">
         <div class="col-6">
-            <input class="form-control incluidos" name="incluidos[]" type="text" value="${incluidosMae[i] || ''}${incluidosPai[i] || ''}" data-marcador="${response.laudoPai[i] ? response.laudoPai[i].marcador : ''}">
+            <input class="form-control incluidos" name="incluidos[]" type="text" value="${incluidosMae[i] || ''}${incluidosPai[i] || ''}">
         </div>
         <div class="col-6">
-            <input class="form-control excluidos" name="excluidos[]" type="text" value="${excluidosMae[i] == 'M' ? 'M' : ''}${excluidosPai[i] == 'P' ? 'P' : ''}${excluidosPai[i] == 'V' ? '' : ''}" data-marcador="${response.laudoPai[i] ? response.laudoPai[i].marcador : ''}">
+            <input class="form-control excluidos" name="excluidos[]" type="text" value="${excluidosMae[i] == 'M' ? 'M' : ''}${excluidosPai[i] == 'P' ? 'P' : ''}">
         </div>
     </div>`;
                             $('#valores').append(html);
                         }
-
-
                     }
                     const msg = [
                         `Conclui-se que o produto ${response.animal.animal_name} não está qualificado pela genitora ${response.mae ? response.mae.animal_name : ''} (${response.mae && response.mae.number_definitive ? response.mae.number_definitive : '*****'}) e não está qualificado pelo genitor ${response.pai ? response.pai.animal_name : ''} (${response.pai && response.pai.number_definitive ? response.pai.number_definitive : '*****'}).`,
