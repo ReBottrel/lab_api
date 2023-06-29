@@ -91,10 +91,10 @@ class LaudoController extends Controller
             $writer = new Writer($renderer);
             //Escreve o r code em algum diretório
             //                  codigo          arquivo saida
-            $writer->writeFile($content, 'qrcode.png');
-            $imageData = file_get_contents('qrcode.png');
+            $filePath = public_path('qrcodes/' . time() . '.png');
+            $writer->writeFile($content, $filePath);
 
-            // Converta a imagem para base64
+            $imageData = file_get_contents($filePath);
             $base64Image = base64_encode($imageData);
 
 
@@ -138,7 +138,7 @@ class LaudoController extends Controller
                 break;
         }
         $qrCode = ModelQrCode::where('laudo_id', $laudo->id)->first();
-      
+
         return view('admin.ordem-servico.laudo', get_defined_vars());
     }
     public function gerarPdf($id)
