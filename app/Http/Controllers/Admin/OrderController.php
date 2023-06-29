@@ -371,7 +371,7 @@ class OrderController extends Controller
 
         $order_request = OrderRequest::with('user', 'tecnico', 'owner')->find($request->order);
 
-        dd($request->all());
+        dd($order_request);
 
         if ($order_request->origin == 'sistema' || $order_request->origin == 'API' || $order_request->origin == 'email') {
 
