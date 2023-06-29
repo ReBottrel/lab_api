@@ -122,6 +122,7 @@ Route::middleware(['auth:admin'])->group(function () {
         return view('admin.ordem-servico.relatorios-de-ensaios.beta-caseina');
     })->name('relatorio.beta-caseina');
 
+    Route::get('laudos', [LaudoController::class, 'index'])->name('laudos');
 
     Route::post('gerar-laudo', [LaudoController::class, 'store'])->name('gerar.laudo');
     Route::get('ver-laudo/{id}', [LaudoController::class, 'show'])->name('ver.laudo');

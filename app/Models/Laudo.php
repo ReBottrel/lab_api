@@ -23,6 +23,9 @@ class Laudo extends Model
         'conclusao',
         'tipo',
         'veterinario_id',
-        'qrcode'
+        'qrcode',
+        'ordem_id',
+        'order_id',
+        'pdf'
     ];
 }

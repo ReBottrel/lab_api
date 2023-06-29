@@ -632,7 +632,7 @@
                     }).then((result) => {
                         if (result.isConfirmed) {
                             window.location.href =
-                                "{{ route('ordem.servico.all') }}";
+                                "{{ route('laudos') }}";
                         }
                     })
                 },

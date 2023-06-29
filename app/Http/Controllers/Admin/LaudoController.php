@@ -33,6 +33,14 @@ use BaconQrCode\Renderer\RendererStyle\RendererStyle;
 
 class LaudoController extends Controller
 {
+
+
+    public function index()
+    {
+        $laudos = Laudo::all();
+        return view('admin.laudos.index', get_defined_vars());
+    }
+
     public function store(Request $request)
     {
         $ordem = OrdemServico::find($request->ordem);
@@ -59,7 +67,9 @@ class LaudoController extends Controller
             'observacao' => $request->obs,
             'conclusao' => $request->conclusao,
             'tipo' => $datas->tipo,
-            'veterinario_id' => $order->id_tecnico
+            'veterinario_id' => $order->id_tecnico,
+            'ordem_id' => $ordem->id,
+            'order_id' => $order->id,
         ];
 
 
@@ -214,6 +224,10 @@ class LaudoController extends Controller
 
         // Salva o PDF assinado no diretório público
         Storage::disk('public')->put($filename, $outputAssinado);
+
+        $laudo->update([
+            'pdf' => $filename
+        ]);
 
         // Gera a resposta de download
         $path = Storage::disk('public')->path($filename);
