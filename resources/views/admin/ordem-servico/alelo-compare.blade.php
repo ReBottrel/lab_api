@@ -275,7 +275,7 @@
                             response.laudoMae.forEach(function(query) {
                                 incluidosMae.push(query.include == 'M' ? 'M' : '');
                                 excluidosMae.push(query.include == 'V' ? '' : (query
-                                    .include == '' ? '' : ''));
+                                    .include == '' ? 'M' : ''));
                             });
                         }
 
@@ -285,7 +285,7 @@
                             response.laudoPai.forEach(function(query) {
                                 incluidosPai.push(query.include == 'P' ? 'P' : '');
                                 excluidosPai.push(query.include == 'V' ? '' : (query
-                                    .include == '' ? '' : ''));
+                                    .include == '' ? 'P' : ''));
                             });
                         }
 
