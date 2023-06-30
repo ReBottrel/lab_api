@@ -123,6 +123,7 @@ Route::middleware(['auth:admin'])->group(function () {
     })->name('relatorio.beta-caseina');
 
     Route::get('laudos', [LaudoController::class, 'index'])->name('laudos');
+    Route::get('laudo-download/{id}', [LaudoController::class, 'downloadLaudo'])->name('laudo.download');
 
     Route::post('gerar-laudo', [LaudoController::class, 'store'])->name('gerar.laudo');
     Route::get('ver-laudo/{id}', [LaudoController::class, 'show'])->name('ver.laudo');

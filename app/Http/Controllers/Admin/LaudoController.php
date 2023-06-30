@@ -29,6 +29,7 @@ use Illuminate\Support\Facades\Storage;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use BaconQrCode\Renderer\Image\ImagickImageBackEnd;
 use BaconQrCode\Renderer\RendererStyle\RendererStyle;
+use Illuminate\Support\Facades\Response;
 
 
 class LaudoController extends Controller
@@ -37,7 +38,7 @@ class LaudoController extends Controller
 
     public function index()
     {
-        $laudos = Laudo::all();
+        $laudos = Laudo::with('animal')->get();
         return view('admin.laudos.index', get_defined_vars());
     }
 
@@ -254,6 +255,24 @@ class LaudoController extends Controller
             return view('admin.ordem-servico.laudo', get_defined_vars());
         } else {
             return response()->json(['message' => 'Laudo não encontrado'], 404);
+        }
+    }
+
+    public function downloadLaudo($id)
+    {
+        $laudo = Laudo::find($id);
+        // dd($laudo);
+        if ($laudo) {
+            $pathToFile = storage_path('app/public/' . $laudo->pdf); // Obtém o caminho completo para o arquivo PDF
+            // dd($pathToFile);
+            // Verifica se o arquivo existe
+            if (file_exists($pathToFile)) {
+                return Response::download($pathToFile); // Faz o download do arquivo
+            } else {
+                return response()->json(['error' => 'Arquivo não encontrado.']);
+            }
+        } else {
+            return response()->json(['error' => 'Laudo não encontrado.']);
         }
     }
 }

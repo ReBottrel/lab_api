@@ -28,4 +28,9 @@ class Laudo extends Model
         'order_id',
         'pdf'
     ];
+
+    public function animal()
+    {
+        return $this->belongsTo(Animal::class);
+    }
 }

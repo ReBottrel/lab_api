@@ -14,22 +14,22 @@
             <thead>
                 <tr>
                     <th scope="col">Numero/Pedido</th>
-                    <th scope="col">Proprietario</th>
+                    <th scope="col">Produto</th>
                     <th>Data de criação</th>
                     <th>Ação</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach ($laudos as $item)
-                    <tr>
-                        <th scope="row">{{ $item->order_id }}</th>
+                    <tr> 
+                        <th scope="row">{{ $item->id }} / {{ $item->order_id }}</th>
 
-                        <td>{{ $item->owner }}</td>
+                        <td>{{ $item->animal->animal_name }}</td>
                         <th>{{ date('d/m/Y', strtotime($item->created_at)) }}</th>
                         <td>
                             <div class="row">
-                                <div class="col-4"><a href="{{ route('ordem.servico.show', $item->id) }}"><button
-                                            class="btn btn-primary"><i class="fa-solid fa-eye"></i>
+                                <div class="col-4"><a href="{{ route('laudo.download', $item->id) }}"><button
+                                            class="btn btn-primary"><i class="fa-solid fa-download"></i>
                                         </button></a>
                                 </div>
 
