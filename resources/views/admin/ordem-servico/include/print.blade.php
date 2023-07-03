@@ -11,12 +11,16 @@
 
 <body>
     <style>
-             
+         h5{
+            font-size: 14px;
+            font-weight: bold;
+         }    
     </style>
     <page size="A4">
         <h5>Numero de solicitação: {{ $ordem->id }}</h5>
         <h5>Proprietário: {{ $ordem->owner }}</h5>
         <h5>Data de solicitção: {{ date('d/m/Y', strtotime($ordem->created_at)) }}</h5>
+        <h5>Técnico: {{ $ordemServicos[0]->tecnico }}</h5>
         <p>Dados dos envolvidos nos exames/lote</p>
         <hr>
         <table class="table table-alt">
