@@ -255,7 +255,7 @@
     }
 
     .rodape {
-        margin-top: 20px;
+        margin-top: 10px;
         width: 100%;
     }
 
@@ -322,7 +322,7 @@
 
     .table-sm th,
     .table-sm td {
-        padding: 0.3rem;
+        padding: 0.1rem;
     }
 
     .table-responsive {
@@ -691,7 +691,7 @@
                 <p class="mb-0">Dra. RENATA BOTTREL</p>
                 <p>Responsável Técnica <br> CR-Bio 37845/04-D</p>
             </div>
-            <div class="my-2">
+            <div class="my-1">
                 <p>Este relatório é válido apenas para a amostra analisada.</p>
                 <p>
                     Laboratório credenciado ao MAPA (Ministério da Agricultura, Pecuária e
