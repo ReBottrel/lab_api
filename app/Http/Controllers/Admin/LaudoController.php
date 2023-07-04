@@ -251,10 +251,13 @@ class LaudoController extends Controller
     {
         $laudo = Laudo::find($request->laudo);
         $order = OrderRequest::find($laudo->order_id);
+        $owner = Owner::find($laudo->owner_id);
         $parceiro = Parceiro::where('nome', $order->parceiro)->first();
 
 
         Mail::to($parceiro->email)->send(new EnviarLaudoMail($laudo->pdf));
+        Mail::to($owner->email)->send(new EnviarLaudoMail($laudo->pdf));
+
         return response()->json([get_defined_vars()], 200);
     }
 
