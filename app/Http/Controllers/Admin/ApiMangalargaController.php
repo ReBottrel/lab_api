@@ -18,7 +18,7 @@ class ApiMangalargaController extends Controller
 {
     public function __construct()
     {
-        ini_set('max_execution_time', 8000);
+        ini_set('max_execution_time', 60000);
     }
     public function getApi()
     {
