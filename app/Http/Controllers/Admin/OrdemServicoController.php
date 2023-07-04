@@ -111,8 +111,8 @@ class OrdemServicoController extends Controller
                             $alelo = Alelo::create([
                                 'animal_id' => $animal->id,
                                 'marcador' => $columns[2],
-                                'alelo1' => $columns[3] ?? "*",
-                                'alelo2' => $columns[4] ?? "*",
+                                'alelo1' => $columns[3] ?? '',
+                                'alelo2' => $columns[4] ?? '',
                             ]);
                         }
                     } else {
@@ -316,9 +316,9 @@ class OrdemServicoController extends Controller
     public function gerarBarCode($id)
     {
         $ordem = OrdemServico::find($id);
-        $codebar = $this->generateUniqueBarcode();
+        $animal = Animal::with('alelos')->find($ordem->animal_id);
         $ordem->update([
-            'bar_code' => $codebar
+            'bar_code' => $animal->register_number_brand ?? null, 
         ]);
         $generator = new BarcodeGeneratorPNG();
         $barcode = $generator->getBarcode($ordem->codlab, $generator::TYPE_CODE_128);
@@ -328,13 +328,4 @@ class OrdemServicoController extends Controller
         return view('admin.ordem-servico.bar-code', get_defined_vars());
     }
 
-    // Gera um código de barras único.
-    private function generateUniqueBarcode()
-    {
-        do {
-            $codebar = mt_rand(1000000, 9999999);
-        } while (OrdemServico::where('bar_code', $codebar)->exists());
-
-        return $codebar;
-    }
 }
