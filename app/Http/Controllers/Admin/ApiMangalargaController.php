@@ -5,10 +5,11 @@ namespace App\Http\Controllers\Admin;
 use App\Models\User;
 use App\Models\Owner;
 use App\Models\Animal;
+use App\Models\Tecnico;
+use App\Models\DnaVerify;
 use App\Models\OrderRequest;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\Tecnico;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 use Maatwebsite\Excel\Concerns\ToArray;
@@ -21,7 +22,7 @@ class ApiMangalargaController extends Controller
     }
     public function getApi()
     {
-    
+
         $coletas = $this->fetchDataFromApi('coletas', 18, 1, ['dataEnvioInicio' => date('Y-m-d\TH:i:s', strtotime('-1 day'))]);
         // dd($coletas);
         // $coletas = $this->fetchDataFromApi('coletas', 18, 1, ['dataEnvioInicio' => '2023-05-20T00:00:00']);
@@ -79,7 +80,6 @@ class ApiMangalargaController extends Controller
                     'propriety' =>  $coleta->cliente->fazendas[0]->nome ?? null,
                 ]);
                 $ownerid = $ownerc->id;
-             
             }
 
 
@@ -119,6 +119,12 @@ class ApiMangalargaController extends Controller
                         'registro_mae' => $animal->registroMae,
                         'mae' => $animal->nomeMae,
                         'row_id' => $order->collection_number,
+                    ]);
+
+                    $verify = DnaVerify::create([
+                        'animal_id' => $newAnimal->id,
+                        'order_id' => $order->id,
+                        'verify_code' => 'EQUTR',
                     ]);
                 }
             }
@@ -228,6 +234,12 @@ class ApiMangalargaController extends Controller
                         'registro_mae' => $animal->registroMae,
                         'mae' => $animal->nomeMae,
                         'row_id' => $order->collection_number,
+                    ]);
+
+                    $verify = DnaVerify::create([
+                        'animal_id' => $newAnimal->id,
+                        'order_id' => $order->id,
+                        'verify_code' => 'EQUTR',
                     ]);
                 }
             }
