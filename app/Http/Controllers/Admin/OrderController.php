@@ -683,7 +683,7 @@ class OrderController extends Controller
         $owner = Owner::findOrFail($order->owner_id);
         $randomNumber = mt_rand(0, 1000000);
         $sigla = substr($request->especies, 0, 3);
-        dd($request->all());
+    
         $data = [
             'user_id' => $owner->user_id,
             'order_id' => $request->order,
