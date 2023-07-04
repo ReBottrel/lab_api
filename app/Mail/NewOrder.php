@@ -29,6 +29,6 @@ class NewOrder extends Mailable
      */
     public function build()
     {
-        return $this->markdown('mails.order')->subject('Recebemos seu pedido')->from('felipe@simetria.me', 'Lab Loci')->with(['user' => $this->email, 'senha' => $this->senha]);;
+        return $this->markdown('mails.order')->subject('Recebemos seu pedido')->from('pedidos@locilab.app.br', 'Lab Loci')->with(['user' => $this->email, 'senha' => $this->senha]);;
     }
 }

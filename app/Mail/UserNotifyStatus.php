@@ -28,6 +28,6 @@ class UserNotifyStatus extends Mailable
      */
     public function build()
     {
-        return $this->markdown('mails.userNotifyStatus')->subject('Cadastro Liberado')->from('naoresponder@labloci.com.br', 'Lab Loci');
+        return $this->markdown('mails.userNotifyStatus')->subject('Cadastro Liberado')->from('pedidos@locilab.app.br', 'Lab Loci');
     }
 }

@@ -38,6 +38,6 @@ class ORPayment extends Mailable
         return $this->with([
             'msg' => 'Você está recebendo por email um link de pagamento com auto-login.',
             'link' => $this->userClient[0],
-            ])->markdown('mails.orpayment')->subject(($this->charge == 'generate_charge' ? 'Liberado para pagar' : 'Exames não pago'))->from('naoresponder@labloci.com.br', 'Lab Loci');
+            ])->markdown('mails.orpayment')->subject(($this->charge == 'generate_charge' ? 'Liberado para pagar' : 'Exames não pago'))->from('pedidos@locilab.app.br', 'Lab Loci');
     }
 }
