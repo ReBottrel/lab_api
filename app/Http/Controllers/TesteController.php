@@ -64,7 +64,9 @@ class TesteController extends Controller
 
         // Gera o PDF e envia para o navegador
         $dompdf->stream('documento.pdf');
-
-
     }
+    // public function verPdf()
+    // {
+    //     return view('admin.ordem-servico.laudo-imp-teste');
+    // }
 }
