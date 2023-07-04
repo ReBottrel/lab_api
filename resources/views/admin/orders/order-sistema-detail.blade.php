@@ -311,17 +311,30 @@
                     url: `{{ route('ordem.servico.store') }}`,
                     type: 'POST',
                     data: {
-                
+
                         order: order
                     },
                     success: function(data) {
-                        console.log(data);
                         Swal.fire(
                             'Sucesso!',
                             'Ordem de serviço gerada com sucesso.',
                             'success'
                         )
                         location.reload();
+
+                    },
+                    error: function(er) {
+                        error = er.responseJSON.error;
+                        console.log(er);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: error,
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.reload();
+                            }
+                        });
                     }
                 });
             });

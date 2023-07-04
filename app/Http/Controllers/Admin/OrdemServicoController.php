@@ -20,13 +20,26 @@ class OrdemServicoController extends Controller
 {
     public function store(Request $request)
     {
-
         $order = OrderRequest::find($request->order);
+
+        if (!$order) {
+            // Ordem não encontrada
+            return response()->json(['error' => 'Pedido não encontrado.'], 404);
+        }
+
+        // Verificar se já existe uma ordem de serviço com o order_id
+        $existingOrder = OrdemServico::where('order', $order->id)->first();
+        if ($existingOrder) {
+            // Já existe uma ordem de serviço com o order_id
+            return response()->json(['error' => 'Já existe uma ordem de serviço para este pedido.'], 400);
+        }
+
         $orderRequest = OrderRequestPayment::where('order_request_id', $order->id)->get();
         $lote = OrderLote::create([
             'order_id' => $order->id,
             'owner' => $order->creator,
         ]);
+
         foreach ($orderRequest as $item) {
             $exame = Exam::find($item->exam_id);
             $animal = Animal::find($item->animal_id);
@@ -54,13 +67,10 @@ class OrdemServicoController extends Controller
                 'tecnico' => $order->technical_manager,
                 'data' => $data,
                 'status' => 1,
-
             ]);
         }
 
-
-
-        return response()->json($ordemServico);
+        return response()->json('success', 200);
     }
 
     public function index()
@@ -318,7 +328,7 @@ class OrdemServicoController extends Controller
         $ordem = OrdemServico::find($id);
         $animal = Animal::with('alelos')->find($ordem->animal_id);
         $ordem->update([
-            'bar_code' => $animal->register_number_brand ?? null, 
+            'bar_code' => $animal->register_number_brand ?? null,
         ]);
         $generator = new BarcodeGeneratorPNG();
         $barcode = $generator->getBarcode($ordem->codlab, $generator::TYPE_CODE_128);
@@ -327,5 +337,4 @@ class OrdemServicoController extends Controller
 
         return view('admin.ordem-servico.bar-code', get_defined_vars());
     }
-
 }
