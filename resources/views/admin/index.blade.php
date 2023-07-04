@@ -87,7 +87,7 @@
         </div>
     </div>
 
-    @foreach ($orders as $order)
+    {{-- @foreach ($orders as $order)
         <div class="container">
             <div class="text-secondary border rounded shadow orders"
                 style="background: var(--bs-gray-300);margin-top: 15px;margin-bottom: 15px;">
@@ -142,7 +142,7 @@
                 </div>
             </div>
         </div>
-    @endforeach
+    @endforeach --}}
 
     <div class="ms-4">
         {{ $orders->links() }}
