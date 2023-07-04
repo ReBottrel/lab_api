@@ -11,9 +11,10 @@ use App\Models\Owner;
 use App\Models\Animal;
 use App\Models\Tecnico;
 use BaconQrCode\Writer;
+use App\Models\Parceiro;
 use phpseclib\Crypt\RSA;
-use phpseclib\File\ASN1;
 // use X509\CertificationPath;
+use phpseclib\File\ASN1;
 use phpseclib\File\X509;
 use App\Models\DnaVerify;
 use App\Models\DataColeta;
@@ -21,15 +22,17 @@ use Spatie\PdfToImage\Pdf;
 use App\Models\OrdemServico;
 use App\Models\OrderRequest;
 use Illuminate\Http\Request;
+use App\Mail\EnviarLaudoMail;
 use BaconQrCode\Renderer\Image\Png;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Mail;
 use App\Models\QrCode as ModelQrCode;
 use BaconQrCode\Renderer\ImageRenderer;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Response;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use BaconQrCode\Renderer\Image\ImagickImageBackEnd;
 use BaconQrCode\Renderer\RendererStyle\RendererStyle;
-use Illuminate\Support\Facades\Response;
 
 
 class LaudoController extends Controller
@@ -235,11 +238,24 @@ class LaudoController extends Controller
         return response()->download($path, $filename);
     }
 
+    public function preConfirm(Request $request)
+    {
+        $laudo = Laudo::find($request->laudo);
+        $order = OrderRequest::find($laudo->order_id);
+        $parceiro = Parceiro::where('nome', $order->parceiro)->first();
+
+        return response()->json(['parceiro' => $parceiro, 'laudo' => $request->laudo], 200);
+    }
+
     public function finalizar(Request $request)
     {
         $laudo = Laudo::find($request->laudo);
+        $order = OrderRequest::find($laudo->order_id);
+        $parceiro = Parceiro::where('nome', $order->parceiro)->first();
 
-        return response()->json($laudo, 200);
+
+        Mail::to($parceiro->email)->send(new EnviarLaudoMail($laudo->pdf));
+        return response()->json([get_defined_vars()], 200);
     }
 
     public function verify($codigo)

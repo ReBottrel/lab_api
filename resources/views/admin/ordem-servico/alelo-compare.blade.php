@@ -615,7 +615,7 @@
         $(document).on('click', '#finalizar', function() {
             let laudo = $('#laudo').val();
             $.ajax({
-                url: "{{ route('finalizar.laudo') }}",
+                url: "{{ route('pre.confirm') }}",
                 type: 'POST',
                 data: {
                     _token: "{{ csrf_token() }}",
@@ -624,15 +624,34 @@
                 success: function(response) {
                     console.log(response);
                     Swal.fire({
-                        icon: 'success',
-                        title: 'Laudo finalizado com sucesso!',
-                        showConfirmButton: true,
-                        timer: 1500,
-                        timerProgressBar: true,
+                        title: 'Você tem certeza?',
+                        text: "Você está enviando o laudo para o seguinte parceiro " +
+                            response.parceiro.nome,
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Sim, continuar'
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            window.location.href =
-                                "{{ route('laudos') }}";
+                            $.ajax({
+                                url: "{{ route('finalizar.laudo') }}",
+                                type: 'POST',
+                                data: {
+                                    _token: "{{ csrf_token() }}",
+                                    laudo: laudo,
+                                },
+                                success: function(response) {
+                                    console.log(response);
+                                    Swal.fire(
+                                        'Sucesso!',
+                                        'Laudo enviado com sucesso.',
+                                        'success'
+                                    )
+                                    window.location.href =
+                                        "{{ route('laudos') }}";
+                                }
+                            })
                         }
                     })
                 },
