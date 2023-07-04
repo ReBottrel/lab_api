@@ -371,7 +371,7 @@ class OrderController extends Controller
 
         $order_request = OrderRequest::with('user', 'tecnico', 'owner')->find($request->order);
 
-     
+
 
         if ($order_request->origin == 'sistema' || $order_request->origin == 'API' || $order_request->origin == 'email') {
 
@@ -683,7 +683,7 @@ class OrderController extends Controller
         $owner = Owner::findOrFail($order->owner_id);
         $randomNumber = mt_rand(0, 1000000);
         $sigla = substr($request->especies, 0, 3);
-
+        dd($request->all());
         $data = [
             'user_id' => $owner->user_id,
             'order_id' => $request->order,
@@ -786,12 +786,42 @@ class OrderController extends Controller
     {
         $animal = Animal::find($request->animal);
 
-        $animal->update([
-            'order_id' => $request->order,
-            'status' => 1,
-        ]);
-        $order = OrderRequest::find($request->order);
-        return redirect()->route('admin.order-animal', [$order->id, $order->tipo]);
+        if ($animal->especies) {
+            switch ($animal->especies) {
+                case 'EQUINA':
+                    $tipo = 'EQUTR';
+                    break;
+                case 'MUARES':
+                    $tipo = 'MUATR';
+                    break;
+                case 'ASININO':
+                    $tipo = 'ASITR';
+                    break;
+                case 'EQUINO_PEGA':
+                    $tipo = 'ASITR';
+                    break;
+                case 'BOVINA':
+                    $tipo = 'BOVTR';
+                    break;
+                default:
+                    $tipo = 'EQUTR';
+            }
+
+            $verify = DnaVerify::create([
+                'animal_id' => $animal->id,
+                'order_id' => $request->order,
+                'verify_code' => $tipo,
+            ]);
+
+            $animal->update([
+                'order_id' => $request->order,
+                'status' => 1,
+            ]);
+            $order = OrderRequest::find($request->order);
+            return redirect()->route('admin.order-animal', [$order->id, $order->tipo]);
+        } else {
+            return redirect()->back()->with('error', 'Animal não possui espécie cadastrada, va até a o menu de animais e edite o animal para adicionar a espécie');
+        }
     }
 
     public function addAnimalToOrder($id)
