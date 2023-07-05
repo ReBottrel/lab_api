@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Dompdf\Dompdf;
 use App\Models\Owner;
 use App\Models\Animal;
+use App\Models\PedidoAnimal;
 use Illuminate\Http\Request;
 use App\Models\ResenhaAnimal;
 use Illuminate\Support\Facades\Http;
@@ -69,4 +70,19 @@ class TesteController extends Controller
     // {
     //     return view('admin.ordem-servico.laudo-imp-teste');
     // }
+
+    public function updateStatus()
+    {
+        $data = PedidoAnimal::get();
+
+        foreach ($data as $key => $value) {
+            $animal = Animal::find($value->id_animal);
+            if ($animal) {
+                $animal->update([
+                    'status' => $value->status
+                ]);
+            }
+        }
+        return 'ok';
+    }
 }
