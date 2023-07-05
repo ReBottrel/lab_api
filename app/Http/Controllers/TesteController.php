@@ -79,7 +79,7 @@ class TesteController extends Controller
             $animal = Animal::find($value->id_animal);
             if ($animal) {
                 $animal->update([
-                    'status' => $value->status
+                    'order_id' => $value->id_pedido,
                 ]);
             }
         }
