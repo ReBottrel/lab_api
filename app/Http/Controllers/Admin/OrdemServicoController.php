@@ -46,8 +46,33 @@ class OrdemServicoController extends Controller
             $data = Carbon::now()->addWeekdays($exame->days);
             $randomNumber = mt_rand(0, 1000000);
             $dna_verify = DnaVerify::where('animal_id', $item->animal_id)->latest('created_at')->first();
+            if (!$dna_verify) {
+                switch ($animal->especies) {
+                    case 'EQUINA':
+                        $tipo = 'EQUTR';
+                        break;
+                    case 'MUARES':
+                        $tipo = 'MUATR';
+                        break;
+                    case 'ASININO':
+                        $tipo = 'ASITR';
+                        break;
+                    case 'EQUINO_PEGA':
+                        $tipo = 'ASITR';
+                        break;
+                    case 'BOVINA':
+                        $tipo = 'BOVTR';
+                        break;
+                    default:
+                        $tipo = 'EQUTR';
+                }
+                $dna_verify = DnaVerify::create([
+                    'animal_id' => $item->animal_id,
+                    'order_id' => $order->id,
+                    'verify_code' => $tipo,
+                ]);
+            }
             $sigla = substr($animal->especies, 0, 3);
-
             if ($animal->codlab == null) {
                 $animal->update([
                     'codlab' => Animal::where('codlab', $randomNumber)->exists() ? $sigla . rand(0, 1000000) :  $sigla . $randomNumber,
