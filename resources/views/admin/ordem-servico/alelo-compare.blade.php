@@ -601,6 +601,9 @@
                     console.log(response);
                     $('#buttons').removeClass('d-none');
                     $('#laudo').val(response.id);
+                },
+                error: function(response) {
+                    console.log(response);
                 }
             });
         });
