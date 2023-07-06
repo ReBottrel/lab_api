@@ -603,7 +603,11 @@
                     $('#laudo').val(response.id);
                 },
                 error: function(response) {
-                    console.log(response);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Insira a data de coleta no pedido, antes de gerar o laudo.',
+                    })
                 }
             });
         });
