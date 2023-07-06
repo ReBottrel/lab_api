@@ -72,7 +72,7 @@ class OrdemServicoController extends Controller
                     'verify_code' => $tipo,
                 ]);
             }
-            $sigla = substr($animal->especies, 0, 3);
+            $sigla = substr($animal->especies, 0, 3) ? substr($animal->especies, 0, 3) : 'EQU';
             if ($animal->codlab == null) {
                 $animal->update([
                     'codlab' => Animal::where('codlab', $randomNumber)->exists() ? $sigla . rand(0, 1000000) :  $sigla . $randomNumber,
