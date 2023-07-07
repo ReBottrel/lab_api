@@ -98,7 +98,7 @@
                                     <span>STATUS:
                                         {{ $status }}</span>
                                 </li>
- 
+
                                 <li class="list-group-item">
                                     <label for="exampleFormControlInput1" class="form-label">Status do pedido</label>
                                     <select class="form-select status-select" data-order="{{ $order->id }}"
@@ -190,6 +190,9 @@
                                                 class="btn fw-bold link-light" type="button"
                                                 style="background: var(--bs-success);">VER RELATÓRIO DE PEDIDO</button></a>
                                     </div>
+                                    <div class="text-center my-4" data-order="{{ $order->id }}" id="criar-ordem">
+                                        <button class="btn btn-alt-2">GERAR ORDEM DE SERVIÇO</button>
+                                    </div>
                                 </div>
                             @endif
                         @endif
@@ -217,7 +220,39 @@
                 }
             });
         });
+        $(document).on('click', '#criar-ordem', function() {
+            var order = $(this).data('order');
+            $.ajax({
+                url: `{{ route('ordem.servico.store') }}`,
+                type: 'POST',
+                data: {
 
+                    order: order
+                },
+                success: function(data) {
+                    Swal.fire(
+                        'Sucesso!',
+                        'Ordem de serviço gerada com sucesso.',
+                        'success'
+                    )
+                    location.reload();
+
+                },
+                error: function(er) {
+                    error = er.responseJSON.error;
+                    console.log(er);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: error,
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.reload();
+                        }
+                    });
+                }
+            });
+        });
         $(document).on('change', '.status-select', function() {
             var id = $(this).data('id');
             if ($(this).val() == 6 | $(this).val() == 7) {
