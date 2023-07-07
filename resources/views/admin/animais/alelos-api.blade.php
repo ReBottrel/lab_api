@@ -2,9 +2,14 @@
 
 @section('content')
     <div class="container">
-        <div class="mb-3 col-4">
-            <label for="exampleFormControlInput1" class="form-label">Buscar registro</label>
-            <input type="text" class="form-control" id="registro">
+        <div class="row">
+            <div class="mb-3 col-4">
+                <label for="exampleFormControlInput1" class="form-label">Buscar registro</label>
+                <input type="text" class="form-control" id="registro">
+            </div>
+            <div class="col-4 mt-4">
+                <button class="btn btn-primary" id="buscar">BUSCAR</button>
+            </div>
         </div>
         <div class="spinner-border d-none" id="spiner" role="status">
             <span class="visually-hidden">Buscando aguarde...</span>
@@ -80,10 +85,9 @@
 @endsection
 @section('js')
     <script>
-        $(document).on('blur', '#registro', function() {
-            var registro = $(this).val();
+        $(document).on('click', '#buscar', function() {
+            var registro = $('#registro').val();
             $('#spiner').removeClass('d-none');
-
             $.ajax({
                 url: "{{ route('alelos.api') }}",
                 type: 'POST',

@@ -62,7 +62,7 @@ class AlelosController extends Controller
 
             // Verifica se o animal já existe no banco de dados
             $animal = Animal::where('animal_name', $animalData['nomeAnimal'])->first();
-
+            $marcadores = Marcador::where('especie', 'EQUINA')->get();
             if (!$animal) {
                 $randomNumber = mt_rand(0, 1000000);
 
@@ -75,7 +75,7 @@ class AlelosController extends Controller
                     'birth_date' => $animalData['dataNascimento'],
                     'number_definitive' => $animalData['registro'],
                     'status' => 1,
-                    'codlab' => $randomNumber,
+                    'codlab' => 'EQU' . $randomNumber,
                 ]);
             }
             if ($exameData['alelos'] != null) {
@@ -84,17 +84,17 @@ class AlelosController extends Controller
                 if (Alelo::where('animal_id', $animal->id)->exists()) {
                     return response()->json(['error' => 'existe']);
                 }
-
-                // Cria os registros de alelos
-                foreach ($exameData['alelos'] as $item) {
-                    Alelo::create([
-                        'animal_id' => $animal->id,
-                        'marcador' => $item['marcador'],
-                        'alelo1' => $item['alelo1'],
-                        'alelo2' => $item['alelo2'],
-                        'lab' => $exameData['laboratorio'],
-                        'data' => $exameData['dataResultado'],
-                    ]);
+               
+                foreach ($marcadores as $marcador) {
+                   
+                    // Alelo::create([
+                    //     'animal_id' => $animal->id,
+                    //     'marcador' => $marcador,
+                    //     'alelo1' => $alelo1,
+                    //     'alelo2' => $alelo2,
+                    //     'lab' => $exameData['laboratorio'],
+                    //     'data' => $exameData['dataResultado'],
+                    // ]);
                 }
 
                 return response()->json(['success' => 'ok']);
