@@ -7,7 +7,7 @@
         <div class="d-flex my-4">
             <div>
                 <button type="button" class="btn btn-primary" id="imprimir"><i class="fa-solid fa-print"></i> Imprimir
-                    laudo</button>
+                    OS</button>
             </div>
         </div>
         <div class="conteudo d-none">
