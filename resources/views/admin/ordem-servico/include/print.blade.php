@@ -33,7 +33,7 @@
                     <th scope="col">Código</th>
                     <th scope="col">Animal</th>
                     <th scope="col">Tipo</th>
-                    <th scope="col">Rg</th>
+                    <th scope="col">Rg pai/mae</th>
                     <th scope="col">Data de entrega</th>
                     <th scope="col">Identificação</th>
                 </tr>
@@ -44,7 +44,7 @@
                         <th scope="row">{{ $item->codlab }}</th>
                         <td>{{ $item->animal }}</td>
                         <td>{{ $item->tipo_exame }}</td>
-                        <td>{{ $item->rg ?? '' }}</td>
+                        <td>{{ $item->rg_pai ?? '' }}/ {{ $item->rg_mae ?? '' }}</td>
                         <td>{{ date('d/m/Y', strtotime($item->data)) }}</td>
                         <td>{{ $item->id_abccmm }}</td>
                     </tr>
