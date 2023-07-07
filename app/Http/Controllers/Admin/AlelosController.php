@@ -84,17 +84,28 @@ class AlelosController extends Controller
                 if (Alelo::where('animal_id', $animal->id)->exists()) {
                     return response()->json(['error' => 'existe']);
                 }
-               
+
                 foreach ($marcadores as $marcador) {
-                   
-                    // Alelo::create([
-                    //     'animal_id' => $animal->id,
-                    //     'marcador' => $marcador,
-                    //     'alelo1' => $alelo1,
-                    //     'alelo2' => $alelo2,
-                    //     'lab' => $exameData['laboratorio'],
-                    //     'data' => $exameData['dataResultado'],
-                    // ]);
+                    $apiAlelos = collect($exameData['alelos'])->where('marcador', $marcador->gene)->first();
+                    if ($apiAlelos) {
+                        Alelo::create([
+                            'animal_id' => $animal->id,
+                            'marcador' => $marcador->gene,
+                            'alelo1' => $apiAlelos['alelo1'],
+                            'alelo2' =>   $apiAlelos['alelo2'],
+                            'lab' => $exameData['laboratorio'],
+                            'data' => $exameData['dataResultado'],
+                        ]);
+                    } else {
+                        Alelo::create([
+                            'animal_id' => $animal->id,
+                            'marcador' => $marcador->gene,
+                            'alelo1' => '',
+                            'alelo2' =>   '',
+                            'lab' => $exameData['laboratorio'],
+                            'data' => $exameData['dataResultado'],
+                        ]);
+                    }
                 }
 
                 return response()->json(['success' => 'ok']);
