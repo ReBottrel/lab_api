@@ -43,7 +43,7 @@ class OrdemServicoController extends Controller
         foreach ($orderRequest as $item) {
             $exame = Exam::find($item->exam_id);
             $animal = Animal::find($item->animal_id);
-            $data = Carbon::now()->addWeekdays($exame->days);
+            $data = Carbon::parse($item->updated_at)->addWeekdays($exame->days);
             $randomNumber = mt_rand(0, 1000000);
             $dna_verify = DnaVerify::where('animal_id', $item->animal_id)->latest('created_at')->first();
             if (!$dna_verify) {
@@ -91,6 +91,9 @@ class OrdemServicoController extends Controller
                 'proprietario' => $order->creator,
                 'tecnico' => $order->technical_manager,
                 'data' => $data,
+                'data_payment' => $item->updated_at,
+                'rg_pai' => $animal->registro_pai,
+                'rg_mae' => $animal->registro_mae,
                 'status' => 1,
             ]);
         }

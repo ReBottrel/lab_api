@@ -25,5 +25,8 @@ class OrdemServico extends Model
         'observacao',
         'data_bar',
         'bar_code',
+        'data_payment',
+        'rg_pai',
+        'rg_mae',
     ];
 }
