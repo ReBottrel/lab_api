@@ -19,7 +19,7 @@
     <page size="A4">
         <h5>Numero do pedido: {{ $ordem->order_id }}</h5>
         <h5>Proprietário: {{ $ordem->owner }}</h5>
-        <h5>Data de solicitção: {{ date('d/m/Y', strtotime($ordemServicos[0]->data_payment)) }}</h5>
+        <h5>Data de pagamento: {{ date('d/m/Y', strtotime($ordemServicos[0]->data_payment)) }}</h5>
         @if (count($ordemServicos) > 0)
             <h5>Técnico: {{ $ordemServicos[0]->tecnico }}</h5>
         @else
