@@ -76,7 +76,7 @@ class OrdemServicoController extends Controller
             $sigla = substr($animal->especies, 0, 3) ? substr($animal->especies, 0, 3) : 'EQU';
             if ($animal->codlab == null) {
                 $animal->update([
-                    'codlab' => Animal::where('codlab', $randomNumber)->exists() ? $sigla . rand(0, 1000000) :  $sigla . $randomNumber,
+                    'codlab' => $sigla . strval($this->generateUniqueCodlab()),
                 ]);
             }
 
@@ -101,6 +101,29 @@ class OrdemServicoController extends Controller
 
         return response()->json('success', 200);
     }
+    private function generateUniqueCodlab()
+    {
+        $startValue = 100000;
+        $codlab = Animal::max('codlab');
+
+        if ($codlab >= $startValue) {
+            if (is_numeric($codlab)) {
+                $codlab = intval($codlab);
+            } else {
+                $codlab = $startValue;
+            }
+            $codlab += 1;
+        } else {
+            $codlab = $startValue;
+        }
+
+
+        while (Animal::where('codlab', $codlab)->exists()) {
+            $codlab += 1;
+        }
+
+        return $codlab;
+    }
 
     public function index()
     {
@@ -121,26 +144,26 @@ class OrdemServicoController extends Controller
         if ($request->hasFile('file')) {
             // Obter o arquivo do campo de entrada
             $file = $request->file('file');
-    
+
             // Verificar se o arquivo é válido
             if ($file->isValid()) {
                 // Caminho para salvar o arquivo
                 $filePath = storage_path('app/files/') . $file->getClientOriginalName();
-    
+
                 // Mover o arquivo para o diretório desejado
                 $file->move(storage_path('app/files'), $file->getClientOriginalName());
-    
+
                 // Ler o conteúdo do arquivo
                 $fileContent = file_get_contents($filePath);
-    
+
                 // Quebrar o conteúdo do arquivo em linhas
                 $lines = explode("\n", $fileContent);
-    
+
                 // Iterar pelas linhas do arquivo
                 foreach ($lines as $line) {
                     // Quebrar a linha em colunas separadas por tabulação
                     $columns = explode("\t", $line);
-    
+
                     // Verificar se a coluna com o índice 1 existe
                     if (isset($columns[1])) {
                         $sampleName = $columns[1];
@@ -150,7 +173,7 @@ class OrdemServicoController extends Controller
                             $marcador = trim(str_replace('*', '', $columns[2]));
                             $alelo1 = trim(str_replace('*', '', $columns[3]));
                             $alelo2 = trim(str_replace('*', '', $columns[4]));
-    
+
                             // Criar o registro de Alelo para o animal encontrado
                             $alelo = Alelo::create([
                                 'animal_id' => $animal->id,
@@ -164,12 +187,12 @@ class OrdemServicoController extends Controller
                         $sampleName = null; // Ou qualquer outro valor padrão que faça sentido para o seu caso
                     }
                 }
-    
+
                 // Retorne uma resposta adequada após a importação
                 return redirect()->back()->with('success', 'Arquivo importado com sucesso');
             }
         }
-    
+
         // Caso nenhum arquivo tenha sido enviado ou o arquivo seja inválido
         return response()->json(['message' => 'Nenhum arquivo válido enviado'], 400);
     }

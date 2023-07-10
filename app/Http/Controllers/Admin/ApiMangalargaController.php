@@ -102,6 +102,7 @@ class ApiMangalargaController extends Controller
                 $existingAnimal = Animal::where('register_number_brand', $animal->rowidAnimal)->first();
                 if ($existingAnimal) {
                     $existingAnimal->status = 1;
+                    $existingAnimal->codlab = 'EQU'.strval($this->generateUniqueCodlab());
                     $existingAnimal->order_id = $order->id; // atualize o status como necessário
                     $existingAnimal->save();
                 } else {
@@ -118,6 +119,7 @@ class ApiMangalargaController extends Controller
                         'pai' => $animal->nomePai,
                         'registro_mae' => $animal->registroMae,
                         'mae' => $animal->nomeMae,
+                        'codlab' => 'EQU'.strval($this->generateUniqueCodlab()),
                         'row_id' => $order->collection_number,
                     ]);
 
@@ -217,6 +219,7 @@ class ApiMangalargaController extends Controller
                 $existingAnimal = Animal::where('register_number_brand', $animal->rowidAnimal)->first();
                 if ($existingAnimal) {
                     $existingAnimal->status = 1;
+                    $existingAnimal->codlab = 'EQU'.strval($this->generateUniqueCodlab());
                     $existingAnimal->order_id = $order->id; // atualize o status como necessário
                     $existingAnimal->save();
                 } else {
@@ -228,6 +231,7 @@ class ApiMangalargaController extends Controller
                         'birth_date' => $animal->dataNascimento,
                         'description' => $animal->obs,
                         'status' => 1,
+                        'codlab' => 'EQU'.strval($this->generateUniqueCodlab()),
                         'especie' => 'EQUINA',
                         'registro_pai' => $animal->registroPai,
                         'pai' => $animal->nomePai,
@@ -247,6 +251,29 @@ class ApiMangalargaController extends Controller
         return response()->json('ok');
     }
 
+
+    private function generateUniqueCodlab()
+    {
+        $startValue = 100000;
+        $codlab = Animal::max('codlab');
+
+        if ($codlab >= $startValue) {
+            if (is_numeric($codlab)) {
+                $codlab = intval($codlab);
+            } else {
+                $codlab = $startValue;
+            }
+            $codlab += 1;
+        } else {
+            $codlab = $startValue;
+        }
+
+        while (Animal::where('codlab', $codlab)->exists()) {
+            $codlab += 1;
+        }
+
+        return $codlab;
+    }
     public function fetchDataFromApi($resource, $id, $tipo, $query = [])
     {
         $url = "http://laboratorios.abccmm.org.br/api/$resource/$id/$tipo" . '?' . http_build_query($query);

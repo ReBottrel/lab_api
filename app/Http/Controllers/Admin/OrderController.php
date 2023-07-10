@@ -683,7 +683,7 @@ class OrderController extends Controller
         $owner = Owner::findOrFail($order->owner_id);
         $randomNumber = mt_rand(0, 1000000);
         $sigla = substr($request->especies, 0, 3);
-    
+
         $data = [
             'user_id' => $owner->user_id,
             'order_id' => $request->order,
@@ -705,7 +705,7 @@ class OrderController extends Controller
 
         ];
 
-        $data['codlab'] = Animal::where('codlab', $randomNumber)->exists() ? $sigla . rand(0, 1000000) : $sigla . $randomNumber;
+        $data['codlab'] = $sigla . strval($this->generateUniqueCodlab());
 
         if ($request->verify_code == 'semverify') {
             $tipo = 'EQUTR';
@@ -782,6 +782,28 @@ class OrderController extends Controller
         ]);
     }
 
+    private function generateUniqueCodlab()
+    {
+        $startValue = 100000;
+        $codlab = Animal::max('codlab');
+
+        if ($codlab >= $startValue) {
+            if (is_numeric($codlab)) {
+                $codlab = intval($codlab);
+            } else {
+                $codlab = $startValue;
+            }
+            $codlab += 1;
+        } else {
+            $codlab = $startValue;
+        }
+
+        while (Animal::where('codlab', $codlab)->exists()) {
+            $codlab += 1;
+        }
+
+        return $codlab;
+    }
     public function updateAnimalOrder(Request $request)
     {
         $animal = Animal::find($request->animal);
