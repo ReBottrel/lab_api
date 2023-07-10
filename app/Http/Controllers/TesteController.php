@@ -90,12 +90,12 @@ class TesteController extends Controller
 
     public function getOrderNotCreate()
     {
-        $pedido_animals = PedidoAnimal::whereExists(function ($query) {
+        $id_pedidos = PedidoAnimal::whereNotExists(function ($query) {
             $query->select(DB::raw(1))
                   ->from('order_requests')
                   ->whereColumn('order_requests.id', 'pedido_animals.id_pedido');
-        })->get();
+        })->distinct('id_pedido')->pluck('id_pedido');
     
-        return $pedido_animals;
+        return $id_pedidos;
     }
 }
