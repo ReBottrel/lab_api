@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use Dompdf\Dompdf;
 use App\Models\Owner;
 use App\Models\Animal;
+use App\Models\OrderRequest;
 use App\Models\PedidoAnimal;
 use Illuminate\Http\Request;
 use App\Models\ResenhaAnimal;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 
 class TesteController extends Controller
@@ -84,5 +86,16 @@ class TesteController extends Controller
             }
         }
         return 'ok';
+    }
+
+    public function getOrderNotCreate()
+    {
+        $pedido_animals = PedidoAnimal::whereExists(function ($query) {
+            $query->select(DB::raw(1))
+                  ->from('order_requests')
+                  ->whereColumn('order_requests.id', 'pedido_animals.id_pedido');
+        })->get();
+    
+        return $pedido_animals;
     }
 }

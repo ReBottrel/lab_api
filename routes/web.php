@@ -103,7 +103,7 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::get('new-orders', [OrderController::class, 'getNewOrders'])->name('get.new.orders');
 
     Route::get('update-status-animal-mass', [TesteController::class, 'updateStatus'])->name('update.status.animal.mass');
-
+    Route::get('get-all-order-not-create', [TesteController::class, 'getOrderNotCreate'])->name('get.all.order.not.create');
 
     Route::get('import-txt-view', [AlelosController::class, 'importTxt'])->name('import.txt.view');
 
