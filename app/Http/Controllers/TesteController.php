@@ -108,16 +108,30 @@ class TesteController extends Controller
     }
     public function updateCodlabInRange()
     {
-        $codlabs = Animal::select('codlab')
+        $codlabs = Animal::select('id', 'codlab')
             ->whereRaw('CAST(SUBSTRING(codlab, 4) AS UNSIGNED) >= 100000 AND CAST(SUBSTRING(codlab, 4) AS UNSIGNED) < 200000')
             ->orderByRaw('CAST(SUBSTRING(codlab, 4) AS UNSIGNED)')
             ->get();
 
         $startValue = 100000;
+        $updates = [];
         foreach ($codlabs as $animal) {
             $newCodlab = substr($animal->codlab, 0, 3) . strval($startValue);
-            Animal::where('codlab', $animal->codlab)->update(['codlab' => $newCodlab]);
+            $updates[$animal->id] = ['codlab' => $newCodlab];
             $startValue += 1;
+        }
+
+        // Begin a transaction to ensure data integrity
+        DB::beginTransaction();
+        try {
+            foreach ($updates as $id => $update) {
+                Animal::where('id', $id)->update($update);
+            }
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollback();
+            // Handle the exception...
+            throw $e;
         }
     }
 }
