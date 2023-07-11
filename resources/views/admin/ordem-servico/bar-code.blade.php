@@ -21,7 +21,7 @@
     </div>
     <page size="A4">
         <div class="print">
-            <img src="data:image/png;base64,{{ $barcodex }}" alt="">
+            <img width="150" src="data:image/png;base64,{{ $barcodex }}" alt="">
             <p>{{ $ordem->codlab }}</p>
             <p>{{ $ordem->tipo_exame }}</p>
             <p>{{ $ordem->order }}</p>
