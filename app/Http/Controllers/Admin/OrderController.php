@@ -704,8 +704,10 @@ class OrderController extends Controller
             'especie_mae' => $request->especie_mae,
 
         ];
+        $codlab = $this->generateUniqueCodlab($sigla);
+        $data['codlab'] = $codlab;
 
-        $data['codlab'] = $sigla . strval($this->generateUniqueCodlab());
+
 
         if ($request->verify_code == 'semverify') {
             $tipo = 'EQUTR';
@@ -781,25 +783,21 @@ class OrderController extends Controller
             'species' => $species
         ]);
     }
-
-    private function generateUniqueCodlab()
+    private function generateUniqueCodlab($sigla)
     {
         $startValue = 100000;
-        $codlab = Animal::max('codlab');
+        $lastCodlab = Animal::where('codlab', 'LIKE', $sigla . '%')->max('codlab');
 
-        if ($codlab >= $startValue) {
-            if (is_numeric($codlab)) {
-                $codlab = intval($codlab);
-            } else {
-                $codlab = $startValue;
-            }
-            $codlab += 1;
-        } else {
-            $codlab = $startValue;
+        if ($lastCodlab !== null) {
+            $lastNumber = intval(substr($lastCodlab, strlen($sigla)));
+            $startValue = max($startValue, $lastNumber + 1);
         }
 
+        $codlab = $sigla . strval($startValue);
+
         while (Animal::where('codlab', $codlab)->exists()) {
-            $codlab += 1;
+            $startValue += 1;
+            $codlab = $sigla . strval($startValue);
         }
 
         return $codlab;

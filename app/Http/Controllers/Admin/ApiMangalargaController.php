@@ -101,11 +101,13 @@ class ApiMangalargaController extends Controller
             foreach ($coleta->animais as $animal) {
                 $existingAnimal = Animal::where('register_number_brand', $animal->rowidAnimal)->first();
                 if ($existingAnimal) {
+                    $codlab = 'EQU' . strval($this->generateUniqueCodlab());
                     $existingAnimal->status = 1;
-                    $existingAnimal->codlab = 'EQU'.strval($this->generateUniqueCodlab());
+                    $existingAnimal->codlab = Animal::where('codlab', $codlab)->exists() ? 'EQU' . strval($this->generateUniqueCodlab()) : $codlab;
                     $existingAnimal->order_id = $order->id; // atualize o status como necessário
                     $existingAnimal->save();
                 } else {
+                    $codlab = 'EQU' . strval($this->generateUniqueCodlab());
                     $newAnimal = Animal::create([
                         'register_number_brand' => $animal->rowidAnimal,
                         'order_id' => $order->id,
@@ -119,7 +121,7 @@ class ApiMangalargaController extends Controller
                         'pai' => $animal->nomePai,
                         'registro_mae' => $animal->registroMae,
                         'mae' => $animal->nomeMae,
-                        'codlab' => 'EQU'.strval($this->generateUniqueCodlab()),
+                        'codlab' => Animal::where('codlab', $codlab)->exists() ? 'EQU' . strval($this->generateUniqueCodlab()) : $codlab,
                         'row_id' => $order->collection_number,
                     ]);
 
@@ -216,13 +218,15 @@ class ApiMangalargaController extends Controller
             ]);
 
             foreach ($coleta->animais as $animal) {
+                $codlab = 'EQU' . strval($this->generateUniqueCodlab());
                 $existingAnimal = Animal::where('register_number_brand', $animal->rowidAnimal)->first();
                 if ($existingAnimal) {
                     $existingAnimal->status = 1;
-                    $existingAnimal->codlab = 'EQU'.strval($this->generateUniqueCodlab());
+                    $existingAnimal->codlab = Animal::where('codlab', $codlab)->exists() ? 'EQU' . strval($this->generateUniqueCodlab()) : $codlab;
                     $existingAnimal->order_id = $order->id; // atualize o status como necessário
                     $existingAnimal->save();
                 } else {
+                    $codlab = 'EQU' . strval($this->generateUniqueCodlab());
                     $newAnimal = Animal::create([
                         'register_number_brand' => $animal->rowidAnimal,
                         'order_id' => $order->id,
@@ -231,7 +235,7 @@ class ApiMangalargaController extends Controller
                         'birth_date' => $animal->dataNascimento,
                         'description' => $animal->obs,
                         'status' => 1,
-                        'codlab' => 'EQU'.strval($this->generateUniqueCodlab()),
+                        'codlab' => Animal::where('codlab', $codlab)->exists() ? 'EQU' . strval($this->generateUniqueCodlab()) : $codlab,
                         'especie' => 'EQUINA',
                         'registro_pai' => $animal->registroPai,
                         'pai' => $animal->nomePai,

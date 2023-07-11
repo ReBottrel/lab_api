@@ -92,10 +92,18 @@ class TesteController extends Controller
     {
         $id_pedidos = PedidoAnimal::whereNotExists(function ($query) {
             $query->select(DB::raw(1))
-                  ->from('order_requests')
-                  ->whereColumn('order_requests.id', 'pedido_animals.id_pedido');
+                ->from('order_requests')
+                ->whereColumn('order_requests.id', 'pedido_animals.id_pedido');
         })->distinct('id_pedido')->pluck('id_pedido');
-    
+
         return $id_pedidos;
+    }
+    public function selectCodlabInRange()
+    {
+        $codlabs = Animal::select('codlab')
+            ->whereRaw('CAST(SUBSTRING(codlab, 4) AS UNSIGNED) >= 100000 AND CAST(SUBSTRING(codlab, 4) AS UNSIGNED) < 200000')
+            ->get();
+
+        return $codlabs;
     }
 }

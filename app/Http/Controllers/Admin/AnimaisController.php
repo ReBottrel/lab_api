@@ -45,7 +45,7 @@ class AnimaisController extends Controller
      */
     public function store(Request $request)
     {
-        $randomNumber = mt_rand(0, 1000000);
+
         $sigla = substr($request->especies, 0, 3);
 
         $data = [
@@ -65,12 +65,31 @@ class AnimaisController extends Controller
 
         ];
 
-        $data['codlab'] = Animal::where('codlab', $randomNumber)->exists() ? $sigla . rand(0, 1000000) : $sigla . $randomNumber;
-
+        $codlab = $this->generateUniqueCodlab($sigla);
+        $data['codlab'] = $codlab;
+        // dd($data);
         $animal = Animal::create($data);
         return redirect()->route('animais')->with('success', 'Animal cadastrado com sucesso!');
     }
+    private function generateUniqueCodlab($sigla)
+    {
+        $startValue = 100000;
+        $maxNumber = Animal::selectRaw('MAX(CAST(SUBSTRING(codlab, 4) AS UNSIGNED)) as max_num')
+            ->whereRaw('CAST(SUBSTRING(codlab, 4) AS UNSIGNED) >= 100000 AND CAST(SUBSTRING(codlab, 4) AS UNSIGNED) < 200000')
+            ->first();
 
+        if ($maxNumber !== null && $maxNumber->max_num !== null) {
+            $startValue = $maxNumber->max_num + 1;
+        }
+
+        while (Animal::where('codlab', '=', $sigla . strval($startValue))->exists()) {
+            $startValue += 1;
+        }
+
+        $codlab = $sigla . strval($startValue);
+
+        return $codlab;
+    }
     /**
      * Display the specified resource.
      *
