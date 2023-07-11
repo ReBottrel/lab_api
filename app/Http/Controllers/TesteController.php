@@ -106,4 +106,17 @@ class TesteController extends Controller
 
         return $codlabs;
     }
+    public function updateCodlabInRange()
+    {
+        $codlabs = Animal::select('codlab')
+            ->whereRaw('CAST(SUBSTRING(codlab, 4) AS UNSIGNED) >= 100000 AND CAST(SUBSTRING(codlab, 4) AS UNSIGNED) < 200000')
+            ->get();
+
+        $startValue = 100000;
+        foreach ($codlabs as $animal) {
+            $newCodlab = substr($animal->codlab, 0, 3) . strval($startValue);
+            Animal::where('codlab', $animal->codlab)->update(['codlab' => $newCodlab]);
+            $startValue += 1;
+        }
+    }
 }
