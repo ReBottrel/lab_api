@@ -63,10 +63,11 @@ class AnimaisController extends Controller
             'registro_mae' => $request->registro_mae,
             'mae' => $request->mae,
 
+
         ];
 
         $codlab = $this->generateUniqueCodlab($sigla);
-        $data['codlab'] = $codlab;
+        $data['codlab'] = $request->codlab ? $request->codlab : $codlab;
         // dd($data);
         $animal = Animal::create($data);
         return redirect()->route('animais')->with('success', 'Animal cadastrado com sucesso!');

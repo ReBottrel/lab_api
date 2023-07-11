@@ -21,6 +21,13 @@
 
                             <div class="col-md-6">
                                 <div class="mb-3">
+                                    <label for="exampleFormControlInput1" class="form-label">Codlab</label>
+                                    <input type="text" name="codlab" id="codlab"
+                                        class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
                                     <label for="exampleFormControlInput1" class="form-label">ID do animal</label>
                                     <input type="text" name="register_number_brand" id="register_number_brand"
                                         class="form-control">
