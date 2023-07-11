@@ -174,6 +174,19 @@ class OrdemServicoController extends Controller
                             $alelo1 = trim(str_replace('*', '', $columns[3]));
                             $alelo2 = trim(str_replace('*', '', $columns[4]));
 
+                            // Se alelo1 e alelo2 estiverem vazios, manter como vazios
+                            if (!empty($alelo1) || !empty($alelo2)) {
+                                // Se alelo1 estiver vazio, copiar valor de alelo2
+                                if (empty($alelo1)) {
+                                    $alelo1 = $alelo2;
+                                }
+
+                                // Se alelo2 estiver vazio, copiar valor de alelo1
+                                if (empty($alelo2)) {
+                                    $alelo2 = $alelo1;
+                                }
+                            }
+
                             // Criar o registro de Alelo para o animal encontrado
                             $alelo = Alelo::create([
                                 'animal_id' => $animal->id,
