@@ -786,19 +786,19 @@ class OrderController extends Controller
     private function generateUniqueCodlab($sigla)
     {
         $startValue = 100000;
-        $lastCodlab = Animal::where('codlab', 'LIKE', $sigla . '%')->max('codlab');
+        $maxNumber = Animal::selectRaw('MAX(CAST(SUBSTRING(codlab, 4) AS UNSIGNED)) as max_num')
+            ->whereRaw('CAST(SUBSTRING(codlab, 4) AS UNSIGNED) >= 100000 AND CAST(SUBSTRING(codlab, 4) AS UNSIGNED) < 200000')
+            ->first();
 
-        if ($lastCodlab !== null) {
-            $lastNumber = intval(substr($lastCodlab, strlen($sigla)));
-            $startValue = max($startValue, $lastNumber + 1);
+        if ($maxNumber !== null && $maxNumber->max_num !== null) {
+            $startValue = $maxNumber->max_num + 1;
+        }
+
+        while (Animal::where('codlab', '=', $sigla . strval($startValue))->exists()) {
+            $startValue += 1;
         }
 
         $codlab = $sigla . strval($startValue);
-
-        while (Animal::where('codlab', $codlab)->exists()) {
-            $startValue += 1;
-            $codlab = $sigla . strval($startValue);
-        }
 
         return $codlab;
     }
