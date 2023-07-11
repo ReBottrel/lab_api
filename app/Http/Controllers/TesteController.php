@@ -106,7 +106,7 @@ class TesteController extends Controller
 
         return $codlabs;
     }
-    private function updateCodlabInRange()
+    public function updateCodlabInRange()
     {
         $codlabs = Animal::select('codlab')
             ->whereRaw('CAST(SUBSTRING(codlab, 4) AS UNSIGNED) >= 100000 AND CAST(SUBSTRING(codlab, 4) AS UNSIGNED) < 200000')
