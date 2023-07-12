@@ -14,6 +14,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Alelo;
 use App\Models\DnaVerify;
 use App\Models\Marcador;
+use App\Models\Result;
 use Picqer\Barcode\BarcodeGeneratorPNG;
 
 
@@ -208,6 +209,8 @@ class OrdemServicoController extends Controller
         return response()->json(['message' => 'Nenhum arquivo válido enviado'], 400);
     }
 
+
+
     public function compareAlelo($id)
     {
         $ordem = OrdemServico::find($id);
@@ -251,9 +254,9 @@ class OrdemServicoController extends Controller
         $animal = Animal::with('alelos')->find($ordem->animal_id);
         $dna_verify = DnaVerify::where('animal_id', $animal->id)->first();
         $sigla = substr($animal->especies, 0, 3);
+        $result = Result::where('ordem_servico', $ordem->id)->get();
         $pai = null;
         $mae = null;
-
         switch ($dna_verify->verify_code) {
             case $sigla . 'PD':
                 $pai = Animal::with('alelos')->where('animal_name', $animal->pai)->first();
@@ -385,9 +388,47 @@ class OrdemServicoController extends Controller
             'animal' => $animal,
             'pai' => $pai,
             'mae' => $mae,
+            'result' => $result,
+
         ]);
     }
+    public function storeResult(Request $request)
+    {
+        // The $request->ordem, $request->incluidos and $request->excluidos will contain your data.
+        $ordem = $request->ordem;
+        $incluidos = $request->incluidos;
+        $excluidos = $request->excluidos;
 
+        // Now, you can do whatever you want with this data.
+        // For instance, you can save them to the database.
+
+        // Assuming you have a 'results' table and a 'Result' model
+        $result = new Result;
+        $result->ordem_servico = $ordem;
+        $result->incluido = json_encode($incluidos);
+        $result->excluido = json_encode($excluidos);
+        $result->save();
+
+        // Return a response to the AJAX call
+        return response()->json(['message' => 'Data saved successfully!']);
+    }
+    public function getResult($id)
+    {
+        $result = Result::find($id);
+
+        $ordem = $result->ordem;
+        $incluidos = json_decode($result->incluidos);
+        $excluidos = json_decode($result->excluidos);
+
+        // Now, you have your data. Do whatever you want with it.
+        // For example, return it as a response to an AJAX call.
+
+        return response()->json([
+            'ordem' => $ordem,
+            'incluidos' => $incluidos,
+            'excluidos' => $excluidos,
+        ]);
+    }
     public function aleloUpdate(Request $request)
     {
         $alelo = Alelo::find($request->id);
@@ -415,6 +456,14 @@ class OrdemServicoController extends Controller
         return response()->json($alelo);
     }
 
+    public function dataAnalise(Request $request)
+    {
+        $ordem = OrdemServico::find($request->id);
+        $ordem->update([
+            'data_analise' =>  Carbon::now(),
+        ]);
+        return response()->json($ordem);
+    }
 
     public function gerarBarCode($id)
     {

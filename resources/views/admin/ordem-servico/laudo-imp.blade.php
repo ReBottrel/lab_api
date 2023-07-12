@@ -503,7 +503,7 @@
             <div class="content_4">
                 <p>
                     <strong>Data da Realização:</strong>
-                    <span>{{date( 'd/m/Y' , strtotime($laudo->created_at)) }}</span>
+                    <span>{{date( 'd/m/Y' , strtotime($ordem->data_analise)) }}</span>
                     <br>
                     <strong>Metodologia Utilizada:</strong>
                     <span>

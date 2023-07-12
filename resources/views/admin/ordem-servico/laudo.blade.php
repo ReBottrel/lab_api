@@ -166,7 +166,7 @@
 
             <div class="col-12">
                 <strong>Data da Realização:</strong>
-                <span>{{date( 'd/m/Y' , strtotime($laudo->created_at)) }}</span>
+                <span>{{date( 'd/m/Y' , strtotime($ordem->data_analise)) }}</span>
             </div>
             <div class="col-12">
                 <strong>Metodologia Utilizada:</strong>

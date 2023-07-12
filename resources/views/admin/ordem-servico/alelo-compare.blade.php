@@ -187,7 +187,9 @@
         <div class="row" id="valores">
 
         </div>
-
+        <div class="d-none mt-2" id="salvar-btn">
+            <button class="btn btn-primary" type="button" id="salvar">SALVAR VALORES</button>
+        </div>
     </div>
 </div>
 <div class="d-none" id="resultado">
@@ -258,6 +260,32 @@
                 }
             });
         });
+
+        $(document).on('click', '#salvar', function() {
+            const ordem = $('#analisar').data('ordem');
+            const incluidos = [];
+            const excluidos = [];
+            $('.incluidos').each(function() {
+                incluidos.push($(this).val());
+            });
+            $('.excluidos').each(function() {
+                excluidos.push($(this).val());
+            });
+            $.ajax({
+                url: "{{ route('result.store') }}",
+                type: 'POST',
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    ordem: ordem,
+                    incluidos: incluidos,
+                    excluidos: excluidos,
+                },
+                success: function(response) {
+                    console.log(response);
+                }
+            });
+
+        });
     });
 
 
@@ -280,6 +308,7 @@
             const ordem = $(this).data('ordem');
             $('#valores').html('');
             $('.resultadoAnalise').html('');
+            $('#salvar-btn').removeClass('d-none');
             $.ajax({
                 url: "{{ route('alelo.analise') }}",
                 type: 'POST',
@@ -338,7 +367,7 @@
                         for (let i = 0; i < length; i++) {
                             const html = `<div class="row">
         <div class="col-6">
-            <input class="form-control incluidos" name="incluidos[]" type="text" value="${incluidosMae[i] || ''}${incluidosPai[i] || ''}">
+            <input class="form-control incluidos" name="incluidos[]" type="text"  value="${incluidosMae[i] || ''}${incluidosPai[i] || ''}">
         </div>
         <div class="col-6">
             <input class="form-control excluidos" name="excluidos[]" type="text" value="${excluidosMae[i] == 'M' ? 'M' : ''}${excluidosPai[i] == 'P' ? 'P' : ''}">

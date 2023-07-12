@@ -28,5 +28,6 @@ class OrdemServico extends Model
         'data_payment',
         'rg_pai',
         'rg_mae',
+        'data_analise'
     ];
 }

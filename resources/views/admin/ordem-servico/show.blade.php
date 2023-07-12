@@ -63,8 +63,9 @@
 
                         </div>
                         <div class="mx-2">
-                            <a href="#"> <button class="btn btn-primary"><i class="fa-solid fa-tag"></i>
-                                    Data da análise</button></a>
+                            <button type="button" id="dataAnalise" data-id="{{ $ordemServico->id }}"
+                                class="btn btn-primary"><i class="fa-solid fa-tag"></i>
+                                Data da análise</button>
                         </div>
 
                     </div>
@@ -129,6 +130,26 @@
                 success: function(data) {
                     console.log(data);
                     $('#exampleModal').modal('hide');
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Sucesso!',
+                        text: 'Data salva com sucesso!',
+                    });
+                }
+
+            });
+        });
+        $(document).on('click', '#dataAnalise', function() {
+            let id = $(this).data('id');
+            $.ajax({
+                url: "{{ route('data.analise') }}",
+                type: 'POST',
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    id: id,
+                },
+                success: function(data) {
+                    console.log(data);
                     Swal.fire({
                         icon: 'success',
                         title: 'Sucesso!',

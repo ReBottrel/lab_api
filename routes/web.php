@@ -149,6 +149,11 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::post('ordem-delete', [OrdemServicoController::class, 'delete'])->name('ordem.delete');
     Route::post('alelo-update', [OrdemServicoController::class, 'aleloUpdate'])->name('alelo.update');
 
+    Route::post('result-store', [OrdemServicoController::class, 'storeResult'])->name('result.store');
+    Route::post('result-get', [OrdemServicoController::class, 'getResult'])->name('result.get');
+
+    Route::post('data-analise', [OrdemServicoController::class, 'dataAnalise'])->name('data.analise');
+
     Route::post('import-txt', [OrdemServicoController::class, 'importFile'])->name('import.txt');
     Route::get('alelo-compare/{id}', [OrdemServicoController::class, 'compareAlelo'])->name('alelo.compare');
     Route::post('alelo-analise', [OrdemServicoController::class, 'analise'])->name('alelo.analise');
