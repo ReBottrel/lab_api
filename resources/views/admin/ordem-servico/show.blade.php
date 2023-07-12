@@ -60,7 +60,11 @@
                                     class="btn btn-primary"><i class="fa-solid fa-tag"></i>
                                     Data da entrada na area técnica</button></a>
 
-                                    
+
+                        </div>
+                        <div class="mx-2">
+                            <a href="#"> <button class="btn btn-primary"><i class="fa-solid fa-tag"></i>
+                                    Data da análise</button></a>
                         </div>
 
                     </div>
