@@ -451,8 +451,8 @@
                         <span>{{ $ordem->bar_code ?? 'Não informado' }}</span>
                         <br>
                         <strong>Endereço:</strong>
-                        <span>{{ $owner->address ?? 'Não informado' }}, {{ $owner->number ?? 'Não informado' }}
-                            {{ $owner->complement }} -
+                        <span>{{ $owner->address ?? 'Não informado' }}, {{ $owner->number ?? 'Não informado' }} <br>
+                            {{ $owner->complement }} - 
                             {{ $owner->city ?? 'Não informado' }} -
                             {{ $owner->state ?? 'Não informado' }}
                         </span>
