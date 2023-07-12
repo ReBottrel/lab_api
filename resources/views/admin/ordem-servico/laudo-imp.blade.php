@@ -510,7 +510,7 @@
                         Identificação Genética e Pesquisa de Vínculo Genético pela amplificação das regiões STRs
                         pela
                         técnica PCR e
-                        detecção por eletroforese capilar em sistema automatizado por fluorescência laser-induzida
+                        detecção por eletroforese capilar em sistema automatizado por fluorescência laser-induzida.
                     </span>
                 </p>
             </div>
