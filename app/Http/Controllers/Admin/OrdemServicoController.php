@@ -397,7 +397,7 @@ class OrdemServicoController extends Controller
         $ordem = OrdemServico::find($id);
         $animal = Animal::with('alelos')->find($ordem->animal_id);
         $ordem->update([
-            'bar_code' => $animal->register_number_brand ?? null,
+            'bar_code' => $animal->codlab ?? null,
         ]);
         $generator = new BarcodeGeneratorPNG();
         $barcode = $generator->getBarcode($ordem->codlab, $generator::TYPE_CODE_128);

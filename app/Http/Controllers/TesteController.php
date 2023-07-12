@@ -120,8 +120,7 @@ class TesteController extends Controller
             $updates[$animal->id] = ['codlab' => $newCodlab];
             $startValue += 1;
         }
-
-        // Begin a transaction to ensure data integrity
+ 
         DB::beginTransaction();
         try {
             foreach ($updates as $id => $update) {
@@ -130,7 +129,7 @@ class TesteController extends Controller
             DB::commit();
         } catch (\Exception $e) {
             DB::rollback();
-            // Handle the exception...
+          
             throw $e;
         }
     }
