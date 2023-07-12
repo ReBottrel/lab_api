@@ -193,12 +193,11 @@
         </div>
     </div>
 </div>
-<div class="" id="resultado">
+<div class="@if (!$result) d-none @endif" id="resultado">
     <div class="mensagem px-5 pt-2">
-        <textarea class="form-control resultadoAnalise" id="obs" rows="3">
-@if ($laudo)
-{{ $laudo->conclusao }}
+        <textarea class="form-control resultadoAnalise" id="obs" rows="3">@if ($laudo){{ $laudo->conclusao }}
 @endif
+
 </textarea>
     </div>
     <div class="mb-3 px-5 pt-2">

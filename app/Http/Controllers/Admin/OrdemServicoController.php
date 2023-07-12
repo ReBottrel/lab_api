@@ -220,6 +220,9 @@ class OrdemServicoController extends Controller
         $laudo = Laudo::where('ordem_id', $id)
             ->orderBy('id', 'desc')
             ->first();
+        $result = Result::where('ordem_servico', $id)
+            ->orderBy('id', 'desc')
+            ->first();
         $sigla = substr($animal->especies, 0, 3);
         $pai = null;
         $mae = null;
