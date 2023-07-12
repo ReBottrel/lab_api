@@ -2,6 +2,7 @@
 
 @section('content')
     <div class="container alelos-compare">
+        <input type="hidden" name="" id="ordem_id" value="{{ $ordem->id }}">
         <div class="row justify-content-center align-items-center">
             <div class="col-2 bg-light border rounded text-center">
                 <h5>Compare alelos</h5>
@@ -187,14 +188,18 @@
         <div class="row" id="valores">
 
         </div>
-        <div class="d-none mt-2" id="salvar-btn">
+        <div class="mt-2" id="salvar-btn">
             <button class="btn btn-primary" type="button" id="salvar">SALVAR VALORES</button>
         </div>
     </div>
 </div>
-<div class="d-none" id="resultado">
+<div class="" id="resultado">
     <div class="mensagem px-5 pt-2">
-        <textarea class="form-control resultadoAnalise" id="obs" rows="3"></textarea>
+        <textarea class="form-control resultadoAnalise" id="obs" rows="3">
+@if ($laudo)
+{{ $laudo->conclusao }}
+@endif
+</textarea>
     </div>
     <div class="mb-3 px-5 pt-2">
         <label for="exampleFormControlTextarea1" class="form-label">Observação</label>
@@ -226,6 +231,54 @@
 @endsection
 @section('js')
 <script>
+    $(document).ready(function() {
+        var id = $('#ordem_id').val();
+        $.ajax({
+            url: `{{ url('/get-result-alelo') }}/ ${id}`,
+            type: 'GET',
+            data: {
+                _token: "{{ csrf_token() }}",
+            },
+            success: function(response) {
+                console.log(response);
+
+                const incluidosString = response.incluido ||
+                    '[]'; // Definir como string vazia se for null ou undefined
+                const excluidosString = response.excluido ||
+                    '[]'; // Definir como string vazia se for null ou undefined
+
+                const incluidos = JSON.parse(
+                    incluidosString); // Converter a string em array JavaScript
+                const excluidos = JSON.parse(
+                    excluidosString); // Converter a string em array JavaScript
+
+                // Verificar o tamanho do array mais longo entre incluidos e excluidos
+                const length = Math.max(incluidos.length, excluidos.length);
+
+                // Iterar com base no tamanho do array mais longo
+                for (let i = 0; i < length; i++) {
+                    const incluido = incluidos[i] ||
+                        ''; // Definir como string vazia se for null ou undefined
+                    const excluido = excluidos[i] ||
+                        ''; // Definir como string vazia se for null ou undefined
+
+                    const html = `<div class="row">
+                    <div class="col-6">
+                        <input class="form-control incluidos" name="incluidos[]" type="text" value="${incluido}">
+                    </div>
+                    <div class="col-6">
+                        <input class="form-control excluidos" name="excluidos[]" type="text" value="${excluido}">
+                    </div>
+                </div>`;
+                    $('#valores').append(html);
+                }
+            }
+        });
+    });
+
+
+
+
     $(document).ready(function() {
         $('.alelo1').keyup(function() {
             const id = $(this).data('id');
@@ -282,6 +335,7 @@
                 },
                 success: function(response) {
                     console.log(response);
+
                 }
             });
 
@@ -340,41 +394,49 @@
                 </div>`;
                         $('#valores').append(html);
                     } else {
-                        let incluidosMae = [];
-                        let excluidosMae = [];
+                        let incluidos = [];
+                        let excluidos = [];
 
-                        if (response.laudoMae !== null) {
-                            response.laudoMae.forEach(function(query) {
-                                incluidosMae.push(query.include == 'M' ? 'M' : '');
-                                excluidosMae.push(query.include == 'V' ? '' : (query
-                                    .include == '' ? 'M' : ''));
-                            });
+                        if (response.result && Array.isArray(response.result.incluido) &&
+                            Array.isArray(response.result.excluido)) {
+                            incluidos = response.result.incluido;
+                            excluidos = response.result.excluido;
+                        } else {
+                            let incluidosMae = response.laudoMae ? response.laudoMae.map(
+                                query => query.include === 'M' ? 'M' : '') : [];
+                            let excluidosMae = response.laudoMae ? response.laudoMae.map(
+                                query => query.include === 'V' ? '' : (query.include ===
+                                    '' ? 'M' : '')) : [];
+
+                            let incluidosPai = response.laudoPai ? response.laudoPai.map(
+                                query => query.include === 'P' ? 'P' : '') : [];
+                            let excluidosPai = response.laudoPai ? response.laudoPai.map(
+                                query => query.include === 'V' ? '' : (query.include ===
+                                    '' ? 'P' : '')) : [];
+
+                            let length = Math.max(incluidosMae.length, incluidosPai.length);
+                            for (let i = 0; i < length; i++) {
+                                incluidos.push(
+                                    `${incluidosMae[i] || ''}${incluidosPai[i] || ''}`);
+                                excluidos.push(
+                                    `${excluidosMae[i] || ''}${excluidosPai[i] || ''}`);
+                            }
                         }
 
-                        let incluidosPai = [];
-                        let excluidosPai = [];
-
-                        if (response.laudoPai !== null) {
-                            response.laudoPai.forEach(function(query) {
-                                incluidosPai.push(query.include == 'P' ? 'P' : '');
-                                excluidosPai.push(query.include == 'V' ? '' : (query
-                                    .include == '' ? 'P' : ''));
-                            });
-                        }
-
-                        let length = Math.max(incluidosMae.length, incluidosPai.length);
-
-                        for (let i = 0; i < length; i++) {
+                        for (let i = 0; i < incluidos.length; i++) {
                             const html = `<div class="row">
         <div class="col-6">
-            <input class="form-control incluidos" name="incluidos[]" type="text"  value="${incluidosMae[i] || ''}${incluidosPai[i] || ''}">
+            <input class="form-control incluidos" name="incluidos[]" type="text"  value="${incluidos[i] || ''}">
         </div>
         <div class="col-6">
-            <input class="form-control excluidos" name="excluidos[]" type="text" value="${excluidosMae[i] == 'M' ? 'M' : ''}${excluidosPai[i] == 'P' ? 'P' : ''}">
+            <input class="form-control excluidos" name="excluidos[]" type="text" value="${excluidos[i] || ''}">
         </div>
     </div>`;
                             $('#valores').append(html);
                         }
+
+
+
                     }
                     const msg = [
                         `Conclui-se que o produto ${response.animal.animal_name} não está qualificado pela genitora ${response.mae ? response.mae.animal_name : ''} (${response.mae && response.mae.number_definitive ? response.mae.number_definitive : '*****'}) e não está qualificado pelo genitor ${response.pai ? response.pai.animal_name : ''} (${response.pai && response.pai.number_definitive ? response.pai.number_definitive : '*****'}).`,

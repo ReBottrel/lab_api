@@ -13,6 +13,7 @@ use App\Models\OrderRequestPayment;
 use App\Http\Controllers\Controller;
 use App\Models\Alelo;
 use App\Models\DnaVerify;
+use App\Models\Laudo;
 use App\Models\Marcador;
 use App\Models\Result;
 use Picqer\Barcode\BarcodeGeneratorPNG;
@@ -216,6 +217,9 @@ class OrdemServicoController extends Controller
         $ordem = OrdemServico::find($id);
         $animal = Animal::with('alelos')->find($ordem->animal_id);
         $dna_verify = DnaVerify::where('animal_id', $ordem->animal_id)->first();
+        $laudo = Laudo::where('ordem_id', $id)
+            ->orderBy('id', 'desc')
+            ->first();
         $sigla = substr($animal->especies, 0, 3);
         $pai = null;
         $mae = null;
@@ -248,13 +252,17 @@ class OrdemServicoController extends Controller
         return response()->json($ordem);
     }
 
+
+
     public function analise(Request $request)
     {
         $ordem = OrdemServico::find($request->ordem);
         $animal = Animal::with('alelos')->find($ordem->animal_id);
         $dna_verify = DnaVerify::where('animal_id', $animal->id)->first();
         $sigla = substr($animal->especies, 0, 3);
-        $result = Result::where('ordem_servico', $ordem->id)->get();
+        $result = Result::where('ordem_servico', $ordem->id)
+            ->orderBy('id', 'desc')
+            ->first();
         $pai = null;
         $mae = null;
         switch ($dna_verify->verify_code) {
@@ -414,20 +422,11 @@ class OrdemServicoController extends Controller
     }
     public function getResult($id)
     {
-        $result = Result::find($id);
+        $result = Result::where('ordem_servico', $id)
+            ->orderBy('id', 'desc')
+            ->first();
 
-        $ordem = $result->ordem;
-        $incluidos = json_decode($result->incluidos);
-        $excluidos = json_decode($result->excluidos);
-
-        // Now, you have your data. Do whatever you want with it.
-        // For example, return it as a response to an AJAX call.
-
-        return response()->json([
-            'ordem' => $ordem,
-            'incluidos' => $incluidos,
-            'excluidos' => $excluidos,
-        ]);
+        return response()->json($result);
     }
     public function aleloUpdate(Request $request)
     {
