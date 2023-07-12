@@ -621,7 +621,7 @@
                     laboratório</span>
             </div>
             <div>
-                <strong>Observação</strong>
+                <strong>Observação:</strong>
                 <span>
                     O resultado da análise de vínculo genético apresentado aqui foi definido
                     com base nos seguintes laudos:
@@ -662,7 +662,7 @@
             </div>
 
             @php
-                setlocale(LC_TIME, 'ptb');
+                setlocale(LC_TIME, 'pt-br');
                 $date = \Carbon\Carbon::now();
                 $textDate = $date->formatLocalized('%d de %B de %Y');
             @endphp

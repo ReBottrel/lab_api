@@ -102,7 +102,7 @@ class ApiMangalargaController extends Controller
                 $existingAnimal = Animal::where('register_number_brand', $animal->rowidAnimal)->first();
                 if ($existingAnimal) {
                     $codlab = $this->generateUniqueCodlab('EQU');
-                    $existingAnimal->status = 1;
+                    // $existingAnimal->status = 1;
                     $existingAnimal->codlab = $codlab;
                     $existingAnimal->order_id = $order->id; // atualize o status como necessário
                     $existingAnimal->save();
@@ -221,7 +221,7 @@ class ApiMangalargaController extends Controller
                 $codlab = $this->generateUniqueCodlab('EQU');
                 $existingAnimal = Animal::where('register_number_brand', $animal->rowidAnimal)->first();
                 if ($existingAnimal) {
-                    $existingAnimal->status = 1;
+                    // $existingAnimal->status = 1;
                     $existingAnimal->codlab = $codlab;
                     $existingAnimal->order_id = $order->id; // atualize o status como necessário
                     $existingAnimal->save();
