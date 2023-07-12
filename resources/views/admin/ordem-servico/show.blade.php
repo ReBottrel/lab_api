@@ -58,7 +58,9 @@
                             <a href="#"> <button id="openModal" data-bs-toggle="modal"
                                     data-id="{{ $ordemServico->id }}" data-bs-target="#exampleModal"
                                     class="btn btn-primary"><i class="fa-solid fa-tag"></i>
-                                    Ler código de barras</button></a>
+                                    Data da entrada na area técnica</button></a>
+
+                                    
                         </div>
 
                     </div>

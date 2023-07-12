@@ -74,9 +74,11 @@ class OrdemServicoController extends Controller
                 ]);
             }
             $sigla = substr($animal->especies, 0, 3) ? substr($animal->especies, 0, 3) : 'EQU';
+            $codlab = $this->generateUniqueCodlab($sigla);
+
             if ($animal->codlab == null) {
                 $animal->update([
-                    'codlab' => $sigla . strval($this->generateUniqueCodlab()),
+                    'codlab' => $codlab,
                 ]);
             }
 
@@ -101,26 +103,22 @@ class OrdemServicoController extends Controller
 
         return response()->json('success', 200);
     }
-    private function generateUniqueCodlab()
+    private function generateUniqueCodlab($sigla)
     {
         $startValue = 100000;
-        $codlab = Animal::max('codlab');
+        $maxNumber = Animal::selectRaw('MAX(CAST(SUBSTRING(codlab, 4) AS UNSIGNED)) as max_num')
+            ->whereRaw('CAST(SUBSTRING(codlab, 4) AS UNSIGNED) >= 100000 AND CAST(SUBSTRING(codlab, 4) AS UNSIGNED) < 200000')
+            ->first();
 
-        if ($codlab >= $startValue) {
-            if (is_numeric($codlab)) {
-                $codlab = intval($codlab);
-            } else {
-                $codlab = $startValue;
-            }
-            $codlab += 1;
-        } else {
-            $codlab = $startValue;
+        if ($maxNumber !== null && $maxNumber->max_num !== null) {
+            $startValue = $maxNumber->max_num + 1;
         }
 
-
-        while (Animal::where('codlab', $codlab)->exists()) {
-            $codlab += 1;
+        while (Animal::where('codlab', '=', $sigla . strval($startValue))->exists()) {
+            $startValue += 1;
         }
+
+        $codlab = $sigla . strval($startValue);
 
         return $codlab;
     }
@@ -390,6 +388,32 @@ class OrdemServicoController extends Controller
         ]);
     }
 
+    public function aleloUpdate(Request $request)
+    {
+        $alelo = Alelo::find($request->id);
+        // dd($request->all());
+        $data = [];
+
+        if ($request->has('alelo1')) {
+            if (!is_null($request->alelo1)) {
+                $data['alelo1'] = strtoupper($request->alelo1);
+            } else {
+                $data['alelo1'] = null; // Define o valor de alelo1 como nulo
+            }
+        }
+
+        if ($request->has('alelo2')) {
+            if (!is_null($request->alelo2)) {
+                $data['alelo2'] = strtoupper($request->alelo2);
+            } else {
+                $data['alelo2'] = null; // Define o valor de alelo2 como nulo
+            }
+        }
+
+        $alelo->update($data);
+
+        return response()->json($alelo);
+    }
 
 
     public function gerarBarCode($id)
@@ -413,7 +437,6 @@ class OrdemServicoController extends Controller
 
         if (!$ordem) {
             return response()->json('Ordem não encontrada', 404);
-            
         }
 
         $ordemServicos = OrdemServico::where('lote', $ordem->id)->get();

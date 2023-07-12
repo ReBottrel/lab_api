@@ -120,16 +120,20 @@
                 @foreach ($animal->alelos as $item)
                     <div class="col-6">
                         @if ($item->alelo1 == '')
-                            <input class="form-control" type="text" value="*">
+                            <input class="form-control alelo1" data-id="{{ $item->id }}" type="text"
+                                value="*">
                         @else
-                            <input class="form-control" type="text" value="{{ $item->alelo1 }}">
+                            <input class="form-control alelo1" data-id="{{ $item->id }}" type="text"
+                                value="{{ $item->alelo1 }}">
                         @endif
                     </div>
                     <div class="col-6">
                         @if ($item->alelo2 == '')
-                            <input class="form-control" type="text" value="*">
+                            <input class="form-control alelo2" data-id="{{ $item->id }}" type="text"
+                                value="*">
                         @else
-                            <input class="form-control" type="text" value="{{ $item->alelo2 }}">
+                            <input class="form-control alelo2" data-id="{{ $item->id }}" type="text"
+                                value="{{ $item->alelo2 }}">
                         @endif
                     </div>
                 @endforeach
@@ -188,7 +192,7 @@
 </div>
 <div class="d-none" id="resultado">
     <div class="mensagem px-5 pt-2">
-
+        <textarea class="form-control resultadoAnalise" id="obs" rows="3"></textarea>
     </div>
     <div class="mb-3 px-5 pt-2">
         <label for="exampleFormControlTextarea1" class="form-label">Observação</label>
@@ -221,6 +225,45 @@
 @section('js')
 <script>
     $(document).ready(function() {
+        $('.alelo1').keyup(function() {
+            const id = $(this).data('id');
+            const alelo1 = $(this).val().toUpperCase(); // Transforma para maiúsculas
+            $.ajax({
+                url: "{{ route('alelo.update') }}",
+                type: 'POST',
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    id: id,
+                    alelo1: alelo1,
+                },
+                success: function(response) {
+                    console.log(response);
+                }
+            });
+        });
+
+        $('.alelo2').keyup(function() {
+            const id = $(this).data('id');
+            const alelo2 = $(this).val().toUpperCase(); // Transforma para maiúsculas
+            $.ajax({
+                url: "{{ route('alelo.update') }}",
+                type: 'POST',
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    id: id,
+                    alelo2: alelo2,
+                },
+                success: function(response) {
+                    console.log(response);
+                }
+            });
+        });
+    });
+
+
+
+
+    $(document).ready(function() {
         vMae = false;
         vPai = false;
         let msgs = [
@@ -236,7 +279,7 @@
         $('#analisar').click(function() {
             const ordem = $(this).data('ordem');
             $('#valores').html('');
-            $('.mensagem').html('');
+            $('.resultadoAnalise').html('');
             $.ajax({
                 url: "{{ route('alelo.analise') }}",
                 type: 'POST',
@@ -382,28 +425,28 @@
                     if (mptrue == true && mpfalse == false && naoExisteP == false &&
                         naoExisteM == false) {
 
-                        $('.mensagem').append(msg[3]);
+                        $('.resultadoAnalise').val(msg[3]);
 
                     } else if (mptrue == true && mpfalse == true) {
-                        $('.mensagem').append(msg[0]);
+                        $('.resultadoAnalise').val(msg[0]);
                     } else if (mptrue == true && naoExisteP == true) {
-                        $('.mensagem').append(msg[2]);
+                        $('.resultadoAnalise').val(msg[2]);
                     } else if (mptrue == true && naoExisteM == true) {
-                        $('.mensagem').append(msg[1]);
+                        $('.resultadoAnalise').val(msg[1]);
                     } else if (mptrue == false && naoExisteM == true && existeP == false &&
                         existeM == true) {
-                        $('.mensagem').append(msg[4]);
+                        $('.resultadoAnalise').val(msg[4]);
                     } else if (mptrue == false && naoExisteM == false && existeP == false &&
                         existeM == true) {
-                        $('.mensagem').append(msg[7]);
+                        $('.resultadoAnalise').val(msg[7]);
                     } else if (mptrue == false && naoExisteP == true && existeM == false &&
                         existeP == true) {
-                        $('.mensagem').append(msg[5]);
+                        $('.resultadoAnalise').val(msg[5]);
                     } else if (mptrue == false && naoExisteP == false && existeM == false &&
                         existeP == true) {
-                        $('.mensagem').append(msg[6]);
+                        $('.resultadoAnalise').val(msg[6]);
                     } else if (mptrue == false && mpfalse == false) {
-                        $('.mensagem').append();
+                        $('.resultadoAnalise').val();
                     }
 
 
@@ -585,7 +628,7 @@
         $('#gerar-laudo').click(function() {
             let ordem = $('#analisar').data('ordem');
             let obs = $('#obs').val();
-            let conclusao = $('.mensagem').html();
+            let conclusao = $('.resultadoAnalise').val();
             let laudo = $('#laudo').val();
             $.ajax({
                 url: "{{ route('gerar.laudo') }}",
