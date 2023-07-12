@@ -32,6 +32,10 @@
                                             class="btn btn-primary"><i class="fa-solid fa-eye"></i>
                                         </button></a>
                                 </div>
+                                <div class="col-4"><button type="button" class="btn btn-danger delete"
+                                        data-id="{{ $item->id }}"><i class="fa-solid fa-trash"></i>
+                                    </button>
+                                </div>
 
                             </div>
                         </td>
@@ -41,4 +45,44 @@
         </table>
         {{ $ordemServicos->links() }}
     </div>
+@endsection
+@section('js')
+    <script>
+        $(document).ready(function() {
+            $('.delete').click(function() {
+                var id = $(this).data('id');
+            
+                Swal.fire({
+                    title: 'Você tem certeza?',
+                    text: "Você não poderá reverter isso!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Sim, delete!',
+                    cancelButtonText: 'Cancelar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: "{{ route('ordem.delete') }}",
+                            type: "POST",
+                            data: {
+                                id: id,
+                                _token: "{{ csrf_token() }}"
+                            },
+                            success: function(response) {
+                                Swal.fire(
+                                    'Deletado!',
+                                    'Ordem de serviço deletada com sucesso.',
+                                    'success'
+                                )
+                                location.reload();
+                            }
+                        });
+                    }
+                });
+
+            });
+        });
+    </script>
 @endsection

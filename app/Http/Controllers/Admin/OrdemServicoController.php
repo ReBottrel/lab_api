@@ -406,4 +406,29 @@ class OrdemServicoController extends Controller
 
         return view('admin.ordem-servico.bar-code', get_defined_vars());
     }
+
+    public function delete(Request $request)
+    {
+        $ordem = OrderLote::find($request->id);
+
+        if (!$ordem) {
+            return response()->json('Ordem não encontrada', 404);
+            
+        }
+
+        $ordemServicos = OrdemServico::where('lote', $ordem->id)->get();
+
+        if ($ordemServicos->isEmpty()) {
+            // return response()->json('Não foram encontradas ordens de serviço relacionadas', 404);
+            $ordem->delete();
+        }
+
+        foreach ($ordemServicos as $ordemServico) {
+            $ordemServico->delete();
+        }
+
+        $ordem->delete();
+
+        return response()->json('Ordem e ordens de serviço relacionadas foram excluídas com sucesso', 200);
+    }
 }

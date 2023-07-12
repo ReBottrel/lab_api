@@ -146,6 +146,7 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::post('store-alelos-custom', [AlelosController::class, 'storeAlelo'])->name('alelos.store.custom');
 
     Route::post('data-bar-store', [OrdemServicoController::class, 'dataBarCode'])->name('data.bar.store');
+    Route::post('ordem-delete', [OrdemServicoController::class, 'delete'])->name('ordem.delete');
 
     Route::post('import-txt', [OrdemServicoController::class, 'importFile'])->name('import.txt');
     Route::get('alelo-compare/{id}', [OrdemServicoController::class, 'compareAlelo'])->name('alelo.compare');
