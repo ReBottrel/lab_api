@@ -202,7 +202,7 @@
 </div>
 <div class="@if (!$result) d-none @endif" id="resultado">
     <div class="mensagem px-5 pt-2">
-        <textarea class="form-control resultadoAnalise" id="obs" rows="3">
+        <textarea class="form-control resultadoAnalise" rows="3">
 @if ($laudo)
 {{ $laudo->conclusao }}
 @endif
