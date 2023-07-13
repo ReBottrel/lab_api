@@ -134,6 +134,7 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::post('gerar-laudo', [LaudoController::class, 'store'])->name('gerar.laudo');
     Route::get('ver-laudo/{id}', [LaudoController::class, 'show'])->name('ver.laudo');
     // Route::get('gerar-pdf', [TesteController::class, 'gerarPdf'])->name('gerar.pdf');
+    // Route::get('ver-pdf', [TesteController::class, 'verPdf'])->name('ver.pdf');
     Route::get('gerar-pdf/{id}', [LaudoController::class, 'gerarPdf'])->name('gerar.pdf');
     Route::get('validacao/{codigo}', [LaudoController::class, 'verify'])->name('verify.pdf');
     Route::post('finalizar-laudo', [LaudoController::class, 'finalizar'])->name('finalizar.laudo');
