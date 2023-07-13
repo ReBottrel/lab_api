@@ -657,17 +657,17 @@
                 <strong>Conclusão </strong>
                 {{ $laudo->conclusao }}
                 </p>
-                <br>
-                <span>As opiniões e interpretações expressas acima não fazem parte do escopo de acreditação deste
+               
+                <p>As opiniões e interpretações expressas acima não fazem parte do escopo de acreditação deste
                     laboratório
-                </span>
+                </p>
             </div>
             <div>
                 <strong>Observação:</strong><br>
-                <span>
+                <p>
                     O resultado da análise de vínculo genético apresentado aqui foi definido
                     com base nos seguintes laudos:
-                </span>
+                </p>
             </div>
             <div id="animalinfo mb-1">
                 <p class="spn">
