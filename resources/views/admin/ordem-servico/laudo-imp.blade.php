@@ -704,9 +704,9 @@
             </div>
 
             @php
-                setlocale(LC_TIME, 'pt-br');
+                setlocale(LC_TIME, 'pt_BR.utf8');
                 $date = \Carbon\Carbon::now();
-                $textDate = $date->format('d \d\e F \d\e Y');
+                $textDate = strftime('%d de %B de %Y', $date->timestamp);
             @endphp
             <p>Lagoa Santa, {{ $textDate }}</p>
             <p>Conferido, liberado e assinado eletronicamente por:</p>
