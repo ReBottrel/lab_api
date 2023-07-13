@@ -60,23 +60,30 @@
             <div class="col-2 bg-light border rounded">
                 <div class="d-flex flex-column text-center mt-2">
 
-                    @foreach ($animal->alelos as $key => $item)
+                    @php
+                        $marcadores = [];
+                    @endphp
+
+                    @foreach ($animal->alelos as $item)
                         @php
                             $marcadores[] = $item->marcador;
                         @endphp
+                    @endforeach
+
+                    @php
+                        sort($marcadores); // Ordenar os marcadores
+                    @endphp
+
+                    @foreach ($marcadores as $marcador)
                         <div>
                             <p>
-                                {{ $item->marcador }}
+                                {{ $marcador }}
                             </p>
                         </div>
                     @endforeach
 
-
                 </div>
             </div>
-            @php
-                $marcadores = array_values($marcadores); // Reindexar os marcadores
-            @endphp
             <div class="col-2 bg-light border rounded">
                 <div class="d-flex flex-column text-center mae">
                     <div class="row mt-2">
@@ -195,9 +202,10 @@
 </div>
 <div class="@if (!$result) d-none @endif" id="resultado">
     <div class="mensagem px-5 pt-2">
-        <textarea class="form-control resultadoAnalise" id="obs" rows="3">@if ($laudo){{ $laudo->conclusao }}
+        <textarea class="form-control resultadoAnalise" id="obs" rows="3">
+@if ($laudo)
+{{ $laudo->conclusao }}
 @endif
-
 </textarea>
     </div>
     <div class="mb-3 px-5 pt-2">
