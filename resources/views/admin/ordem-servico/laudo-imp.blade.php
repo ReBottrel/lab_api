@@ -417,7 +417,17 @@
             <div class="text-center">
                 <strong>RELATÓRIO DE ENSAIO</strong>
                 <br>
-                <strong>@if($examType == 'TR') Verificação de Parentesco com Mãe e Pai @elseif($examType == 'MD') Verificação de Parentesco com Mãe @elseif($examType == 'PD') Verificação de Parentesco com Pai @elseif($examType == 'GN') Genotipagem @endif</strong>
+                <strong>
+                    @if ($examType == 'TR')
+                        Verificação de Parentesco com Mãe e Pai
+                    @elseif($examType == 'MD')
+                        Verificação de Parentesco com Mãe
+                    @elseif($examType == 'PD')
+                        Verificação de Parentesco com Pai
+                    @elseif($examType == 'GN')
+                        Genotipagem
+                    @endif
+                </strong>
             </div>
             <div class="text-end">
                 <span><strong>Relat. n</strong>
@@ -445,14 +455,22 @@
                         <span>{{ $animal->breed ?? 'Não informado' }}</span>
                         <br>
                         <strong>Sexo:</strong>
-                        <span>{{ $animal->sex ?? 'Não informado' }}</span>
+                        <span>
+                            @if ($animal->sex == 'M')
+                                Macho
+                            @elseif($animal->sex == 'F')
+                                Fêmea
+                            @else
+                                Não informado
+                            @endif
+                        </span>
                         <br>
                         <strong>Cód. Barras:</strong>
                         <span>{{ $ordem->bar_code ?? 'Não informado' }}</span>
                         <br>
                         <strong>Endereço:</strong>
-                        <span>{{ $owner->address ?? 'Não informado' }}, {{ $owner->number ?? 'Não informado' }} 
-                            {{ $owner->complement }} - 
+                        <span>{{ $owner->address ?? 'Não informado' }}, {{ $owner->number ?? 'Não informado' }}
+                            {{ $owner->complement }} -
                             {{ $owner->city ?? 'Não informado' }} -
                             {{ $owner->state ?? 'Não informado' }}
                         </span>
@@ -461,13 +479,19 @@
                 <div class="content_2">
                     <p>
                         <strong>Tipo Amostra:</strong>
-                        <span>{{ $datas->tipo ?? 'Não informado' }}</span>
+                        <span>
+                            @if ($datas->tipo == 1)
+                                Pelo
+                            @else
+                                {{ $datas->tipo ?? 'Não informado' }}
+                            @endif
+                        </span>
                         <br>
                         <strong>Espécie:</strong>
                         <span>{{ $animal->especies ?? 'Não informado' }}</span>
                         <br>
                         <strong>Data de Nascimento:</strong>
-                        <span>{{ date( 'd/m/Y' , strtotime($animal->birth_date)) ?? 'Não informado' }}</span>
+                        <span>{{ date('d/m/Y', strtotime($animal->birth_date)) ?? 'Não informado' }}</span>
                         <br>
                         <strong>Código Interno:</strong>
                         <span>{{ $animal->codlab ?? 'Não informado' }}</span>
@@ -489,7 +513,7 @@
                     <span>{{ $datas->data_recebimento }}</span>
                     <br>
                     <strong>Data de Entrada na Área Técnica:</strong>
-                    <span>{{ date( 'd/m/Y' , strtotime($ordem->data_bar)) }}</span>
+                    <span>{{ date('d/m/Y', strtotime($ordem->data_bar)) }}</span>
                     <br>
                     <strong>OBSERVAÇÃO:</strong>
                     <span>A amostragem foi de exclusiva responsabilidade do cliente.</span>
@@ -503,7 +527,7 @@
             <div class="content_4">
                 <p>
                     <strong>Data da Realização:</strong>
-                    <span>{{date( 'd/m/Y' , strtotime($ordem->data_analise)) }}</span>
+                    <span>{{ date('d/m/Y', strtotime($ordem->data_analise)) }}</span>
                     <br>
                     <strong>Metodologia Utilizada:</strong>
                     <span>
@@ -562,57 +586,73 @@
                                 <th>Alelos</th>
                             @endif
                         </tr>
-                        @foreach ($animal->alelos as $key => $item)
+                        @php
+                            $dados = [];
+                            
+                            foreach ($animal->alelos as $item) {
+                                $alelo_mae = $mae != null ? $mae->alelos->firstWhere('marcador', $item->marcador) : null;
+                                $alelo_pai = $pai != null ? $pai->alelos->firstWhere('marcador', $item->marcador) : null;
+                                $dados[] = [
+                                    'marcador' => $item->marcador,
+                                    'alelo_animal' => [$item->alelo1, $item->alelo2],
+                                    'alelo_mae' => $alelo_mae != null ? [$alelo_mae->alelo1, $alelo_mae->alelo2] : [null, null],
+                                    'alelo_pai' => $alelo_pai != null ? [$alelo_pai->alelo1, $alelo_pai->alelo2] : [null, null],
+                                ];
+                            }
+                            
+                            usort($dados, function ($a, $b) {
+                                return strcmp($a['marcador'], $b['marcador']);
+                            });
+                        @endphp
+
+                        @foreach ($dados as $item)
                             <tr>
-                                <td>{{ $item->marcador }}</td>
-                                @if ($mae != null)
-                                    <td>
-
-                                        @if ($mae->alelos[$key]->alelo1 == '')
-                                            *
-                                        @else
-                                            {{ $mae->alelos[$key]->alelo1 }}
-                                            @endif - @if ($mae->alelos[$key]->alelo2 == '')
-                                                *
-                                            @else
-                                                {{ $mae->alelos[$key]->alelo2 }}
-                                            @endif
-
-                                    </td>
-                                @endif
+                                <td>{{ $item['marcador'] }}</td>
                                 <td>
-                                    @if ($item->alelo1 == '')
+                                    @if ($item['alelo_mae'][0] == '')
                                         *
                                     @else
-                                        {{ $item->alelo1 }}
-                                        @endif - @if ($item->alelo2 == '')
-                                            *
-                                        @else
-                                            {{ $item->alelo2 }}
-                                        @endif
+                                        {{ $item['alelo_mae'][0] }}
+                                    @endif -
+                                    @if ($item['alelo_mae'][1] == '')
+                                        *
+                                    @else
+                                        {{ $item['alelo_mae'][1] }}
+                                    @endif
                                 </td>
-                                @if ($pai != null)
-                                    <td>
-
-                                        @if ($pai->alelos[$key]->alelo1 == '')
-                                            *
-                                        @else
-                                            {{ $pai->alelos[$key]->alelo1 }}
-                                            @endif - @if ($pai->alelos[$key]->alelo2 == '')
-                                                *
-                                            @else
-                                                {{ $pai->alelos[$key]->alelo2 }}
-                                            @endif
-
-                                    </td>
-                                @endif
+                                <td>
+                                    @if ($item['alelo_animal'][0] == '')
+                                        *
+                                    @else
+                                        {{ $item['alelo_animal'][0] }}
+                                    @endif -
+                                    @if ($item['alelo_animal'][1] == '')
+                                        *
+                                    @else
+                                        {{ $item['alelo_animal'][1] }}
+                                    @endif
+                                </td>
+                                <td>
+                                    @if ($item['alelo_pai'][0] == '')
+                                        *
+                                    @else
+                                        {{ $item['alelo_pai'][0] }}
+                                    @endif -
+                                    @if ($item['alelo_pai'][1] == '')
+                                        *
+                                    @else
+                                        {{ $item['alelo_pai'][1] }}
+                                    @endif
+                                </td>
                             </tr>
                         @endforeach
+
+
 
                     </tbody>
                 </table>
             </div>
-            <div>
+            <div id="animalinfo mb-1">
                 <strong>Conclusão</strong>
                 <span>
                     {{ $laudo->conclusao }}
@@ -631,13 +671,15 @@
                 <p class="spn">
                     @if ($mae != null)
                         <span>
-                            GENITORA: animal {{ $mae->animal_name }}, número {{ $mae->identificador }}, emitido pelo laboratório
+                            GENITORA: animal {{ $mae->animal_name }}, número {{ $mae->identificador }}, emitido pelo
+                            laboratório
                             {{ $mae->alelos[0]->lab }} em {{ date('d/m/Y', strtotime($mae->alelos[0]->data)) }}.
                         </span>
                     @endif
                     <br>
                     <span>
-                        FILHO(A): animal {{ $animal->animal_name }}, número {{ $animal->identificador }}, emitido pelo laboratório
+                        FILHO(A): animal {{ $animal->animal_name }}, número {{ $animal->identificador }}, emitido pelo
+                        laboratório
                         {{ $animal->alelos[0]->lab }} em {{ date('d/m/Y', strtotime($animal->alelos[0]->data)) }}.
 
                     </span>
@@ -684,7 +726,17 @@
                 </p>
             </div>
             <div class="rodape">
-                <span style="float: left;">@if($examType == 'TR') FOR.LRE.02 v.03 @elseif($examType == 'MD') FOR.LRE.02 v.01 @elseif($examType == 'PD') FOR.LRE.01 v.02 @elseif($examType == 'GN') FOR.LRE.01 v.03 @endif</span>
+                <span style="float: left;">
+                    @if ($examType == 'TR')
+                        FOR.LRE.02 v.03
+                    @elseif($examType == 'MD')
+                        FOR.LRE.02 v.01
+                    @elseif($examType == 'PD')
+                        FOR.LRE.01 v.02
+                    @elseif($examType == 'GN')
+                        FOR.LRE.01 v.03
+                    @endif
+                </span>
                 <span style="float: none; margin: 0 auto; text-align:center;">Documento assinado eletronicamente por
                     LOCI BIOTECNOLOGIA LTDA, em {{ date('d/m/Y H:i:s') }}</span>
                 <span style="float: right;">Página 1 de 1</span>

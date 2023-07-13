@@ -74,7 +74,17 @@
                     <strong>RELATÓRIO DE ENSAIO</strong>
                 </h5>
                 <h6>
-                    <strong>@if($examType == 'TR') Verificação de Parentesco com Mãe e Pai @elseif($examType == 'MD') Verificação de Parentesco com Mãe @elseif($examType == 'PD') Verificação de Parentesco com Pai @elseif($examType == 'GN') Genotipagem @endif</strong>
+                    <strong>
+                        @if ($examType == 'TR')
+                            Verificação de Parentesco com Mãe e Pai
+                        @elseif($examType == 'MD')
+                            Verificação de Parentesco com Mãe
+                        @elseif($examType == 'PD')
+                            Verificação de Parentesco com Pai
+                        @elseif($examType == 'GN')
+                            Genotipagem
+                        @endif
+                    </strong>
                 </h6>
             </div>
             <div class="col-3 text-end">
@@ -136,8 +146,8 @@
             <div class="col-4">
                 <strong>Tipo Amostra:</strong>
                 <span>
-                  {{ $datas->tipo }} 
-                  
+                    {{ $datas->tipo }}
+
                 </span>
             </div>
             <div class="col-4">
@@ -154,7 +164,7 @@
             </div>
             <div class="col-4 offset-4">
                 <strong>Data de Entrada na Área Técnica:</strong>
-                <span>{{ date( 'd/m/Y' , strtotime($ordem->data_bar)) }}</span>
+                <span>{{ date('d/m/Y', strtotime($ordem->data_bar)) }}</span>
             </div>
             <div class="col-12">
                 <strong>OBSERVAÇÃO:</strong>
@@ -166,7 +176,7 @@
 
             <div class="col-12">
                 <strong>Data da Realização:</strong>
-                <span>{{date( 'd/m/Y' , strtotime($ordem->data_analise)) }}</span>
+                <span>{{ date('d/m/Y', strtotime($ordem->data_analise)) }}</span>
             </div>
             <div class="col-12">
                 <strong>Metodologia Utilizada:</strong>
@@ -223,52 +233,67 @@
                             <th scope="row">Alelos</th>
                         @endif
                     </tr>
-                    @foreach ($animal->alelos as $key => $item)
+                    @php
+                        $dados = [];
+                        
+                        foreach ($animal->alelos as $item) {
+                            $alelo_mae = $mae != null ? $mae->alelos->firstWhere('marcador', $item->marcador) : null;
+                            $alelo_pai = $pai != null ? $pai->alelos->firstWhere('marcador', $item->marcador) : null;
+                            $dados[] = [
+                                'marcador' => $item->marcador,
+                                'alelo_animal' => [$item->alelo1, $item->alelo2],
+                                'alelo_mae' => $alelo_mae != null ? [$alelo_mae->alelo1, $alelo_mae->alelo2] : [null, null],
+                                'alelo_pai' => $alelo_pai != null ? [$alelo_pai->alelo1, $alelo_pai->alelo2] : [null, null],
+                            ];
+                        }
+                        
+                        usort($dados, function ($a, $b) {
+                            return strcmp($a['marcador'], $b['marcador']);
+                        });
+                    @endphp
+
+                    @foreach ($dados as $item)
                         <tr>
-                            <td>{{ $item->marcador }}</td>
-                            @if ($mae != null)
-                                <td>
-
-                                    @if ($mae->alelos[$key]->alelo1 == '')
-                                        *
-                                    @else
-                                        {{ $mae->alelos[$key]->alelo1 }}
-                                        @endif - @if ($mae->alelos[$key]->alelo2 == '')
-                                            *
-                                        @else
-                                            {{ $mae->alelos[$key]->alelo2 }}
-                                        @endif
-
-                                </td>
-                            @endif
+                            <td>{{ $item['marcador'] }}</td>
                             <td>
-                                @if ($item->alelo1 == '')
+                                @if ($item['alelo_mae'][0] == '')
                                     *
                                 @else
-                                    {{ $item->alelo1 }}
-                                    @endif - @if ($item->alelo2 == '')
-                                        *
-                                    @else
-                                        {{ $item->alelo2 }}
-                                    @endif
+                                    {{ $item['alelo_mae'][0] }}
+                                @endif -
+                                @if ($item['alelo_mae'][1] == '')
+                                    *
+                                @else
+                                    {{ $item['alelo_mae'][1] }}
+                                @endif
                             </td>
-                            @if ($pai != null)
-                                <td>
-
-                                    @if ($pai->alelos[$key]->alelo1 == '')
-                                        *
-                                    @else
-                                        {{ $pai->alelos[$key]->alelo1 }}
-                                        @endif - @if ($pai->alelos[$key]->alelo2 == '')
-                                            *
-                                        @else
-                                            {{ $pai->alelos[$key]->alelo2 }}
-                                        @endif
-
-                                </td>
-                            @endif
+                            <td>
+                                @if ($item['alelo_animal'][0] == '')
+                                    *
+                                @else
+                                    {{ $item['alelo_animal'][0] }}
+                                @endif -
+                                @if ($item['alelo_animal'][1] == '')
+                                    *
+                                @else
+                                    {{ $item['alelo_animal'][1] }}
+                                @endif
+                            </td>
+                            <td>
+                                @if ($item['alelo_pai'][0] == '')
+                                    *
+                                @else
+                                    {{ $item['alelo_pai'][0] }}
+                                @endif -
+                                @if ($item['alelo_pai'][1] == '')
+                                    *
+                                @else
+                                    {{ $item['alelo_pai'][1] }}
+                                @endif
+                            </td>
                         </tr>
                     @endforeach
+
 
                 </tbody>
             </table>
