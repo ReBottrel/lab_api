@@ -663,7 +663,7 @@
                 </span>
             </div>
             <div>
-                <strong>Observação:</strong>
+                <strong>Observação:</strong><br>
                 <span>
                     O resultado da análise de vínculo genético apresentado aqui foi definido
                     com base nos seguintes laudos:
@@ -713,7 +713,7 @@
                 $textDate = str_replace(['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'], ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'], $textDate);
 
             @endphp
-            <p>Lagoa Santa, {{ $textDate }}</p>
+            <p>Lagoa Santa<br> {{ $textDate }}</p>
             <p>Conferido, liberado e assinado eletronicamente por:</p>
             <div class="assinatura text-center">
                 <img
