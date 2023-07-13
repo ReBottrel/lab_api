@@ -68,10 +68,10 @@ class TesteController extends Controller
         // Gera o PDF e envia para o navegador
         $dompdf->stream('documento.pdf');
     }
-    // public function verPdf()
-    // {
-    //     return view('admin.ordem-servico.laudo-imp-teste');
-    // }
+    public function verPdf()
+    {
+        return view('admin.ordem-servico.laudo-imp-teste');
+    }
 
     public function updateStatus()
     {
@@ -120,7 +120,7 @@ class TesteController extends Controller
             $updates[$animal->id] = ['codlab' => $newCodlab];
             $startValue += 1;
         }
- 
+
         DB::beginTransaction();
         try {
             foreach ($updates as $id => $update) {
@@ -129,7 +129,7 @@ class TesteController extends Controller
             DB::commit();
         } catch (\Exception $e) {
             DB::rollback();
-          
+
             throw $e;
         }
     }

@@ -635,9 +635,15 @@
                 </table>
             </div>
             <div>
-                <strong>Conclusão</strong>
-                <span>
-                    {{ $laudo->conclusao ?? 'conclusao' }}
+                <p>
+                    <strong>Conclusão</strong>
+                        Conclui-se que o produto BLACK DAS AROEIRA VA está qualificado pela genitora DELICIA DA PEDRA
+                        MONTADA (0160099) e não está qualificado pelo
+                        genitor CATUNI BROCHE (32591).
+                        {{-- {{ $laudo->conclusao}} --}}
+                </p>
+                <span>As opiniões e interpretações expressas acima não fazem parte do escopo de acreditação deste
+                    laboratório
                 </span>
             </div>
             <div>
@@ -701,7 +707,8 @@
 
             <div class="rodape">
                 <span style="float: left;">FOR.LRE.02 v.03</span>
-                <span style="float: none; margin: 0 auto; text-align:center;">Documento assinado eletronicamente por LOCI BIOTECNOLOGIA LTDA, em {{ date('d/m/Y H:i:s') }}</span>
+                <span style="float: none; margin: 0 auto; text-align:center;">Documento assinado eletronicamente por
+                    LOCI BIOTECNOLOGIA LTDA, em {{ date('d/m/Y H:i:s') }}</span>
                 <span style="float: right;">Página 1 de 1</span>
             </div>
         </div>

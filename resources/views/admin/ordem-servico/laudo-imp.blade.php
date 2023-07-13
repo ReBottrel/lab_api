@@ -588,7 +588,7 @@
                         </tr>
                         @php
                             $dados = [];
-                            
+
                             foreach ($animal->alelos as $item) {
                                 $alelo_mae = $mae != null ? $mae->alelos->firstWhere('marcador', $item->marcador) : null;
                                 $alelo_pai = $pai != null ? $pai->alelos->firstWhere('marcador', $item->marcador) : null;
@@ -599,7 +599,7 @@
                                     'alelo_pai' => $alelo_pai != null ? [$alelo_pai->alelo1, $alelo_pai->alelo2] : [null, null],
                                 ];
                             }
-                            
+
                             usort($dados, function ($a, $b) {
                                 return strcmp($a['marcador'], $b['marcador']);
                             });
@@ -653,12 +653,14 @@
                 </table>
             </div>
             <div id="animalinfo mb-1">
-                <strong>Conclusão</strong>
-                <span>
-                    {{ $laudo->conclusao }}
-                </span> <br>
+                <p>
+                <strong>Conclusão </strong>
+                {{ $laudo->conclusao }}
+                </p>
+                <br>
                 <span>As opiniões e interpretações expressas acima não fazem parte do escopo de acreditação deste
-                    laboratório</span>
+                    laboratório
+                </span>
             </div>
             <div>
                 <strong>Observação:</strong>
@@ -705,11 +707,11 @@
 
             @php
                 setlocale(LC_TIME, 'pt_BR.utf8');
-                
+
                 $date = new DateTime();
                 $textDate = $date->format('d \d\e F \d\e Y');
                 $textDate = str_replace(['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'], ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'], $textDate);
-                
+
             @endphp
             <p>Lagoa Santa, {{ $textDate }}</p>
             <p>Conferido, liberado e assinado eletronicamente por:</p>
