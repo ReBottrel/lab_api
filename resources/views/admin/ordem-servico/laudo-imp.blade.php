@@ -705,8 +705,11 @@
 
             @php
                 setlocale(LC_TIME, 'pt_BR.utf8');
-                $date = \Carbon\Carbon::now();
-                $textDate = strftime('%d de %B de %Y', $date->timestamp);
+                
+                $date = new DateTime();
+                $textDate = $date->format('d \d\e F \d\e Y');
+                $textDate = str_replace(['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'], ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'], $textDate);
+                
             @endphp
             <p>Lagoa Santa, {{ $textDate }}</p>
             <p>Conferido, liberado e assinado eletronicamente por:</p>
