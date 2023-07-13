@@ -64,7 +64,8 @@ class AlelosController extends Controller
             $animal = Animal::where('animal_name', $animalData['nomeAnimal'])->first();
             $marcadores = Marcador::where('especie', 'EQUINA')->get();
             if (!$animal) {
-                $randomNumber = mt_rand(0, 1000000);
+                $sigla = 'EQU';
+                $codlab = $this->generateUniqueCodlab($sigla);
 
                 // Cria um novo animal no banco de dados
                 $animal = Animal::create([
@@ -75,7 +76,8 @@ class AlelosController extends Controller
                     'birth_date' => $animalData['dataNascimento'],
                     'number_definitive' => $animalData['registro'],
                     'status' => 1,
-                    'codlab' => 'EQU' . $randomNumber,
+                    'codlab' => $codlab,
+                    'identificador' => $exameData['Código'] ?? null,
                 ]);
             }
             if ($exameData['alelos'] != null) {
@@ -114,6 +116,25 @@ class AlelosController extends Controller
         }
 
         return response()->json(['error' => 'erro']);
+    }
+    private function generateUniqueCodlab($sigla)
+    {
+        $startValue = 100000;
+        $maxNumber = Animal::selectRaw('MAX(CAST(SUBSTRING(codlab, 4) AS UNSIGNED)) as max_num')
+            ->whereRaw('CAST(SUBSTRING(codlab, 4) AS UNSIGNED) >= 100000 AND CAST(SUBSTRING(codlab, 4) AS UNSIGNED) < 200000')
+            ->first();
+
+        if ($maxNumber !== null && $maxNumber->max_num !== null) {
+            $startValue = $maxNumber->max_num + 1;
+        }
+
+        while (Animal::where('codlab', '=', $sigla . strval($startValue))->exists()) {
+            $startValue += 1;
+        }
+
+        $codlab = $sigla . strval($startValue);
+
+        return $codlab;
     }
 
     public function getAnimal(Request $request)

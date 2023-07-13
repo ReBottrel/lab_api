@@ -194,6 +194,9 @@ class OrdemServicoController extends Controller
                                 'alelo1' => $alelo1,
                                 'alelo2' => $alelo2,
                             ]);
+                            $animal->update([
+                                'identificador' =>  'LO23-' . substr($animal->codlab, 3)
+                            ]);
                         }
                     } else {
                         // Tratar o caso em que a colunsa não existe
