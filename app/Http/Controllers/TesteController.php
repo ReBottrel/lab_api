@@ -3,8 +3,14 @@
 namespace App\Http\Controllers;
 
 use Dompdf\Dompdf;
+use App\Models\Laudo;
 use App\Models\Owner;
 use App\Models\Animal;
+use App\Models\QrCode;
+use App\Models\Tecnico;
+use App\Models\DnaVerify;
+use App\Models\DataColeta;
+use App\Models\OrdemServico;
 use App\Models\OrderRequest;
 use App\Models\PedidoAnimal;
 use Illuminate\Http\Request;
@@ -132,5 +138,37 @@ class TesteController extends Controller
 
             throw $e;
         }
+    }
+
+    public function pdfLaudo($id)
+    {
+        $laudo = Laudo::find($id);
+        $animal = Animal::find($laudo->animal_id);
+        $owner = Owner::find($laudo->owner_id);
+        $datas = DataColeta::where('id_animal', $laudo->animal_id)->first();
+        $tecnico = Tecnico::find($laudo->veterinario_id);
+        $dna_verify = DnaVerify::where('animal_id', $animal->id)->first();
+        $sigla = substr($animal->especies, 0, 3);
+        $examType = substr($dna_verify->verify_code, 3, 2);
+        $ordem = OrdemServico::where('animal_id', $laudo->animal_id)->latest()->first();
+        $pai = null;
+        $mae = null;
+        switch ($dna_verify->verify_code) {
+            case $sigla . 'PD':
+                $pai = Animal::with('alelos')->find($laudo->pai_id);
+                break;
+            case $sigla . 'MD':
+                $mae = Animal::with('alelos')->find($laudo->mae_id);
+                break;
+            case $sigla . 'TR':
+                $pai = Animal::with('alelos')->find($laudo->pai_id);
+                $mae = Animal::with('alelos')->find($laudo->mae_id);
+                break;
+            default:
+                break;
+        }
+        $qrCode = QrCode::where('laudo_id', $laudo->id)->first();
+
+        return view('admin.ordem-servico.laudo-imp', get_defined_vars());
     }
 }
