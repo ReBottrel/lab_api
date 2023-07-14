@@ -729,7 +729,6 @@
                     <br>
                     <span>
                         FILHO(A): animal {{ $animal->animal_name }}, número {{ $animal->identificador }}, emitido pelo
-                        Loci Genética Laboratorial
                         {{ $animal->alelos[0]->lab }} em {{ date('d/m/Y', strtotime($animal->alelos[0]->data)) }}.
 
                     </span>
