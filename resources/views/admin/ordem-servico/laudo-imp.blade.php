@@ -446,7 +446,7 @@
                         33239-206 Tel: (31) 3681-4331 – e-mail: atendimento@locilab.com.br
                     </p>
                 </div>
-                <div class="qr">
+                {{-- <div class="qr">
                     <img width="66" height="66" src="data:image/png;base64,{{ $qrCode->qrcode ?? '' }}" />
                     <p>
                         Utilize um leitor de QRCode ou acesse o site:
@@ -454,7 +454,7 @@
                         para validar este laudo.
                     </p>
 
-                </div>
+                </div> --}}
             </div>
 
 
