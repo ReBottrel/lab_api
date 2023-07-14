@@ -510,4 +510,19 @@ class OrdemServicoController extends Controller
 
         return response()->json('Ordem e ordens de serviço relacionadas foram excluídas com sucesso', 200);
     }
+    public function searchByOrder(Request $request)
+    {
+        if ($request->ajax()) {
+            $busca = $request->busca;
+    
+            $ordemServicos = OrderLote::where('order_id', $busca)
+                ->orWhere('owner', 'LIKE', '%' . $busca . '%')
+                ->get();
+    
+            $viewRender = view('admin.ordem-servico.include.search', compact('ordemServicos'))->render();
+    
+            return response()->json(['viewRender' => $viewRender]);
+        }
+    }
+    
 }

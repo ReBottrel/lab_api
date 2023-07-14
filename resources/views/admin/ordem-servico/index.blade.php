@@ -7,7 +7,7 @@
         <div class="row">
             <div class="mb-3 col-6">
                 <label for="exampleFormControlInput1" class="form-label">Buscar por proprietário ou por numero</label>
-                <input type="text" class="form-control">
+                <input type="text" class="form-control" id="busca">
             </div>
         </div>
         <table class="table">
@@ -19,7 +19,7 @@
                     <th>Ação</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody class="table-busca">
                 @foreach ($ordemServicos as $item)
                     <tr>
                         <th scope="row">{{ $item->order_id }}</th>
@@ -51,7 +51,7 @@
         $(document).ready(function() {
             $('.delete').click(function() {
                 var id = $(this).data('id');
-            
+
                 Swal.fire({
                     title: 'Você tem certeza?',
                     text: "Você não poderá reverter isso!",
@@ -82,6 +82,28 @@
                     }
                 });
 
+            });
+            $('#busca').keyup(function() {
+                var busca = $(this).val();
+
+                if (busca === '') {
+                    // Ação a ser realizada quando o campo de busca estiver vazio
+                    // Por exemplo, recarregar a página ou redefinir os resultados da busca
+                    $('.table-busca').html(''); // Limpa os resultados da busca
+                    return; // Sai da função para evitar a requisição AJAX
+                }
+
+                $.ajax({
+                    url: "{{ route('ordem.search') }}",
+                    type: "POST",
+                    data: {
+                        busca: busca,
+                        _token: "{{ csrf_token() }}"
+                    },
+                    success: function(response) {
+                        $('.table-busca').html(response.viewRender);
+                    }
+                });
             });
         });
     </script>
