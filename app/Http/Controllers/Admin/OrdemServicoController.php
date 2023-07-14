@@ -193,6 +193,8 @@ class OrdemServicoController extends Controller
                                 'marcador' => $marcador,
                                 'alelo1' => $alelo1,
                                 'alelo2' => $alelo2,
+                                'lab' => 'Loci Genética Laboratorial',
+                                'data' => Carbon::now(),
                             ]);
                             $animal->update([
                                 'identificador' =>  'LO23-' . substr($animal->codlab, 3)
