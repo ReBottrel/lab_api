@@ -63,8 +63,8 @@
 
                         </div>
                         <div class="mx-2">
-                            <button type="button" id="dataAnalise" data-id="{{ $ordemServico->id }}"
-                                class="btn btn-primary"><i class="fa-solid fa-tag"></i>
+                            <button type="button" id="dataAnalise" data-bs-toggle="modal" data-bs-target="#modalData"
+                                data-id="{{ $ordemServico->id }}" class="btn btn-primary"><i class="fa-solid fa-tag"></i>
                                 Data da análise</button>
                         </div>
 
@@ -95,6 +95,32 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
                         <button type="button" class="btn btn-primary" id="enviar">Salvar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="modalData" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Inserir data da análise</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form>
+                    @csrf
+                    <input type="hidden" name="ordem_id" id="id">
+                    <div class="modal-body">
+                        <div class="mb-3 col-4">
+                            <label for="formFile" class="form-label">Data da análise</label>
+                            <input class="form-control" name="file" id="dataAn" type="date">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                        <button type="button" class="btn btn-primary" id="save">Salvar apenas um</button>
+                        {{-- <button type="button" class="btn btn-primary" id="replicar">Replicar para todos</button> --}}
                     </div>
                 </form>
             </div>
@@ -141,15 +167,24 @@
         });
         $(document).on('click', '#dataAnalise', function() {
             let id = $(this).data('id');
+            $('#id').val(id);
+
+        });
+        $(document).on('click', '#save', function() {
+            let data = $('#dataAn').val();
+            let id = $('#id').val();
+
             $.ajax({
                 url: "{{ route('data.analise') }}",
                 type: 'POST',
                 data: {
                     _token: "{{ csrf_token() }}",
                     id: id,
+                    data: data
                 },
                 success: function(data) {
                     console.log(data);
+                    $('#modalData').modal('hide');
                     Swal.fire({
                         icon: 'success',
                         title: 'Sucesso!',
@@ -159,5 +194,6 @@
 
             });
         });
+      
     </script>
 @endsection

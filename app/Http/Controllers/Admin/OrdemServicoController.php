@@ -465,9 +465,10 @@ class OrdemServicoController extends Controller
 
     public function dataAnalise(Request $request)
     {
+        // dd($request->all());    
         $ordem = OrdemServico::find($request->id);
         $ordem->update([
-            'data_analise' =>  Carbon::now(),
+            'data_analise' =>  $request->data,
         ]);
         return response()->json($ordem);
     }

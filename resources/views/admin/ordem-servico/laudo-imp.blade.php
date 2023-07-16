@@ -469,7 +469,7 @@
                     @elseif($examType == 'PD')
                         Verificação de Parentesco com Pai
                     @elseif($examType == 'GN')
-                        Genotipagem
+                        DNA Genotipagem
                     @endif
                 </strong>
             </div>
@@ -655,18 +655,22 @@
                             @foreach ($dados as $item)
                                 <tr>
                                     <td>{{ $item['marcador'] }}</td>
-                                    <td>
-                                        @if ($item['alelo_mae'][0] == '')
-                                            *
-                                        @else
-                                            {{ $item['alelo_mae'][0] }}
-                                        @endif -
-                                        @if ($item['alelo_mae'][1] == '')
-                                            *
-                                        @else
-                                            {{ $item['alelo_mae'][1] }}
-                                        @endif
-                                    </td>
+
+                                    @if ($mae != null)
+                                        <td>
+                                            @if ($item['alelo_mae'][0] == '')
+                                                *
+                                            @else
+                                                {{ $item['alelo_mae'][0] }}
+                                            @endif -
+                                            @if ($item['alelo_mae'][1] == '')
+                                                *
+                                            @else
+                                                {{ $item['alelo_mae'][1] }}
+                                            @endif
+                                        </td>
+                                    @endif
+
                                     <td>
                                         @if ($item['alelo_animal'][0] == '')
                                             *
@@ -679,20 +683,25 @@
                                             {{ $item['alelo_animal'][1] }}
                                         @endif
                                     </td>
-                                    <td>
-                                        @if ($item['alelo_pai'][0] == '')
-                                            *
-                                        @else
-                                            {{ $item['alelo_pai'][0] }}
-                                        @endif -
-                                        @if ($item['alelo_pai'][1] == '')
-                                            *
-                                        @else
-                                            {{ $item['alelo_pai'][1] }}
-                                        @endif
-                                    </td>
+
+                                    @if ($pai != null)
+                                        <td>
+                                            @if ($item['alelo_pai'][0] == '')
+                                                *
+                                            @else
+                                                {{ $item['alelo_pai'][0] }}
+                                            @endif -
+                                            @if ($item['alelo_pai'][1] == '')
+                                                *
+                                            @else
+                                                {{ $item['alelo_pai'][1] }}
+                                            @endif
+                                        </td>
+                                    @endif
+
                                 </tr>
                             @endforeach
+
 
 
 
@@ -700,58 +709,61 @@
                     </table>
                 </div>
             </div>
-            <div id="animalinfo">
-                <p>
-                    <strong>Conclusão </strong>
-                    {{ $laudo->conclusao }}
-                </p>
+            @if ($examType != 'GN')
+                <div id="animalinfo">
+                    <p>
+                        <strong>Conclusão </strong>
+                        {{ $laudo->conclusao }}
+                    </p>
 
-                <p>As opiniões e interpretações expressas acima não fazem parte do escopo de acreditação deste
-                    laboratório.
-                </p>
-            </div>
-            <div>
-                <strong>Observação:</strong><br>
-                <p>
-                    O resultado da análise de vínculo genético apresentado aqui foi definido
-                    com base nos seguintes laudos:
-                </p>
-            </div>
-            <div id="animalinfo mb-1">
-                <p class="spn">
-                    @if ($mae != null)
-                        <span>
-                            GENITORA: animal {{ $mae->animal_name }}, número {{ $mae->identificador }}, emitido pelo
-                            laboratório
-                            {{ $mae->alelos[0]->lab }} em {{ date('d/m/Y', strtotime($mae->alelos[0]->data)) }}.
-                        </span>
-                    @endif
-                    <br>
-                    <span>
-                        FILHO(A): animal {{ $animal->animal_name }}, número {{ $animal->identificador }}, emitido pelo
-                        {{ $animal->alelos[0]->lab }} em {{ date('d/m/Y', strtotime($animal->alelos[0]->data)) }}.
-
-                    </span>
-                    @if ($pai != null)
+                    <p>As opiniões e interpretações expressas acima não fazem parte do escopo de acreditação deste
+                        laboratório.
+                    </p>
+                </div>
+                <div>
+                    <strong>Observação:</strong><br>
+                    <p>
+                        O resultado da análise de vínculo genético apresentado aqui foi definido
+                        com base nos seguintes laudos:
+                    </p>
+                </div>
+                <div id="animalinfo mb-1">
+                    <p class="spn">
+                        @if ($mae != null)
+                            <span>
+                                GENITORA: animal {{ $mae->animal_name }}, número {{ $mae->identificador }}, emitido
+                                pelo
+                                laboratório
+                                {{ $mae->alelos[0]->lab }} em {{ date('d/m/Y', strtotime($mae->alelos[0]->data)) }}.
+                            </span>
+                        @endif
                         <br>
                         <span>
-                            GENITOR: {{ $pai->animal_name }}, número {{ $pai->identificador }},
-                            emitido pelo laboratório {{ $pai->alelos[0]->lab }} em
-                            {{ date('d/m/Y', strtotime($pai->alelos[0]->data)) }}.
+                            FILHO(A): animal {{ $animal->animal_name }}, número {{ $animal->identificador }}, emitido
+                            pelo
+                            {{ $animal->alelos[0]->lab }} em {{ date('d/m/Y', strtotime($animal->alelos[0]->data)) }}.
+
                         </span>
-                    @endif
+                        @if ($pai != null)
+                            <br>
+                            <span>
+                                GENITOR: {{ $pai->animal_name }}, número {{ $pai->identificador }},
+                                emitido pelo laboratório {{ $pai->alelos[0]->lab }} em
+                                {{ date('d/m/Y', strtotime($pai->alelos[0]->data)) }}.
+                            </span>
+                        @endif
 
-                </p>
-            </div>
-            <div>
-                <span>
-                    Esses laudos são de exclusiva responsabilidade dos laboratórios
-                    emissores.
-                    <br>
-                    {{ $laudo->observacao }}
-                </span>
-            </div>
-
+                    </p>
+                </div>
+                <div>
+                    <span>
+                        Esses laudos são de exclusiva responsabilidade dos laboratórios
+                        emissores.
+                        <br>
+                        {{ $laudo->observacao }}
+                    </span>
+                </div>
+            @endif
             @php
                 setlocale(LC_TIME, 'pt_BR.utf8');
                 
