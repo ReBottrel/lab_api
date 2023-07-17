@@ -778,8 +778,8 @@
             @endif
             @php
                 setlocale(LC_TIME, 'pt_BR.utf8');
-                if ($laudo->id == 8) {
-                    $date = new DateTime($laudo->created_at);
+                if ($laudo->id == 11) {
+                    $date = new DateTime('2023-07-14');
                 } else {
                     $date = new DateTime();
                 }
