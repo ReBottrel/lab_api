@@ -220,7 +220,11 @@
 </div>
 <div class="mb-3 px-5 pt-2">
     <label for="exampleFormControlTextarea1" class="form-label">Observação</label>
-    <textarea class="form-control" id="obs" rows="3"></textarea>
+    <textarea class="form-control" id="obs" rows="3">
+        @if ($laudo)
+{{ $laudo->observacao  }}
+@endif
+    </textarea>
 </div>
 <div class="d-flex">
     <div>
