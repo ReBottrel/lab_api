@@ -33,6 +33,9 @@ use Illuminate\Support\Facades\Response;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use BaconQrCode\Renderer\Image\ImagickImageBackEnd;
 use BaconQrCode\Renderer\RendererStyle\RendererStyle;
+use RobRichards\XMLSecLibs\XMLSecurityDSig;
+use RobRichards\XMLSecLibs\XMLSecurityKey;
+use DOMDocument;
 
 
 class LaudoController extends Controller
@@ -259,6 +262,47 @@ class LaudoController extends Controller
         Mail::to($owner->email)->send(new EnviarLaudoMail($laudo->pdf));
 
         return response()->json([get_defined_vars()], 200);
+    }
+    public function gerarXML()
+    {
+        $doc = new DOMDocument();
+        $doc->loadXML('<root></root>'); // Carregue o XML que deseja assinar
+
+        // Crie uma nova instância de segurança
+        $objDSig = new XMLSecurityDSig();
+
+        // Use a canonização exclusiva (remove espaços em branco desnecessários, etc.)
+        $objDSig->setCanonicalMethod(XMLSecurityDSig::EXC_C14N);
+
+        // Assine usando SHA-1
+        $objDSig->addReference(
+            $doc,
+            XMLSecurityDSig::SHA1,
+            array('http://www.w3.org/2000/09/xmldsig#enveloped-signature'),
+            array('force_uri' => true)
+        );
+
+        // Carregue a chave privada
+        $objKey = new XMLSecurityKey(XMLSecurityKey::RSA_SHA1, array('type' => 'private'));
+
+        // Se você tiver uma chave de string, use isto para carregar a chave ao invés
+        //$objKey->loadKey('-----BEGIN PRIVATE KEY-----...');
+
+        // Se a chave privada tem uma passphrase, adicione-a.
+        //$objKey->passphrase = 'passphrase';
+
+        // Adicione a chave privada ao objeto de assinatura
+        $objDSig->add509Cert(file_get_contents(storage_path('app/public.pem'))); // public.pem é a sua chave pública
+        $objDSig->sign($objKey);
+
+        // Anexe a assinatura ao XML
+        $objDSig->appendSignature($doc->documentElement);
+
+        // Salve o XML assinado
+        $doc->save(storage_path('app/signed.xml')); // signed.xml é o seu XML assinado
+
+        // Retorna o XML assinado como uma resposta
+        return response($doc->saveXML())->header('Content-Type', 'text/xml');
     }
 
     public function verify($codigo)

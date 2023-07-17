@@ -771,9 +771,9 @@
                     <span>
                         Esses laudos são de exclusiva responsabilidade dos laboratórios
                         emissores.
-                        <br>
-                        {{ $laudo->observacao }}
                     </span>
+                    <br>
+                    <p>{!! $laudo->observacao !!}</p>
                 </div>
             @endif
             @php
