@@ -778,8 +778,12 @@
             @endif
             @php
                 setlocale(LC_TIME, 'pt_BR.utf8');
+                if ($laudo->id == 8) {
+                    $date = new DateTime($laudo->created_at);
+                } else {
+                    $date = new DateTime();
+                }
                 
-                $date = new DateTime();
                 $textDate = $date->format('d \d\e F \d\e Y');
                 $textDate = str_replace(['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'], ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'], $textDate);
                 
