@@ -495,7 +495,13 @@
                         <strong>Número do Registro:</strong>
                         <span>{{ $animal->number_definitive ?? 'Não informado' }}</span>
                         <strong style="margin-left: 123px;">Data de Nascimento:</strong>
-                        <span>{{ date('d/m/Y', strtotime($animal->birth_date)) ?? 'Não informado' }}</span>
+                        <span>
+                            @if ($animal->birth_date == null)
+                                Não informado
+                            @else
+                                {{ date('d/m/Y', strtotime($animal->birth_date)) ?? 'Não informado' }}
+                            @endif
+                        </span>
                         <br>
                         <strong>Código Interno:</strong>
                         <span>{{ $animal->codlab ?? 'Não informado' }}</span>
@@ -517,7 +523,13 @@
                             @endif
                         </span>
                         <strong style="margin-left: 197px;">Data da Coleta:</strong>
-                        <span>{{ $datas->data_coleta ?? 'Não informado' }}</span>
+                        <span>
+                            @if ($datas->data_coleta == null || $datas->data_coleta == '31/12/1969')
+                                Não informado
+                            @else
+                                {{ $datas->data_coleta ?? 'Não informado' }}
+                            @endif
+                        </span>
                     <div class="amostra">
 
                     </div>
