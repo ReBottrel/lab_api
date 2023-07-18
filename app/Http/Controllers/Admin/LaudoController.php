@@ -90,7 +90,7 @@ class LaudoController extends Controller
 
 
 
-            $content = 'https://i.locilab.com.br/' . $laudo->codigo_busca;
+            $content = 'https://i.locilab.com.br/validacao/' . $laudo->codigo_busca;
             // Crie uma instância do escritor
             $renderer = new ImageRenderer(
                 new RendererStyle(400),
