@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope">
+        <soap:Header>
+            <!-- Cabeçalho SOAP -->
+        </soap:Header>
+        <soap:Body>
+            <!-- Corpo da mensagem SOAP -->
+        </soap:Body>
+    <ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+  <ds:SignedInfo><ds:CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+    <ds:SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"/>
+  <ds:Reference URI=""><ds:Transforms><ds:Transform Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/></ds:Transforms><ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/><ds:DigestValue>kndGg3FvaJXJP3VMd/qmSkvqI0FTBSx3jfebvXqbCgs=</ds:DigestValue></ds:Reference></ds:SignedInfo><ds:SignatureValue>islGo4V6TP32BVlILohbXMhVLsaPgEzm9DAOV/jbacj3TEnygGMJqOYkShKnKb0mYvRpv8NfdRG+d5EjfTe08Y8mIUFNZR1jnlKr45CYfXevkPlUVpGW5kAG9OOi9JNRLzEWZyrxzmLFR50lvNi9pQHp/wKlTIJbOPiExjNzLsYpyolYqyKUJkZ1mb80dMsT2AxJ4ap32lRSJA1SEEinC8Dzs9q8Uo3apRNKq4H1Ce4M6dJz9ZD4nxiwhMs6PsaJcoc9cFdaxXdGeLZLQBnGOfg60RGnOd7SY0UVKDyAeQxOqah7EnHX7HP0wOQp243LFuO6RG2VdXMSRIASUodlAA==</ds:SignatureValue>
+<ds:KeyInfo><ds:X509Data/></ds:KeyInfo></ds:Signature></soap:Envelope>

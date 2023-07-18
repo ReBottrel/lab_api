@@ -102,6 +102,9 @@ Route::middleware(['auth:web'])->group(function () {
 Route::middleware(['auth:admin'])->group(function () {
     Route::get('new-orders', [OrderController::class, 'getNewOrders'])->name('get.new.orders');
 
+    Route::get('gerar-xml', [LaudoController::class, 'gerarXML'])->name('gerar.xml');
+    Route::get('envia-xml', [LaudoController::class, 'enviaXML'])->name('envia.xml');
+
     Route::get('update-status-animal-mass', [TesteController::class, 'updateStatus'])->name('update.status.animal.mass');
     Route::get('get-all-order-not-create', [TesteController::class, 'getOrderNotCreate'])->name('get.all.order.not.create');
     Route::get('get-all-codlab', [TesteController::class, 'selectCodlabInRange'])->name('get.all.codlab');

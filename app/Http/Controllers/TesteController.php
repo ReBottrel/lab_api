@@ -171,4 +171,5 @@ class TesteController extends Controller
 
         return view('admin.ordem-servico.laudo-imp', get_defined_vars());
     }
+
 }

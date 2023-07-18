@@ -2,18 +2,19 @@
 
 namespace App\Http\Controllers\Admin;
 
-use TCPDF;
 
+use DOMDocument;
 use Dompdf\Dompdf;
 use App\Models\Laudo;
-
 use App\Models\Owner;
 use App\Models\Animal;
+use App\Models\Result;
+use GuzzleHttp\Client;
 use App\Models\Tecnico;
+// use X509\CertificationPath;
 use BaconQrCode\Writer;
 use App\Models\Parceiro;
 use phpseclib\Crypt\RSA;
-// use X509\CertificationPath;
 use phpseclib\File\ASN1;
 use phpseclib\File\X509;
 use App\Models\DnaVerify;
@@ -26,16 +27,16 @@ use App\Mail\EnviarLaudoMail;
 use BaconQrCode\Renderer\Image\Png;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Mail;
+
 use App\Models\QrCode as ModelQrCode;
 use BaconQrCode\Renderer\ImageRenderer;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Response;
+use RobRichards\XMLSecLibs\XMLSecurityKey;
+use RobRichards\XMLSecLibs\XMLSecurityDSig;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use BaconQrCode\Renderer\Image\ImagickImageBackEnd;
 use BaconQrCode\Renderer\RendererStyle\RendererStyle;
-use RobRichards\XMLSecLibs\XMLSecurityDSig;
-use RobRichards\XMLSecLibs\XMLSecurityKey;
-use DOMDocument;
 
 
 class LaudoController extends Controller
@@ -256,6 +257,11 @@ class LaudoController extends Controller
         $order = OrderRequest::find($laudo->order_id);
         $owner = Owner::find($laudo->owner_id);
         $parceiro = Parceiro::where('nome', $order->parceiro)->first();
+        $animal = Animal::with('alelos')->find($laudo->animal_id);
+        $pai = Animal::with('alelos')->where('animal_name', $animal->pai)->first();
+        $mae = Animal::with('alelos')->where('animal_name', $animal->mae)->first();
+        $results = Result::where('ordem_servico', $laudo->ordem_id)->latest()->first();
+        $xml = $this->gerarXML($animal, $laudo, $order, $results, $pai, $mae);
 
 
         Mail::to($parceiro->email)->send(new EnviarLaudoMail($laudo->pdf));
@@ -263,48 +269,246 @@ class LaudoController extends Controller
 
         return response()->json([get_defined_vars()], 200);
     }
-    public function gerarXML()
-    {
-        $doc = new DOMDocument();
-        $doc->loadXML('<root></root>'); // Carregue o XML que deseja assinar
 
-        // Crie uma nova instância de segurança
+    public function gerarXML($animal, $laudo, $order, $results, $pai, $mae)
+    {
+        $microssatellites = ["AHT4", "AHT5", "ASB17", "ASB2", "ASB23", "HMS2", "HMS3", "HMS6", "HMS7", "HTG4", "HTG7", "VHL20"];
+        $excluidos = $results->excluido;  // substitua por seus dados
+        $incluidos = $results->incluido;  // substitua por seus dados
+
+        $seqXmlPai = "";
+        for ($i = 0; $i < count($microssatellites); $i++) {
+            $marcador = $pai->alelos[$i]->alelo1 . '/' . $pai->alelos[$i]->alelo2;
+            $exclusao = ($excluidos[$i] == "P" || $excluidos[$i] == "MP") ? 0 : 1;
+            $seqXmlPai .= '<SEQUENCIA Microssatelite="' . $microssatellites[$i] . '" Marcador="' . $marcador . '" Exclusao="' . $exclusao . '" />';
+        }
+
+        $seqXmlMae = "";
+        for ($i = 0; $i < count($microssatellites); $i++) {
+            $marcador = $mae->alelos[$i]->alelo1 . '/' . $mae->alelos[$i]->alelo2;
+            $exclusao = ($incluidos[$i] == "M" || $incluidos[$i] == "MP") ? 0 : 1;
+            $seqXmlMae .= '<SEQUENCIA Microssatelite="' . $microssatellites[$i] . '" Marcador="' . $marcador . '" Exclusao="' . $exclusao . '" />';
+        }
+
+        $paiXml = '<PAI CodigoLaboratorio="' . $pai->identificador . '" ConfirmaPaternidade="1">' . $seqXmlPai . '</PAI>';
+        $maeXml = '<MAE CodigoLaboratorio="' . $mae->identificador . '" ConfirmaMaternidade="1">' . $seqXmlMae . '</MAE>';
+        $xml = '<?xml version="1.0" encoding="iso-8859-1" ?>
+        <document>
+          <CASO>
+            <NUMERO><![CDATA[VP-' . $animal->identificador . ']]></NUMERO> 		
+            <ANIMAL><![CDATA[' . $animal->animal_name . ']]></ANIMAL> 	
+            <REGISTRO><![CDATA[' . $animal->id . ']]></REGISTRO> 		
+            <DATACONCLUSAO><![CDATA[' . date('d/m/Y', strtotime($laudo->created_at)) . ']]></DATACONCLUSAO> 
+            <LABORATORIO><![CDATA[18]]></LABORATORIO> 		
+            <PROPRIETARIO><![CDATA[' . $order->creator_number . ']]></PROPRIETARIO>
+            <TIPOEXAME><![CDATA[2]]></TIPOEXAME> 		
+            <SUBTIPOEXAME><![CDATA[1]]></SUBTIPOEXAME> 		
+            <TECNICO><![CDATA[BETHOVEEN SILVA MAGALHÃES]]></TECNICO> 		
+            <DATACOLETA><![CDATA[' . $laudo->data_coleta . ']]></DATACOLETA> 	
+            <TIPOMATERIAL><![CDATA[001]]></TIPOMATERIAL> 	
+            <NOMEIMAGEM><![CDATA[' . $laudo->pdf . ']]></NOMEIMAGEM> 
+            <OBSERVACOES><![CDATA[' . $laudo->observacao . ']]></OBSERVACOES> 
+            <DATAENVIO><![CDATA[' . $laudo->data_lab . ']]></DATAENVIO>	
+            <HORAENVIO><![CDATA[00:00]]></HORAENVIO>
+            <ROWIDANIMAL><![CDATA[' . $animal->row_id . ']]></ROWIDANIMAL>
+          </CASO>
+          <REGISTRO CodigoLaboratorio="' . $animal->identificador . '">
+            <SEQUENCIA Microssatelite="AHT4" Marcador="' . $animal->alelos[0]->alelo1 . '/' . $animal->alelos[0]->alelo2 . '" />
+            <SEQUENCIA Microssatelite="AHT5" Marcador="' . $animal->alelos[1]->alelo1 . '/' . $animal->alelos[1]->alelo2 . '" />
+            <SEQUENCIA Microssatelite="ASB17" Marcador="' . $animal->alelos[2]->alelo1 . '/' . $animal->alelos[2]->alelo2 . '" />
+            <SEQUENCIA Microssatelite="ASB2" Marcador="' . $animal->alelos[3]->alelo1 . '/' . $animal->alelos[3]->alelo2 . '" />
+            <SEQUENCIA Microssatelite="ASB23" Marcador="' . $animal->alelos[4]->alelo1 . '/' . $animal->alelos[4]->alelo2 . '" />
+            <SEQUENCIA Microssatelite="CA425" Marcador="/" />
+            <SEQUENCIA Microssatelite="HMS1" Marcador="/" />
+            <SEQUENCIA Microssatelite="HMS2" Marcador="' . $animal->alelos[5]->alelo1 . '/' . $animal->alelos[6]->alelo2 . '" />
+            <SEQUENCIA Microssatelite="HMS3" Marcador="' . $animal->alelos[6]->alelo1 . '/' . $animal->alelos[7]->alelo2 . '" />
+            <SEQUENCIA Microssatelite="HMS6" Marcador="' . $animal->alelos[7]->alelo1 . '/' . $animal->alelos[8]->alelo2 . '" />
+            <SEQUENCIA Microssatelite="HMS7" Marcador="' . $animal->alelos[8]->alelo1 . '/' . $animal->alelos[9]->alelo2 . '" />
+            <SEQUENCIA Microssatelite="HTG4" Marcador="' . $animal->alelos[9]->alelo1 . '/' . $animal->alelos[10]->alelo2 . '" />
+            <SEQUENCIA Microssatelite="HTG7" Marcador="' . $animal->alelos[10]->alelo1 . '/' . $animal->alelos[11]->alelo2 . '" />
+            <SEQUENCIA Microssatelite="LEX03" Marcador="/" />
+            <SEQUENCIA Microssatelite="VHL20" Marcador="' . $animal->alelos[11]->alelo1 . '/' . $animal->alelos[11]->alelo2 . '" />	
+          </REGISTRO>
+          <VP>
+            ' . $paiXml
+            . $maeXml . '
+        </VP>
+        </document>';
+        $xml = str_replace('﻿', '', $xml);
+        $saveXml = public_path('xml/arquivo2.xml');
+        file_put_contents($saveXml, $xml);
+        $pemContent = file_get_contents(public_path('certificado/key.pem'));
+        // dd($saveXml);
+        try {
+            $options = array(
+                'trace' => true,
+                'exceptions' => true,
+                'cache_wsdl' => WSDL_CACHE_NONE,
+                'features' => SOAP_SINGLE_ELEMENT_ARRAYS,
+            );
+
+            $client = new \SoapClient('http://webserviceteste.abccmm.org.br:8083/service.asmx?wsdl', $options);
+
+            $params = array(
+                'objBinaryCertificate' => $pemContent,  // Binary data for certificate
+                'strXmlData' => $xml  // XML data as a string
+            );
+
+            $response = $client->SetCertificate($params);
+
+            print_r($response);
+        } catch (\SoapFault $fault) {
+            trigger_error("SOAP Fault: (faultcode: {$fault->faultcode}, faultstring: {$fault->faultstring})", E_USER_ERROR);
+        }
+    }
+    function setCertificate($objBinaryCertificate, $xmlData, $strPassword)
+    {
+        // Carrega o certificado e a chave privada do arquivo PEM
+        $pemContent = file_get_contents(public_path('certificado/key.pem'));
+
+        // Carrega o XML
+        $xmlContent = '<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope">
+        <soap:Header>
+            <!-- Cabeçalho SOAP -->
+        </soap:Header>
+        <soap:Body>
+        <document>
+        <CASO>
+          <NUMERO><![CDATA[VP-EQ21.A1146-001]]></NUMERO>
+          <ANIMAL><![CDATA[Amendoim Avante]]></ANIMAL>
+          <REGISTRO><![CDATA[37529]]></REGISTRO>
+          <DATACONCLUSAO><![CDATA[31/08/2021]]></DATACONCLUSAO>
+          <LABORATORIO><![CDATA[21]]></LABORATORIO>
+          <PROPRIETARIO><![CDATA[99999-9]]></PROPRIETARIO>
+          <TIPOEXAME><![CDATA[2]]></TIPOEXAME>
+          <SUBTIPOEXAME><![CDATA[2]]></SUBTIPOEXAME>
+          <TECNICO><![CDATA[Roberto Antônio Salles Trindade]]></TECNICO>
+          <DATACOLETA><![CDATA[08/11/2009]]></DATACOLETA>
+          <TIPOMATERIAL><![CDATA[2]]></TIPOMATERIAL>
+          <NOMEIMAGEM><![CDATA[EQ21.A1146-001.pdf]]></NOMEIMAGEM>
+          <OBSERVACOES><![CDATA[Qualifica]]></OBSERVACOES>
+          <DATAENVIO><![CDATA[02/09/2021]]></DATAENVIO>
+          <HORAENVIO><![CDATA[11:00]]></HORAENVIO>
+          <ROWIDANIMAL><![CDATA[123456]]></ROWIDANIMAL>
+        </CASO>
+        <REGISTRO CodigoLaboratorio="EQ21.A1146-001">
+          <SEQUENCIA Microssatelite="AHT4" Marcador="K/K" />
+          <SEQUENCIA Microssatelite="AHT5" Marcador="M/O" />
+          <SEQUENCIA Microssatelite="ASB17" Marcador="N/Q" />
+          <SEQUENCIA Microssatelite="ASB2" Marcador="O/Q" />
+          <SEQUENCIA Microssatelite="ASB23" Marcador="U/U" />
+          <SEQUENCIA Microssatelite="CA425" Marcador="N/N" />
+          <SEQUENCIA Microssatelite="HMS1" Marcador="J/M" />
+          <SEQUENCIA Microssatelite="HMS2" Marcador="H/L" />
+          <SEQUENCIA Microssatelite="HMS3" Marcador="I/M" />
+          <SEQUENCIA Microssatelite="HMS6" Marcador="O/P" />
+          <SEQUENCIA Microssatelite="HMS7" Marcador="L/O" />
+          <SEQUENCIA Microssatelite="HTG4" Marcador="L/L" />
+          <SEQUENCIA Microssatelite="HTG7" Marcador="K/K" />
+          <SEQUENCIA Microssatelite="LEX03" Marcador="F/P" />
+          <SEQUENCIA Microssatelite="VHL20" Marcador="L/N" />
+        </REGISTRO>
+        <VP>
+          <PAI CodigoLaboratorio="EQ21.A1147" ConfirmaPaternidade="1">
+            <SEQUENCIA Microssatelite="AHT4" Marcador="J/K" Exclusao="1" />
+            <SEQUENCIA Microssatelite="AHT5" Marcador="Q/Q" Exclusao="1" />
+            <SEQUENCIA Microssatelite="ASB17" Marcador="F/U" Exclusao="1" />
+            <SEQUENCIA Microssatelite="ASB2" Marcador="Q/R" Exclusao="1" />
+            <SEQUENCIA Microssatelite="ASB23" Marcador="K/U" Exclusao="1" />
+            <SEQUENCIA Microssatelite="CA425" Marcador="J/J" Exclusao="1" />
+            <SEQUENCIA Microssatelite="HMS1" Marcador="M/M" Exclusao="1" />
+            <SEQUENCIA Microssatelite="HMS2" Marcador="K/L" Exclusao="1" />
+            <SEQUENCIA Microssatelite="HMS3" Marcador="M/P" Exclusao="0" />
+            <SEQUENCIA Microssatelite="HMS6" Marcador="O/O" Exclusao="0" />
+            <SEQUENCIA Microssatelite="HMS7" Marcador="M/N" Exclusao="1" />
+            <SEQUENCIA Microssatelite="HTG4" Marcador="M/M" Exclusao="1" />
+            <SEQUENCIA Microssatelite="HTG7" Marcador="N/O" Exclusao="1" />
+            <SEQUENCIA Microssatelite="HTG6" Marcador="G/G" Exclusao="0" />
+            <SEQUENCIA Microssatelite="VHL20" Marcador="I/M" Exclusao="1" />
+          </PAI>
+          <MAE CodigoLaboratorio="EQ21.A1148" ConfirmaMaternidade="1">
+            <SEQUENCIA Microssatelite="AHT4" Marcador="J/K" Exclusao="1" />
+            <SEQUENCIA Microssatelite="ASB17" Marcador="M/U" Exclusao="1" />
+            <SEQUENCIA Microssatelite="ASB2" Marcador="C/M" Exclusao="1" />
+            <SEQUENCIA Microssatelite="ASB23" Marcador="L/L" Exclusao="1" />
+            <SEQUENCIA Microssatelite="CA425" Marcador="J/N" Exclusao="1" />
+            <SEQUENCIA Microssatelite="HMS1" Marcador="M/M" Exclusao="1" />
+            <SEQUENCIA Microssatelite="HMS2" Marcador="L/L" Exclusao="1" />
+            <SEQUENCIA Microssatelite="HMS3" Marcador="M/O" Exclusao="0" />
+            <SEQUENCIA Microssatelite="HMS6" Marcador="P/P" Exclusao="0" />
+            <SEQUENCIA Microssatelite="HMS7" Marcador="M/N" Exclusao="1" />
+            <SEQUENCIA Microssatelite="HTG4" Marcador="M/M" Exclusao="1" />
+            <SEQUENCIA Microssatelite="HTG7" Marcador="O/O" Exclusao="1" />
+            <SEQUENCIA Microssatelite="VHL20" Marcador="L/L" Exclusao="1" />
+          </MAE>
+        </VP>
+      </document>
+        </soap:Body>
+    </soap:Envelope>';
+
+        // Cria um novo documento DOM e carrega o XML
+        $doc = new DOMDocument();
+        $doc->loadXML($xmlContent);
+
+        // Cria uma nova assinatura de segurança XML
         $objDSig = new XMLSecurityDSig();
 
-        // Use a canonização exclusiva (remove espaços em branco desnecessários, etc.)
+        // Usa a assinatura canônica exclusiva
         $objDSig->setCanonicalMethod(XMLSecurityDSig::EXC_C14N);
 
-        // Assine usando SHA-1
+        // Adiciona a assinatura ao documento
         $objDSig->addReference(
             $doc,
-            XMLSecurityDSig::SHA1,
-            array('http://www.w3.org/2000/09/xmldsig#enveloped-signature'),
-            array('force_uri' => true)
+            XMLSecurityDSig::SHA256,
+            [XMLSecurityDSig::C14N],
+            ['force_uri' => true]
         );
 
-        // Carregue a chave privada
-        $objKey = new XMLSecurityKey(XMLSecurityKey::RSA_SHA1, array('type' => 'private'));
+        // Inicializa a chave de segurança
+        $objKey = new XMLSecurityKey(XMLSecurityKey::RSA_SHA256, ['type' => 'private']);
 
-        // Se você tiver uma chave de string, use isto para carregar a chave ao invés
-        //$objKey->loadKey('-----BEGIN PRIVATE KEY-----...');
+        // Carrega a chave privada
+        $objKey->loadKey($pemContent, FALSE);
 
-        // Se a chave privada tem uma passphrase, adicione-a.
-        //$objKey->passphrase = 'passphrase';
-
-        // Adicione a chave privada ao objeto de assinatura
-        $objDSig->add509Cert(file_get_contents(storage_path('app/public.pem'))); // public.pem é a sua chave pública
+        // Assina o XML
         $objDSig->sign($objKey);
 
-        // Anexe a assinatura ao XML
+        // Adiciona a chave pública associada à assinatura
+        $objDSig->add509Cert($pemContent, TRUE, FALSE);
+
+        // Anexa a assinatura ao XML
         $objDSig->appendSignature($doc->documentElement);
 
-        // Salve o XML assinado
-        $doc->save(storage_path('app/signed.xml')); // signed.xml é o seu XML assinado
-
-        // Retorna o XML assinado como uma resposta
-        return response($doc->saveXML())->header('Content-Type', 'text/xml');
+        // Salva o XML assinado
+        $doc->save('xml/arquivo.xml');
     }
 
+    public function enviaXML()
+    {
+        $signedXml = file_get_contents(public_path('xml/arquivo.xml'));
+        $pemContent = file_get_contents(public_path('certificado/key.pem'));
+        try {
+            $options = array(
+                'trace' => true,
+                'exceptions' => true,
+                'cache_wsdl' => WSDL_CACHE_NONE,
+                'features' => SOAP_SINGLE_ELEMENT_ARRAYS,
+            );
+
+            $client = new \SoapClient('http://webserviceteste.abccmm.org.br:8083/service.asmx?wsdl', $options);
+
+            $params = array(
+                'objBinaryCertificate' => $pemContent,  // Binary data for certificate
+                'strXmlData' => $signedXml  // XML data as a string
+            );
+
+            $response = $client->SetCertificate($params);
+
+            print_r($response);
+        } catch (\SoapFault $fault) {
+            trigger_error("SOAP Fault: (faultcode: {$fault->faultcode}, faultstring: {$fault->faultstring})", E_USER_ERROR);
+        }
+    }
     public function verify($codigo)
     {
         $laudo = Laudo::where('codigo_busca', $codigo)->first();
