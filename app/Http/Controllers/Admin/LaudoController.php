@@ -548,7 +548,12 @@ class LaudoController extends Controller
 
         // verifica se o arquivo existe antes de retorná-lo
         if (file_exists($pathToFile)) {
-            return response()->file($pathToFile);
+            return response()->stream(function () use ($pathToFile) {
+                return file_get_contents($pathToFile);
+            }, 200, [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'inline; filename="' . basename($pathToFile) . '"'
+            ]);
         } else {
             return response()->json(['message' => 'File not found.'], 404);
         }
