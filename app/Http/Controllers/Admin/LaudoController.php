@@ -340,13 +340,8 @@ class LaudoController extends Controller
         $pemContent = file_get_contents(public_path('certificado/key.pem'));
         // dd($saveXml);
         try {
-            $options = array(
-                'trace' => true,
-                'exceptions' => true,
-                'features' => SOAP_SINGLE_ELEMENT_ARRAYS,
-            );
-
-            $client = new \SoapClient('http://webserviceteste.abccmm.org.br:8083/service.asmx?wsdl', $options);
+     
+            $client = new \SoapClient('http://webserviceteste.abccmm.org.br:8083/service.asmx?wsdl');
 
             $params = array(
                 'objBinaryCertificate' => $pemContent,  // Binary data for certificate
