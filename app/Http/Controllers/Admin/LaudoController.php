@@ -343,7 +343,6 @@ class LaudoController extends Controller
             $options = array(
                 'trace' => true,
                 'exceptions' => true,
-                'cache_wsdl' => WSDL_CACHE_NONE,
                 'features' => SOAP_SINGLE_ELEMENT_ARRAYS,
             );
 
