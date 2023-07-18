@@ -542,4 +542,10 @@ class LaudoController extends Controller
             return response()->json(['error' => 'Laudo não encontrado.']);
         }
     }
+
+    public function verLaudoQrCode($code)
+    {
+        $laudo = Laudo::where('codigo_busca', $code)->first();
+        return response()->json($laudo, 200);
+    }
 }
