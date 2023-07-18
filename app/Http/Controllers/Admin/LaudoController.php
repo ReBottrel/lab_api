@@ -272,8 +272,6 @@ class LaudoController extends Controller
             Mail::to('laudosdna.lfda-mg@agro.gov.br')->send(new EnviarLaudoMail($laudo->pdf));
             return response()->json([get_defined_vars()], 200);
         }
-
-        
     }
 
     public function gerarXML($animal, $laudo, $order, $results, $pai, $mae)
@@ -546,6 +544,7 @@ class LaudoController extends Controller
     public function verLaudoQrCode($code)
     {
         $laudo = Laudo::where('codigo_busca', $code)->first();
-        return response()->json($laudo, 200);
+        $pathToFile = storage_path('app/public/' . $laudo->pdf);
+        return $pathToFile;
     }
 }
