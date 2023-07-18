@@ -264,10 +264,12 @@ class LaudoController extends Controller
         if ($order->parceiro == 'ABCCMM') {
             $xml = $this->gerarXML($animal, $laudo, $order, $results, $pai, $mae);
             Mail::to($owner->email)->send(new EnviarLaudoMail($laudo->pdf));
+            Mail::to('laudosdna.lfda-mg@agro.gov.br')->send(new EnviarLaudoMail($laudo->pdf));
             return response()->json([$xml], 200);
         } else {
             Mail::to($parceiro->email)->send(new EnviarLaudoMail($laudo->pdf));
             Mail::to($owner->email)->send(new EnviarLaudoMail($laudo->pdf));
+            Mail::to('laudosdna.lfda-mg@agro.gov.br')->send(new EnviarLaudoMail($laudo->pdf));
             return response()->json([get_defined_vars()], 200);
         }
 
