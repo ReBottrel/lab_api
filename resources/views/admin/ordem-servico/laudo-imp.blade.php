@@ -768,11 +768,11 @@
                     </p>
                 </div>
                 <div>
-                    <span>
+                    <p>
                         Esses laudos são de exclusiva responsabilidade dos laboratórios
                         emissores.
-                    </span>
-                    <br>
+                    </p>
+                    
                     <p>{!! $laudo->observacao !!}</p>
                 </div>
             @endif
