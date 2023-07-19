@@ -58,7 +58,8 @@
                                 <div class="mb-3">
                                     <label for="exampleFormControlInput1" class="form-label">Raça</label>
                                     <select class="form-select" name="breed">
-                                        <option value="MANGALARGA">MANGALARGA MARCHADOR</option>
+                                        <option value="MANGALARGA MARCHADOR">MANGALARGA MARCHADOR</option>
+                                        <option value="MANGALARGA">MANGALARGA</option>
                                         <option value="PÊGA">PÊGA</option>
                                         <option value="QUARTO DE MILHO">QUARTO DE MILHA</option>
                                         <option value="PAMPA">PAMPA</option>
