@@ -545,14 +545,16 @@ class LaudoController extends Controller
     {
         $laudo = Laudo::where('codigo_busca', $code)->first();
         $pathToFile = storage_path('app/public/' . $laudo->pdf);
-
+    
         // verifica se o arquivo existe antes de retorná-lo
         if (file_exists($pathToFile)) {
-            return response()->stream(function () use ($pathToFile) {
-                return file_get_contents($pathToFile);
-            },);
+            return response()->file($pathToFile, [
+                'Content-Disposition' => 'inline; filename="' . $laudo->pdf . '"',
+                'Content-Type' => 'application/pdf',
+            ]);
         } else {
             return response()->json(['message' => 'Laudo não encontrado'], 404);
         }
     }
+    
 }
