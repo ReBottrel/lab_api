@@ -546,7 +546,7 @@
                         <span>{{ $animal->breed ?? 'Não informado' }}</span>
                         <br>
                         <strong>Cód. Barras:</strong>
-                        <span>{{ $ordem->bar_code ?? 'Não informado' }}</span>
+                        <span>{{ $animal->register_number_brand ?? 'Não informado' }}</span>
                         <br>
                         <strong>Sexo:</strong>
                         <span>
