@@ -307,7 +307,7 @@ class LaudoController extends Controller
             <PROPRIETARIO><![CDATA[' . $order->creator_number . ']]></PROPRIETARIO>
             <TIPOEXAME><![CDATA[2]]></TIPOEXAME> 		
             <SUBTIPOEXAME><![CDATA[1]]></SUBTIPOEXAME> 		
-            <TECNICO><![CDATA['.$order->technical_manager.']]></TECNICO> 		
+            <TECNICO><![CDATA[' . $order->technical_manager . ']]></TECNICO> 		
             <DATACOLETA><![CDATA[' . $laudo->data_coleta . ']]></DATACOLETA> 	
             <TIPOMATERIAL><![CDATA[001]]></TIPOMATERIAL> 	
             <NOMEIMAGEM><![CDATA[' . $laudo->pdf . ']]></NOMEIMAGEM> 
@@ -550,10 +550,7 @@ class LaudoController extends Controller
         if (file_exists($pathToFile)) {
             return response()->stream(function () use ($pathToFile) {
                 return file_get_contents($pathToFile);
-            }, 200, [
-                'Content-Type' => 'application/pdf',
-                'Content-Disposition' => 'inline; filename="' . basename($pathToFile) . '"'
-            ]);
+            },);
         } else {
             return response()->json(['message' => 'Laudo não encontrado'], 404);
         }
