@@ -110,6 +110,8 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::get('get-all-codlab', [TesteController::class, 'selectCodlabInRange'])->name('get.all.codlab');
     Route::get('get-all-codlab-update', [TesteController::class, 'updateCodlabInRange'])->name('get.all.update.codlab');
     Route::get('ver-pdf/{id}', [TesteController::class, 'pdfLaudo'])->name('ver.pdf');
+    Route::get('alelos-duplicados', [TesteController::class, 'alelosDuplicados'])->name('alelos.duplicados');
+    Route::get('alelos-duplicados-delete', [TesteController::class, 'apagarAlelosDuplicados'])->name('alelos.duplicados.delete');
 
     Route::get('import-txt-view', [AlelosController::class, 'importTxt'])->name('import.txt.view');
 

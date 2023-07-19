@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Dompdf\Dompdf;
+use App\Models\Alelo;
 use App\Models\Laudo;
 use App\Models\Owner;
 use App\Models\Animal;
@@ -172,4 +173,40 @@ class TesteController extends Controller
         return view('admin.ordem-servico.laudo-imp', get_defined_vars());
     }
 
+    public function alelosDuplicados()
+    {
+        $duplicados = Alelo::select('animal_id', 'marcador')
+            ->groupBy('animal_id', 'marcador')
+            ->havingRaw('COUNT(*) > 1')
+            ->get();
+
+        $dupli = [];
+        foreach ($duplicados as $duplicado) {
+            $dupli[] = "Animal ID: " . $duplicado->animal_id . " | Marcador: " . $duplicado->marcador;
+        }
+        return $dupli;
+    }
+    public function apagarAlelosDuplicados()
+    {
+        $duplicados = Alelo::select('animal_id', 'marcador')
+            ->groupBy('animal_id', 'marcador')
+            ->havingRaw('COUNT(*) > 1')
+            ->get();
+    
+        foreach ($duplicados as $duplicado) {
+            $registrosDuplicados = Alelo::where('animal_id', $duplicado->animal_id)
+                ->where('marcador', $duplicado->marcador)
+                ->get();
+    
+            $primeiroRegistro = true;
+            foreach ($registrosDuplicados as $registro) {
+                if ($primeiroRegistro) {
+                    $primeiroRegistro = false;
+                    continue;
+                }
+    
+                $registro->delete();
+            }
+        }
+    }
 }
