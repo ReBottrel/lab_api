@@ -42,7 +42,10 @@ use BaconQrCode\Renderer\RendererStyle\RendererStyle;
 class LaudoController extends Controller
 {
 
-
+    public function __construct()
+    {
+        ini_set('max_execution_time', 600000);
+    }
     public function index()
     {
         $laudos = Laudo::with('animal')->get();
@@ -545,7 +548,7 @@ class LaudoController extends Controller
     {
         $laudo = Laudo::where('codigo_busca', $code)->first();
         $pathToFile = storage_path('app/public/' . $laudo->pdf);
-    
+
         // verifica se o arquivo existe antes de retorná-lo
         if (file_exists($pathToFile)) {
             return response()->file($pathToFile, [
@@ -556,5 +559,4 @@ class LaudoController extends Controller
             return response()->json(['message' => 'Laudo não encontrado'], 404);
         }
     }
-    
 }

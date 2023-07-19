@@ -21,6 +21,10 @@ use Picqer\Barcode\BarcodeGeneratorPNG;
 
 class OrdemServicoController extends Controller
 {
+    public function __construct()
+    {
+        ini_set('max_execution_time', 600000);
+    }
     public function store(Request $request)
     {
         $order = OrderRequest::find($request->order);
@@ -515,15 +519,14 @@ class OrdemServicoController extends Controller
     {
         if ($request->ajax()) {
             $busca = $request->busca;
-    
+
             $ordemServicos = OrderLote::where('order_id', $busca)
                 ->orWhere('owner', 'LIKE', '%' . $busca . '%')
                 ->get();
-    
+
             $viewRender = view('admin.ordem-servico.include.search', compact('ordemServicos'))->render();
-    
+
             return response()->json(['viewRender' => $viewRender]);
         }
     }
-    
 }
