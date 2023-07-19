@@ -173,40 +173,40 @@ class OrdemServicoController extends Controller
                         $sampleName = $columns[1];
                         $animal = Animal::where('codlab', $sampleName)->first();
                         if ($animal) {
-                            // Verificar se o animal já tem alelos
-                            if (!Alelo::where('animal_id', $animal->id)->exists()) {
-                                // Remover espaços e asteriscos dos valores dos alelos
-                                $marcador = trim(str_replace('*', '', $columns[2]));
-                                $alelo1 = trim(str_replace('*', '', $columns[3]));
-                                $alelo2 = trim(str_replace('*', '', $columns[4]));
+                            // Remover espaços e asteriscos dos valores dos alelos
+                            $marcador = trim(str_replace('*', '', $columns[2]));
+                            $alelo1 = trim(str_replace('*', '', $columns[3]));
+                            $alelo2 = trim(str_replace('*', '', $columns[4]));
 
-                                // Se alelo1 e alelo2 estiverem vazios, manter como vazios
-                                if (!empty($alelo1) || !empty($alelo2)) {
-                                    // Se alelo1 estiver vazio, copiar valor de alelo2
-                                    if (empty($alelo1)) {
-                                        $alelo1 = $alelo2;
-                                    }
-
-                                    // Se alelo2 estiver vazio, copiar valor de alelo1
-                                    if (empty($alelo2)) {
-                                        $alelo2 = $alelo1;
-                                    }
+                            // Se alelo1 e alelo2 estiverem vazios, manter como vazios
+                            if (!empty($alelo1) || !empty($alelo2)) {
+                                // Se alelo1 estiver vazio, copiar valor de alelo2
+                                if (empty($alelo1)) {
+                                    $alelo1 = $alelo2;
                                 }
 
-                                // Criar o registro de Alelo para o animal encontrado
-                                Alelo::create([
-                                    'animal_id' => $animal->id,
-                                    'marcador' => $marcador,
-                                    'alelo1' => $alelo1,
-                                    'alelo2' => $alelo2,
-                                    'lab' => 'Loci Genética Laboratorial',
-                                    'data' => Carbon::now(),
-                                ]);
-                                $animal->update([
-                                    'identificador' =>  'LO23-' . substr($animal->codlab, 3)
-                                ]);
+                                // Se alelo2 estiver vazio, copiar valor de alelo1
+                                if (empty($alelo2)) {
+                                    $alelo2 = $alelo1;
+                                }
                             }
+
+                            // Criar o registro de Alelo para o animal encontrado
+                            $alelo = Alelo::create([
+                                'animal_id' => $animal->id,
+                                'marcador' => $marcador,
+                                'alelo1' => $alelo1,
+                                'alelo2' => $alelo2,
+                                'lab' => 'Loci Genética Laboratorial',
+                                'data' => Carbon::now(),
+                            ]);
+                            $animal->update([
+                                'identificador' =>  'LO23-' . substr($animal->codlab, 3)
+                            ]);
                         }
+                    } else {
+                        // Tratar o caso em que a colunsa não existe
+                        $sampleName = null; // Ou qualquer outro valor padrão que faça sentido para o seu caso
                     }
                 }
 
@@ -218,7 +218,6 @@ class OrdemServicoController extends Controller
         // Caso nenhum arquivo tenha sido enviado ou o arquivo seja inválido
         return response()->json(['message' => 'Nenhum arquivo válido enviado'], 400);
     }
-
 
 
     public function compareAlelo($id)
