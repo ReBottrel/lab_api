@@ -649,6 +649,10 @@
                                 $dados = [];
                                 
                                 foreach ($animal->alelos as $item) {
+                                    if ($item->marcador === 'ASB17' && ($item->alelo1 === '' && $item->alelo2 === '')) {
+                                        continue; // Ignora o marcador ABS17 se não houver valores
+                                    }
+                                
                                     $alelo_mae = $mae != null ? $mae->alelos->firstWhere('marcador', $item->marcador) : null;
                                     $alelo_pai = $pai != null ? $pai->alelos->firstWhere('marcador', $item->marcador) : null;
                                     $dados[] = [
@@ -710,7 +714,6 @@
                                             @endif
                                         </td>
                                     @endif
-
                                 </tr>
                             @endforeach
 
@@ -772,7 +775,7 @@
                         Esses laudos são de exclusiva responsabilidade dos laboratórios
                         emissores.
                     </p>
-                    
+
                     <p>{!! $laudo->observacao !!}</p>
                 </div>
             @endif

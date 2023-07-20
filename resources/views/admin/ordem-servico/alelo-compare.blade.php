@@ -93,7 +93,7 @@
                                     $encontrado = false;
                                 @endphp
                                 @foreach ($mae->alelos as $item)
-                                    @if ($item->marcador == $marcador)
+                                    @if (strtolower(trim($item->marcador)) == strtolower(trim($marcador)))
                                         @php
                                             $encontrado = true;
                                         @endphp
@@ -115,10 +115,12 @@
                                 @endif
                             @endforeach
                             @if (!$encontrado)
-                                <p>Marcador não encontrado!</p>
+                                        
                             @endif
                         @endforeach
                     @endif
+
+
                 </div>
             </div>
         </div>
@@ -222,7 +224,7 @@
     <label for="exampleFormControlTextarea1" class="form-label">Observação</label>
     <textarea class="form-control" id="obs" rows="3">
         @if ($laudo)
-{{ $laudo->observacao  }}
+{{ $laudo->observacao }}
 @endif
     </textarea>
 </div>

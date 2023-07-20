@@ -475,8 +475,11 @@
             </div>
             <div class="text-end">
                 <span><strong>Relat. n</strong>
-                    @if ($mae != null){{ substr($mae->codlab, 3) }}.@endif{{ substr($animal->codlab, 3) }}.@if ($pai != null){{ substr($pai->codlab, 3) }}
-                    @endif
+                    @if ($mae != null)
+                        {{ substr($mae->codlab, 3) }}.
+                        @endif{{ substr($animal->codlab, 3) }}.@if ($pai != null)
+                            {{ substr($pai->codlab, 3) }}
+                        @endif
                 </span>
             </div>
             <div class="text-center my-1 text-decoration-underline">
@@ -645,6 +648,10 @@
                                 $dados = [];
                                 
                                 foreach ($animal->alelos as $item) {
+                                    if ($item->marcador === 'ASB17' && ($item->alelo1 === '' && $item->alelo2 === '')) {
+                                        continue; // Ignora o marcador ABS17 se não houver valores
+                                    }
+                                
                                     $alelo_mae = $mae != null ? $mae->alelos->firstWhere('marcador', $item->marcador) : null;
                                     $alelo_pai = $pai != null ? $pai->alelos->firstWhere('marcador', $item->marcador) : null;
                                     $dados[] = [
@@ -706,7 +713,6 @@
                                             @endif
                                         </td>
                                     @endif
-
                                 </tr>
                             @endforeach
 
@@ -768,7 +774,7 @@
                         Esses laudos são de exclusiva responsabilidade dos laboratórios
                         emissores.
                     </p>
-                    
+
                     <p>{!! $laudo->observacao !!}</p>
                 </div>
             @endif

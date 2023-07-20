@@ -1,41 +1,41 @@
 <?xml version="1.0" encoding="iso-8859-1" ?>
         <document>
           <CASO>
-            <NUMERO><![CDATA[VP-LO23-100003]]></NUMERO> 		
-            <ANIMAL><![CDATA[AGHATA DO ZIZO]]></ANIMAL> 	
-            <REGISTRO><![CDATA[60720]]></REGISTRO> 		
-            <DATACONCLUSAO><![CDATA[19/07/2023]]></DATACONCLUSAO> 
+            <NUMERO><![CDATA[VP-LO23-100910]]></NUMERO> 		
+            <ANIMAL><![CDATA[JAVANESA DO CARDEAL]]></ANIMAL> 	
+            <REGISTRO><![CDATA[64386]]></REGISTRO> 		
+            <DATACONCLUSAO><![CDATA[20/07/2023]]></DATACONCLUSAO> 
             <LABORATORIO><![CDATA[18]]></LABORATORIO> 		
-            <PROPRIETARIO><![CDATA[58355-3]]></PROPRIETARIO>
+            <PROPRIETARIO><![CDATA[SI007710]]></PROPRIETARIO>
             <TIPOEXAME><![CDATA[2]]></TIPOEXAME> 		
             <SUBTIPOEXAME><![CDATA[1]]></SUBTIPOEXAME> 		
-            <TECNICO><![CDATA[JOÃO BAYER]]></TECNICO> 		
-            <DATACOLETA><![CDATA[20/04/2023]]></DATACOLETA> 	
+            <TECNICO><![CDATA[ADÉLCIO BARBOSA DA SILVA JÚNIOR]]></TECNICO> 		
+            <DATACOLETA><![CDATA[06/08/2020]]></DATACOLETA> 	
             <TIPOMATERIAL><![CDATA[001]]></TIPOMATERIAL> 	
-            <NOMEIMAGEM><![CDATA[signed-pdf-1689855555.pdf]]></NOMEIMAGEM> 
+            <NOMEIMAGEM><![CDATA[signed-pdf-1689863346.pdf]]></NOMEIMAGEM> 
             <OBSERVACOES><![CDATA[]]></OBSERVACOES> 
-            <DATAENVIO><![CDATA[]]></DATAENVIO>	
+            <DATAENVIO><![CDATA[31/12/1969]]></DATAENVIO>	
             <HORAENVIO><![CDATA[00:00]]></HORAENVIO>
-            <ROWIDANIMAL><![CDATA[748666]]></ROWIDANIMAL>
+            <ROWIDANIMAL><![CDATA[]]></ROWIDANIMAL>
           </CASO>
-          <REGISTRO CodigoLaboratorio="LO23-100003">
-            <SEQUENCIA Microssatelite="AHT4" Marcador="M/R" />
-            <SEQUENCIA Microssatelite="AHT5" Marcador="M/M" />
-            <SEQUENCIA Microssatelite="ASB17" Marcador="L/L" />
-            <SEQUENCIA Microssatelite="ASB2" Marcador="M/N" />
-            <SEQUENCIA Microssatelite="ASB23" Marcador="O/P" />
+          <REGISTRO CodigoLaboratorio="LO23-100910">
+            <SEQUENCIA Microssatelite="AHT4" Marcador="/" />
+            <SEQUENCIA Microssatelite="AHT5" Marcador="J/N" />
+            <SEQUENCIA Microssatelite="ASB17" Marcador="/" />
+            <SEQUENCIA Microssatelite="ASB2" Marcador="U/U" />
+            <SEQUENCIA Microssatelite="ASB23" Marcador="I/L" />
             <SEQUENCIA Microssatelite="CA425" Marcador="/" />
             <SEQUENCIA Microssatelite="HMS1" Marcador="/" />
-            <SEQUENCIA Microssatelite="HMS2" Marcador="*/O" />
-            <SEQUENCIA Microssatelite="HMS3" Marcador="K/" />
-            <SEQUENCIA Microssatelite="HMS6" Marcador="/O" />
-            <SEQUENCIA Microssatelite="HMS7" Marcador="O/P" />
-            <SEQUENCIA Microssatelite="HTG4" Marcador="P/N" />
-            <SEQUENCIA Microssatelite="HTG7" Marcador="B/R" />
+            <SEQUENCIA Microssatelite="HMS2" Marcador="M/O" />
+            <SEQUENCIA Microssatelite="HMS3" Marcador="K/M" />
+            <SEQUENCIA Microssatelite="HMS6" Marcador="M/R" />
+            <SEQUENCIA Microssatelite="HMS7" Marcador="Q/P" />
+            <SEQUENCIA Microssatelite="HTG4" Marcador="M/O" />
+            <SEQUENCIA Microssatelite="HTG7" Marcador="N/M" />
             <SEQUENCIA Microssatelite="LEX03" Marcador="/" />
-            <SEQUENCIA Microssatelite="VHL20" Marcador="O/R" />	
+            <SEQUENCIA Microssatelite="VHL20" Marcador="L/M" />	
           </REGISTRO>
           <VP>
-            <PAI CodigoLaboratorio="ECVP16-07842" ConfirmaPaternidade="1"><SEQUENCIA Microssatelite="AHT4" Marcador="K/K" Exclusao="1" /><SEQUENCIA Microssatelite="AHT5" Marcador="O/Q" Exclusao="1" /><SEQUENCIA Microssatelite="ASB17" Marcador="/" Exclusao="1" /><SEQUENCIA Microssatelite="ASB2" Marcador="I/L" Exclusao="1" /><SEQUENCIA Microssatelite="ASB23" Marcador="O/P" Exclusao="1" /><SEQUENCIA Microssatelite="HMS2" Marcador="P/P" Exclusao="1" /><SEQUENCIA Microssatelite="HMS3" Marcador="M/M" Exclusao="1" /><SEQUENCIA Microssatelite="HMS6" Marcador="O/R" Exclusao="1" /><SEQUENCIA Microssatelite="HMS7" Marcador="L/M" Exclusao="1" /><SEQUENCIA Microssatelite="HTG4" Marcador="K/N" Exclusao="1" /><SEQUENCIA Microssatelite="HTG7" Marcador="I/M" Exclusao="1" /><SEQUENCIA Microssatelite="VHL20" Marcador="Q/Q" Exclusao="1" /></PAI><MAE CodigoLaboratorio="ECVP10-14478" ConfirmaMaternidade="1"><SEQUENCIA Microssatelite="AHT4" Marcador="H/J" Exclusao="1" /><SEQUENCIA Microssatelite="AHT5" Marcador="M/O" Exclusao="1" /><SEQUENCIA Microssatelite="ASB17" Marcador="M/N" Exclusao="0" /><SEQUENCIA Microssatelite="ASB2" Marcador="L/M" Exclusao="1" /><SEQUENCIA Microssatelite="ASB23" Marcador="O/P" Exclusao="1" /><SEQUENCIA Microssatelite="HMS2" Marcador="P/P" Exclusao="1" /><SEQUENCIA Microssatelite="HMS3" Marcador="L/N" Exclusao="1" /><SEQUENCIA Microssatelite="HMS6" Marcador="/" Exclusao="0" /><SEQUENCIA Microssatelite="HMS7" Marcador="M/P" Exclusao="1" /><SEQUENCIA Microssatelite="HTG4" Marcador="/" Exclusao="1" /><SEQUENCIA Microssatelite="HTG7" Marcador="R/R" Exclusao="1" /><SEQUENCIA Microssatelite="VHL20" Marcador="L/M" Exclusao="1" /></MAE>
+            <PAI CodigoLaboratorio="ECVP12-05532" ConfirmaPaternidade="1"><SEQUENCIA Microssatelite="AHT4" Marcador="L/N" Exclusao="1" /><SEQUENCIA Microssatelite="AHT5" Marcador="N/Q" Exclusao="1" /><SEQUENCIA Microssatelite="ASB17" Marcador="M/M" Exclusao="1" /><SEQUENCIA Microssatelite="ASB2" Marcador="L/L" Exclusao="1" /><SEQUENCIA Microssatelite="ASB23" Marcador="O/O" Exclusao="1" /><SEQUENCIA Microssatelite="HMS2" Marcador="/" Exclusao="1" /><SEQUENCIA Microssatelite="HMS3" Marcador="L/M" Exclusao="1" /><SEQUENCIA Microssatelite="HMS6" Marcador="/" Exclusao="1" /><SEQUENCIA Microssatelite="HMS7" Marcador="L/M" Exclusao="1" /><SEQUENCIA Microssatelite="HTG4" Marcador="/" Exclusao="1" /><SEQUENCIA Microssatelite="HTG7" Marcador="M/M" Exclusao="1" /><SEQUENCIA Microssatelite="VHL20" Marcador="M/Q" Exclusao="1" /></PAI><MAE CodigoLaboratorio="TIP0000076789" ConfirmaMaternidade="1"><SEQUENCIA Microssatelite="AHT4" Marcador="K/K" Exclusao="1" /><SEQUENCIA Microssatelite="AHT5" Marcador="J/M" Exclusao="1" /><SEQUENCIA Microssatelite="ASB17" Marcador="N/Q" Exclusao="1" /><SEQUENCIA Microssatelite="ASB2" Marcador="H/H" Exclusao="1" /><SEQUENCIA Microssatelite="ASB23" Marcador="O/P" Exclusao="1" /><SEQUENCIA Microssatelite="HMS2" Marcador="K/P" Exclusao="1" /><SEQUENCIA Microssatelite="HMS3" Marcador="M/O" Exclusao="1" /><SEQUENCIA Microssatelite="HMS6" Marcador="/" Exclusao="0" /><SEQUENCIA Microssatelite="HMS7" Marcador="K/P" Exclusao="1" /><SEQUENCIA Microssatelite="HTG4" Marcador="O/O" Exclusao="1" /><SEQUENCIA Microssatelite="HTG7" Marcador="L/L" Exclusao="1" /><SEQUENCIA Microssatelite="VHL20" Marcador="R/R" Exclusao="1" /></MAE>
         </VP>
         </document>
