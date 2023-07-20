@@ -115,7 +115,7 @@
                                 @endif
                             @endforeach
                             @if (!$encontrado)
-                                <!-- Lógica para o caso de o marcador não ser encontrado na mãe -->
+                                <p>Marcador não encontrado!</p>
                             @endif
                         @endforeach
                     @endif
