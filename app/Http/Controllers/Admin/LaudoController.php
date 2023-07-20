@@ -348,8 +348,8 @@ class LaudoController extends Controller
         // dd($saveXml);
         try {
 
-            // $client = new \SoapClient('http://weblab.abccmm.org.br:8083/service.asmx?wsdl');
-            $client = new \SoapClient('http://webserviceteste.abccmm.org.br:8083/service.asmx?wsdl');
+            $client = new \SoapClient('http://weblab.abccmm.org.br:8083/service.asmx?wsdl');
+            // $client = new \SoapClient('http://webserviceteste.abccmm.org.br:8083/service.asmx?wsdl');
 
             $params = array(
                 'objBinaryCertificate' => $pemContent,  // Binary data for certificate
