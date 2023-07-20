@@ -250,7 +250,7 @@ class OrdemServicoController extends Controller
                 break;
         }
 
-        dd( $dna_verify, $result);
+        dd( $dna_verify, $sigla);
 
         return view('admin.ordem-servico.alelo-compare', get_defined_vars());
     }
