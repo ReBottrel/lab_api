@@ -9,6 +9,13 @@
                 <label for="exampleFormControlInput1" class="form-label">Buscar por proprietário ou por numero</label>
                 <input type="text" class="form-control" id="busca">
             </div>
+            <div class="mb-3 col-4">
+                <label for="exampleFormControlInput1" class="form-label">Buscar por codlab</label>
+                <input type="text" class="form-control" id="codlab">
+            </div>
+            <div class="col-2 mt-4">
+                <button class="btn btn-primary" id="buscar-codlab" style="margin-top: 6px;">BUSCAR CODLAB</button>
+            </div>
         </div>
         <table class="table">
             <thead>
@@ -102,6 +109,28 @@
                     },
                     success: function(response) {
                         $('.table-busca').html(response.viewRender);
+                    }
+                });
+            });
+            $('#buscar-codlab').click(function() {
+                var codlab = $('#codlab').val();
+
+                if (codlab === '') {
+                    // Ação a ser realizada quando o campo de busca estiver vazio
+                    // Por exemplo, recarregar a página ou redefinir os resultados da busca
+                    $('.table-busca').html(''); // Limpa os resultados da busca
+                    return; // Sai da função para evitar a requisição AJAX
+                }
+
+                $.ajax({
+                    url: "{{ route('search.by.codlab') }}",
+                    type: "POST",
+                    data: {
+                        codlab: codlab,
+                        _token: "{{ csrf_token() }}"
+                    },
+                    success: function(response) {
+                        $('.table').html(response.viewRender);
                     }
                 });
             });

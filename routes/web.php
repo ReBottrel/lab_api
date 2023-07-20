@@ -113,6 +113,9 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::get('alelos-duplicados', [TesteController::class, 'alelosDuplicados'])->name('alelos.duplicados');
     Route::get('alelos-duplicados-delete', [TesteController::class, 'apagarAlelosDuplicados'])->name('alelos.duplicados.delete');
 
+    Route::post('search-by-codlab', [OrdemServicoController::class, 'searchByCodlab'])->name('search.by.codlab');
+    Route::get('result-by-codlab/{id}', [OrdemServicoController::class, 'resultado'])->name('result.by.codlab');
+
     Route::get('import-txt-view', [AlelosController::class, 'importTxt'])->name('import.txt.view');
 
     Route::get('laudo', function () { return view('admin.ordem-servico.laudo');})->name('laudo');

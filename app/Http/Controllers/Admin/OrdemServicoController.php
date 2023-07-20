@@ -529,4 +529,25 @@ class OrdemServicoController extends Controller
             return response()->json(['viewRender' => $viewRender]);
         }
     }
+    public function searchByCodlab(Request $request)
+    {
+        if ($request->ajax()) {
+            $codlab = $request->codlab;
+
+            $item = OrdemServico::where('codlab', 'LIKE', '%' . $codlab . '%')
+                ->first();
+                // dd($item);
+
+            $viewRender = view('admin.ordem-servico.include.search-codlab', compact('item'))->render();
+
+            return response()->json(['viewRender' => $viewRender]);
+        }
+    }
+
+    public function resultado($id)
+    {
+        $ordemServico = OrdemServico::find($id);
+        $ordem = OrderLote::find($ordemServico->lote);
+        return view('admin.ordem-servico.resultado-busca', get_defined_vars());
+    }
 }
