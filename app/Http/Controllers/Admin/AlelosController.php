@@ -63,7 +63,11 @@ class AlelosController extends Controller
             // Verifica se o animal já existe no banco de dados
             $animal = Animal::where('animal_name', $animalData['nomeAnimal'])->first();
             $marcadores = Marcador::where('especie', 'EQUINA')->get();
-            if (!$animal) {
+            if ($animal) {
+                // Atualiza o identificador do animal
+                $animal->identificador = $exameData['codigo'] ?? null;
+                $animal->save();
+            } else {
                 $sigla = 'EQU';
                 $codlab = $this->generateUniqueCodlab($sigla);
 
@@ -77,46 +81,67 @@ class AlelosController extends Controller
                     'number_definitive' => $animalData['registro'],
                     'status' => 1,
                     'codlab' => $codlab,
-                    'identificador' => $exameData['Código'] ?? null,
+                    'identificador' => $exameData['codigo'] ?? null,
                 ]);
             }
+
             if ($exameData['alelos'] != null) {
-
-                // Verifica se existem registros de alelos para o animal
-                if (Alelo::where('animal_id', $animal->id)->exists()) {
-                    return response()->json(['error' => 'existe']);
-                }
-
                 foreach ($marcadores as $marcador) {
                     $apiAlelos = collect($exameData['alelos'])->where('marcador', $marcador->gene)->first();
+                    $alelo = Alelo::where('animal_id', $animal->id)
+                        ->where('marcador', $marcador->gene)
+                        ->first();
                     if ($apiAlelos) {
-                        Alelo::create([
-                            'animal_id' => $animal->id,
-                            'marcador' => $marcador->gene,
-                            'alelo1' => $apiAlelos['alelo1'],
-                            'alelo2' =>   $apiAlelos['alelo2'],
-                            'lab' => $exameData['laboratorio'],
-                            'data' => $exameData['dataResultado'],
-                        ]);
+                        if ($alelo) {
+                            // Atualiza o alelo se já existir
+                            $alelo->alelo1 = $apiAlelos['alelo1'];
+                            $alelo->alelo2 = $apiAlelos['alelo2'];
+                            $alelo->lab = $exameData['laboratorio'];
+                            $alelo->data = $exameData['dataResultado'];
+                            $alelo->save();
+                        } else {
+                            // Cria um novo alelo se não existir
+                            Alelo::create([
+                                'animal_id' => $animal->id,
+                                'marcador' => $marcador->gene,
+                                'alelo1' => $apiAlelos['alelo1'],
+                                'alelo2' =>   $apiAlelos['alelo2'],
+                                'lab' => $exameData['laboratorio'],
+                                'data' => $exameData['dataResultado'],
+                            ]);
+                        }
                     } else {
-                        Alelo::create([
-                            'animal_id' => $animal->id,
-                            'marcador' => $marcador->gene,
-                            'alelo1' => '',
-                            'alelo2' =>   '',
-                            'lab' => $exameData['laboratorio'],
-                            'data' => $exameData['dataResultado'],
-                        ]);
+                        if ($alelo) {
+                            // Atualiza o alelo se já existir
+                            $alelo->alelo1 = '';
+                            $alelo->alelo2 = '';
+                            $alelo->lab = $exameData['laboratorio'];
+                            $alelo->data = $exameData['dataResultado'];
+                            $alelo->save();
+                        } else {
+                            // Cria um novo alelo se não existir
+                            Alelo::create([
+                                'animal_id' => $animal->id,
+                                'marcador' => $marcador->gene,
+                                'alelo1' => '',
+                                'alelo2' =>   '',
+                                'lab' => $exameData['laboratorio'],
+                                'data' => $exameData['dataResultado'],
+                            ]);
+                        }
                     }
                 }
 
                 return response()->json(['success' => 'ok']);
             }
+
             return response()->json(['error' => 'vazio']);
         }
 
         return response()->json(['error' => 'erro']);
     }
+
+
     private function generateUniqueCodlab($sigla)
     {
         $startValue = 100000;

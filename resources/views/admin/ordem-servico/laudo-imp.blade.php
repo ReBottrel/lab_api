@@ -342,7 +342,7 @@
     .table-responsive {
         display: block;
         width: 100%;
-        width: 80%;
+        width: 90%;
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
         -ms-overflow-style: -ms-autohiding-scrollbar;
@@ -475,11 +475,7 @@
             </div>
             <div class="text-end">
                 <span><strong>Relat. n</strong>
-                    @if ($mae != null)
-                        {{ substr($mae->codlab, 3) }}.
-                    @endif
-                    {{ substr($animal->codlab, 3) }}. @if ($pai != null)
-                        {{ substr($pai->codlab, 3) }}
+                    @if ($mae != null){{ substr($mae->codlab, 3) }}.@endif{{ substr($animal->codlab, 3) }}.@if ($pai != null){{ substr($pai->codlab, 3) }}
                     @endif
                 </span>
             </div>
