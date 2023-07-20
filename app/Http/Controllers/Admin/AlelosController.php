@@ -208,6 +208,10 @@ class AlelosController extends Controller
                 $animal->update([
                     'identificador' => $request->input('identificador') ? $request->input('identificador') : 'LO23-' . substr($animal->codlab, 3),
                 ]);
+            } else {
+                $animal->update([
+                    'identificador' => $request->input('identificador') ? $request->input('identificador') : 'LO23-' . substr($animal->codlab, 3),
+                ]);
             }
 
             return response()->json(['success' => 'ok']);
