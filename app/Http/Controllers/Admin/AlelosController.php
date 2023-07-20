@@ -204,7 +204,7 @@ class AlelosController extends Controller
                 }
             }
 
-            if ($animal->identificador == null) {
+            if ($animal->identificador) {
                 $animal->update([
                     'identificador' => $request->input('identificador') ? $request->input('identificador') : 'LO23-' . substr($animal->codlab, 3),
                 ]);
