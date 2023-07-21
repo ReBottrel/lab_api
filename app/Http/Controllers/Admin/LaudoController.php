@@ -233,9 +233,18 @@ class LaudoController extends Controller
         $codlabPai = $pai ? substr($pai->codlab, 3) : 'N/A';
         $codlabAnimal = substr($animal->codlab, 3);
         $siglaPais = ($pai || $mae) ? 'VP' : 'AP';
+        // Cria a string para a sigla representando as informações de Pai e/ou Mãe
+
+
+        // Remove any slashes from the codlab strings to avoid issues in the filename
+        $codlabAnimal = str_replace(['/', '\\'], '_', $codlabAnimal);
+        $codlabMae = str_replace(['/', '\\'], '_', $codlabMae);
+        $codlabPai = str_replace(['/', '\\'], '_', $codlabPai);
+        $codlabMae = str_replace(['N_A', '\\'], '', $codlabMae);
+        $codlabPai = str_replace(['N_A', '\\'], '', $codlabPai);
         // $name =  if($mae == null)
         // Gera um nome de arquivo exclusivo para o PDF assinado
-        $filename = "LO{$siglaPais}23-{$codlabMae}.{$codlabAnimal}.{$codlabPai}".'.pdf';
+        $filename = "LO{$siglaPais}23-{$codlabMae}.{$codlabAnimal}.{$codlabPai}" . '.pdf';
 
         // Salva o PDF assinado no diretório público
         Storage::disk('public')->put($filename, $outputAssinado);
