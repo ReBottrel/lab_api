@@ -536,7 +536,7 @@
 
                         <br>
                         <strong>Espécie:</strong>
-                        <span>{{ $animal->especies ?? 'Não informado' }}</span>
+                        <span>@if($animal->especies == 'EQUINA_PEGA') EQUINA @else {{ $animal->especies ?? 'Não informado' }} @endif</span>
                         <br>
                         <strong>Raça:</strong>
                         <span>{{ $animal->breed ?? 'Não informado' }}</span>
