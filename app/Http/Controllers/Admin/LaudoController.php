@@ -235,7 +235,7 @@ class LaudoController extends Controller
         $siglaPais = ($pai || $mae) ? 'VP' : 'AP';
         // $name =  if($mae == null)
         // Gera um nome de arquivo exclusivo para o PDF assinado
-        $filename = "LO{$siglaPais}-{$codlabAnimal}.{$codlabMae}.{$codlabPai}".'.pdf';
+        $filename = "LO{$siglaPais}23-{$codlabAnimal}.{$codlabMae}.{$codlabPai}".'.pdf';
 
         // Salva o PDF assinado no diretório público
         Storage::disk('public')->put($filename, $outputAssinado);
