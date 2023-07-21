@@ -475,11 +475,7 @@
             </div>
             <div class="text-end">
                 <span><strong>Relat. n</strong>
-                    @if ($mae != null)
-                        {{ substr($mae->codlab, 3) }}.
-                    @endif
-                    {{ substr($animal->codlab, 3) }}. @if ($pai != null)
-                        {{ substr($pai->codlab, 3) }}
+                    @if ($mae != null){{ substr($mae->codlab, 3) }}.@endif{{ substr($animal->codlab, 3) }}.@if ($pai != null){{ substr($pai->codlab, 3) }}
                     @endif
                 </span>
             </div>
