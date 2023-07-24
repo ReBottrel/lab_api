@@ -118,6 +118,11 @@
                                     <input type="text" name="mae" id="mae" class="form-control">
                                 </div>
                             </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">Identificador</label>
+                                    <input type="text" name="identificador" id="identificador" class="form-control">
+                                </div>
+                            </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary"
                                     data-bs-dismiss="modal">Cancelar</button>
