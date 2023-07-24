@@ -309,6 +309,7 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::post('get-mae', [AnimaisController::class, 'getMae'])->name('get.mae');
 
     Route::get('get-animals-all', [AnimaisController::class, 'buscarAnimal'])->name('get.animals.all');
+    Route::post('search-codlab-animal', [AnimaisController::class, 'searchCodLab'])->name('search.codlab.animal');
 
     Route::get('export-order', [OrderController::class, 'exportOrders']);
     Route::get('export-pendentes', [OrderController::class, 'exportPedentes']);

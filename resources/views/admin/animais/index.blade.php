@@ -10,9 +10,17 @@
                     <div class="col-6">
                         <form action="" method="POST" class="form form-inline">
                             @csrf
-                            <input type="search" name="filter" placeholder="Buscar por nome..."
-                                class="form-control buscar-animal" value="{{ $filters['filter'] ?? '' }}">
+                            <label for="exampleFormControlInput1" class="form-label">Buscar por nome</label>
+                            <input type="search" name="filter" class="form-control buscar-animal"
+                                value="{{ $filters['filter'] ?? '' }}">
                         </form>
+                    </div>
+                    <div class=" col-4">
+                        <label for="exampleFormControlInput1" class="form-label">Buscar por codlab</label>
+                        <input type="text" class="form-control" id="codlab">
+                    </div>
+                    <div class="col-2 mt-4">
+                        <button class="btn btn-primary" id="buscar-codlab" style="margin-top: 6px;">BUSCAR CODLAB</button>
                     </div>
 
                 </div>
@@ -134,6 +142,26 @@
                             // console.log(data[0].animal[0]);
                             $('.filter').html(data[0].viewRender);
                             $('.pagin').addClass('d-none');
+                        }
+                    });
+                } else {
+                    $('.pagin').removeClass('d-none');
+                }
+            });
+            $(document).on('click', '#buscar-codlab', function() {
+                var query = $('#codlab').val();
+                if (query != '') {
+
+                    $.ajax({
+                        url: "{{ route('search.codlab.animal') }}",
+                        method: "POST",
+                        data: {
+                            codlab: query
+                        },
+                        success: function(response) {
+                            console.log(response);
+                            $('.filter').html(response.viewRender);
+
                         }
                     });
                 } else {

@@ -205,4 +205,18 @@ class AnimaisController extends Controller
         }
         return response()->json($animais);
     }
+    public function searchCodLab(Request $request)
+    {
+        if ($request->ajax()) {
+            $codlab = $request->codlab;
+
+            $animal = Animal::where('codlab', 'LIKE', '%' . $codlab . '%')
+                ->first();
+            // dd($item);
+
+            $viewRender = view('admin.animais.includes.codlab-search', compact('animal'))->render();
+
+            return response()->json(['viewRender' => $viewRender]);
+        }
+    }
 }

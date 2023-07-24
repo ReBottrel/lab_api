@@ -137,4 +137,6 @@ class AnimalOrderController extends Controller
         $parents = FurParent::where('animal_id', $animal->id)->first();
         return response()->json(get_defined_vars());
     }
+
+
 }
