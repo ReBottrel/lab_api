@@ -51,11 +51,7 @@ class OrdemServicoController extends Controller
             $exame = Exam::find($item->exam_id);
             $animal = Animal::find($item->animal_id);
             $data = Carbon::parse($item->updated_at)->addWeekdays($exame->days);
-            if ($animal->especies == null) {
-                $animal->update([
-                    'especies' => "EQUINA",
-                ]);
-            }
+
             $randomNumber = mt_rand(0, 1000000);
             $dna_verify = DnaVerify::where('animal_id', $item->animal_id)->latest('created_at')->first();
             if (!$dna_verify) {
@@ -211,6 +207,11 @@ class OrdemServicoController extends Controller
         $ordem = OrdemServico::find($id);
         $animal = Animal::with('alelos')->find($ordem->animal_id);
         $dna_verify = DnaVerify::where('animal_id', $ordem->animal_id)->first();
+        if ($animal->especies == null) {
+            $animal->update([
+                'especies' => "EQUINA",
+            ]);
+        }
         $laudo = Laudo::where('ordem_id', $id)
             ->orderBy('id', 'desc')
             ->first();
