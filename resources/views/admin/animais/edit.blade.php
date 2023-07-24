@@ -119,7 +119,7 @@
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <div class="mb-3">Identificador</label>
+                                <div class="mb-3">Identificador/ REF do laudo</label>
                                     <input type="text" name="identificador" id="identificador" class="form-control">
                                 </div>
                             </div>
