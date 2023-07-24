@@ -812,8 +812,8 @@
                                         'Laudo enviado com sucesso.',
                                         'success'
                                     )
-                                    window.location.href =
-                                        "{{ route('laudos') }}";
+                                    // window.location.href =
+                                    //     "{{ route('laudos') }}";
                                 }
                             })
                         }

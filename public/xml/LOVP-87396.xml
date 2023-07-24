@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="iso-8859-1" ?>
         <document>
           <CASO>
-            <NUMERO><![CDATA[LOVP23-LO23-87396]]></NUMERO> 		
+            <NUMERO><![CDATA[VP-LO23-87396]]></NUMERO> 		
             <ANIMAL><![CDATA[ADRENALINA AOSTA]]></ANIMAL> 	
-            <REGISTRO><![CDATA[]]></REGISTRO> 		
+            <REGISTRO><![CDATA[63220]]></REGISTRO> 		
             <DATACONCLUSAO><![CDATA[24/07/2023]]></DATACONCLUSAO> 
             <LABORATORIO><![CDATA[18]]></LABORATORIO> 		
             <PROPRIETARIO><![CDATA[49973-9]]></PROPRIETARIO>
@@ -11,7 +11,7 @@
             <SUBTIPOEXAME><![CDATA[1]]></SUBTIPOEXAME> 		
             <TECNICO><![CDATA[ADÉLCIO BARBOSA DA SILVA JÚNIOR]]></TECNICO> 		
             <DATACOLETA><![CDATA[14/06/2023]]></DATACOLETA> 	
-            <TIPOMATERIAL><![CDATA[2]]></TIPOMATERIAL> 	
+            <TIPOMATERIAL><![CDATA[001]]></TIPOMATERIAL> 	
             <NOMEIMAGEM><![CDATA[LOVP23-626254.98286.93530.pdf]]></NOMEIMAGEM> 
             <OBSERVACOES><![CDATA[]]></OBSERVACOES> 
             <DATAENVIO><![CDATA[]]></DATAENVIO>	
@@ -24,12 +24,15 @@
             <SEQUENCIA Microssatelite="ASB17" Marcador="M/N" />
             <SEQUENCIA Microssatelite="ASB2" Marcador="L/L" />
             <SEQUENCIA Microssatelite="ASB23" Marcador="I/O" />
+            <SEQUENCIA Microssatelite="CA425" Marcador="/" />
+            <SEQUENCIA Microssatelite="HMS1" Marcador="/" />
             <SEQUENCIA Microssatelite="HMS2" Marcador="O/K" />
             <SEQUENCIA Microssatelite="HMS3" Marcador="I/U" />
             <SEQUENCIA Microssatelite="HMS6" Marcador="U/M" />
             <SEQUENCIA Microssatelite="HMS7" Marcador="J/P" />
             <SEQUENCIA Microssatelite="HTG4" Marcador="P/K" />
             <SEQUENCIA Microssatelite="HTG7" Marcador="I/R" />
+            <SEQUENCIA Microssatelite="LEX03" Marcador="/" />
             <SEQUENCIA Microssatelite="VHL20" Marcador="P/R" />	
           </REGISTRO>
           <VP>

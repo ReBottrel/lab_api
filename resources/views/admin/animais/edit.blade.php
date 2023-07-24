@@ -83,7 +83,7 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="exampleFormControlInput1" class="form-label">Data de nascimento</label>
-                                    <input type="date" name="birth_date" id="birth_date" class="form-control">
+                                    <input type="text" name="birth_date" id="birth_date" class="form-control">
                                 </div>
                             </div>
                             <div class="col-md-6">
