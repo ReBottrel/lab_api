@@ -159,9 +159,18 @@
                             codlab: query
                         },
                         success: function(response) {
-                            console.log(response);
-                            $('.filter').html(response.viewRender);
-
+                            if (response.viewRender) {
+                        
+                                $('.filter').html(response.viewRender);
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Erro!',
+                                    text: 'Animal não encontrado!',
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                });
+                            }
                         }
                     });
                 } else {
