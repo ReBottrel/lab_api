@@ -506,9 +506,9 @@
                         <span>{{ $owner->owner_name ?? 'Não informado' }}</span><br>
                         <strong>Endereço:</strong>
                         <span>{{ $owner->address ?? 'Não informado' }}, {{ $owner->number ?? 'Não informado' }}
-                            {{ $owner->complement }} -
-                            {{ $owner->city ?? 'Não informado' }} -
-                            {{ $owner->state ?? 'Não informado' }}
+                            {{ $owner->complement ?? '' }} -
+                            {{ $owner->city ?? '' }} -
+                            {{ $owner->state ?? '' }}
                         </span><br>
                         <strong>Tipo Amostra:</strong>
                         <span>
