@@ -507,7 +507,7 @@
                             @elseif($isDmy)
                                 {{ $animal->birth_date }}
                             @endif
-                            @endif
+
                         </span>
                         <br>
                         <strong>Código Interno:</strong>
