@@ -24,12 +24,13 @@
                     <div class="col">
                         @foreach ($order->data_g['data_table'] as $item)
                             @php
-                                
+                          
                                 $animal = App\Models\Animal::where('id', $item['id'])
                                     ->orWhere('register_number_brand', $item['id'])
                                     ->first();
                                 if ($animal) {
                                     $get = App\Models\PedidoAnimal::where('id_animal', $animal->id)->first();
+                                    $datas = App\Models\DataColeta::where('id_animal', $animal->id)->first();
                                 }
                                 
                                 $status = 'Aguardando amostra';
@@ -97,6 +98,36 @@
                                     class="list-group-item text-uppercase @if ($status == 'Análise Aprovada') bg-success @elseif($status == 'Amostra paga') bg-success @elseif($status == 'Análise reprovada') bg-danger @elseif($status == 'Recoleta solicitada') bg-warning @else bg-primary @endif  text-white">
                                     <span>STATUS:
                                         {{ $status }}</span>
+                                </li>
+
+                                <li class="list-group-item">
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <label for="exampleFormControlInput1" class="form-label">Data de
+                                                recebimento</label>
+                                            <input type="text" class="form-control datas data-1"
+                                                data-id="{{ $animal->id }}" data-type="data_recebimento"
+                                                id="data-rece-{{ $animal->id }}"
+                                                value="{{ $datas->data_recebimento ?? '' }}" placeholder="">
+                                        </div>
+                                        <div class="col-4">
+                                            <label for="exampleFormControlInput1" class="form-label">Data de
+                                                coleta</label>
+                                            <input type="text" class="form-control datas data-2"
+                                                id="data-coleta-{{ $animal->id }}" data-type="data_coleta"
+                                                data-id="{{ $animal->id }}" value="{{ $datas->data_coleta ?? '' }}"
+                                                placeholder="">
+                                        </div>
+                                        <div class="col-4">
+                                            <label for="exampleFormControlInput1" class="form-label">Data de
+                                                chamado</label>
+                                            <input type="text" class="form-control datas data-3"
+                                                data-id="{{ $animal->id }}" data-type="data_laboratorio"
+                                                id="data-chamado-{{ $animal->id }}"
+                                                value="{{ $datas->data_laboratorio ?? '' }}" placeholder="">
+                                        </div>
+
+                                    </div>
                                 </li>
 
                                 <li class="list-group-item">
@@ -206,6 +237,7 @@
 
 @section('js')
     <script>
+        $('.datas').mask('00/00/0000');
         $(document).on('blur', '.cpf-tech', function() {
             var id = $(this).data('id');
             $.ajax({
@@ -214,6 +246,56 @@
 
                 data: {
                     cpf: $(this).val()
+                },
+                success: function(data) {
+                    console.log(data);
+                }
+            });
+        });
+        $(document).on('blur', '.data-1', function() {
+            var id = $(this).data('id');
+            var data1 = $(`#data-rece-${id}`).val();
+            $.ajax({
+                url: `/data-store-resultado`,
+                type: 'POST',
+
+                data: {
+                    id_animal: id,
+                    data_recebimento: data1
+                },
+                success: function(data) {
+                    console.log(data);
+                }
+            });
+
+        });
+        $(document).on('blur', '.data-2', function() {
+            var id = $(this).data('id');
+            var data2 = $(`#data-coleta-${id}`).val();
+            $.ajax({
+                url: `/data-store-resultado`,
+                type: 'POST',
+
+                data: {
+                    id_animal: id,
+                    data_coleta: data2
+                },
+                success: function(data) {
+                    console.log(data);
+                }
+            });
+
+        });
+        $(document).on('blur', '.data-3', function() {
+            var id = $(this).data('id');
+            var data3 = $(`#data-chamado-${id}`).val();
+            $.ajax({
+                url: `/data-store-resultado`,
+                type: 'POST',
+
+                data: {
+                    id_animal: id,
+                    data_laboratorio: data3
                 },
                 success: function(data) {
                     console.log(data);

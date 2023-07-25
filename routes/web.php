@@ -41,6 +41,7 @@ use App\Http\Controllers\Veterinario\VetOrderController;
 use App\Http\Controllers\Veterinario\VetOwnerController;
 use App\Http\Controllers\Veterinario\VetAnimalController;
 use App\Http\Controllers\Veterinario\VetConfigController;
+use App\Models\OrdemServico;
 
 /*
 |--------------------------------------------------------------------------
@@ -353,6 +354,7 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::get('order-servico-all', [OrdemServicoController::class, 'index'])->name('ordem.servico.all');
     Route::get('order-servico-show/{id}', [OrdemServicoController::class, 'show'])->name('ordem.servico.show');
     Route::get('gerar-barcode/{id}', [OrdemServicoController::class, 'gerarBarCode'])->name('gerar.barcode');
+    Route::get('ordem-edit/{id}', [OrdemServicoController::class, 'edit'])->name('ordem.servico.edit');
 });
 
 Route::get('vet-login', [AuthVetController::class, 'showLoginForm'])->name('vet.login');
@@ -415,6 +417,8 @@ Route::middleware(['auth:veterinario'])->prefix('vet')->group(function () {
     Route::post('configs-store', [VetConfigController::class, 'updateUser'])->name('vet.configs.store');
 
     Route::any('logout', [AuthVetController::class, 'sair'])->name('vet.logout');
+
+  
 });
 
 Route::get('duplicados-e-filhos-daputa', [TesteController::class, 'duplicate']);

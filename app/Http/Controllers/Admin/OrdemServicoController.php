@@ -275,8 +275,6 @@ class OrdemServicoController extends Controller
                 break;
         }
 
-       
-
         return view('admin.ordem-servico.alelo-compare', get_defined_vars());
     }
 
@@ -574,5 +572,12 @@ class OrdemServicoController extends Controller
         $ordemServico = OrdemServico::find($id);
         $ordem = OrderLote::find($ordemServico->lote);
         return view('admin.ordem-servico.resultado-busca', get_defined_vars());
+    }
+
+    public function edit($id)
+    {
+        $ordemServico = OrdemServico::find($id);
+        $ordem = OrderLote::find($ordemServico->lote);
+        return response()->json($ordemServico);
     }
 }
