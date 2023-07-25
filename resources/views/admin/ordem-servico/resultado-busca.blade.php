@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+i@extends('layouts.admin')
 @section('content')
     <div class="container">
         <div>
@@ -13,67 +13,102 @@
         <div class="conteudo d-none">
             @include('admin.ordem-servico.include.print', get_defined_vars())
         </div>
-            <div class="ordem-servico">
-                <div class="card-alt">
-                    <div class="card-title">Animal ID</div>
-                    <div class="card-data">{{ $ordemServico->animal_id }}</div>
+        <div class="ordem-servico">
+            <div class="card-alt">
+                <div class="card-title">Animal ID</div>
+                <div class="card-data">{{ $ordemServico->animal_id }}</div>
 
 
-                    <div class="card-title">Animal</div>
-                    <div class="card-data">{{ $ordemServico->animal }}</div>
+                <div class="card-title">Animal</div>
+                <div class="card-data">{{ $ordemServico->animal }}</div>
 
-                    <div class="card-title">Código Lab</div>
-                    <div class="card-data">{{ $ordemServico->codlab }}</div>
+                <div class="card-title">Código Lab</div>
+                <div class="card-data">{{ $ordemServico->codlab }}</div>
 
-                    <div class="card-title">ID ABCCMM</div>
-                    <div class="card-data">{{ $ordemServico->id_abccmm }}</div>
+                <div class="card-title">ID ABCCMM</div>
+                <div class="card-data">{{ $ordemServico->id_abccmm }}</div>
 
-                    <div class="card-title">Tipo de Exame</div>
-                    <div class="card-data">{{ $ordemServico->tipo_exame }}</div>
+                <div class="card-title">Tipo de Exame</div>
+                <div class="card-data">{{ $ordemServico->tipo_exame }}</div>
 
-                    <div class="card-title">Proprietário</div>
-                    <div class="card-data">{{ $ordemServico->proprietario }}</div>
+                <div class="card-title">Proprietário</div>
+                <div class="card-data">{{ $ordemServico->proprietario }}</div>
 
-                    <div class="card-title">Técnico</div>
-                    <div class="card-data">{{ $ordemServico->tecnico }}</div>
+                <div class="card-title">Técnico</div>
+                <div class="card-data">{{ $ordemServico->tecnico }}</div>
 
-                    <div class="card-title">Data esperada</div>
-                    <div class="card-data">{{ date('d/m/Y', strtotime($ordemServico->data)) }}</div>
+                <div class="card-title">Data esperada</div>
+                <div class="card-data">{{ date('d/m/Y', strtotime($ordemServico->data)) }}</div>
 
-                    <div class="card-title">Observação</div>
-                    <div class="card-data">{{ $ordemServico->observacao }}</div>
+                <div class="card-title">Observação</div>
+                <div class="card-data">{{ $ordemServico->observacao }}</div>
 
-                    <div class="d-flex my-4">
-                        <div class="">
-                            <a href="{{ route('gerar.barcode', $ordemServico->id) }}"> <button class="btn btn-primary"><i
-                                        class="fa-solid fa-tag"></i> Imprimir etiqueta</button></a>
-                        </div>
-                        <div class="mx-2">
-                            <a href="{{ route('alelo.compare', $ordemServico->id) }}"> <button class="btn btn-alt-2"><i
-                                        class="fa-solid fa-tag"></i> Laudo</button></a>
-                        </div>
+                <div class="d-flex my-4">
+                    <div class="">
+                        <a href="{{ route('gerar.barcode', $ordemServico->id) }}"> <button class="btn btn-primary"><i
+                                    class="fa-solid fa-tag"></i> Imprimir etiqueta</button></a>
+                    </div>
+                    <div class="mx-2">
+                        <a href="{{ route('alelo.compare', $ordemServico->id) }}"> <button class="btn btn-alt-2"><i
+                                    class="fa-solid fa-tag"></i> Laudo</button></a>
+                    </div>
 
-                        <div class="mx-2">
-                            <a href="#"> <button id="openModal" data-bs-toggle="modal"
-                                    data-id="{{ $ordemServico->id }}" data-bs-target="#exampleModal"
-                                    class="btn btn-primary"><i class="fa-solid fa-tag"></i>
-                                    Data da entrada na area técnica</button></a>
+                    <div class="mx-2">
+                        <a href="#"> <button id="openModal" data-bs-toggle="modal" data-id="{{ $ordemServico->id }}"
+                                data-bs-target="#exampleModal" class="btn btn-primary"><i class="fa-solid fa-tag"></i>
+                                Data da entrada na area técnica</button></a>
 
-
-                        </div>
-                        <div class="mx-2">
-                            <button type="button" id="dataAnalise" data-bs-toggle="modal" data-bs-target="#modalData"
-                                data-id="{{ $ordemServico->id }}" class="btn btn-primary"><i class="fa-solid fa-tag"></i>
-                                Data da análise</button>
-                        </div>
 
                     </div>
+                    <div class="mx-2">
+                        <button type="button" id="dataAnalise" data-bs-toggle="modal" data-bs-target="#modalData"
+                            data-id="{{ $ordemServico->id }}" class="btn btn-primary"><i class="fa-solid fa-tag"></i>
+                            Data da análise</button>
+                    </div>
+
                 </div>
             </div>
-   
+        </div>
+
 
     </div>
-
+    <!-- Modal -->
+    <div class="modal fade" id="modalEdit" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Editar</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form method="post" action="{{ route('ordem.servico.update') }}">
+                    @csrf
+                    <input type="hidden" name="ordem_id" id="ordem_id">
+                    <div class="modal-body" id="edit-modal">
+                        <div class="mb-3 col-4">
+                            <label for="formFile" class="form-label">Nome do animal</label>
+                            <input class="form-control" name="animal" type="text">
+                        </div>
+                        <div class="mb-3 col-4">
+                            <label for="formFile" class="form-label">Código de barras</label>
+                            <input class="form-control" name="bar_code" type="text">
+                        </div>
+                        <div class="mb-3 col-4">
+                            <label for="formFile" class="form-label">Codlab</label>
+                            <input class="form-control" name="codlab" type="text">
+                        </div>
+                        <div class="mb-3 col-4">
+                            <label for="formFile" class="form-label">Tipo de exame</label>
+                            <input class="form-control" name="tipo_exame" type="text">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                        <button type="submit" class="btn btn-primary" id="enviar">Salvar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
     <!-- Modal -->
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -128,6 +163,20 @@
 @endsection
 @section('js')
     <script>
+        $(document).on('click', '[data-bs-target="#modalEdit"]', function() {
+            let id = $(this).data('id'); // Obtenha o ID do elemento clicado
+            $('#ordem_id').val(id);
+            $.ajax({
+                url: `{{ route('ordem.servico.edit', ['id' => ':id']) }}`.replace(':id', id),
+                type: 'GET',
+                success: (data) => {
+                    console.log(data);
+                    for (i in data) {
+                        $('#edit-modal').find(`[name="${i}"]`).val(data[i]);
+                    }
+                }
+            });
+        });
         $('#imprimir').click(function() {
             var conteudo = $('.conteudo').html();
             var tela_impressao = window.open('about:blank');
@@ -193,6 +242,5 @@
 
             });
         });
-      
     </script>
 @endsection
