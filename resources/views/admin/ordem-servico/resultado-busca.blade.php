@@ -67,17 +67,18 @@
                         <a href="{{ route('alelo.compare', $ordemServico->id) }}"> <button class="btn btn-alt-2"><i
                                     class="fa-solid fa-tag"></i> Laudo</button></a>
                     </div>
-
                     <div class="mx-2">
                         <a href="#"> <button id="openModal" data-bs-toggle="modal" data-id="{{ $ordemServico->id }}"
-                                data-bs-target="#exampleModal" class="btn btn-primary"><i class="fa-solid fa-tag"></i>
+                                data-bar="{{ $ordemServico->data_bar }}" data-bs-target="#exampleModal"
+                                class="btn btn-primary"><i class="fa-solid fa-tag"></i>
                                 Data da entrada na area técnica</button></a>
 
 
                     </div>
                     <div class="mx-2">
                         <button type="button" id="dataAnalise" data-bs-toggle="modal" data-bs-target="#modalData"
-                            data-id="{{ $ordemServico->id }}" class="btn btn-primary"><i class="fa-solid fa-tag"></i>
+                            data-id="{{ $ordemServico->id }}" data-analise="{{ $ordemServico->data_analise }}"
+                            class="btn btn-primary"><i class="fa-solid fa-tag"></i>
                             Data da análise</button>
                     </div>
                     <div class="mx-2">
