@@ -44,6 +44,24 @@
                     <div class="card-title">Observação</div>
                     <div class="card-data">{{ $ordemServico->observacao }}</div>
 
+                    <div class="card-title">Data entrada na areá técnica</div>
+                    <div class="card-data">
+                        @if ($ordemServico->data_bar == null)
+                            Data ainda não inserida
+                        @else
+                            {{ date('d/m/Y', strtotime($ordemServico->data_bar)) }}
+                        @endif
+                    </div>
+
+                    <div class="card-title">Data análise</div>
+                    <div class="card-data">
+                        @if ($ordemServico->data_analise == null)
+                            Data ainda não inserida
+                        @else
+                            {{ date('d/m/Y', strtotime($ordemServico->data_analise)) }}
+                        @endif
+                    </div>
+
                     <div class="d-flex my-4">
                         <div class="">
                             <a href="{{ route('gerar.barcode', $ordemServico->id) }}"> <button class="btn btn-primary"><i
@@ -56,7 +74,7 @@
 
                         <div class="mx-2">
                             <a href="#"> <button id="openModal" data-bs-toggle="modal"
-                                    data-id="{{ $ordemServico->id }}" data-bs-target="#exampleModal"
+                                    data-id="{{ $ordemServico->id }}" data-bar="{{ $ordemServico->data_bar }}" data-bs-target="#exampleModal"
                                     class="btn btn-primary"><i class="fa-solid fa-tag"></i>
                                     Data da entrada na area técnica</button></a>
 
@@ -64,9 +82,14 @@
                         </div>
                         <div class="mx-2">
                             <button type="button" id="dataAnalise" data-bs-toggle="modal" data-bs-target="#modalData"
-                                data-id="{{ $ordemServico->id }}" class="btn btn-primary"><i class="fa-solid fa-tag"></i>
+                                data-id="{{ $ordemServico->id }}" data-analise="{{ $ordemServico->data_analise }}" class="btn btn-primary"><i class="fa-solid fa-tag"></i>
                                 Data da análise</button>
                         </div>
+                        {{-- <div class="mx-2">
+                            <button type="button" id="dataAnalise" data-bs-toggle="modal" data-bs-target="#modalData"
+                                data-id="{{ $ordemServico->id }}" class="btn btn-primary"><i class="fa-solid fa-tag"></i>
+                                Editar</button>
+                        </div> --}}
 
                     </div>
                 </div>
@@ -138,7 +161,9 @@
         });
         $(document).on('click', '#openModal', function() {
             let id = $(this).data('id');
+            let data = $(this).data('bar');
             $('#ordem_id').val(id);
+            $('#data').val(data);
         });
 
         $(document).on('click', '#enviar', function() {
@@ -161,14 +186,16 @@
                         title: 'Sucesso!',
                         text: 'Data salva com sucesso!',
                     });
+                    window.location.reload();
                 }
 
             });
         });
         $(document).on('click', '#dataAnalise', function() {
             let id = $(this).data('id');
+            let data = $(this).data('analise');
             $('#id').val(id);
-
+            $('#dataAn').val(data);
         });
         $(document).on('click', '#save', function() {
             let data = $('#dataAn').val();
@@ -190,10 +217,10 @@
                         title: 'Sucesso!',
                         text: 'Data salva com sucesso!',
                     });
+                    window.location.reload();
                 }
 
             });
         });
-      
     </script>
 @endsection
