@@ -355,6 +355,7 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::get('order-servico-show/{id}', [OrdemServicoController::class, 'show'])->name('ordem.servico.show');
     Route::get('gerar-barcode/{id}', [OrdemServicoController::class, 'gerarBarCode'])->name('gerar.barcode');
     Route::get('ordem-edit/{id}', [OrdemServicoController::class, 'edit'])->name('ordem.servico.edit');
+    Route::post('ordem-update/', [OrdemServicoController::class, 'update'])->name('ordem.servico.update');
 });
 
 Route::get('vet-login', [AuthVetController::class, 'showLoginForm'])->name('vet.login');

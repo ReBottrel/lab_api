@@ -580,4 +580,12 @@ class OrdemServicoController extends Controller
         $ordem = OrderLote::find($ordemServico->lote);
         return response()->json($ordemServico);
     }
+
+    public function update(Request $request)
+    {
+        $ordemServico = OrdemServico::find($request->ordem_id);
+        $ordemServico->update($request->all());
+
+        return redirect()->back()->with('success', 'Ordem de serviço atualizada com sucesso');
+    }
 }

@@ -107,7 +107,7 @@
                     <h1 class="modal-title fs-5" id="exampleModalLabel">Editar</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form method="post">
+                <form method="post" action="{{ route('ordem.servico.update') }}">
                     @csrf
                     <input type="hidden" name="ordem_id" id="ordem_id">
                     <div class="modal-body" id="edit-modal">
@@ -191,7 +191,7 @@
     <script>
         $(document).on('click', '[data-bs-target="#modalEdit"]', function() {
             let id = $(this).data('id'); // Obtenha o ID do elemento clicado
-
+            $('#ordem_id').val(id);
             $.ajax({
                 url: `{{ route('ordem.servico.edit', ['id' => ':id']) }}`.replace(':id', id),
                 type: 'GET',
