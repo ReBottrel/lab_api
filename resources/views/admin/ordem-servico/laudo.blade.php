@@ -495,17 +495,21 @@
                         <span>{{ $animal->number_definitive ?? 'Não informado' }}</span>
                         <strong style="margin-left: 123px;">Data de Nascimento:</strong>
                         <span>
-                            @php
-                                // Verifica se está no formato 'Y-m-d' (0000-00-00)
-                                $isYmd = date_create_from_format('Y-m-d', $animal->birth_date) !== false;
-                                
-                                // Verifica se está no formato 'd/m/Y' (00/00/0000)
-                                $isDmy = date_create_from_format('d/m/Y', $animal->birth_date) !== false;
-                            @endphp
-                            @if ($isYmd)
-                                {{ date('d/m/Y', strtotime($animal->birth_date)) }}
-                            @elseif($isDmy)
-                                {{ $animal->birth_date }}
+                            @if ($animal->birth_date == null)
+                                Não informado
+                            @else
+                                @php
+                                    // Verifica se está no formato 'Y-m-d' (0000-00-00)
+                                    $isYmd = date_create_from_format('Y-m-d', $animal->birth_date) !== false;
+                                    
+                                    // Verifica se está no formato 'd/m/Y' (00/00/0000)
+                                    $isDmy = date_create_from_format('d/m/Y', $animal->birth_date) !== false;
+                                @endphp
+                                @if ($isYmd)
+                                    {{ date('d/m/Y', strtotime($animal->birth_date)) }}
+                                @elseif($isDmy)
+                                    {{ $animal->birth_date }}
+                                @endif
                             @endif
 
                         </span>
