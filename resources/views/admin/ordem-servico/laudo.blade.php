@@ -495,7 +495,7 @@
                             @if ($animal->birth_date == null)
                                 Não informado
                             @else
-                                {{ date('d/m/Y', strtotime($animal->birth_date)) ?? 'Não informado' }}
+                                {{ date('d/m/Y', strtotime($animal->birth_date)) ? date('d/m/Y', strtotime($animal->birth_date)) : $animal->birth_date }}
                             @endif
                         </span>
                         <br>
