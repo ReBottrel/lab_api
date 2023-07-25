@@ -475,8 +475,11 @@
             </div>
             <div class="text-end">
                 <span><strong>Relat. n</strong>
-                    @if ($mae != null){{ substr($mae->codlab, 3) }}.@endif{{ substr($animal->codlab, 3) }}.@if ($pai != null){{ substr($pai->codlab, 3) }}
-                    @endif
+                    @if ($mae != null)
+                        {{ substr($mae->codlab, 3) }}.
+                        @endif{{ substr($animal->codlab, 3) }}.@if ($pai != null)
+                            {{ substr($pai->codlab, 3) }}
+                        @endif
                 </span>
             </div>
             <div class="text-center my-1 text-decoration-underline">
@@ -495,7 +498,18 @@
                             @if ($animal->birth_date == null)
                                 Não informado
                             @else
-                                {{ date('d/m/Y', strtotime($animal->birth_date)) ?? 'Não informado' }}
+                                @php
+                                    // Verifica se está no formato 'Y-m-d' (0000-00-00)
+                                    $isYmd = date_create_from_format('Y-m-d', $animal->birth_date) !== false;
+                                    
+                                    // Verifica se está no formato 'd/m/Y' (00/00/0000)
+                                    $isDmy = date_create_from_format('d/m/Y', $animal->birth_date) !== false;
+                                @endphp
+                                @if ($isYmd)
+                                    {{ date('d/m/Y', strtotime($animal->birth_date)) }}
+                                @elseif($isDmy)
+                                    {{ $animal->birth_date }}
+                                @endif
                             @endif
                         </span>
                         <br>
@@ -536,7 +550,13 @@
 
                         <br>
                         <strong>Espécie:</strong>
-                        <span>@if($animal->especies == 'EQUINA_PEGA') EQUINA @else {{ $animal->especies ?? 'Não informado' }} @endif</span>
+                        <span>
+                            @if ($animal->especies == 'EQUINA_PEGA')
+                                EQUINA
+                            @else
+                                {{ $animal->especies ?? 'Não informado' }}
+                            @endif
+                        </span>
                         <br>
                         <strong>Raça:</strong>
                         <span>{{ $animal->breed ?? 'Não informado' }}</span>
