@@ -84,7 +84,7 @@
                                     <select class="form-select species" name="especies">
                                         <option>Selecione e espécie</option>
                                         @foreach ($species as $specie)
-                                            <option value="{{ $specie->name }}" data-specie="{{ $specie->id }}">
+                                            <option value="{{ $specie->description }}" data-specie="{{ $specie->id }}">
                                                 {{ $specie->name }}</option>
                                         @endforeach
                                     </select>
