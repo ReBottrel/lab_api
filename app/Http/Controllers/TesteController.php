@@ -192,22 +192,32 @@ class TesteController extends Controller
             ->groupBy('animal_id', 'marcador')
             ->havingRaw('COUNT(*) > 1')
             ->get();
-    
+
         foreach ($duplicados as $duplicado) {
             $registrosDuplicados = Alelo::where('animal_id', $duplicado->animal_id)
                 ->where('marcador', $duplicado->marcador)
                 ->get();
-    
+
             $primeiroRegistro = true;
             foreach ($registrosDuplicados as $registro) {
                 if ($primeiroRegistro) {
                     $primeiroRegistro = false;
                     continue;
                 }
-    
+
                 $registro->delete();
             }
         }
     }
 
+    public function mudarEspecie()
+    {
+        $animals = Animal::where('especies', 'ASININO')->get();
+        // foreach ($animals as $animal) {
+        //     $animal->update([
+        //         'especies' => 'MANGALARGA',
+        //     ]);
+        // }
+        return $animals;
+    }
 }
