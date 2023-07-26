@@ -42,6 +42,7 @@
 
                 <div class="card-title">Observação</div>
                 <div class="card-data">{{ $ordemServico->observacao }}</div>
+                <div class="card-title">Data entrada na areá técnica</div>
                 <div class="card-data">
                     @if ($ordemServico->data_bar == null)
                         Data ainda não inserida
