@@ -212,10 +212,10 @@ class TesteController extends Controller
 
     public function mudarEspecie()
     {
-        $animals = Animal::where('especies', 'ASININO')->get();
+        $animals = Animal::where('especies', 'ASININA')->get();
         // foreach ($animals as $animal) {
         //     $animal->update([
-        //         'especies' => 'MANGALARGA',
+        //         'especies' => 'ASININO',
         //     ]);
         // }
         return $animals;
