@@ -22,8 +22,7 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="exampleFormControlInput1" class="form-label">Codlab</label>
-                                    <input type="text" name="codlab" id="codlab"
-                                        class="form-control">
+                                    <input type="text" name="codlab" id="codlab" class="form-control">
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -83,7 +82,7 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="exampleFormControlInput1" class="form-label">Data de nascimento</label>
-                                    <input type="text" name="birth_date" id="birth_date" class="form-control">
+                                    <input type="date" name="birth_date" id="birth_date" class="form-control">
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -143,13 +142,22 @@
             console.log(id);
             $.ajax({
                 url: `{{ url('animal-edit') }}/${id}`,
-
                 type: 'GET',
                 success: (data) => {
                     console.log(data);
                     for (i in data) {
+                        var inputField = $('#editar-produto').find(`[name="${i}"]`);
 
-                        $('#editar-produto').find(`[name="${i}"]`).val(data[i]);
+                        if (inputField.attr('type') === 'date') {
+                            var date = new Date(data[i]);
+                            var day = ("0" + date.getDate()).slice(-2);
+                            var month = ("0" + (date.getMonth() + 1)).slice(-2);
+                            var formattedDate = date.getFullYear() + "-" + (month) + "-" + (day);
+
+                            inputField.val(formattedDate);
+                        } else {
+                            inputField.val(data[i]);
+                        }
                     }
                 }
             });
