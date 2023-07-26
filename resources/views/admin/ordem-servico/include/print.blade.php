@@ -54,7 +54,7 @@
                         <tr>
                             <th scope="row">{{ $item->codlab }}</th>
                             <td>{{ $item->animal }}</td>
-                            <td>{{ $item->tipo_exame }}</td>
+                            <td>@if($item->tipo_exame == 'PEGGN') EQUPEGGN @else {{ $item->tipo_exame }} @endif</td>
                             <td>{{ $item->rg_pai ?? '' }}/ {{ $item->rg_mae ?? '' }}</td>
                             <td>{{ date('d/m/Y', strtotime($item->data)) }}</td>
                             <td>{{ $item->id_abccmm }}</td>

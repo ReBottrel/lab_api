@@ -384,7 +384,7 @@ class OrderController extends Controller
                         break;
                     case 'MUARES':
                     case 'ASININO':
-                    case 'EQUINA_PEGA':
+                    case 'PEGA_EQUINO':
                         $exam = Exam::find(20);
                         break;
                     case 'EQUINA':

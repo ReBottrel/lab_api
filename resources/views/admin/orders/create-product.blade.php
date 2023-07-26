@@ -148,7 +148,7 @@
                                     Verificação de parentesco
                                 </label>
                             </div>
-                            <div class="col-md-6 type-verify d-none">
+                            <div class="col-md-6 type-verify ">
                                 <div class="mb-3">
                                     <label for="exampleFormControlInput1" class="form-label">Tipo de exame</label>
                                     <select class="form-select verify-type" name="verify_code">
@@ -173,7 +173,7 @@
                                         <option value="MUAMD" data-verify="2">MUAMD</option>
                                         <option value="MUAPD" data-verify="3">MUAPD</option>
                                         <option value="MUATR" data-verify="4">MUATR</option>
-                                        <option value="MUATR" data-verify="4">EQUPEGGN</option>
+                                        <option value="PEGGN" data-verify="1">EQUPEGGN</option>
                                     </select>
                                 </div>
                             </div>

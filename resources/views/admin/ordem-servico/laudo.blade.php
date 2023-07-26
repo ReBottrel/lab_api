@@ -552,7 +552,7 @@
                         <br>
                         <strong>Espécie:</strong>
                         <span>
-                            @if ($animal->especies == 'EQUINA_PEGA')
+                            @if ($animal->especies == 'PEGA_EQUINO')
                                 EQUINA
                             @else
                                 {{ $animal->especies ?? 'Não informado' }}

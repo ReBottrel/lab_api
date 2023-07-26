@@ -49,7 +49,7 @@
                                         <option value="BOVINA">BOVINA</option>
                                         <option value="ASININO">ASININOS</option>
                                         <option value="MUARES">MUARES</option>
-                                        <option value="EQUINO_PEGA">EQUINO PÊGA</option>
+                                        <option value="PEGA_EQUINO">EQUINO PÊGA</option>
                                     </select>
                                 </div>
                             </div>
