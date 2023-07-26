@@ -777,6 +777,7 @@
         });
         $(document).on('click', '#finalizar', function() {
             let laudo = $('#laudo').val();
+            $(this).html('ENVIANDO...');
             $.ajax({
                 url: "{{ route('pre.confirm') }}",
                 type: 'POST',
@@ -805,29 +806,46 @@
                                     laudo: laudo,
                                 },
                                 success: function(response) {
-                                    console.log(response[0]);
-                                    if (response[0]
-                                        .SetCertificateResult ==
-                                        '000 - ABCCMM: Sucesso'
-                                    ) {
+                                    console.log(response);
+                                    if (response[1].nome == 'ABCCMM') {
+                                        if (response[0]
+                                            .SetCertificateResult ==
+                                            '000 - ABCCMM: Sucesso'
+                                        ) {
+                                            Swal.fire(
+                                                'Sucesso!',
+                                                'Laudo enviado com sucesso.',
+                                                'success'
+                                            )
+                                            $('#finalizar').html(
+                                                'FINALIZAR');
+                                            window.location.href =
+                                                "{{ route('laudos') }}";
+                                        } else {
+                                            Swal.fire({
+                                                icon: 'error',
+                                                title: 'Oops...',
+                                                text: response[
+                                                        0]
+                                                    .SetCertificateResult,
+
+                                            });
+                                            $('#finalizar').html(
+                                                'FINALIZAR');
+                                        }
+
+                                    } else {
                                         Swal.fire(
                                             'Sucesso!',
                                             'Laudo enviado com sucesso.',
                                             'success'
                                         )
-                                        // window.location.href =
-                                        //     "{{ route('laudos') }}";
-                                    } else {
-                                        Swal.fire({
-                                            icon: 'error',
-                                            title: 'Oops...',
-                                            text: response[0]
-                                                .SetCertificateResult,
-
-                                        })
+                                        $('#finalizar').html(
+                                            'FINALIZAR');
+                                        window.location.href =
+                                            "{{ route('laudos') }}";
                                     }
-
-                                },
+                                }
 
                             })
                         }

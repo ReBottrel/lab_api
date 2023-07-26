@@ -29,7 +29,7 @@
                 <div class="card-data">{{ $ordemServico->id_abccmm }}</div>
 
                 <div class="card-title">Tipo de Exame</div>
-                <div class="card-data">{{ $ordemServico->tipo_exame }}</div>
+                <div class="card-data">@if($ordemServico->tipo_exame == 'PEGGN') EQUPEGGN @else {{ $ordemServico->tipo_exame }} @endif</div>
 
                 <div class="card-title">Proprietário</div>
                 <div class="card-data">{{ $ordemServico->proprietario }}</div>
