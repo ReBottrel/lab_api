@@ -586,16 +586,21 @@ class OrdemServicoController extends Controller
     {
         $ordemServico = OrdemServico::find($request->ordem_id);
         $dna_verify = DnaVerify::where('animal_id', $ordemServico->animal_id)->latest('created_at')->first();
-        
+        $tipoExame = null;
+        if ($request->tipo_exame == 'EQUPEGGN') {
+            $tipoExame = 'PEGGN';
+        } else {
+            $tipoExame = $request->tipo_exame;
+        }
         if (!$dna_verify) {
             $dna_verify = new DnaVerify();
             $dna_verify->animal_id = $ordemServico->animal_id;
             $dna_verify->order_id = $ordemServico->order;
-            $dna_verify->verify_code = $request->tipo_exame;
+            $dna_verify->verify_code = $tipoExame;
             $dna_verify->save();
         } else {
             $dna_verify->update([
-                'verify_code' => $request->tipo_exame,
+                'verify_code' => $tipoExame,
             ]);
         }
 
