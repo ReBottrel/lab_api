@@ -150,9 +150,9 @@
                             </div>
                             <div class="col-md-6 type-verify d-none">
                                 <div class="mb-3">
-                                    <label for="exampleFormControlInput1" class="form-label">Tipo de verificação</label>
+                                    <label for="exampleFormControlInput1" class="form-label">Tipo de exame</label>
                                     <select class="form-select verify-type" name="verify_code">
-                                        <option value="semverify">Selecione a verificação</option>
+                                        <option value="semverify">Selecione o tipo de verificação</option>
                                         <option value="ASIGN" data-verify="1">ASIGN</option>
                                         <option value="ASIMD" data-verify="2">ASIMD</option>
                                         <option value="ASIPD" data-verify="3">ASIPD</option>
@@ -173,6 +173,7 @@
                                         <option value="MUAMD" data-verify="2">MUAMD</option>
                                         <option value="MUAPD" data-verify="3">MUAPD</option>
                                         <option value="MUATR" data-verify="4">MUATR</option>
+                                        <option value="MUATR" data-verify="4">EQUPEGGN</option>
                                     </select>
                                 </div>
                             </div>

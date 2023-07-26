@@ -286,7 +286,7 @@ class LaudoController extends Controller
             Mail::to($parceiro->email)->send(new EnviarLaudoMail($laudo->pdf));
             Mail::to($owner->email)->send(new EnviarLaudoMail($laudo->pdf));
             Mail::to('laudosdna.lfda-mg@agro.gov.br')->send(new EnviarLaudoMail($laudo->pdf));
-            return response()->json([get_defined_vars()], 200);
+            return response()->json([$parceiro], 200);
         }
     }
 

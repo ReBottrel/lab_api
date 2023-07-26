@@ -805,6 +805,7 @@
                                     laudo: laudo,
                                 },
                                 success: function(response) {
+                                    console.log(response[0]);
                                     if (response[0]
                                         .SetCertificateResult ==
                                         '000 - ABCCMM: Sucesso'
@@ -814,8 +815,8 @@
                                             'Laudo enviado com sucesso.',
                                             'success'
                                         )
-                                        window.location.href =
-                                            "{{ route('laudos') }}";
+                                        // window.location.href =
+                                        //     "{{ route('laudos') }}";
                                     } else {
                                         Swal.fire({
                                             icon: 'error',

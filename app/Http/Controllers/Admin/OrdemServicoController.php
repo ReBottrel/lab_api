@@ -584,6 +584,21 @@ class OrdemServicoController extends Controller
     public function update(Request $request)
     {
         $ordemServico = OrdemServico::find($request->ordem_id);
+        $dna_verify = DnaVerify::where('animal_id', $ordemServico->animal_id)->first();
+        // dd($dna_verify);
+        // Se o dna_verify não existir, crie um novo registro com os dados relevantes
+        if (!$dna_verify) {
+            $dna_verify = new DnaVerify();
+            $dna_verify->animal_id = $ordemServico->animal_id;
+            $dna_verify->order_id = $ordemServico->order;
+            $dna_verify->verify_code = $request->tipo_exame;
+            $dna_verify->save();
+        } else {
+            // Se o registro existir, atualize o atributo 'verify_code' com o novo valor
+            $dna_verify->verify_code = $request->tipo_exame;
+            $dna_verify->save();
+        }
+
         $ordemServico->update($request->all());
 
         return redirect()->back()->with('success', 'Ordem de serviço atualizada com sucesso');
