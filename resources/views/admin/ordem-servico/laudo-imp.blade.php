@@ -585,7 +585,7 @@
             <div class="content_3">
                 <p>
                     <strong>Responsável pela Coleta/Registro Profissional ou CPF:</strong>
-                    <span>{{ $ordem->tecnico ?? 'Não informado' }} - {{ $tecnico->document ?? 'Não informado' }}</span>
+                    <span>{{ $ordem->tecnico }} - {{ $tecnico->document ?? 'Não informado' }}</span>
                     <br>
                     <strong>Data do Recebimento</strong>
                     <span>{{ $datas->data_recebimento }}</span>
