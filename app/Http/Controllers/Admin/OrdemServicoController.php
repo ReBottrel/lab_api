@@ -294,7 +294,7 @@ class OrdemServicoController extends Controller
     {
         $ordem = OrdemServico::find($request->ordem);
         $animal = Animal::with('alelos')->find($ordem->animal_id);
-        $dna_verify = DnaVerify::where('animal_id', $animal->id)->first();
+        $dna_verify = DnaVerify::where('animal_id', $animal->id)->latest('created_at')->first();
         $sigla = substr($animal->especies, 0, 3);
         $result = Result::where('ordem_servico', $ordem->id)
             ->orderBy('id', 'desc')
@@ -315,6 +315,8 @@ class OrdemServicoController extends Controller
             default:
                 break;
         }
+
+        // dd($dna_verify);
 
         $alelosMae = [];
         $alelosPai = [];
@@ -586,6 +588,7 @@ class OrdemServicoController extends Controller
     {
         $ordemServico = OrdemServico::find($request->ordem_id);
         $dna_verify = DnaVerify::where('animal_id', $ordemServico->animal_id)->latest('created_at')->first();
+        dd($dna_verify);
         $tipoExame = null;
         if ($request->tipo_exame == 'EQUPEGGN') {
             $tipoExame = 'PEGGN';
