@@ -588,7 +588,7 @@ class OrdemServicoController extends Controller
     {
         $ordemServico = OrdemServico::find($request->ordem_id);
         $dna_verify = DnaVerify::where('animal_id', $ordemServico->animal_id)->latest('created_at')->first();
-        dd($dna_verify);
+     
         $tipoExame = null;
         if ($request->tipo_exame == 'EQUPEGGN') {
             $tipoExame = 'PEGGN';
