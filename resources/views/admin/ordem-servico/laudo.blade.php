@@ -554,6 +554,8 @@
                         <span>
                             @if ($animal->especies == 'PEGA_EQUINO')
                                 EQUINA
+                            @elseif($animal->especies == 'MUARES')
+                                MUAR
                             @else
                                 {{ $animal->especies ?? 'Não informado' }}
                             @endif
