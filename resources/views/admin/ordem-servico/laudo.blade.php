@@ -497,6 +497,8 @@
                         <span>
                             @if ($animal->birth_date == null)
                                 Não informado
+                            @elseif(date('d/m/Y', strtotime($animal->birth_date)) == '31/12/1969')
+                                Não informado
                             @else
                                 @php
                                     // Verifica se está no formato 'Y-m-d' (0000-00-00)
