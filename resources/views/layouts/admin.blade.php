@@ -77,7 +77,7 @@
                                 @if (auth()->user()->permission == 10)
                                     <li><a class="dropdown-item" href="{{ route('alelos.get.api') }}">Importar API</a>
                                     </li>
-                                    <li><a class="dropdown-item" href="{{ route('alelos.create') }}">Criar</a>
+                                    <li><a class="dropdown-item" href="{{ route('alelos.create') }}">Criar/Editar</a>
                                     </li>
                                     <li><a class="dropdown-item" href="{{ route('import.txt.view') }}">Importar TXT</a>
                                     </li>
