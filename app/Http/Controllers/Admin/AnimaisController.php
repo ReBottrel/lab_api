@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Animal;
 use App\Models\Fur;
+use App\Models\OrdemServico;
 use Illuminate\Http\Request;
 
 class AnimaisController extends Controller
@@ -125,7 +126,32 @@ class AnimaisController extends Controller
     public function update(Request $request, $id)
     {
         $animal = Animal::find($id);
-        $animal->update($request->all());
+
+        $animal->update([
+
+            'register_number_brand' => $request->register_number_brand,
+            'animal_name' => $request->animal_name,
+            'especies' => $request->especies,
+            'breed' => $request->breed,
+            'sex' => $request->sex,
+            'age' => $request->age,
+            'birth_date' => $request->birth_date,
+            'registro_pai' => $request->registro_pai,
+            'pai' => $request->pai,
+            'registro_mae' => $request->registro_mae,
+            'mae' => $request->mae,
+            'codlab' => $request->codlab,
+            'identificador' => $request->identificador,
+        ]);
+
+        $ordem = OrdemServico::where('animal_id', $id)->first();
+
+        if ($ordem) {
+            $ordem->update([
+                'codlab' => $request->codlab,
+            ]);
+        }
+
         return redirect()->route('animais')->with('success', 'Animal editado com sucesso!');
     }
 
@@ -206,18 +232,18 @@ class AnimaisController extends Controller
         return response()->json($animais);
     }
 
-   
+
     public function searchCodLab(Request $request)
     {
         if ($request->ajax()) {
             $codlab = $request->codlab;
-    
+
             $animal = Animal::where('codlab', 'LIKE', '%' . $codlab . '%')
                 ->first();
-    
+
             if ($animal) {
                 $viewRender = view('admin.animais.includes.codlab-search', compact('animal'))->render();
-    
+
                 return response()->json(['viewRender' => $viewRender]);
             } else {
                 return response()->json(['error' => 'Animal não encontrado.']);
