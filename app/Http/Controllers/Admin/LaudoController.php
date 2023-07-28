@@ -279,8 +279,8 @@ class LaudoController extends Controller
         $results = Result::where('ordem_servico', $laudo->ordem_id)->latest()->first();
         if ($order->parceiro == 'ABCCMM') {
             $xml = $this->gerarXML($animal, $laudo, $order, $results, $pai, $mae);
-            Mail::to($owner->email)->send(new EnviarLaudoMail($laudo->pdf));
-            Mail::to('laudosdna.lfda-mg@agro.gov.br')->send(new EnviarLaudoMail($laudo->pdf));
+            // Mail::to($owner->email)->send(new EnviarLaudoMail($laudo->pdf));
+            // Mail::to('laudosdna.lfda-mg@agro.gov.br')->send(new EnviarLaudoMail($laudo->pdf));
             return response()->json([$xml, $parceiro], 200);
         } else {
             Mail::to($parceiro->email)->send(new EnviarLaudoMail($laudo->pdf));
@@ -317,7 +317,7 @@ class LaudoController extends Controller
           <CASO>
             <NUMERO><![CDATA[LOVP23-' . $animal->identificador . ']]></NUMERO> 		
             <ANIMAL><![CDATA[' . $animal->animal_name . ']]></ANIMAL> 	
-            <REGISTRO><![CDATA[]]></REGISTRO> 		
+            <REGISTRO><![CDATA[0]]></REGISTRO> 		
             <DATACONCLUSAO><![CDATA[' . date('d/m/Y', strtotime($laudo->created_at)) . ']]></DATACONCLUSAO> 
             <LABORATORIO><![CDATA[18]]></LABORATORIO> 		
             <PROPRIETARIO><![CDATA[' . $order->creator_number . ']]></PROPRIETARIO>
@@ -330,7 +330,7 @@ class LaudoController extends Controller
             <OBSERVACOES><![CDATA[' . $laudo->observacao . ']]></OBSERVACOES> 
             <DATAENVIO><![CDATA[' . $laudo->data_lab . ']]></DATAENVIO>	
             <HORAENVIO><![CDATA[00:00]]></HORAENVIO>
-            <ROWIDANIMAL><![CDATA[' . $animal->row_id . ']]></ROWIDANIMAL>
+            <ROWIDANIMAL><![CDATA[' . $animal->register_number_brand . ']]></ROWIDANIMAL>
           </CASO>
           <REGISTRO CodigoLaboratorio="' . $animal->identificador . '">
             <SEQUENCIA Microssatelite="AHT4" Marcador="' . $animal->alelos[0]->alelo1 . '/' . $animal->alelos[0]->alelo2 . '" />
@@ -353,7 +353,8 @@ class LaudoController extends Controller
         </document>';
 
         $xml = str_replace('﻿', '', $xml);
-        $saveXml = public_path('xml/arquivo2.xml');
+        $name = 'LOVP23-' . $animal->identificador . '.xml';
+        $saveXml = public_path('xml/'. $name);
         file_put_contents($saveXml, $xml);
         $pemContent = file_get_contents(public_path('certificado/certw.pem'));
 
