@@ -233,18 +233,19 @@ class LaudoController extends Controller
         $codlabPai = $pai ? substr($pai->codlab, 3) : 'N/A';
         $codlabAnimal = substr($animal->codlab, 3);
         $siglaPais = ($pai || $mae) ? 'VP' : 'AP';
+
         // Cria a string para a sigla representando as informações de Pai e/ou Mãe
-
-
-        // Remove any slashes from the codlab strings to avoid issues in the filename
         $codlabAnimal = str_replace(['/', '\\'], '_', $codlabAnimal);
         $codlabMae = str_replace(['/', '\\'], '_', $codlabMae);
         $codlabPai = str_replace(['/', '\\'], '_', $codlabPai);
-        $codlabMae = str_replace(['N_A', '\\'], '', $codlabMae);
-        $codlabPai = str_replace(['N_A', '\\'], '', $codlabPai);
-        // $name =  if($mae == null)
-        // Gera um nome de arquivo exclusivo para o PDF assinado
-        $filename = "LO{$siglaPais}23-{$codlabMae}.{$codlabAnimal}.{$codlabPai}" . '.pdf';
+
+        if ($siglaPais == 'AP') {
+            $codlabMae = str_replace('N_A', '', $codlabMae);
+            $codlabPai = str_replace('N_A', '', $codlabPai);
+            $filename = "LO23-{$codlabAnimal}" . '.pdf'; // Remova os pontos aqui
+        } else {
+            $filename = "LO{$siglaPais}23-{$codlabMae}.{$codlabAnimal}.{$codlabPai}" . '.pdf';
+        }
 
         // Salva o PDF assinado no diretório público
         Storage::disk('public')->put($filename, $outputAssinado);
@@ -354,17 +355,17 @@ class LaudoController extends Controller
 
         $xml = str_replace('﻿', '', $xml);
         $name = 'LOVP23-' . $animal->identificador . '.xml';
-        $saveXml = public_path('xml/'. $name);
+        $saveXml = public_path('xml/' . $name);
         file_put_contents($saveXml, $xml);
         $pemContent = file_get_contents(public_path('certificado/certw.pem'));
 
- 
+
         try {
 
             $client = new \SoapClient('http://weblab.abccmm.org.br:8087/service.asmx?wsdl');
             // $client = new \SoapClient('http://webserviceteste.abccmm.org.br:8083/service.asmx?wsdl');
-      
-            
+
+
             $params = array(
                 'objBinaryCertificate' => $pemContent,  // Binary data for certificate
                 'strXmlData' => $xml  // XML data as a string
@@ -372,7 +373,6 @@ class LaudoController extends Controller
 
             $response = $client->SetCertificate($params);
             return $response;
-   
         } catch (\SoapFault $fault) {
             trigger_error("SOAP Fault: (faultcode: {$fault->faultcode}, faultstring: {$fault->faultstring})", E_USER_ERROR);
         }
