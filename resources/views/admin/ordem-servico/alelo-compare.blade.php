@@ -91,6 +91,7 @@
                             @foreach ($marcadores as $marcador)
                                 @php
                                     $encontrado = false;
+                                    // var_dump($marcador);    
                                 @endphp
                                 @foreach ($mae->alelos as $item)
                                     @if (strtolower(trim($item->marcador)) == strtolower(trim($marcador)))
