@@ -774,7 +774,7 @@
                         <br>
                         <span>
                             FILHO(A): animal {{ $animal->animal_name }}, número {{ $animal->identificador }}, emitido
-                            pelo
+                            pelo laboratório
                             {{ $animal->alelos[0]->lab }} em {{ date('d/m/Y') }}.
 
                         </span>
