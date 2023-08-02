@@ -820,8 +820,8 @@
                                             )
                                             $('#finalizar').html(
                                                 'FINALIZAR');
-                                            window.location.href =
-                                                "{{ route('laudos') }}";
+                                            // window.location.href =
+                                            //     "{{ route('laudos') }}";
                                         } else {
                                             Swal.fire({
                                                 icon: 'error',

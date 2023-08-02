@@ -359,7 +359,17 @@ class LaudoController extends Controller
         file_put_contents($saveXml, $xml);
         $pemContent = file_get_contents(public_path('certificado/certw.pem'));
 
+        // Caminho para o arquivo PDF que você deseja converter
+        $nomeArquivo = storage_path('app/public/' . $laudo->pdf);
 
+        $pdfContent = file_get_contents($nomeArquivo);
+
+        
+
+        // Converte o conteúdo do PDF em um array de bytes
+        $byteArray = unpack('C*', $pdfContent);
+        $pdfBase64 = base64_encode(pack('C*', ...$byteArray));
+ 
         try {
 
             $client = new \SoapClient('http://weblab.abccmm.org.br:8087/service.asmx?wsdl');
@@ -367,7 +377,7 @@ class LaudoController extends Controller
 
 
             $params = array(
-                'objBinaryCertificate' => $pemContent,  // Binary data for certificate
+                'objBinaryCertificate' => $pdfBase64,  // Binary data for certificate
                 'strXmlData' => $xml  // XML data as a string
             );
 
