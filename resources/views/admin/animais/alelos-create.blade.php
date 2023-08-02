@@ -3,7 +3,7 @@
 @section('content')
     <div class="container">
         <div class="row">
-            <div class="mb-3 col-6">
+            <div class="mb-3 col-4">
                 <label for="exampleFormControlInput1" class="form-label">Buscar animal pelo nome</label>
                 <select class="js-example-basic-animal" id="buscar-nome">
 
@@ -12,6 +12,14 @@
             <div class="col-2 mt-4">
                 <button class="btn btn-primary" type="button" id="buscar">BUSCAR</button>
             </div>
+            <div class="mb-3 col-3">
+                <label for="exampleFormControlInput1" class="form-label">Buscar animal pelo codlab</label>
+                <input type="text" class="form-control" id="codlab">
+            </div>
+            <div class="col-2 mt-4">
+                <button class="btn btn-primary" type="button" id="buscarCodlab">BUSCAR</button>
+            </div>
+
         </div>
         <div id="animal-info">
 
@@ -131,6 +139,50 @@
                 }
             });
 
+            $(document).on('click', '#buscarCodlab', function() {
+            
+                var codlab = $('#codlab').val();
+                if (codlab != '') {
+                    $.ajax({
+                        url: "{{ route('animais.buscar.codlab') }}",
+                        method: "POST",
+                        data: {
+                            codlab: codlab,
+                            _token: "{{ csrf_token() }}",
+                        },
+                        success: function(data) {
+                            console.log(data);
+                            id = data.animal.id;
+                            $('#animal-info').fadeIn();
+                            $('#animal-info').html(`
+                            <p>Nome do animal: ${data.animal.animal_name}</p>
+                            `);
+                            if (data.especie == null) {
+                                $('#especienull').removeClass('d-none').append(
+                                    `<div class="alert alert-danger" role="alert">
+                Espécie não cadastrada, por favor cadastre a espécie antes de cadastrar o animal! <a href="{{ url('/animal-show') }}/${id}">Clique aqui para editar o animal</a>
+            </div>`);
+                                $('#animalForm').addClass('d-none');
+                            } else {
+                                $('#especienull').addClass('d-none');
+                                $('#animalForm').removeClass('d-none');
+                                $('#especie').val(data.especie.id);
+                            }
+
+                            $('input[name="animal_name"]').val(data.animal.animal_name);
+                            $('#animalForm').removeClass('d-none');
+                            $('#lab').val(data.animal.alelos && data.animal.alelos[0] && data
+                                .animal.alelos[0].lab ? data.animal.alelos[0].lab : '');
+                            $('#data').val(data.animal.alelos && data.animal.alelos[0] && data
+                                .animal.alelos[0].data ? data.animal.alelos[0].data : '');
+                            $('#identificador').val(data.animal.identificador ? data.animal
+                                .identificador : '');
+                            $('#marcadores').html(data.view);
+
+                        }
+                    });
+                }
+            });
 
         });
         $(document).ready(function() {

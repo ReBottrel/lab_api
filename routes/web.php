@@ -155,6 +155,7 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::post('alelos-api', [AlelosController::class, 'api'])->name('alelos.api');
     Route::post('alelos-store', [AlelosController::class, 'store'])->name('alelos.store');
     Route::post('animais-alelo-buscar', [AlelosController::class, 'getAnimal'])->name('animais.buscar');
+    Route::post('animais-alelo-buscar-codlab', [AlelosController::class, 'getAnimalCodlab'])->name('animais.buscar.codlab');
     Route::post('store-alelos-custom', [AlelosController::class, 'storeAlelo'])->name('alelos.store.custom');
 
     Route::post('data-bar-store', [OrdemServicoController::class, 'dataBarCode'])->name('data.bar.store');
