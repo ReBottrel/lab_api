@@ -34,6 +34,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Response;
 use RobRichards\XMLSecLibs\XMLSecurityKey;
 use RobRichards\XMLSecLibs\XMLSecurityDSig;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use BaconQrCode\Renderer\Image\ImagickImageBackEnd;
 use BaconQrCode\Renderer\RendererStyle\RendererStyle;
@@ -363,10 +364,8 @@ class LaudoController extends Controller
         // Caminho para o arquivo PDF que você deseja converter
         $nomeArquivo = storage_path('app/public/' . $laudo->pdf);
 
-
-        
-        $pdfHash = base64_encode(hash('sha256', $nomeArquivo, true)); //base64-encoded binary hash of the raw file data
- 
+        $pdf = file_get_contents($nomeArquivo);
+        // dd($pdf);
         try {
 
             // $client = new \SoapClient('http://weblab.abccmm.org.br:8087/service.asmx?wsdl');
@@ -374,7 +373,7 @@ class LaudoController extends Controller
 
 
             $params = array(
-                'objBinaryCertificate' => $nomeArquivo,  // Binary data for certificate
+                'objBinaryCertificate' => $pdf,  // Binary data for certificate
                 'strXmlData' => $xml  // XML data as a string
             );
 
