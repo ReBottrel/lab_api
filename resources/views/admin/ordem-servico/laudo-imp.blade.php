@@ -475,6 +475,7 @@
             </div>
             <div class="text-end">
                 <span><strong>Relat. n</strong>
+                    @if($laudo->observacao)RET1.@endif
                     {{ $mae != null ? substr($mae->codlab, 3) . '.' : '' }}
                     {{ substr($animal->codlab, 3) }}
                     {{ $pai != null ? '.' . substr($pai->codlab, 3) : '' }}
