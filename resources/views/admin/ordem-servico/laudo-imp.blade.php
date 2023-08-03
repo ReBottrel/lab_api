@@ -613,7 +613,7 @@
                 <p>
                     <strong>Data da Realização:</strong>
                     <span>
-                        @if ($ordem->data_analise == null || $datas->data_analise == '31/12/1969')
+                        @if ($ordem->data_analise == null || $ordem->data_analise == '31/12/1969')
                             Não informado
                         @else
                             {{ $ordem->data_analise ?? 'Não informado' }}
