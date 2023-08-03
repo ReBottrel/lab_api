@@ -299,6 +299,12 @@ class LaudoController extends Controller
         $excluidos = $results->excluido;  // substitua por seus dados
         $incluidos = $results->incluido;  // substitua por seus dados
 
+        if ($pai == null && $mae == null) {
+            $subtipo = 1;
+        } else {
+            $subtipo = 2;
+        }
+
         $seqXmlPai = "";
         for ($i = 0; $i < count($microssatellites); $i++) {
             $marcador = $pai->alelos[$i]->alelo1 . '/' . $pai->alelos[$i]->alelo2;
@@ -325,7 +331,7 @@ class LaudoController extends Controller
             <LABORATORIO><![CDATA[18]]></LABORATORIO> 		
             <PROPRIETARIO><![CDATA[' . $order->creator_number . ']]></PROPRIETARIO>
             <TIPOEXAME><![CDATA[2]]></TIPOEXAME> 		
-            <SUBTIPOEXAME><![CDATA[1]]></SUBTIPOEXAME> 		
+            <SUBTIPOEXAME><![CDATA['.$subtipo.']]></SUBTIPOEXAME> 		
             <TECNICO><![CDATA[' . $order->technical_manager . ']]></TECNICO> 		
             <DATACOLETA><![CDATA[' . $laudo->data_coleta . ']]></DATACOLETA> 	
             <TIPOMATERIAL><![CDATA[2]]></TIPOMATERIAL> 	
