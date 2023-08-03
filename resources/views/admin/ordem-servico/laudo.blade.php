@@ -475,9 +475,7 @@
             </div>
             <div class="text-end">
                 <span><strong>Relat. n</strong>
-                    @if ($laudo->ret)
-                        {{ $laudo->ret }}
-                    @endif
+                    @if($laudo->ret){{ $laudo->ret }}@endif
                     {{ $mae != null ? substr($mae->codlab, 3) . '.' : '' }}
                     {{ substr($animal->codlab, 3) }}
                     {{ $pai != null ? '.' . substr($pai->codlab, 3) : '' }}
@@ -593,13 +591,7 @@
                     <strong>Data do Recebimento</strong>
                     <span>{{ $datas->data_recebimento }}</span>
                     <strong style="margin-left: 136px;">Data de Entrada na Área Técnica:</strong>
-                    <span>
-                        @if ($ordem->data_bar == null || $datas->data_bar == '31/12/1969')
-                            Não informado
-                        @else
-                            {{ $ordem->data_bar ?? 'Não informado' }}
-                        @endif
-                    </span>
+                    <span>{{ date('d/m/Y', strtotime($ordem->data_bar)) }}</span>
                     <br>
                     <strong>OBSERVAÇÃO:</strong>
                     <span>A amostragem foi de exclusiva responsabilidade do cliente.</span>
@@ -613,13 +605,7 @@
             <div class="content_4">
                 <p>
                     <strong>Data da Realização:</strong>
-                    <span>
-                        @if ($ordem->data_analise == null || $ordem->data_analise == '31/12/1969')
-                            Não informado
-                        @else
-                            {{ $ordem->data_analise ?? 'Não informado' }}
-                        @endif
-                    </span>
+                    <span>{{ date('d/m/Y', strtotime($ordem->data_analise)) }}</span>
                     <br>
                     <strong>Metodologia Utilizada:</strong>
                     <span>
