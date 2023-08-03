@@ -281,8 +281,8 @@ class LaudoController extends Controller
         $results = Result::where('ordem_servico', $laudo->ordem_id)->latest()->first();
         if ($order->parceiro == 'ABCCMM') {
             $xml = $this->gerarXML($animal, $laudo, $order, $results, $pai, $mae);
-            Mail::to($owner->email)->send(new EnviarLaudoMail($laudo->pdf));
-            Mail::to('laudosdna.lfda-mg@agro.gov.br')->send(new EnviarLaudoMail($laudo->pdf));
+            // Mail::to($owner->email)->send(new EnviarLaudoMail($laudo->pdf));
+            // Mail::to('laudosdna.lfda-mg@agro.gov.br')->send(new EnviarLaudoMail($laudo->pdf));
             return response()->json([$xml, $parceiro], 200);
         } else {
             Mail::to($parceiro->email)->send(new EnviarLaudoMail($laudo->pdf));
@@ -363,22 +363,18 @@ class LaudoController extends Controller
         // Caminho para o arquivo PDF que você deseja converter
         $nomeArquivo = storage_path('app/public/' . $laudo->pdf);
 
-        $pdfContent = file_get_contents($nomeArquivo);
 
         
-
-        // Converte o conteúdo do PDF em um array de bytes
-        $byteArray = unpack('C*', $pdfContent);
-        $pdfBase64 = base64_encode(pack('C*', ...$byteArray));
+        $pdfHash = base64_encode(hash('sha256', $nomeArquivo, true)); //base64-encoded binary hash of the raw file data
  
         try {
 
-            $client = new \SoapClient('http://weblab.abccmm.org.br:8087/service.asmx?wsdl');
-            // $client = new \SoapClient('http://webserviceteste.abccmm.org.br:8083/service.asmx?wsdl');
+            // $client = new \SoapClient('http://weblab.abccmm.org.br:8087/service.asmx?wsdl');
+            $client = new \SoapClient('http://webserviceteste.abccmm.org.br:8083/service.asmx?wsdl');
 
 
             $params = array(
-                'objBinaryCertificate' => $pdfBase64,  // Binary data for certificate
+                'objBinaryCertificate' => $nomeArquivo,  // Binary data for certificate
                 'strXmlData' => $xml  // XML data as a string
             );
 
