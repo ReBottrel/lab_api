@@ -592,7 +592,13 @@
                     <strong>Data do Recebimento</strong>
                     <span>{{ $datas->data_recebimento }}</span>
                     <strong style="margin-left: 136px;">Data de Entrada na Área Técnica:</strong>
-                    <span>{{ date('d/m/Y', strtotime($ordem->data_bar)) }}</span>
+                    <span>
+                        @if ($ordem->data_bar == null || $datas->data_bar == '31/12/1969')
+                            Não informado
+                        @else
+                            {{ $ordem->data_bar ?? 'Não informado' }}
+                        @endif
+                    </span>
                     <br>
                     <strong>OBSERVAÇÃO:</strong>
                     <span>A amostragem foi de exclusiva responsabilidade do cliente.</span>
@@ -606,7 +612,13 @@
             <div class="content_4">
                 <p>
                     <strong>Data da Realização:</strong>
-                    <span>{{ date('d/m/Y', strtotime($ordem->data_analise)) }}</span>
+                    <span>
+                        @if ($ordem->data_analise == null || $datas->data_analise == '31/12/1969')
+                            Não informado
+                        @else
+                            {{ $ordem->data_analise ?? 'Não informado' }}
+                        @endif
+                    </span>
                     <br>
                     <strong>Metodologia Utilizada:</strong>
                     <span>
