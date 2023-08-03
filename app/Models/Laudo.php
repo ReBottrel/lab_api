@@ -26,7 +26,8 @@ class Laudo extends Model
         'qrcode',
         'ordem_id',
         'order_id',
-        'pdf'
+        'pdf',
+        'ret',
     ];
 
     public function animal()

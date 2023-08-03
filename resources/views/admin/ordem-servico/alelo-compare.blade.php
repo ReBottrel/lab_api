@@ -91,7 +91,7 @@
                             @foreach ($marcadores as $marcador)
                                 @php
                                     $encontrado = false;
-                                    // var_dump($marcador);    
+                                    // var_dump($marcador);
                                 @endphp
                                 @foreach ($mae->alelos as $item)
                                     @if (strtolower(trim($item->marcador)) == strtolower(trim($marcador)))
@@ -227,6 +227,12 @@
 {{ $laudo->observacao }}
 @endif
     </textarea>
+</div>
+<div class="mb-3 px-5 pt-2">
+    <label for="exampleFormControlTextarea1" class="form-label">Retificação</label>
+    <input class="form-control" id="ret"
+        value="@if ($laudo) {{ $laudo->ret }} @endif">
+
 </div>
 <div class="d-flex">
     <div>
@@ -744,6 +750,7 @@
             let obs = $('#obs').val();
             let conclusao = $('.resultadoAnalise').val();
             let laudo = $('#laudo').val();
+            let ret = $('#ret').val();
             $.ajax({
                 url: "{{ route('gerar.laudo') }}",
                 type: 'POST',
@@ -753,6 +760,7 @@
                     obs: obs,
                     conclusao: conclusao,
                     laudo: laudo,
+                    ret: ret,
                 },
                 success: function(response) {
                     console.log(response);

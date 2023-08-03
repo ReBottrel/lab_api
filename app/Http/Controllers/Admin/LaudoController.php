@@ -81,6 +81,7 @@ class LaudoController extends Controller
             'veterinario_id' => $order->id_tecnico,
             'ordem_id' => $ordem->id,
             'order_id' => $order->id,
+            'ret' => $request->ret
         ];
 
 

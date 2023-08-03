@@ -475,7 +475,7 @@
             </div>
             <div class="text-end">
                 <span><strong>Relat. n</strong>
-                    @if($laudo->observacao)RET1.@endif
+                    @if($laudo->ret){{ $laudo->ret }}.@endif
                     {{ $mae != null ? substr($mae->codlab, 3) . '.' : '' }}
                     {{ substr($animal->codlab, 3) }}
                     {{ $pai != null ? '.' . substr($pai->codlab, 3) : '' }}
@@ -585,7 +585,8 @@
             <div class="content_3">
                 <p>
                     <strong>Responsável pela Coleta/Registro Profissional ou CPF:</strong>
-                    <span>{{ $ordem->tecnico ?? 'Não informado' }} - {{ $tecnico->document ?? 'Não informado' }}</span>
+                    <span>{{ $ordem->tecnico ?? 'Não informado' }} -
+                        {{ $tecnico->document ?? 'Não informado' }}</span>
                     <br>
                     <strong>Data do Recebimento</strong>
                     <span>{{ $datas->data_recebimento }}</span>
