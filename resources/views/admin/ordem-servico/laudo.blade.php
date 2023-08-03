@@ -613,7 +613,13 @@
             <div class="content_4">
                 <p>
                     <strong>Data da Realização:</strong>
-                    <span>{{ date('d/m/Y', strtotime($ordem->data_analise)) }}</span>
+                    <span>
+                        @if ($ordem->data_analise == null || $ordem->data_analise == '31/12/1969')
+                            Não informado
+                        @else
+                            {{ $ordem->data_analise ?? 'Não informado' }}
+                        @endif
+                    </span>
                     <br>
                     <strong>Metodologia Utilizada:</strong>
                     <span>
