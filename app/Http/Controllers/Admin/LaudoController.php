@@ -282,8 +282,8 @@ class LaudoController extends Controller
         $results = Result::where('ordem_servico', $laudo->ordem_id)->latest()->first();
         if ($order->parceiro == 'ABCCMM') {
             $xml = $this->gerarXML($animal, $laudo, $order, $results, $pai, $mae);
-            // Mail::to($owner->email)->send(new EnviarLaudoMail($laudo->pdf));
-            // Mail::to('laudosdna.lfda-mg@agro.gov.br')->send(new EnviarLaudoMail($laudo->pdf));
+            Mail::to($owner->email)->send(new EnviarLaudoMail($laudo->pdf));
+            Mail::to('laudosdna.lfda-mg@agro.gov.br')->send(new EnviarLaudoMail($laudo->pdf));
             return response()->json([$xml, $parceiro], 200);
         } else {
             Mail::to($parceiro->email)->send(new EnviarLaudoMail($laudo->pdf));
@@ -295,7 +295,7 @@ class LaudoController extends Controller
 
     public function gerarXML($animal, $laudo, $order, $results, $pai, $mae)
     {
-        $microssatellites = ["AHT4", "AHT5", "ASB17", "ASB2", "ASB23", "HMS2", "HMS3", "HMS6", "HMS7", "HTG4", "HTG7", "VHL20"];
+        $microssatellites = ["AHT4", "AHT5",  "ASB2", "ASB23", "HMS2", "HMS3", "HMS6", "HMS7", "HTG10", "HTG4", "HTG7", "VHL20"];
         $excluidos = $results->excluido;  // substitua por seus dados
         $incluidos = $results->incluido;  // substitua por seus dados
 
@@ -304,7 +304,16 @@ class LaudoController extends Controller
         } else {
             $subtipo = 2;
         }
-
+        $animalSequencesXml = "";
+        foreach ($microssatellites as $microsatellite) {
+            foreach ($animal->alelos as $alelo) {
+                if ($alelo->marcador == $microsatellite) {
+                    $marcador = $alelo->alelo1 . '/' . $alelo->alelo2;
+                    $animalSequencesXml .= '<SEQUENCIA Microssatelite="' . $alelo->marcador . '" Marcador="' . $marcador . '" />';
+                    break; // interrompe o loop interno, uma vez que o marcador correspondente foi encontrado
+                }
+            }
+        }
         $seqXmlPai = "";
         for ($i = 0; $i < count($microssatellites); $i++) {
             $marcador = $pai->alelos[$i]->alelo1 . '/' . $pai->alelos[$i]->alelo2;
@@ -331,7 +340,7 @@ class LaudoController extends Controller
             <LABORATORIO><![CDATA[18]]></LABORATORIO> 		
             <PROPRIETARIO><![CDATA[' . $order->creator_number . ']]></PROPRIETARIO>
             <TIPOEXAME><![CDATA[2]]></TIPOEXAME> 		
-            <SUBTIPOEXAME><![CDATA['.$subtipo.']]></SUBTIPOEXAME> 		
+            <SUBTIPOEXAME><![CDATA[' . $subtipo . ']]></SUBTIPOEXAME> 		
             <TECNICO><![CDATA[' . $order->technical_manager . ']]></TECNICO> 		
             <DATACOLETA><![CDATA[' . $laudo->data_coleta . ']]></DATACOLETA> 	
             <TIPOMATERIAL><![CDATA[2]]></TIPOMATERIAL> 	
@@ -341,20 +350,9 @@ class LaudoController extends Controller
             <HORAENVIO><![CDATA[00:00]]></HORAENVIO>
             <ROWIDANIMAL><![CDATA[' . $animal->register_number_brand . ']]></ROWIDANIMAL>
           </CASO>
-          <REGISTRO CodigoLaboratorio="' . $animal->identificador . '">
-            <SEQUENCIA Microssatelite="AHT4" Marcador="' . $animal->alelos[0]->alelo1 . '/' . $animal->alelos[0]->alelo2 . '" />
-            <SEQUENCIA Microssatelite="AHT5" Marcador="' . $animal->alelos[1]->alelo1 . '/' . $animal->alelos[1]->alelo2 . '" />
-            <SEQUENCIA Microssatelite="ASB17" Marcador="' . $animal->alelos[2]->alelo1 . '/' . $animal->alelos[2]->alelo2 . '" />
-            <SEQUENCIA Microssatelite="ASB2" Marcador="' . $animal->alelos[3]->alelo1 . '/' . $animal->alelos[3]->alelo2 . '" />
-            <SEQUENCIA Microssatelite="ASB23" Marcador="' . $animal->alelos[4]->alelo1 . '/' . $animal->alelos[4]->alelo2 . '" />
-            <SEQUENCIA Microssatelite="HMS2" Marcador="' . $animal->alelos[5]->alelo1 . '/' . $animal->alelos[6]->alelo2 . '" />
-            <SEQUENCIA Microssatelite="HMS3" Marcador="' . $animal->alelos[6]->alelo1 . '/' . $animal->alelos[7]->alelo2 . '" />
-            <SEQUENCIA Microssatelite="HMS6" Marcador="' . $animal->alelos[7]->alelo1 . '/' . $animal->alelos[8]->alelo2 . '" />
-            <SEQUENCIA Microssatelite="HMS7" Marcador="' . $animal->alelos[8]->alelo1 . '/' . $animal->alelos[9]->alelo2 . '" />
-            <SEQUENCIA Microssatelite="HTG4" Marcador="' . $animal->alelos[9]->alelo1 . '/' . $animal->alelos[10]->alelo2 . '" />
-            <SEQUENCIA Microssatelite="HTG7" Marcador="' . $animal->alelos[10]->alelo1 . '/' . $animal->alelos[11]->alelo2 . '" />
-            <SEQUENCIA Microssatelite="VHL20" Marcador="' . $animal->alelos[11]->alelo1 . '/' . $animal->alelos[11]->alelo2 . '" />	
-          </REGISTRO>
+   <REGISTRO CodigoLaboratorio="' . $animal->identificador . '">
+    ' . $animalSequencesXml . '
+  </REGISTRO>
           <VP>
             ' . $paiXml
             . $maeXml . '
@@ -374,8 +372,8 @@ class LaudoController extends Controller
         // dd($pdf);
         try {
 
-            // $client = new \SoapClient('http://weblab.abccmm.org.br:8087/service.asmx?wsdl');
-            $client = new \SoapClient('http://webserviceteste.abccmm.org.br:8083/service.asmx?wsdl');
+            $client = new \SoapClient('http://weblab.abccmm.org.br:8087/service.asmx?wsdl');
+            // $client = new \SoapClient('http://webserviceteste.abccmm.org.br:8083/service.asmx?wsdl');
 
 
             $params = array(
