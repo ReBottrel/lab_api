@@ -114,6 +114,9 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::get('alelos-duplicados', [TesteController::class, 'alelosDuplicados'])->name('alelos.duplicados');
     Route::get('alelos-duplicados-delete', [TesteController::class, 'apagarAlelosDuplicados'])->name('alelos.duplicados.delete');
     Route::get('get-especies-all', [TesteController::class, 'mudarEspecie'])->name('get.especies.all');
+    Route::get('get-payments', [TesteController::class, 'getPagamentos'])->name('get.payments');
+    Route::get('get-orders-duplicadas', [TesteController::class, 'getOrdemServicosDuplicadas']);
+    Route::get('delete-orders-duplicadas', [TesteController::class, 'deleteOrdemServicosDuplicadasSemDataBar']);
 
     Route::post('search-by-codlab', [OrdemServicoController::class, 'searchByCodlab'])->name('search.by.codlab');
     Route::get('result-by-codlab/{id}', [OrdemServicoController::class, 'resultado'])->name('result.by.codlab');

@@ -13,6 +13,7 @@ use App\Models\DnaVerify;
 use App\Models\DataColeta;
 use App\Models\OrdemServico;
 use App\Models\OrderRequest;
+use App\Models\OrderRequestPayment;
 use App\Models\PedidoAnimal;
 use Illuminate\Http\Request;
 use App\Models\ResenhaAnimal;
@@ -219,5 +220,56 @@ class TesteController extends Controller
             ]);
         }
         return $animals;
+    }
+
+    public function getPagamentos()
+    {
+        $payments_without_orders = OrderRequestPayment::where('payment_status', 1)
+            ->whereNotIn('order_request_id', function ($query) {
+                $query->select('id')->from(with(new OrderRequest)->getTable());
+            })
+            ->select('order_request_id', 'owner_name')
+            ->get();
+
+        // Crie uma string para armazenar os dados.
+        $data = "";
+
+        // Adicione cada pagamento ao arquivo .txt.
+        foreach ($payments_without_orders as $payment) {
+            $data .= "Numero pedido: " . $payment->order_request_id . ", Proprietario: " . $payment->owner_name . "\n";
+        }
+
+        // Escreva os dados no arquivo .txt.
+        file_put_contents('payments_without_orders.txt', $data);
+
+        return $payments_without_orders;
+    }
+
+    public function getOrdemServicosDuplicadas()
+    {
+        $ordens_servicos_duplicadas = OrdemServico::select('animal', 'order')
+            ->groupBy('animal', 'order')
+            ->havingRaw('COUNT(*) > 1')
+            ->get();
+
+        return $ordens_servicos_duplicadas;
+    }
+    public function deleteOrdemServicosDuplicadasSemDataBar()
+    {
+        // Obtenha as ordens de serviço duplicadas
+        $duplicated_orders = OrdemServico::select('animal', 'order')
+            ->groupBy('animal', 'order')
+            ->havingRaw('COUNT(*) > 1')
+            ->pluck('order');
+
+        // De todas as ordens de serviço duplicadas, obtenha as que não têm uma data_bar
+        $orders_to_delete = OrdemServico::whereIn('order', $duplicated_orders)
+            ->whereNull('data_bar')
+            ->get();
+
+        // Exclua essas ordens de serviço
+        foreach ($orders_to_delete as $order) {
+            $order->delete();
+        }
     }
 }
