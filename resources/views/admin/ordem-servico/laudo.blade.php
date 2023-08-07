@@ -781,7 +781,7 @@
 
                         </span>
                         @if ($pai != null)
-                            <br>s
+                            <br>
                             <span>
                                 GENITOR: {{ $pai->animal_name }}, número {{ $pai->identificador }},
                                 emitido pelo laboratório {{ $pai->alelos[0]->lab }} em

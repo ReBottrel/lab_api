@@ -228,7 +228,7 @@ class TesteController extends Controller
             ->whereNotIn('order_request_id', function ($query) {
                 $query->select('id')->from(with(new OrderRequest)->getTable());
             })
-            ->select('order_request_id', 'owner_name')
+            ->select('order_request_id', 'owner_name', 'updated_at','animal')
             ->get();
 
         // Crie uma string para armazenar os dados.
@@ -236,7 +236,8 @@ class TesteController extends Controller
 
         // Adicione cada pagamento ao arquivo .txt.
         foreach ($payments_without_orders as $payment) {
-            $data .= "Numero pedido: " . $payment->order_request_id . ", Proprietario: " . $payment->owner_name . "\n";
+            $formattedDate = $payment->updated_at ? $payment->updated_at->format('d/m/Y') : '';
+            $data .= "Numero pedido: " . $payment->order_request_id . ", Proprietario: " . $payment->owner_name . ", Data: " . $formattedDate . ", Animal: " . $payment->animal . "\n";
         }
 
         // Escreva os dados no arquivo .txt.
