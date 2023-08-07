@@ -333,7 +333,7 @@ class LaudoController extends Controller
         $xml = '<?xml version="1.0" encoding="iso-8859-1" ?>
         <document>
           <CASO>
-            <NUMERO><![CDATA[LOVP23-' . $animal->identificador . ']]></NUMERO> 		
+            <NUMERO><![CDATA[LOVP23-' . $mae->identificador . $animal->identificador . $pai->identificador . ']]></NUMERO> 		
             <ANIMAL><![CDATA[' . $animal->animal_name . ']]></ANIMAL> 	
             <REGISTRO><![CDATA[0]]></REGISTRO> 		
             <DATACONCLUSAO><![CDATA[' . date('d/m/Y', strtotime($laudo->created_at)) . ']]></DATACONCLUSAO> 
