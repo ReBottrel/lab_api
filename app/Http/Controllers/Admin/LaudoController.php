@@ -299,6 +299,9 @@ class LaudoController extends Controller
         $excluidos = $results->excluido;  // substitua por seus dados
         $incluidos = $results->incluido;  // substitua por seus dados
 
+        $animalId = $this->getIdAfterDash($animal->identificador);
+        $paiId = $this->getIdAfterDash($pai->identificador);
+        $maeId = $this->getIdAfterDash($mae->identificador);
         if ($pai == null && $mae == null) {
             $subtipo = 1;
         } else {
@@ -328,12 +331,13 @@ class LaudoController extends Controller
             $seqXmlMae .= '<SEQUENCIA Microssatelite="' . $microssatellites[$i] . '" Marcador="' . $marcador . '" Exclusao="' . $exclusao . '" />';
         }
 
+
         $paiXml = '<PAI CodigoLaboratorio="' . $pai->identificador . '" ConfirmaPaternidade="1">' . $seqXmlPai . '</PAI>';
         $maeXml = '<MAE CodigoLaboratorio="' . $mae->identificador . '" ConfirmaMaternidade="1">' . $seqXmlMae . '</MAE>';
         $xml = '<?xml version="1.0" encoding="iso-8859-1" ?>
         <document>
           <CASO>
-            <NUMERO><![CDATA[LOVP23-' . $mae->identificador . $animal->identificador . $pai->identificador . ']]></NUMERO> 		
+            <NUMERO><![CDATA[LOVP23-' . $maeId . '.' . $animalId . '.' . $paiId . ']]></NUMERO> 		
             <ANIMAL><![CDATA[' . $animal->animal_name . ']]></ANIMAL> 	
             <REGISTRO><![CDATA[0]]></REGISTRO> 		
             <DATACONCLUSAO><![CDATA[' . date('d/m/Y', strtotime($laudo->created_at)) . ']]></DATACONCLUSAO> 
@@ -387,7 +391,11 @@ class LaudoController extends Controller
             trigger_error("SOAP Fault: (faultcode: {$fault->faultcode}, faultstring: {$fault->faultstring})", E_USER_ERROR);
         }
     }
-
+    private function getIdAfterDash($identificador)
+    {
+        $lastDashPos = strrpos($identificador, '-');
+        return $lastDashPos !== false ? substr($identificador, $lastDashPos + 1) : $identificador;
+    }
 
     public function enviaXML()
     {
