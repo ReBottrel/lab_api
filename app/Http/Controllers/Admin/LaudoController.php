@@ -299,9 +299,9 @@ class LaudoController extends Controller
         $excluidos = $results->excluido;  // substitua por seus dados
         $incluidos = $results->incluido;  // substitua por seus dados
 
-        $animalId = $this->getIdAfterDash($animal->identificador);
-        $paiId = $this->getIdAfterDash($pai->identificador);
-        $maeId = $this->getIdAfterDash($mae->identificador);
+        $animalId = $this->removePrefix($animal->codlab);
+        $paiId = $this->removePrefix($pai->codlab);
+        $maeId = $this->removePrefix($mae->codlab);
         if ($pai == null && $mae == null) {
             $subtipo = 1;
         } else {
@@ -391,11 +391,14 @@ class LaudoController extends Controller
             trigger_error("SOAP Fault: (faultcode: {$fault->faultcode}, faultstring: {$fault->faultstring})", E_USER_ERROR);
         }
     }
-    private function getIdAfterDash($identificador)
-    {
-        $lastDashPos = strrpos($identificador, '-');
-        return $lastDashPos !== false ? substr($identificador, $lastDashPos + 1) : $identificador;
+    private function removePrefix($identificador)
+{
+    $prefix = "EQU";
+    if (strpos($identificador, $prefix) === 0) {
+        return substr($identificador, strlen($prefix));
     }
+    return $identificador;
+}
 
     public function enviaXML()
     {
