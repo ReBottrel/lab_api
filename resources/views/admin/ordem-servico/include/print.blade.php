@@ -20,7 +20,7 @@
         <h5>Numero do pedido: {{ $ordem->order_id }}</h5>
         <h5>Proprietário: {{ $ordem->owner }}</h5>
         <h5>Data de pagamento:@if (isset($ordemServicos))
-                {{ date('d/m/Y', strtotime($ordemServicos[0]->data_payment)) }}
+                {{ date('d/m/Y', strtotime($ordemServicos[0]->data_payment)) ?? ''}}
             @else
                 {{ date('d/m/Y', strtotime($ordemServico->data_payment)) }}
             @endif
@@ -28,7 +28,7 @@
 
         @if (isset($ordemServicos))
             @if (count($ordemServicos) > 0)
-                <h5>Técnico: {{ $ordemServicos[0]->tecnico }}</h5>
+                <h5>Técnico: {{ $ordemServicos[0]->tecnico ?? '' }}</h5>
             @else
                 <h5>Nenhum técnico encontrado</h5>
             @endif
