@@ -376,8 +376,8 @@ class LaudoController extends Controller
         // dd($pdf);
         try {
 
-            // $client = new \SoapClient('http://weblab.abccmm.org.br:8087/service.asmx?wsdl');
-            $client = new \SoapClient('http://webserviceteste.abccmm.org.br:8083/service.asmx?wsdl');
+            $client = new \SoapClient('http://weblab.abccmm.org.br:8087/service.asmx?wsdl');
+            // $client = new \SoapClient('http://webserviceteste.abccmm.org.br:8083/service.asmx?wsdl');
 
 
             $params = array(
