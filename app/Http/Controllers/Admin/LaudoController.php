@@ -490,4 +490,18 @@ class LaudoController extends Controller
             return response()->json(['message' => 'Laudo não encontrado'], 404);
         }
     }
+
+    public function searchByAnimal(Request $request)
+    {
+        if ($request->ajax()) {
+            $busca = $request->busca;
+            $animal = Animal::where('animal_name', 'LIKE', '%' . $busca . '%')->first();
+            $laudos = Laudo::where('animal_id', $animal->id)
+                ->get();
+
+            $viewRender = view('admin.laudos.include.search', compact('laudos'))->render();
+
+            return response()->json(['viewRender' => $viewRender]);
+        }
+    }
 }

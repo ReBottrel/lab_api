@@ -153,6 +153,7 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::get('gerar-pdf/{id}', [LaudoController::class, 'gerarPdf'])->name('gerar.pdf');
     Route::get('validacao/{codigo}', [LaudoController::class, 'verify'])->name('verify.pdf');
     Route::post('finalizar-laudo', [LaudoController::class, 'finalizar'])->name('finalizar.laudo');
+    Route::post('search-laudo', [LaudoController::class, 'searchByAnimal'])->name('search.laudo');
 
     Route::get('alelos-create', [AlelosController::class, 'alelosCreate'])->name('alelos.create');
     Route::get('alelos-get-api', [AlelosController::class, 'alelosApi'])->name('alelos.get.api');

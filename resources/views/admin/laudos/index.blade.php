@@ -6,8 +6,8 @@
         </div>
         <div class="row">
             <div class="mb-3 col-6">
-                <label for="exampleFormControlInput1" class="form-label">Buscar por proprietário ou por numero</label>
-                <input type="text" class="form-control">
+                <label for="exampleFormControlInput1"  class="form-label">Buscar por animal</label>
+                <input type="text" id="busca" class="form-control">
             </div>
         </div>
         <table class="table">
@@ -19,9 +19,9 @@
                     <th>Ação</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody class="table-busca">
                 @foreach ($laudos as $item)
-                    <tr> 
+                    <tr>
                         <th scope="row">{{ $item->id }} / {{ $item->order_id }}</th>
 
                         <td>{{ $item->animal->animal_name }}</td>
@@ -39,6 +39,33 @@
                 @endforeach
             </tbody>
         </table>
-      {{ $laudos->links()  }}
+        {{ $laudos->links() }}
     </div>
+@endsection
+
+@section('js')
+    <script>
+        $('#busca').keyup(function() {
+            var busca = $(this).val();
+
+            if (busca === '') {
+                // Ação a ser realizada quando o campo de busca estiver vazio
+                // Por exemplo, recarregar a página ou redefinir os resultados da busca
+                $('.table-busca').html(''); // Limpa os resultados da busca
+                return; // Sai da função para evitar a requisição AJAX
+            }
+
+            $.ajax({
+                url: "{{ route('search.laudo') }}",
+                type: "POST",
+                data: {
+                    busca: busca,
+                    _token: "{{ csrf_token() }}"
+                },
+                success: function(response) {
+                    $('.table-busca').html(response.viewRender);
+                }
+            });
+        });
+    </script>
 @endsection
