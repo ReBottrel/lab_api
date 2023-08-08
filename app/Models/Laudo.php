@@ -28,6 +28,7 @@ class Laudo extends Model
         'order_id',
         'pdf',
         'ret',
+        'status',
     ];
 
     public function animal()
