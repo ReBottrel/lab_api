@@ -39,6 +39,6 @@
                 @endforeach
             </tbody>
         </table>
-      
+      {{ $laudos->links()  }}
     </div>
 @endsection

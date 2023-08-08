@@ -228,7 +228,7 @@ class TesteController extends Controller
             ->whereNotIn('order_request_id', function ($query) {
                 $query->select('id')->from(with(new OrderRequest)->getTable());
             })
-            ->select('order_request_id', 'owner_name', 'updated_at','animal')
+            ->select('order_request_id', 'owner_name', 'updated_at', 'animal')
             ->get();
 
         // Crie uma string para armazenar os dados.
@@ -275,6 +275,10 @@ class TesteController extends Controller
     }
     public function alterarStatusLaudo()
     {
-        
+        // Filtrando laudos com status 0 e created_at diferente de 04/08/2023 e atualizando
+        $updatedCount = Laudo::where('status', 0)
+            ->whereNotNull('pdf')
+            ->update(['status' => 1]);
+        return $updatedCount;
     }
 }

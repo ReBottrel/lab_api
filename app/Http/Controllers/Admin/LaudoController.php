@@ -49,7 +49,7 @@ class LaudoController extends Controller
     }
     public function index()
     {
-        $laudos = Laudo::with('animal')->where('status', 1)->get();
+        $laudos = Laudo::with('animal')->where('status', 1)->paginate();
         return view('admin.laudos.index', get_defined_vars());
     }
 
