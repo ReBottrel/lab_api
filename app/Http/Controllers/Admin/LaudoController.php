@@ -49,7 +49,7 @@ class LaudoController extends Controller
     }
     public function index()
     {
-        $laudos = Laudo::with('animal')->get();
+        $laudos = Laudo::with('animal')->where('status', 1)->get();
         return view('admin.laudos.index', get_defined_vars());
     }
 
@@ -295,28 +295,33 @@ class LaudoController extends Controller
 
     public function gerarXML($animal, $laudo, $order, $results, $pai, $mae)
     {
-        $microssatellites = ["AHT4", "AHT5",  "ASB2", "ASB23", "HMS2", "HMS3", "HMS6", "HMS7", "HTG10", "HTG4", "HTG7", "VHL20"];
-        $excluidos = $results->excluido;  // substitua por seus dados
-        $incluidos = $results->incluido;  // substitua por seus dados
+        $microssatellites = ["AHT4", "AHT5", "ASB2", "ASB23", "HMS2", "HMS3", "HMS6", "HMS7", "HTG10", "HTG4", "HTG7", "VHL20"];
+        $excluidos = str_split($results->excluido);
+        $incluidos = str_split($results->incluido);
 
         $animalId = $this->removePrefix($animal->codlab);
         $paiId = $this->removePrefix($pai->codlab);
         $maeId = $this->removePrefix($mae->codlab);
+
         if ($pai == null && $mae == null) {
             $subtipo = 1;
         } else {
             $subtipo = 2;
         }
+
+        // Cria sequências de animais
         $animalSequencesXml = "";
         foreach ($microssatellites as $microsatellite) {
             foreach ($animal->alelos as $alelo) {
                 if ($alelo->marcador == $microsatellite) {
                     $marcador = $alelo->alelo1 . '/' . $alelo->alelo2;
                     $animalSequencesXml .= '<SEQUENCIA Microssatelite="' . $alelo->marcador . '" Marcador="' . $marcador . '" />';
-                    break; // interrompe o loop interno, uma vez que o marcador correspondente foi encontrado
+                    break;
                 }
             }
         }
+
+        // Cria sequências para pai
         $seqXmlPai = "";
         for ($i = 0; $i < count($microssatellites); $i++) {
             $marcador = $pai->alelos[$i]->alelo1 . '/' . $pai->alelos[$i]->alelo2;
@@ -324,16 +329,20 @@ class LaudoController extends Controller
             $seqXmlPai .= '<SEQUENCIA Microssatelite="' . $microssatellites[$i] . '" Marcador="' . $marcador . '" Exclusao="' . $exclusao . '" />';
         }
 
+        // Cria sequências para mãe
         $seqXmlMae = "";
         for ($i = 0; $i < count($microssatellites); $i++) {
             $marcador = $mae->alelos[$i]->alelo1 . '/' . $mae->alelos[$i]->alelo2;
-            $exclusao = ($incluidos[$i] == "M" || $incluidos[$i] == "MP") ? 0 : 1;
+            $exclusao = ($excluidos[$i] == "M" || $excluidos[$i] == "MP") ? 0 : 1;
             $seqXmlMae .= '<SEQUENCIA Microssatelite="' . $microssatellites[$i] . '" Marcador="' . $marcador . '" Exclusao="' . $exclusao . '" />';
         }
 
+        // Determine se a paternidade e a maternidade são confirmadas
+        $confirmaPaternidade = !in_array("P", $excluidos) && !in_array("MP", $excluidos) ? 1 : 0;
+        $confirmaMaternidade = !in_array("M", $excluidos) && !in_array("MP", $excluidos) ? 1 : 0;
 
-        $paiXml = '<PAI CodigoLaboratorio="' . $pai->identificador . '" ConfirmaPaternidade="1">' . $seqXmlPai . '</PAI>';
-        $maeXml = '<MAE CodigoLaboratorio="' . $mae->identificador . '" ConfirmaMaternidade="1">' . $seqXmlMae . '</MAE>';
+        $paiXml = '<PAI CodigoLaboratorio="' . $pai->identificador . '" ConfirmaPaternidade="' . $confirmaPaternidade . '">' . $seqXmlPai . '</PAI>';
+        $maeXml = '<MAE CodigoLaboratorio="' . $mae->identificador . '" ConfirmaMaternidade="' . $confirmaMaternidade . '">' . $seqXmlMae . '</MAE>';
         $xml = '<?xml version="1.0" encoding="iso-8859-1" ?>
         <document>
           <CASO>
@@ -376,8 +385,8 @@ class LaudoController extends Controller
         // dd($pdf);
         try {
 
-            $client = new \SoapClient('http://weblab.abccmm.org.br:8087/service.asmx?wsdl');
-            // $client = new \SoapClient('http://webserviceteste.abccmm.org.br:8083/service.asmx?wsdl');
+            // $client = new \SoapClient('http://weblab.abccmm.org.br:8087/service.asmx?wsdl');
+            $client = new \SoapClient('http://webserviceteste.abccmm.org.br:8083/service.asmx?wsdl');
 
 
             $params = array(
@@ -392,13 +401,13 @@ class LaudoController extends Controller
         }
     }
     private function removePrefix($identificador)
-{
-    $prefix = "EQU";
-    if (strpos($identificador, $prefix) === 0) {
-        return substr($identificador, strlen($prefix));
+    {
+        $prefix = "EQU";
+        if (strpos($identificador, $prefix) === 0) {
+            return substr($identificador, strlen($prefix));
+        }
+        return $identificador;
     }
-    return $identificador;
-}
 
     public function enviaXML()
     {

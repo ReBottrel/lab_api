@@ -273,4 +273,8 @@ class TesteController extends Controller
             $order->delete();
         }
     }
+    public function alterarStatusLaudo()
+    {
+        
+    }
 }
