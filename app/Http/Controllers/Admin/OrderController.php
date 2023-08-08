@@ -83,6 +83,7 @@ class OrderController extends Controller
     {
         $order = OrderRequest::find($id);
         $samples = Sample::get();
+        $parceiros = Parceiro::get();
         $stats = [
             1 => 'Aguardando amostra',
             2 => 'Amostra recebida',
@@ -100,6 +101,17 @@ class OrderController extends Controller
         $animals = Animal::where('order_id', $id)->get();
         return view('admin.orders.order-sistema-detail', get_defined_vars());
     }
+
+    public function alterarParceiro(Request $request)
+    {
+        // dd($request->all());
+        $order = OrderRequest::find($request->order_id);
+        $order->update([
+            'parceiro' => $request->parceiro,
+        ]);
+        return redirect()->back()->with('success', 'Parceiro alterado com sucesso');
+    }
+
     public function orderDetail($id)
     {
         $order = OrderRequest::find($id);

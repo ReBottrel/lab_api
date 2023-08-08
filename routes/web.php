@@ -184,6 +184,7 @@ Route::middleware(['auth:admin'])->group(function () {
 
     Route::post('chip/{id}', [OrderController::class, 'chip'])->name('chip');
     Route::post('amostra/{id}', [OrderController::class, 'amostra'])->name('amostra');
+    Route::post('parceiro-update-order', [OrderController::class, 'alterarParceiro'])->name('order.parceiro.update');
 
     Route::get('exames', [ExameController::class, 'index'])->name('exames');
     Route::post('exames-store', [ExameController::class, 'store'])->name('exame.store');

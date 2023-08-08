@@ -17,6 +17,29 @@
                         <h5 class="mb-0">CRIADOR: {{ $order->creator }} -
                             {{ $order->creator_number }}</h5>
                     </div>
+                    <div class="col-md-6">
+                        <h5 class="mb-0">Parceiro: {{ $order->parceiro ?? 'Sem parceiro' }}</h5>
+                        <form action="{{ route('order.parceiro.update') }}" method="post">
+                            @csrf
+                            <input type="hidden" name="order_id" value="{{ $order->id }}">
+                            <div class="row">
+                                <div class="col-8">
+                                    <select class="form-select" name="parceiro" aria-label="Default select example">
+                                        <option selected>Selecione o parceiro</option>
+                                        @foreach ($parceiros as $parceiro)
+                                            <option value="{{ $parceiro->nome }}"
+                                                @if ($order->parceiro == $parceiro->nome) selected @endif>{{ $parceiro->nome }}
+                                            </option>
+                                        @endforeach
+
+                                    </select>
+                                </div>
+                                <div class="col-4">
+                                    <button type="submit" class="btn btn-primary">SALVAR</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
             <div class="card-body">
