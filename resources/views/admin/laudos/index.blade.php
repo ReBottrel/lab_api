@@ -6,7 +6,7 @@
         </div>
         <div class="row">
             <div class="mb-3 col-6">
-                <label for="exampleFormControlInput1"  class="form-label">Buscar por animal</label>
+                <label for="exampleFormControlInput1" class="form-label">Buscar por animal</label>
                 <input type="text" id="busca" class="form-control">
             </div>
         </div>
@@ -45,14 +45,16 @@
 
 @section('js')
     <script>
+        // Armazena os itens iniciais
+        var initialItems = $('.table-busca').html();
+
         $('#busca').keyup(function() {
             var busca = $(this).val();
 
             if (busca === '') {
-                // Ação a ser realizada quando o campo de busca estiver vazio
-                // Por exemplo, recarregar a página ou redefinir os resultados da busca
-                $('.table-busca').html(''); // Limpa os resultados da busca
-                return; // Sai da função para evitar a requisição AJAX
+                // Redefine para os itens iniciais
+                $('.table-busca').html(initialItems);
+                return;
             }
 
             $.ajax({
