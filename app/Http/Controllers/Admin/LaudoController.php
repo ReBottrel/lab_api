@@ -280,6 +280,7 @@ class LaudoController extends Controller
         $pai = Animal::with('alelos')->where('animal_name', $animal->pai)->first();
         $mae = Animal::with('alelos')->where('animal_name', $animal->mae)->first();
         $results = Result::where('ordem_servico', $laudo->ordem_id)->latest()->first();
+        $owner = Owner::find($laudo->owner_id);
         if ($order->parceiro == 'ABCCMM') {
             $xml = $this->gerarXML($animal, $laudo, $order, $results, $pai, $mae);
             Mail::to($owner->email)->send(new EnviarLaudoMail($laudo->pdf));
@@ -299,7 +300,7 @@ class LaudoController extends Controller
         }
     }
 
-    public function gerarXML($animal, $laudo, $order, $results, $pai, $mae)
+    public function gerarXML($animal, $laudo, $order, $results, $pai, $mae, $owner)
     {
         $microssatellites = ["AHT4", "AHT5", "ASB2", "ASB23", "HMS2", "HMS3", "HMS6", "HMS7", "HTG10", "HTG4", "HTG7", "VHL20"];
         $excluidos = str_split($results->excluido);
@@ -357,7 +358,7 @@ class LaudoController extends Controller
             <REGISTRO><![CDATA[0]]></REGISTRO> 		
             <DATACONCLUSAO><![CDATA[' . date('d/m/Y', strtotime($laudo->created_at)) . ']]></DATACONCLUSAO> 
             <LABORATORIO><![CDATA[18]]></LABORATORIO> 		
-            <PROPRIETARIO><![CDATA[' . $order->creator_number . ']]></PROPRIETARIO>
+            <PROPRIETARIO><![CDATA[' . $owner->owner_name . ']]></PROPRIETARIO>
             <TIPOEXAME><![CDATA[2]]></TIPOEXAME> 		
             <SUBTIPOEXAME><![CDATA[' . $subtipo . ']]></SUBTIPOEXAME> 		
             <TECNICO><![CDATA[' . $order->technical_manager . ']]></TECNICO> 		
