@@ -17,6 +17,29 @@
                         <h5 class="mb-0">CRIADOR: {{ $order->data_g['data_g']['criador'][1] }} -
                             {{ $order->data_g['data_g']['criador'][0] }}</h5>
                     </div>
+                    <div class="col-md-6">
+                        <h5 class="mb-0">Parceiro: {{ $order->parceiro ?? 'Sem parceiro' }}</h5>
+                        <form action="{{ route('order.parceiro.update') }}" method="post">
+                            @csrf
+                            <input type="hidden" name="order_id" value="{{ $order->id }}">
+                            <div class="row">
+                                <div class="col-8">
+                                    <select class="form-select" name="parceiro" aria-label="Default select example">
+                                        <option selected>Selecione o parceiro</option>
+                                        @foreach ($parceiros as $parceiro)
+                                            <option value="{{ $parceiro->nome }}"
+                                                @if ($order->parceiro == $parceiro->nome) selected @endif>{{ $parceiro->nome }}
+                                            </option>
+                                        @endforeach
+
+                                    </select>
+                                </div>
+                                <div class="col-4">
+                                    <button type="submit" class="btn btn-primary">SALVAR</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
             <div class="card-body">
@@ -24,7 +47,7 @@
                     <div class="col">
                         @foreach ($order->data_g['data_table'] as $item)
                             @php
-                          
+                                
                                 $animal = App\Models\Animal::where('id', $item['id'])
                                     ->orWhere('register_number_brand', $item['id'])
                                     ->first();

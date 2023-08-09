@@ -116,6 +116,7 @@ class OrderController extends Controller
     {
         $order = OrderRequest::find($id);
         $samples = Sample::get();
+        $parceiros = Parceiro::get();
         $stats = [
             1 => 'Aguardando amostra',
             2 => 'Amostra recebida',
