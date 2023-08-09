@@ -118,6 +118,9 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::get('get-orders-duplicadas', [TesteController::class, 'getOrdemServicosDuplicadas']);
     Route::get('delete-orders-duplicadas', [TesteController::class, 'deleteOrdemServicosDuplicadasSemDataBar']);
     Route::get('alterar-status-laudo', [TesteController::class, 'alterarStatusLaudo']);
+    Route::get('alterar-status-animal-view', [TesteController::class, 'viewStatus']);
+    Route::post('alterar-status-animal-store', [TesteController::class, 'alterarStatusAnimalByOrder'])->name('alterar.status.animal.store');
+
 
     Route::post('search-by-codlab', [OrdemServicoController::class, 'searchByCodlab'])->name('search.by.codlab');
     Route::get('result-by-codlab/{id}', [OrdemServicoController::class, 'resultado'])->name('result.by.codlab');

@@ -224,7 +224,7 @@ class TesteController extends Controller
 
     public function getPagamentos()
     {
-        $payments_without_orders = OrderRequestPayment::where('payment_status', 1)
+        $payments_without_orders = OrderRequestPayment::where('payment_status', 0)
             ->whereNotIn('order_request_id', function ($query) {
                 $query->select('id')->from(with(new OrderRequest)->getTable());
             })
@@ -280,5 +280,22 @@ class TesteController extends Controller
             ->whereNotNull('pdf')
             ->update(['status' => 1]);
         return $updatedCount;
+    }
+
+    public function viewStatus()
+    {
+        return view('admin.animais.status');
+    }
+
+    public function alterarStatusAnimalByOrder(Request $request)
+    {
+
+        $animal = Animal::where('order_id', $request->order_id)->get();
+        foreach ($animal as $key => $value) {
+            $value->update([
+                'status' => $request->status,
+            ]);
+        }
+        return redirect()->back()->with('success', 'Status alterado com sucesso!');
     }
 }
