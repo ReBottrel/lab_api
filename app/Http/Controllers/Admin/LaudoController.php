@@ -282,7 +282,7 @@ class LaudoController extends Controller
         $results = Result::where('ordem_servico', $laudo->ordem_id)->latest()->first();
         $owner = Owner::find($laudo->owner_id);
         if ($order->parceiro == 'ABCCMM') {
-            $xml = $this->gerarXML($animal, $laudo, $order, $results, $pai, $mae);
+            $xml = $this->gerarXML($animal, $laudo, $order, $results, $pai, $mae, $owner);
             Mail::to($owner->email)->send(new EnviarLaudoMail($laudo->pdf));
             Mail::to('laudosdna.lfda-mg@agro.gov.br')->send(new EnviarLaudoMail($laudo->pdf));
             $laudo->update([
@@ -392,8 +392,8 @@ class LaudoController extends Controller
         // dd($pdf);
         try {
 
-            $client = new \SoapClient('http://weblab.abccmm.org.br:8087/service.asmx?wsdl');
-            // $client = new \SoapClient('http://webserviceteste.abccmm.org.br:8083/service.asmx?wsdl');
+            $client = new \SoapClient('http://weblab.abccmm.org.br:8087/service.asmx?wsdl'); //produção
+            // $client = new \SoapClient('http://webserviceteste.abccmm.org.br:8083/service.asmx?wsdl'); //teste
 
 
             $params = array(
