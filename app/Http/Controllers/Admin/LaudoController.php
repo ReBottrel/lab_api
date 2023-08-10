@@ -64,7 +64,7 @@ class LaudoController extends Controller
         $laudo = Laudo::where('animal_id', $ordem->animal_id)->first();
         $codigo = rand(100000000, 999999999);
 
-
+       
 
         $laudoData = [
             'animal_id' => $ordem->animal_id,
@@ -310,6 +310,8 @@ class LaudoController extends Controller
         $paiId = $this->removePrefix($pai->codlab);
         $maeId = $this->removePrefix($mae->codlab);
 
+        // dd($laudo);
+
         if ($pai == null && $mae == null) {
             $subtipo = 1;
         } else {
@@ -366,8 +368,8 @@ class LaudoController extends Controller
             <TIPOMATERIAL><![CDATA[2]]></TIPOMATERIAL> 	
             <NOMEIMAGEM><![CDATA[' . $laudo->pdf . ']]></NOMEIMAGEM> 
             <OBSERVACOES><![CDATA[' . $laudo->observacao . ']]></OBSERVACOES> 
-            <DATAENVIO><![CDATA[' . $laudo->data_lab . ']]></DATAENVIO>	
-            <HORAENVIO><![CDATA[00:00]]></HORAENVIO>
+            <DATAENVIO><![CDATA[' . date('d/m/Y') . ']]></DATAENVIO>	
+            <HORAENVIO><![CDATA[' . date('H:i') . ']]></HORAENVIO>
             <ROWIDANIMAL><![CDATA[' . $animal->register_number_brand . ']]></ROWIDANIMAL>
           </CASO>
    <REGISTRO CodigoLaboratorio="' . $animal->identificador . '">

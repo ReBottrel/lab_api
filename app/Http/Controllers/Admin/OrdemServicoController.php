@@ -49,10 +49,9 @@ class OrdemServicoController extends Controller
 
         foreach ($orderRequest as $item) {
             $exame = Exam::find($item->exam_id);
-            $animal = Animal::find($item->animal_id);
+            $animal = Animal::find($item->animal_id) ? Animal::find($item->animal_id) : Animal::where('animal_name', $item->animal)->first();
             $data = Carbon::parse($item->updated_at)->addWeekdays($exame->days);
-            // \Log::info($item);
-            // dd('morreu');
+            \Log::info($animal);
             $randomNumber = mt_rand(0, 1000000);
             $dna_verify = DnaVerify::where('animal_id', $item->animal_id)->latest('created_at')->first();
             if (!$dna_verify) {
@@ -66,7 +65,7 @@ class OrdemServicoController extends Controller
                     case 'ASININO':
                         $tipo = 'ASITR';
                         break;
-                    case 'EQUINO_PEGA':
+                    case 'PEGA_EQUINO':
                         $tipo = 'ASITR';
                         break;
                     case 'BOVINA':
@@ -589,7 +588,7 @@ class OrdemServicoController extends Controller
     {
         $ordemServico = OrdemServico::find($request->ordem_id);
         $dna_verify = DnaVerify::where('animal_id', $ordemServico->animal_id)->latest('created_at')->first();
-     
+
         $tipoExame = null;
         if ($request->tipo_exame == 'EQUPEGGN') {
             $tipoExame = 'PEGGN';
