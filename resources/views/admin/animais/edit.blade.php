@@ -149,12 +149,8 @@
                         var inputField = $('#editar-produto').find(`[name="${i}"]`);
 
                         if (inputField.attr('type') === 'date') {
-                            var date = new Date(data[i]);
-                            var day = ("0" + date.getDate()).slice(-2);
-                            var month = ("0" + (date.getMonth() + 1)).slice(-2);
-                            var formattedDate = date.getFullYear() + "-" + (month) + "-" + (day);
-
-                            inputField.val(formattedDate);
+                            var date = new Date(data[i] + "T00:00:00Z");
+                            inputField.val(date.toISOString().slice(0, 10));
                         } else {
                             inputField.val(data[i]);
                         }
