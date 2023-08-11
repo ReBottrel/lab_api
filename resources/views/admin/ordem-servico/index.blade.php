@@ -56,7 +56,7 @@
 @section('js')
     <script>
         $(document).ready(function() {
-            $('.delete').click(function() {
+            $(document).on('click', '.delete', function() {
                 var id = $(this).data('id');
 
                 Swal.fire({

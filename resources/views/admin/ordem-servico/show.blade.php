@@ -120,6 +120,10 @@
                             <input class="form-control" name="bar_code" type="text">
                         </div>
                         <div class="mb-3 col-4">
+                            <label for="formFile" class="form-label">Técnico</label>
+                            <input class="form-control" name="tecnico" type="text">
+                        </div>
+                        <div class="mb-3 col-4">
                             <label for="formFile" class="form-label">Codlab</label>
                             <input class="form-control" name="codlab" type="text">
                         </div>
