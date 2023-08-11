@@ -148,7 +148,8 @@
                     for (i in data) {
                         var inputField = $('#editar-produto').find(`[name="${i}"]`);
 
-                        if (inputField.attr('type') === 'date') {
+                        if (inputField.attr('type') === 'date' && typeof data[i] === 'string' && data[i]
+                            .length === 10) {
                             var date = new Date(data[i] + "T00:00:00Z");
                             inputField.val(date.toISOString().slice(0, 10));
                         } else {
