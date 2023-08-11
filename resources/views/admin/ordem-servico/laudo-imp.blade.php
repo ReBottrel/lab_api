@@ -787,10 +787,19 @@
                             </span>
                         @endif
                         <br>
+                        @if ($laudo->status == 1)
+                            @php
+                                $dataGen = date('d/m/Y', strtotime($laudo->created_at));
+                            @endphp
+                        @else
+                            @php
+                                $dataGen = date('d/m/Y');
+                            @endphp
+                        @endif
                         <span>
                             FILHO(A): animal {{ $animal->animal_name }}, número {{ $animal->identificador }}, emitido
                             pelo laboratório
-                            {{ $animal->alelos[0]->lab }} em {{ date('d/m/Y') }}.
+                            {{ $animal->alelos[0]->lab }} em {{ $dataGen }}.
 
                         </span>
                         @if ($pai != null)

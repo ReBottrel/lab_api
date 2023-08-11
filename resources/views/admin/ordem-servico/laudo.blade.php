@@ -475,7 +475,9 @@
             </div>
             <div class="text-end">
                 <span><strong>Relat. n</strong>
-                    @if($laudo->ret){{ $laudo->ret }}@endif
+                    @if ($laudo->ret)
+                        {{ $laudo->ret }}
+                    @endif
                     {{ $mae != null ? substr($mae->codlab, 3) . '.' : '' }}
                     {{ substr($animal->codlab, 3) }}
                     {{ $pai != null ? '.' . substr($pai->codlab, 3) : '' }}
@@ -774,10 +776,19 @@
                             </span>
                         @endif
                         <br>
+                        @if ($laudo->status == 1)
+                            @php
+                                $dataGen = date('d/m/Y', strtotime($laudo->created_at));
+                            @endphp
+                        @else
+                            @php
+                                $dataGen = date('d/m/Y') ;
+                            @endphp
+                        @endif
                         <span>
                             FILHO(A): animal {{ $animal->animal_name }}, número {{ $animal->identificador }}, emitido
                             pelo laboratório
-                            {{ $animal->alelos[0]->lab }} em {{ date('d/m/Y') }}.
+                            {{ $animal->alelos[0]->lab }} em {{ $dataGen }}.
 
                         </span>
                         @if ($pai != null)
