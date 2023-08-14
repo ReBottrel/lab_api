@@ -29,6 +29,7 @@ class Laudo extends Model
         'pdf',
         'ret',
         'status',
+        'data_retificacao',
     ];
 
     public function animal()

@@ -82,7 +82,8 @@ class LaudoController extends Controller
             'veterinario_id' => $order->id_tecnico,
             'ordem_id' => $ordem->id,
             'order_id' => $order->id,
-            'ret' => $request->ret
+            'ret' => $request->ret,
+            'data_retificacao' => $request->data_ret,
         ];
 
 
@@ -92,9 +93,6 @@ class LaudoController extends Controller
         } else {
             $laudo = Laudo::create($laudoData);
             // Crie uma instância do escritor
-
-
-
             $content = 'https://i.locilab.com.br/validacao/' . $laudo->codigo_busca;
             // Crie uma instância do escritor
             $renderer = new ImageRenderer(
