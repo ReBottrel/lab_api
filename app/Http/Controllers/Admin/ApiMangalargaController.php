@@ -123,7 +123,7 @@ class ApiMangalargaController extends Controller
                         'registro_mae' => $animal->registroMae,
                         'mae' => $animal->nomeMae,
                         'codlab' => $codlab,
-                        'row_id' => $order->collection_number,
+                        'row_id' => $animal->rowidAnimal,
                     ]);
 
                     $verify = DnaVerify::create([
@@ -244,7 +244,7 @@ class ApiMangalargaController extends Controller
                         'pai' => $animal->nomePai,
                         'registro_mae' => $animal->registroMae,
                         'mae' => $animal->nomeMae,
-                        'row_id' => $order->collection_number,
+                        'row_id' => $animal->rowidAnimal,
                     ]);
 
                     $verify = DnaVerify::create([
@@ -258,6 +258,24 @@ class ApiMangalargaController extends Controller
         return response()->json('ok');
     }
 
+    public function getRowId()
+    {
+     $coletas = $this->fetchDataFromApi('coletas', 18, 2, ['dataEnvioInicio' => '2023-05-05T00:00:00']);
+
+        foreach ($coletas as $coleta) {
+            foreach ($coleta->animais as $animal) {
+            //   dd($animal);
+                $existingAnimal = Animal::where('animal_name', $animal->nome)->first();
+              
+                if ($existingAnimal) {
+                    $existingAnimal->register_number_brand = $animal->rowidAnimal;
+                    $existingAnimal->row_id = $animal->rowidAnimal;
+                    $existingAnimal->save();
+                }
+            }
+        }
+        return response()->json('ok');
+    }
 
     private function generateUniqueCodlab($sigla)
     {

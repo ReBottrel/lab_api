@@ -234,31 +234,32 @@
         value="@if ($laudo) {{ $laudo->ret }} @endif">
 
 </div>
-<label for="exampleFormControlTextarea1" class="form-label">Data retificação</label>
-<input class="form-control" id="data_ret" type="date"
-    value="@if ($laudo && $laudo->data_retificacao) {{ $laudo->data_retificacao }} @endif">
+<div class="mb-3 px-5 pt-2">
+    <label for="exampleFormControlTextarea1" class="form-label">DATA FIXADA PARA VERIFICACAO</label>
+    <input class="form-control" id="data_ret" type="date"
+        value="@if ($laudo && $laudo->data_retificacao) {{ $laudo->data_retificacao }} @endif">
 
 </div>
 <div class="d-flex">
-<div>
-    <button class="btn btn-primary" id="gerar-laudo">GERAR LAUDO</button>
-</div>
+    <div>
+        <button class="btn btn-primary" id="gerar-laudo">GERAR LAUDO</button>
+    </div>
 </div>
 <input type="hidden" name="" id="laudo">
 </div>
 <div id="buttons" class="d-none my-3">
 <div class="d-flex">
-<div>
-    <button class="btn btn-primary" id="ver-laudo">
-        VER LAUDO
-    </button>
-    <button class="btn btn-primary" id="pdf">
-        GERAR PDF E ASSINAR
-    </button>
-    <button class="btn btn-primary" id="finalizar">
-        FINALIZAR
-    </button>
-</div>
+    <div>
+        <button class="btn btn-primary" id="ver-laudo">
+            VER LAUDO
+        </button>
+        <button class="btn btn-primary" id="pdf">
+            GERAR PDF E ASSINAR
+        </button>
+        <button class="btn btn-primary" id="finalizar">
+            FINALIZAR
+        </button>
+    </div>
 </div>
 </div>
 </div>
