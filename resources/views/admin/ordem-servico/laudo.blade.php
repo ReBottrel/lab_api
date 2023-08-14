@@ -456,7 +456,9 @@
 
                 </div>
             </div>
-
+            <div>
+                {{ $laudo->id }}
+            </div>
 
             <div class="text-center">
                 <strong>RELATÓRIO DE ENSAIO</strong>
@@ -800,9 +802,12 @@
                         emissores.
                     </p>
 
-                    <p>{!! $laudo->observacao !!}</p>
+                   
                 </div>
             @endif
+            <div>
+                <p>{!! $laudo->observacao !!}</p>
+            </div>
             @php
                 setlocale(LC_TIME, 'pt_BR.utf8');
                 if ($laudo->id == 11) {

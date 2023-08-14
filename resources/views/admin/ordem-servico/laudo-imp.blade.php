@@ -787,11 +787,15 @@
                             </span>
                         @endif
                         <br>
-           
+
                         <span>
                             FILHO(A): animal {{ $animal->animal_name }}, número {{ $animal->identificador }}, emitido
                             pelo laboratório
-                            {{ $animal->alelos[0]->lab }} em @if($laudo->data_retificacao) {{ date('d/m/Y', strtotime($laudo->data_retificacao)) }}  @else {{ date('d/m/Y') }} @endif.
+                            {{ $animal->alelos[0]->lab }} em @if ($laudo->data_retificacao)
+                                {{ date('d/m/Y', strtotime($laudo->data_retificacao)) }}
+                            @else
+                                {{ date('d/m/Y') }}
+                            @endif.
 
                         </span>
                         @if ($pai != null)
@@ -811,9 +815,12 @@
                         emissores.
                     </p>
 
-                    <p>{!! $laudo->observacao !!}</p>
+
                 </div>
             @endif
+            <div>
+                <p>{!! $laudo->observacao !!}</p>
+            </div>
             @php
                 setlocale(LC_TIME, 'pt_BR.utf8');
                 if ($laudo->id == 11) {
