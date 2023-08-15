@@ -14,6 +14,8 @@ class AnimalToParent extends Model
         'animal_name',
         'especies',
         'animal_register',
+        'mae_id',
+        'pai_id',
     ];
 
     public function animal()

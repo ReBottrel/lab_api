@@ -109,7 +109,7 @@ class TesteController extends Controller
     public function selectCodlabInRange()
     {
         $codlabs = Animal::select('codlab')
-            ->whereRaw('CAST(SUBSTRING(codlab, 4) AS UNSIGNED) >= 100000 AND CAST(SUBSTRING(codlab, 4) AS UNSIGNED) < 200000')
+            ->whereRaw('CAST(SUBSTRING(codlab, 4) AS UNSIGNED) >= 200000 AND CAST(SUBSTRING(codlab, 4) AS UNSIGNED) < 300000')
             ->get();
 
         return $codlabs;
@@ -297,5 +297,14 @@ class TesteController extends Controller
             ]);
         }
         return redirect()->back()->with('success', 'Status alterado com sucesso!');
+    }
+
+    public function getAnimalParents()
+    {
+        $animals = Animal::get();
+
+        foreach ($animals as $animal) {
+            $animal->mae = Animal::find($animal->mae);
+        }
     }
 }

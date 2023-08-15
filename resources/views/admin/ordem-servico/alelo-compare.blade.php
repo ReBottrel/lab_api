@@ -15,7 +15,7 @@
                 <h5>{{ $mae->codlab ?? 'Sem verificação' }}</h5>
             </div>
             <div class="col-3 bg-light border rounded text-center">
-                <h5>{{ $animal->codlab ?? 'Nao encontrado' }}</h5>
+                <h5>{{ $animal->id ?? 'Nao encontrado' }}</h5>
             </div>
             <div class="col-2 bg-light border rounded text-center">
                 <h5>{{ $pai->codlab ?? 'Sem verificação' }}</h5>

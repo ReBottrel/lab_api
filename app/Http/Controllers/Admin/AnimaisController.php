@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Animal;
+use App\Models\AnimalToParent;
 use App\Models\Fur;
 use App\Models\OrdemServico;
 use Illuminate\Http\Request;
@@ -143,6 +144,15 @@ class AnimaisController extends Controller
             'codlab' => $request->codlab,
             'identificador' => $request->identificador,
         ]);
+
+        $parent = AnimalToParent::where('animal_id', $id)->first();
+
+        $parent->update([
+            'pai' => $request->pai,
+            'mae' => $request->mae,
+        ]);
+
+
 
         $ordem = OrdemServico::where('animal_id', $id)->first();
 

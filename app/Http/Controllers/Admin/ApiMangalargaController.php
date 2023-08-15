@@ -247,6 +247,8 @@ class ApiMangalargaController extends Controller
                         'row_id' => $animal->rowidAnimal,
                     ]);
 
+                    
+
                     $verify = DnaVerify::create([
                         'animal_id' => $newAnimal->id,
                         'order_id' => $order->id,
@@ -281,7 +283,7 @@ class ApiMangalargaController extends Controller
     {
         $startValue = 100000;
         $maxNumber = Animal::selectRaw('MAX(CAST(SUBSTRING(codlab, 4) AS UNSIGNED)) as max_num')
-            ->whereRaw('CAST(SUBSTRING(codlab, 4) AS UNSIGNED) >= 100000 AND CAST(SUBSTRING(codlab, 4) AS UNSIGNED) < 200000')
+            ->whereRaw('CAST(SUBSTRING(codlab, 4) AS UNSIGNED) >= 100000 AND CAST(SUBSTRING(codlab, 4) AS UNSIGNED) < 400000')
             ->first();
 
         if ($maxNumber !== null && $maxNumber->max_num !== null) {
