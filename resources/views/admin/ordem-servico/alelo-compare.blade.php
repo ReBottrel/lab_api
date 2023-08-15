@@ -408,71 +408,76 @@
                 success: function(response) {
                     console.log(response);
 
-                    if (response.laudoMae === null) {
-                        vMae = true;
-                    }
-                    if (response.laudoPai === null) {
-                        vPai = true;
-                    }
+                    let vMae = response.laudoMae === null;
+                    let vPai = response.laudoPai === null;
 
                     $('#resultado').removeClass('d-none');
-                    // $('#buttons').removeClass('d-none');
 
-                    if (response.laudoMae === null && response.laudoPai === null) {
-                        const html = `<div class="row">
-                    <div class="col-6">
-                        <input class="form-control incluidos" name="incluidos[]" type="text" value="">
-                    </div>
-                    <div class="col-6">
-                        <input class="form-control excluidos" name="excluidos[]" type="text" value="">
-                    </div>
-                </div>`;
-                        $('#valores').append(html);
-                    } else {
-                        let incluidos = [];
-                        let excluidos = [];
+                    let incluidos = [];
+                    let excluidos = [];
 
-                        if (response.result && Array.isArray(response.result.incluido) &&
-                            Array.isArray(response.result.excluido)) {
-                            incluidos = response.result.incluido;
-                            excluidos = response.result.excluido;
-                        } else {
-                            let incluidosMae = response.laudoMae ? response.laudoMae.map(
-                                query => query.include === 'M' ? 'M' : '') : [];
-                            let excluidosMae = response.laudoMae ? response.laudoMae.map(
-                                query => query.include === 'V' ? '' : (query.include ===
-                                    '' ? 'M' : '')) : [];
+                    // Check for V value and set inputs empty
+                    let incluidosMae = response.laudoMae ? response.laudoMae.map(
+                        query => (query.include === 'V') ? '' : (query.include === 'M' ?
+                            'M' : '')
+                    ) : [];
+                    let excluidosMae = response.laudoMae ? response.laudoMae.map(
+                        query => (query.include === 'V') ? '' : (query.include === '' ?
+                            'M' : '')
+                    ) : [];
 
-                            let incluidosPai = response.laudoPai ? response.laudoPai.map(
-                                query => query.include === 'P' ? 'P' : '') : [];
-                            let excluidosPai = response.laudoPai ? response.laudoPai.map(
-                                query => query.include === 'V' ? '' : (query.include ===
-                                    '' ? 'P' : '')) : [];
+                    let incluidosPai = response.laudoPai ? response.laudoPai.map(
+                        query => (query.include === 'V') ? '' : (query.include === 'P' ?
+                            'P' : '')
+                    ) : [];
+                    let excluidosPai = response.laudoPai ? response.laudoPai.map(
+                        query => (query.include === 'V') ? '' : (query.include === '' ?
+                            'P' : '')
+                    ) : [];
 
-                            let length = Math.max(incluidosMae.length, incluidosPai.length);
-                            for (let i = 0; i < length; i++) {
-                                incluidos.push(
-                                    `${incluidosMae[i] || ''}${incluidosPai[i] || ''}`);
-                                excluidos.push(
-                                    `${excluidosMae[i] || ''}${excluidosPai[i] || ''}`);
-                            }
-                        }
+                    let length = Math.max(incluidosMae.length, incluidosPai.length);
+                    for (let i = 0; i < length; i++) {
+                        incluidos.push(
+                            `${incluidosMae[i] || ''}${incluidosPai[i] || ''}`);
+                        excluidos.push(
+                            `${excluidosMae[i] || ''}${excluidosPai[i] || ''}`);
+                    }
+                    if (response.animal && response.animal.alelos) {
+                        let markersAndValues = [];
 
                         for (let i = 0; i < incluidos.length; i++) {
+                            markersAndValues.push({
+                                marker: response.animal.alelos[i].marcador ||
+                                    'No Marker', // Note a correção aqui
+                                included: incluidos[i] || '',
+                                excluded: excluidos[i] || ''
+                            });
+                        }
+                        // Ordenar o array com base nos marcadores
+                        markersAndValues.sort((a, b) => a.marker.localeCompare(b.marker));
+
+                        // Usar o array ordenado para gerar seus inputs
+                        markersAndValues.forEach(item => {
                             const html = `<div class="row">
         <div class="col-6">
-            <input class="form-control incluidos" name="incluidos[]" type="text"  value="${incluidos[i] || ''}">
+            <input class="form-control incluidos" name="incluidos[]" type="text"  value="${item.included}">
         </div>
         <div class="col-6">
-            <input class="form-control excluidos" name="excluidos[]" type="text" value="${excluidos[i] || ''}">
+            <input class="form-control excluidos" name="excluidos[]" type="text" value="${item.excluded}">
         </div>
     </div>`;
                             $('#valores').append(html);
-                        }
-
-
-
+                        });
+                    } else {
+                        console.error(
+                            "Data missing: Check if 'response.animal.alelos' exists in the AJAX response."
+                        );
                     }
+
+
+
+
+
                     const msg = [
                         `Conclui-se que o produto ${response.animal.animal_name} não está qualificado pela genitora ${response.mae ? response.mae.animal_name : ''} (${response.mae && response.mae.number_definitive ? response.mae.number_definitive : '*****'}) e não está qualificado pelo genitor ${response.pai ? response.pai.animal_name : ''} (${response.pai && response.pai.number_definitive ? response.pai.number_definitive : '*****'}).`,
                         `Conclui-se que o produto ${response.animal.animal_name} não está qualificado pela genitora ${response.mae ? response.mae.animal_name : ''} (${response.mae && response.mae.number_definitive ? response.mae.number_definitive : '*****'}) e está qualificado pelo genitor ${response.pai ? response.pai.animal_name : ''} (${response.pai && response.pai.number_definitive ? response.pai.number_definitive : '*****'}).`,
@@ -499,10 +504,11 @@
                         mae_registro = response.mae.number_definitive || '*****';
                     }
 
-                    msgs = msgs.map(msg => msg.replace('AnimalFilho', animal_name).replace(
-                        'Pai', pai_name).replace('Mae', mae_name).replace(
-                        'registro_pai', pai_registro).replace('registro_mae',
-                        mae_registro));
+                    msgs = msgs.map(msg => msg.replace('AnimalFilho', animal_name)
+                        .replace(
+                            'Pai', pai_name).replace('Mae', mae_name).replace(
+                            'registro_pai', pai_registro).replace('registro_mae',
+                            mae_registro));
 
 
                     let mpfalse = false;
@@ -547,7 +553,8 @@
                         }
 
                     });
-                    console.log(mptrue, mpfalse, naoExisteP, naoExisteM, existeP, existeM);
+                    console.log(mptrue, mpfalse, naoExisteP, naoExisteM, existeP,
+                        existeM);
                     if (mptrue == true && mpfalse == false && naoExisteP == false &&
                         naoExisteM == false) {
 
@@ -559,16 +566,20 @@
                         $('.resultadoAnalise').val(msg[2]);
                     } else if (mptrue == true && naoExisteM == true) {
                         $('.resultadoAnalise').val(msg[1]);
-                    } else if (mptrue == false && naoExisteM == true && existeP == false &&
+                    } else if (mptrue == false && naoExisteM == true && existeP ==
+                        false &&
                         existeM == true) {
                         $('.resultadoAnalise').val(msg[4]);
-                    } else if (mptrue == false && naoExisteM == false && existeP == false &&
+                    } else if (mptrue == false && naoExisteM == false && existeP ==
+                        false &&
                         existeM == true) {
                         $('.resultadoAnalise').val(msg[7]);
-                    } else if (mptrue == false && naoExisteP == true && existeM == false &&
+                    } else if (mptrue == false && naoExisteP == true && existeM ==
+                        false &&
                         existeP == true) {
                         $('.resultadoAnalise').val(msg[5]);
-                    } else if (mptrue == false && naoExisteP == false && existeM == false &&
+                    } else if (mptrue == false && naoExisteP == false && existeM ==
+                        false &&
                         existeP == true) {
                         $('.resultadoAnalise').val(msg[6]);
                     } else if (mptrue == false && mpfalse == false) {
@@ -578,175 +589,8 @@
 
                 }
             });
-            // $(document).on('keyup', '.incluidos', function() {
-            //     $('.mensagem').html('');
-            //     const valor = $(this).val();
-            //     replaced = valor.toUpperCase();
-            //     valor1 = $(this).val(replaced);
-            //     console.log(replaced);
-            //     switch (replaced) {
-            //         case 'MP':
-            //             $(this).parent().parent().find('.excluidos').val('');
-            //             break;
-            //         case 'M':
-            //             if (vPai == true) {
-            //                 $(this).parent().parent().find('.excluidos').val('');
-            //                 break;
-            //             } else {
-            //                 $(this).parent().parent().find('.excluidos').val('P');
-            //                 break;
-            //             }
 
-            //             case 'P':
-            //                 if (vMae == true) {
-            //                     $(this).parent().parent().find('.excluidos').val('');
-            //                     break;
-            //                 } else {
-            //                     $(this).parent().parent().find('.excluidos').val('M');
-            //                     break;
-            //                 }
-
-            //                 default:
-            //                     $(this).parent().parent().find('.excluidos').val('MP');
-            //     }
-
-            //     let mpfalse = true;
-            //     let naoExisteP = true;
-            //     let naoExisteM = true;
-            //     let todosContemP = true;
-            //     $('.excluidos').each(function() {
-            //         const excluidos = $(this).val();
-            //         if (excluidos === 'MP') {
-            //             mpfalse = false;
-            //         }
-            //         if (excluidos === 'P') {
-            //             naoExisteP = false;
-            //         }
-            //         if (excluidos === 'M') {
-            //             naoExisteM = false;
-            //         }
-
-            //     });
-            //     $('.incluidos').each(function() {
-            //         const incluidos = $(this).val();
-            //         if (incluidos !== 'MP') {
-            //             mpfalse = false;
-            //             return false;
-            //         }
-            //     });
-            //     if (vPai == false) {
-            //         if (naoExisteP) {
-            //             $('.mensagem').append(msgs[6]);
-            //         } else {
-            //             console.log('existe P incluidos')
-            //         }
-            //     }
-            //     if (vMae == false) {
-            //         if (naoExisteM) {
-            //             $('.mensagem').append(msgs[7]);
-            //         } else {
-
-            //         }
-            //     }
-            //     if (mpfalse) {
-            //         $('.mensagem').append(msgs[3]);
-            //     }
-
-            // });
-            // $(document).on('keyup', '.excluidos', function() {
-            //     $('.mensagem').html('');
-            //     const valor = $(this).val();
-            //     replaced = valor.toUpperCase();
-            //     valor1 = $(this).val(replaced);
-            //     switch (replaced) {
-            //         case 'MP':
-            //             $(this).parent().parent().find('.incluidos').val('');
-            //             break;
-            //         case 'M':
-            //             if (vPai == true) {
-            //                 $(this).parent().parent().find('.incluidos').val('');
-            //                 break;
-            //             } else {
-            //                 $(this).parent().parent().find('.incluidos').val('P');
-            //                 break;
-            //             }
-
-            //             case 'P':
-            //                 if (vMae == true) {
-            //                     $(this).parent().parent().find('.incluidos').val('');
-            //                     break;
-            //                 } else {
-            //                     $(this).parent().parent().find('.incluidos').val('M');
-            //                     break;
-            //                 }
-
-            //                 default:
-            //                     $(this).parent().parent().find('.incluidos').val('MP');
-            //     }
-
-            //     let mpfalse = true;
-            //     let naoExisteP = true;
-            //     let naoExisteM = true;
-            //     let todosContemP = true;
-            //     $('.excluidos').each(function() {
-            //         const excluidos = $(this).val();
-            //         console.log(excluidos);
-            //         if (excluidos == 'MP') {
-            //             mpfalse = false;
-
-            //         }
-            //         if (excluidos === 'P') {
-            //             naoExisteP = false;
-
-            //         }
-            //         if (excluidos === 'M') {
-            //             naoExisteM = false;
-
-            //         }
-
-            //     });
-            //     if (vMae == false && vPai == false) {
-            //         if (mpfalse == false) {
-
-            //             $('.mensagem').append(msgs[0]);
-            //         }
-            //         if (naoExisteP == false && naoExisteM == true && mpfalse == true) {
-
-            //             $('.mensagem').append(msgs[2]);
-            //         }
-            //         if (naoExisteM == false && naoExisteP == true && mpfalse == true) {
-
-            //             $('.mensagem').append(msgs[1]);
-            //         }
-            //         if (naoExisteM == false && naoExisteP == false && mpfalse == true) {
-            //             $('.mensagem').append(msgs[0]);
-            //         }
-
-            //         console.log(naoExisteM, naoExisteP, mpfalse);
-            //     }
-
-            //     if (vPai == false && vMae == true) {
-            //         if (naoExisteP) {
-            //             console.log('nao existe P')
-            //         } else {
-            //             $('.mensagem').append(msgs[5]);
-            //         }
-            //     }
-
-            //     if (vMae == false && vPai == true) {
-            //         if (naoExisteM) {
-            //             console.log('nao existe M')
-            //         } else {
-            //             console.log('entrei aqui também e aqui')
-            //             $('.mensagem').append(msgs[4]);
-            //         }
-            //     }
-            // });
         });
-
-
-
-
     });
 
 
@@ -845,8 +689,10 @@
                                                     'Laudo enviado com sucesso.',
                                                     'success'
                                                 )
-                                                $('#finalizar').html(
-                                                    'FINALIZAR');
+                                                $('#finalizar')
+                                                    .html(
+                                                        'FINALIZAR'
+                                                    );
                                                 // window.location.href =
                                                 //     "{{ route('laudos') }}";
                                             } else {
@@ -854,12 +700,15 @@
                                                     icon: 'error',
                                                     title: 'Oops...',
                                                     text: response[
-                                                            0]
+                                                            0
+                                                        ]
                                                         .SetCertificateResult,
 
                                                 });
-                                                $('#finalizar').html(
-                                                    'FINALIZAR');
+                                                $('#finalizar')
+                                                    .html(
+                                                        'FINALIZAR'
+                                                    );
                                             }
 
                                         } else {

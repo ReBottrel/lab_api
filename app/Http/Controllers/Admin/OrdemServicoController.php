@@ -296,6 +296,7 @@ class OrdemServicoController extends Controller
         $animal = Animal::with('alelos')->find($ordem->animal_id);
         $dna_verify = DnaVerify::where('animal_id', $animal->id)->latest('created_at')->first();
         $sigla = substr($animal->especies, 0, 3);
+        $marcadores = Marcador::where('especie', $animal->especies)->get();
         $result = Result::where('ordem_servico', $ordem->id)
             ->orderBy('id', 'desc')
             ->first();
@@ -329,6 +330,20 @@ class OrdemServicoController extends Controller
         if ($mae != null) {
             foreach ($animal->alelos as $animalAlelo) {
                 foreach ($mae->alelos as $maeAlelo) {
+                    if (
+                        strpos($animalAlelo->alelo1, '*') !== false || strpos($animalAlelo->alelo2, '*') !== false
+                        || strpos($maeAlelo->alelo1, '*') !== false || strpos($maeAlelo->alelo2, '*') !== false
+                    ) {
+
+                        $laudoMae[] = [
+                            'marcador' => $animalAlelo->marcador,
+                            'include' => 'V'
+                        ];
+                        \Log::info("Condição asterisco encontrado " . $animalAlelo->marcador);
+                        continue;
+                    }
+
+
                     if ($animalAlelo->marcador == $maeAlelo->marcador) {
                         $alelosMae[] = [
                             'marcador' => $animalAlelo->marcador,
@@ -379,6 +394,19 @@ class OrdemServicoController extends Controller
         if ($pai != null) {
             foreach ($animal->alelos as $animalAlelo) {
                 foreach ($pai->alelos as $paiAlelo) {
+                    if (
+                        strpos($animalAlelo->alelo1, '*') !== false || strpos($animalAlelo->alelo2, '*') !== false
+                        || strpos($paiAlelo->alelo1, '*') !== false || strpos($paiAlelo->alelo2, '*') !== false
+                    ) {
+
+                        $laudoPai[] = [
+                            'marcador' => $animalAlelo->marcador,
+                            'include' => 'V'
+                        ];
+                        \Log::info("Condição asterisco encontrado " . $animalAlelo->marcador);
+                        continue;
+                    }
+
                     if ($animalAlelo->marcador == $paiAlelo->marcador) {
                         $alelosPai[] = [
                             'marcador' => $animalAlelo->marcador,
@@ -435,6 +463,7 @@ class OrdemServicoController extends Controller
             'pai' => $pai,
             'mae' => $mae,
             'result' => $result,
+            'marcadores' => $marcadores,
 
         ]);
     }
