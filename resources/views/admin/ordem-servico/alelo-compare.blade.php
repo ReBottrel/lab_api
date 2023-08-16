@@ -416,10 +416,8 @@
                     let incluidos = [];
                     let excluidos = [];
 
-                    // Check for V value and set inputs empty
                     let incluidosMae = response.laudoMae ? response.laudoMae.map(
-                        query => (query.include === 'V') ? '' : (query.include === 'M' ?
-                            'M' : '')
+                        query => (query.include === 'V') ? '' : query.include
                     ) : [];
                     let excluidosMae = response.laudoMae ? response.laudoMae.map(
                         query => (query.include === 'V') ? '' : (query.include === '' ?
@@ -427,8 +425,7 @@
                     ) : [];
 
                     let incluidosPai = response.laudoPai ? response.laudoPai.map(
-                        query => (query.include === 'V') ? '' : (query.include === 'P' ?
-                            'P' : '')
+                        query => (query.include === 'V') ? '' : query.include
                     ) : [];
                     let excluidosPai = response.laudoPai ? response.laudoPai.map(
                         query => (query.include === 'V') ? '' : (query.include === '' ?

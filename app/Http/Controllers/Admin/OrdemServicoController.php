@@ -334,14 +334,14 @@ class OrdemServicoController extends Controller
                 foreach ($mae->alelos as $maeAlelo) {
                     if (
                         strpos($animalAlelo->alelo1, '*') !== false || strpos($animalAlelo->alelo2, '*') !== false
-                        || strpos($maeAlelo->alelo1, '*') !== false || strpos($maeAlelo->alelo2, '*') !== false
+                        || strpos($maeAlelo->alelo1, '*') !== false || strpos($maeAlelo->alelo2, '*') !== false 
                     ) {
                         $laudoMae[] = [
                             'marcador' => $animalAlelo->marcador,
                             'include' => 'V'
                         ];
-                        \Log::info(["Marcador" . $animalAlelo->marcador, "Alelo1" . $animalAlelo->alelo1, "Alelo2" . $animalAlelo->alelo2]);
-                        \Log::info("Condição asterisco encontrado " . $animalAlelo->marcador);
+                        // \Log::info(["Marcador" . $animalAlelo->marcador, "Alelo1" . $animalAlelo->alelo1, "Alelo2" . $animalAlelo->alelo2]);
+                        // \Log::info("Condição asterisco encontrado " . $animalAlelo->marcador);
                         $foundAsteriskForMae = true;
                         break;
                     }
@@ -371,22 +371,22 @@ class OrdemServicoController extends Controller
                             'marcador' => $maeAl['marcador'],
                             'include' => 'M'
                         ];
-                        \Log::info("Condição 1 cumprida" . $maeAl['marcador']);
+                        // \Log::info("Condição 1 cumprida" . $maeAl['marcador']);
                     } else {
                         $laudoMae[] = [
                             'marcador' => $maeAl['marcador'],
                             'include' => ''
                         ];
-                        \Log::info("Condição 2 cumprida" . $maeAl['marcador']);
+                        // \Log::info("Condição 2 cumprida" . $maeAl['marcador']);
                     }
                 } elseif ($maeAl['alelo1'] == '' && $maeAl['alelo2'] == '' || empty($maeAl['aleloMae1']) && empty($maeAl['aleloMae2'])) {
                     $laudoMae[] = [
                         'marcador' => $maeAl['marcador'],
                         'include' => 'V'
                     ];
-                    \Log::info("Condição 3 cumprida" . $maeAl['marcador']);
+                    // \Log::info("Condição 3 cumprida" . $maeAl['marcador']);
                 } else {
-                    \Log::info("Nenhuma condição cumprida" . $maeAl['marcador']);
+                    // \Log::info("Nenhuma condição cumprida" . $maeAl['marcador']);
                 }
             }
         } else {
@@ -408,7 +408,7 @@ class OrdemServicoController extends Controller
                             'include' => 'V'
                         ];
                         \Log::info("Condição asterisco encontrado " . $animalAlelo->marcador);
-                        $foundAsteriskForPai = true;
+                        $foundAsteriskForPai = false;
                         break;
                     }
 
@@ -438,29 +438,29 @@ class OrdemServicoController extends Controller
                             'marcador' => $paiAl['marcador'],
                             'include' => 'P'
                         ];
-                        \Log::info("Condição 1 cumprida" . $paiAl['marcador']);
+                        // \Log::info("Condição 1 cumprida" . $paiAl['marcador']);
                     } else {
                         $laudoPai[] = [
                             'marcador' => $paiAl['marcador'],
                             'include' => ''
                         ];
-                        \Log::info("Condição 2 cumprida" . $paiAl['marcador']);
+                        // \Log::info("Condição 2 cumprida" . $paiAl['marcador']);
                     }
                 } elseif ($paiAl['alelo1'] == '' && $paiAl['alelo2'] == '' || empty($paiAl['aleloPai1']) && empty($paiAl['aleloPai2'])) {
                     $laudoPai[] = [
                         'marcador' => $paiAl['marcador'],
                         'include' => 'V'
                     ];
-                    \Log::info("Condição 3 cumprida" . $paiAl['marcador']);
+                    // \Log::info("Condição 3 cumprida" . $paiAl['marcador']);
                 } else {
-                    \Log::info("Nenhuma condição cumprida" . $paiAl['marcador']);
+                    // \Log::info("Nenhuma condição cumprida" . $paiAl['marcador']);
                 }
             }
         } else {
             $laudoPai = null;
         }
 
-        \Log::info($laudoPai, $laudoMae);
+        \Log::info($laudoPai);
 
         return response()->json([
             'laudoMae' => $laudoMae,

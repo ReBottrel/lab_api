@@ -29,6 +29,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Mail;
 
 use App\Models\QrCode as ModelQrCode;
+use App\Models\User;
 use BaconQrCode\Renderer\ImageRenderer;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Response;
@@ -278,10 +279,10 @@ class LaudoController extends Controller
         $pai = Animal::with('alelos')->where('animal_name', $animal->pai)->first();
         $mae = Animal::with('alelos')->where('animal_name', $animal->mae)->first();
         $results = Result::where('ordem_servico', $laudo->ordem_id)->latest()->first();
-        $owner = Owner::find($order->owner_id);
+        $user = User::where('id', $order->id_user)->first();
         if ($order->parceiro == 'ABCCMM') {
             $xml = $this->gerarXML($animal, $laudo, $order, $results, $pai, $mae, $owner);
-            Mail::to($owner->email)->send(new EnviarLaudoMail($laudo->pdf));
+            Mail::to($user->email)->send(new EnviarLaudoMail($laudo->pdf));
             Mail::to('laudosdna.lfda-mg@agro.gov.br')->send(new EnviarLaudoMail($laudo->pdf));
             $laudo->update([
                 'status' => 1
@@ -289,7 +290,7 @@ class LaudoController extends Controller
             return response()->json([$xml, $parceiro], 200);
         } else {
             Mail::to($parceiro->email)->send(new EnviarLaudoMail($laudo->pdf));
-            Mail::to($owner->email)->send(new EnviarLaudoMail($laudo->pdf));
+            Mail::to($user->email)->send(new EnviarLaudoMail($laudo->pdf));
             Mail::to('laudosdna.lfda-mg@agro.gov.br')->send(new EnviarLaudoMail($laudo->pdf));
             $laudo->update([
                 'status' => 1
