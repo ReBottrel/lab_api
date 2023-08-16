@@ -332,16 +332,16 @@ class OrdemServicoController extends Controller
             foreach ($animal->alelos as $animalAlelo) {
                 $result = '';
 
-                // Verifica se o alelo do animal possui asterisco
-                if (strpos($animalAlelo->alelo1, '*') !== false || strpos($animalAlelo->alelo2, '*') !== false) {
+                // Verifica se o alelo do animal possui asterisco ou está vazio
+                if (strpos($animalAlelo->alelo1, '*') !== false || strpos($animalAlelo->alelo2, '*') !== false || empty(trim($animalAlelo->alelo1)) || empty(trim($animalAlelo->alelo2))) {
                     $result = 'V';
                 }
 
                 if (!$result) {
                     foreach ($mae->alelos as $maeAlelo) {
                         if ($animalAlelo->marcador == $maeAlelo->marcador) {
-                            // Verifica se o alelo da mãe possui asterisco apenas para o marcador correspondente
-                            if (strpos($maeAlelo->alelo1, '*') !== false || strpos($maeAlelo->alelo2, '*') !== false) {
+                            // Verifica se o alelo da mãe possui asterisco ou está vazio apenas para o marcador correspondente
+                            if (strpos($maeAlelo->alelo1, '*') !== false || strpos($maeAlelo->alelo2, '*') !== false || empty(trim($maeAlelo->alelo1)) || empty(trim($maeAlelo->alelo2))) {
                                 $result = 'V';
                                 break;
                             }
@@ -356,7 +356,6 @@ class OrdemServicoController extends Controller
                     'include' => $result
                 ];
             }
-
             foreach ($alelosMae as $maeAl) {
                 if (($maeAl['alelo1'] != '' || $maeAl['alelo2'] != '') && ($maeAl['aleloMae1'] != '' || $maeAl['aleloMae2'] != '')) {
                     if (
@@ -396,17 +395,17 @@ class OrdemServicoController extends Controller
             $laudoPai = [];
             foreach ($animal->alelos as $animalAlelo) {
                 $result = '';
-
-                // Verifica se o alelo do animal possui asterisco
-                if (strpos($animalAlelo->alelo1, '*') !== false || strpos($animalAlelo->alelo2, '*') !== false) {
+            
+                // Verifica se o alelo do animal possui asterisco ou está vazio
+                if (strpos($animalAlelo->alelo1, '*') !== false || strpos($animalAlelo->alelo2, '*') !== false || empty(trim($animalAlelo->alelo1)) || empty(trim($animalAlelo->alelo2))) {
                     $result = 'V';
                 }
-
+            
                 if (!$result) {
                     foreach ($pai->alelos as $paiAlelo) {
                         if ($animalAlelo->marcador == $paiAlelo->marcador) {
-                            // Verifica se o alelo do pai possui asterisco apenas para o marcador correspondente
-                            if (strpos($paiAlelo->alelo1, '*') !== false || strpos($paiAlelo->alelo2, '*') !== false) {
+                            // Verifica se o alelo do pai possui asterisco ou está vazio apenas para o marcador correspondente
+                            if (strpos($paiAlelo->alelo1, '*') !== false || strpos($paiAlelo->alelo2, '*') !== false || empty(trim($paiAlelo->alelo1)) || empty(trim($paiAlelo->alelo2))) {
                                 $result = 'V';
                                 break;
                             }
@@ -415,7 +414,7 @@ class OrdemServicoController extends Controller
                         }
                     }
                 }
-
+            
                 $laudoPai[] = [
                     'marcador' => $animalAlelo->marcador,
                     'include' => $result
