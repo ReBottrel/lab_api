@@ -444,6 +444,9 @@
                     }
                     if (response.animal && response.animal.alelos) {
                         let markersAndValues = [];
+                        const alelosLength = response.animal.alelos.length;
+                        const minLength = Math.min(alelosLength, incluidos.length, excluidos
+                            .length); // pega o menor tamanho entre os três arrays
 
                         for (let i = 0; i < incluidos.length; i++) {
                             markersAndValues.push({

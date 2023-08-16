@@ -317,7 +317,7 @@ class OrdemServicoController extends Controller
                 break;
         }
 
-        // dd($dna_verify);
+        // dd($pai);
 
         $alelosMae = [];
         $alelosPai = [];
@@ -329,20 +329,22 @@ class OrdemServicoController extends Controller
         // Comparar alelos entre mãe e animal
         if ($mae != null) {
             foreach ($animal->alelos as $animalAlelo) {
+                $foundAsteriskForMae = false;
+
                 foreach ($mae->alelos as $maeAlelo) {
                     if (
                         strpos($animalAlelo->alelo1, '*') !== false || strpos($animalAlelo->alelo2, '*') !== false
                         || strpos($maeAlelo->alelo1, '*') !== false || strpos($maeAlelo->alelo2, '*') !== false
                     ) {
-
                         $laudoMae[] = [
                             'marcador' => $animalAlelo->marcador,
                             'include' => 'V'
                         ];
+                        \Log::info(["Marcador" . $animalAlelo->marcador, "Alelo1" . $animalAlelo->alelo1, "Alelo2" . $animalAlelo->alelo2]);
                         \Log::info("Condição asterisco encontrado " . $animalAlelo->marcador);
-                        continue;
+                        $foundAsteriskForMae = true;
+                        break;
                     }
-
 
                     if ($animalAlelo->marcador == $maeAlelo->marcador) {
                         $alelosMae[] = [
@@ -355,6 +357,7 @@ class OrdemServicoController extends Controller
                         break;
                     }
                 }
+                if ($foundAsteriskForMae) continue;
             }
             foreach ($alelosMae as $maeAl) {
                 if (($maeAl['alelo1'] != '' || $maeAl['alelo2'] != '') && ($maeAl['aleloMae1'] != '' || $maeAl['aleloMae2'] != '')) {
@@ -393,18 +396,20 @@ class OrdemServicoController extends Controller
         // Comparar alelos entre pai e animal
         if ($pai != null) {
             foreach ($animal->alelos as $animalAlelo) {
+                $foundAsteriskForPai = false;
+
                 foreach ($pai->alelos as $paiAlelo) {
                     if (
                         strpos($animalAlelo->alelo1, '*') !== false || strpos($animalAlelo->alelo2, '*') !== false
                         || strpos($paiAlelo->alelo1, '*') !== false || strpos($paiAlelo->alelo2, '*') !== false
                     ) {
-
                         $laudoPai[] = [
                             'marcador' => $animalAlelo->marcador,
                             'include' => 'V'
                         ];
                         \Log::info("Condição asterisco encontrado " . $animalAlelo->marcador);
-                        continue;
+                        $foundAsteriskForPai = true;
+                        break;
                     }
 
                     if ($animalAlelo->marcador == $paiAlelo->marcador) {
@@ -418,6 +423,7 @@ class OrdemServicoController extends Controller
                         break;
                     }
                 }
+                if ($foundAsteriskForPai) continue;
             }
 
             foreach ($alelosPai as $paiAl) {
@@ -454,7 +460,7 @@ class OrdemServicoController extends Controller
             $laudoPai = null;
         }
 
-        \Log::info($laudoPai);
+        \Log::info($laudoPai, $laudoMae);
 
         return response()->json([
             'laudoMae' => $laudoMae,
