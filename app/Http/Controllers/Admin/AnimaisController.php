@@ -143,15 +143,7 @@ class AnimaisController extends Controller
             'mae' => $request->mae,
             'codlab' => $request->codlab,
             'identificador' => $request->identificador,
-        ]);
-
-        $parent = AnimalToParent::where('animal_id', $id)->first();
-
-        $parent->update([
-            'pai' => $request->pai,
-            'mae' => $request->mae,
-        ]);
-
+        ]);   
 
 
         $ordem = OrdemServico::where('animal_id', $id)->first();
