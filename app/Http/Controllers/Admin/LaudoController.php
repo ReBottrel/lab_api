@@ -278,7 +278,7 @@ class LaudoController extends Controller
         $pai = Animal::with('alelos')->where('animal_name', $animal->pai)->first();
         $mae = Animal::with('alelos')->where('animal_name', $animal->mae)->first();
         $results = Result::where('ordem_servico', $laudo->ordem_id)->latest()->first();
-        $owner = Owner::find($laudo->owner_id);
+        $owner = Owner::find($order->owner_id);
         if ($order->parceiro == 'ABCCMM') {
             $xml = $this->gerarXML($animal, $laudo, $order, $results, $pai, $mae, $owner);
             Mail::to($owner->email)->send(new EnviarLaudoMail($laudo->pdf));
@@ -358,7 +358,7 @@ class LaudoController extends Controller
             <REGISTRO><![CDATA[0]]></REGISTRO> 		
             <DATACONCLUSAO><![CDATA[' . date('d/m/Y', strtotime($laudo->created_at)) . ']]></DATACONCLUSAO> 
             <LABORATORIO><![CDATA[18]]></LABORATORIO> 		
-            <PROPRIETARIO><![CDATA[' . $owner->owner_name . ']]></PROPRIETARIO>
+            <PROPRIETARIO><![CDATA[' . $order->creator . ']]></PROPRIETARIO>
             <TIPOEXAME><![CDATA[2]]></TIPOEXAME> 		
             <SUBTIPOEXAME><![CDATA[' . $subtipo . ']]></SUBTIPOEXAME> 		
             <TECNICO><![CDATA[' . $order->technical_manager . ']]></TECNICO> 		
