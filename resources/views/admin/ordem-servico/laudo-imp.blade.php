@@ -679,6 +679,7 @@
                                     <th>Alelos</th>
                                 @endif
                             </tr>
+
                             @php
                                 $dados = [];
                                 
@@ -703,58 +704,65 @@
                             @endphp
 
                             @foreach ($dados as $item)
-                                <tr>
-                                    <td>{{ $item['marcador'] }}</td>
+                                @php
+                                    $excludeMarkers = ['CSRM60', 'CSRM66', 'ILSTS006', 'MGTG4B', 'RM067', 'SPS113'];
+                                @endphp
 
-                                    @if ($mae != null)
-                                        <td>
-                                            @if ($item['alelo_mae'][0] == '')
-                                                *
-                                            @else
-                                                {{ $item['alelo_mae'][0] }}
-                                            @endif -
-                                            @if ($item['alelo_mae'][1] == '')
-                                                *
-                                            @else
-                                                {{ $item['alelo_mae'][1] }}
-                                            @endif
-                                        </td>
-                                    @endif
+                                @if (
+                                    !(in_array($item['marcador'], $excludeMarkers) &&
+                                        empty($item['alelo_animal'][0]) &&
+                                        empty($item['alelo_animal'][1])
+                                    ))
+                                    <tr>
+                                        <td>{{ $item['marcador'] }}</td>
 
-                                    <td>
-                                        @if ($item['alelo_animal'][0] == '')
-                                            *
-                                        @else
-                                            {{ $item['alelo_animal'][0] }}
-                                        @endif -
-                                        @if ($item['alelo_animal'][1] == '')
-                                            *
-                                        @else
-                                            {{ $item['alelo_animal'][1] }}
+                                        @if ($mae != null)
+                                            <td>
+                                                @if ($item['alelo_mae'][0] == '')
+                                                    *
+                                                @else
+                                                    {{ $item['alelo_mae'][0] }}
+                                                @endif -
+                                                @if ($item['alelo_mae'][1] == '')
+                                                    *
+                                                @else
+                                                    {{ $item['alelo_mae'][1] }}
+                                                @endif
+                                            </td>
                                         @endif
-                                    </td>
 
-                                    @if ($pai != null)
                                         <td>
-                                            @if ($item['alelo_pai'][0] == '')
+                                            @if ($item['alelo_animal'][0] == '')
                                                 *
                                             @else
-                                                {{ $item['alelo_pai'][0] }}
+                                                {{ $item['alelo_animal'][0] }}
                                             @endif -
-                                            @if ($item['alelo_pai'][1] == '')
+                                            @if ($item['alelo_animal'][1] == '')
                                                 *
                                             @else
-                                                {{ $item['alelo_pai'][1] }}
+                                                {{ $item['alelo_animal'][1] }}
                                             @endif
                                         </td>
-                                    @endif
-                                </tr>
+
+                                        @if ($pai != null)
+                                            <td>
+                                                @if ($item['alelo_pai'][0] == '')
+                                                    *
+                                                @else
+                                                    {{ $item['alelo_pai'][0] }}
+                                                @endif -
+                                                @if ($item['alelo_pai'][1] == '')
+                                                    *
+                                                @else
+                                                    {{ $item['alelo_pai'][1] }}
+                                                @endif
+                                            </td>
+                                        @endif
+                                    </tr>
+                                @endif
                             @endforeach
-
-
-
-
                         </tbody>
+
                     </table>
                 </div>
             </div>
