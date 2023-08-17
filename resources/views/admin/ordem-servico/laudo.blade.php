@@ -696,7 +696,7 @@
 
                             @foreach ($dados as $item)
                                 @php
-                                    $excludeMarkers = ['CSRM60', 'CSRM66', 'ILSTS006', 'MGTG4B', 'RM067', 'SPS113'];
+                                    $excludeMarkers = ['CSRM60', 'CSSM66', 'ILSTS006', 'MGTG4B', 'RM067', 'SPS113'];
                                 @endphp
 
                                 @if (
