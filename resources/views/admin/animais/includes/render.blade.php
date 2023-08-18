@@ -45,7 +45,7 @@
     <td>{{ $animal->animal_name }}</td>
     <td> {{ $animal->breed }} </td>
     <td>
-        {{ $status }}
+        {{ $animal->codlab }}
     </td>
     <td>
         <div class="dropdown">

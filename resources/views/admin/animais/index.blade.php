@@ -38,7 +38,8 @@
                             <tr>
                                 <th>Nome</th>
                                 <th>Raça</th>
-                                <th>Status</th>
+                                <th>Especie</th>
+                                <th>Codlab</th>
                                 <th>Ações</th>
                             </tr>
                         </thead>
@@ -90,7 +91,10 @@
                                     <td>{{ $animal->animal_name }}</td>
                                     <td> {{ $animal->breed }} </td>
                                     <td>
-                                        {{ $status ?? 'Aguardando Amostra' }}
+                                        {{ $animal->especies ?? 'Sem especie' }}
+                                    </td>
+                                    <td>
+                                        {{ $animal->codlab ?? 'Sem codlab' }}
                                     </td>
                                     <td>
                                         <div class="dropdown">
