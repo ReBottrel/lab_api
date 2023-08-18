@@ -337,12 +337,16 @@
 
                         order: order
                     },
+                    beforeSend: function() {
+                        $('#criar-ordem').html('Aguarde...');
+                    },
                     success: function(data) {
                         Swal.fire(
                             'Sucesso!',
                             'Ordem de serviço gerada com sucesso.',
                             'success'
                         )
+                        
                         location.reload();
 
                     },
