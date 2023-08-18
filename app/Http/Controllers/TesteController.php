@@ -114,21 +114,42 @@ class TesteController extends Controller
 
         return $codlabs;
     }
+
+    public function getDuplicatedCodlab()
+    {
+        $duplicatedCodlab = Animal::select('codlab', DB::raw('count(codlab) as count'))
+            ->groupBy('codlab')
+            ->havingRaw('COUNT(codlab) > 1')
+            ->get();
+
+        return $duplicatedCodlab;
+    }
+
+
     public function updateCodlabInRange()
     {
+        // Pegue todos os codlabs dentro da faixa numérica desejada e ordene-os pela parte numérica
         $codlabs = Animal::select('id', 'codlab')
             ->whereRaw('CAST(SUBSTRING(codlab, 4) AS UNSIGNED) >= 100000 AND CAST(SUBSTRING(codlab, 4) AS UNSIGNED) < 200000')
             ->orderByRaw('CAST(SUBSTRING(codlab, 4) AS UNSIGNED)')
             ->get();
-
-        $startValue = 100000;
+    
         $updates = [];
+        $startValue = 100000;
+    
         foreach ($codlabs as $animal) {
-            $newCodlab = substr($animal->codlab, 0, 3) . strval($startValue);
+            // Geramos um novo codlab com o próximo valor numérico disponível
+            while(Animal::whereRaw('CAST(SUBSTRING(codlab, 4) AS UNSIGNED) = ?', [$startValue])->exists()) {
+                $startValue++;
+            }
+            
+            $prefix = substr($animal->codlab, 0, 3);
+            $newCodlab = $prefix . strval($startValue);
+    
             $updates[$animal->id] = ['codlab' => $newCodlab];
-            $startValue += 1;
+            $startValue++;
         }
-
+    
         DB::beginTransaction();
         try {
             foreach ($updates as $id => $update) {
@@ -137,10 +158,12 @@ class TesteController extends Controller
             DB::commit();
         } catch (\Exception $e) {
             DB::rollback();
-
+    
             throw $e;
         }
     }
+    
+
 
     public function pdfLaudo($id)
     {

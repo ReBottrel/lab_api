@@ -80,7 +80,7 @@ class AlelosController extends Controller
                     'birth_date' => $animalData['dataNascimento'],
                     'number_definitive' => $animalData['registro'],
                     'status' => 1,
-                    'codlab' => $codlab,
+                    'codlab' => $this->generateUniqueCodlab('EQU'),
                     'identificador' => $exameData['codigo'] ?? null,
                 ]);
             }
@@ -141,25 +141,20 @@ class AlelosController extends Controller
         return response()->json(['error' => 'erro']);
     }
 
-
     private function generateUniqueCodlab($sigla)
     {
-        $startValue = 100000;
         $maxNumber = Animal::selectRaw('MAX(CAST(SUBSTRING(codlab, 4) AS UNSIGNED)) as max_num')
             ->whereRaw('CAST(SUBSTRING(codlab, 4) AS UNSIGNED) >= 100000 AND CAST(SUBSTRING(codlab, 4) AS UNSIGNED) < 200000')
             ->first();
-
-        if ($maxNumber !== null && $maxNumber->max_num !== null) {
-            $startValue = $maxNumber->max_num + 1;
-        }
-
-        while (Animal::where('codlab', '=', $sigla . strval($startValue))->exists()) {
+    
+        $startValue = ($maxNumber && $maxNumber->max_num) ? $maxNumber->max_num + 1 : 100000;
+    
+        // Verifique a unicidade da parte numérica do codlab em todo o banco de dados
+        while (Animal::whereRaw('CAST(SUBSTRING(codlab, 4) AS UNSIGNED) = ?', [$startValue])->exists()) {
             $startValue += 1;
         }
-
-        $codlab = $sigla . strval($startValue);
-
-        return $codlab;
+    
+        return $sigla . strval($startValue);
     }
 
     public function getAnimal(Request $request)
