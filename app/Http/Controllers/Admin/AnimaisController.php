@@ -143,6 +143,7 @@ class AnimaisController extends Controller
             'mae' => $request->mae,
             'codlab' => $request->codlab,
             'identificador' => $request->identificador,
+            'number_definitive' => $request->number_definitive,
         ]);   
 
 

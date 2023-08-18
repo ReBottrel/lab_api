@@ -34,6 +34,13 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-3">
+                                    <label for="exampleFormControlInput1" class="form-label">Registro do animal</label>
+                                    <input type="text" name="number_definitive" id="number_definitive"
+                                        class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
                                     <label for="exampleFormControlInput1" class="form-label">Sexo</label>
                                     <select class="form-select" name="sex">
                                         <option value="F">F</option>
