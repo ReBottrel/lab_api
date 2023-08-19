@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use App\Models\OrderRequestPayment;
 use App\Http\Controllers\Controller;
 use App\Models\Alelo;
+use App\Models\AnimalToParent;
 use App\Models\DnaVerify;
 use App\Models\Laudo;
 use App\Models\Marcador;
@@ -115,14 +116,14 @@ class OrdemServicoController extends Controller
         $maxNumber = Animal::selectRaw('MAX(CAST(SUBSTRING(codlab, 4) AS UNSIGNED)) as max_num')
             ->whereRaw('CAST(SUBSTRING(codlab, 4) AS UNSIGNED) >= 100000 AND CAST(SUBSTRING(codlab, 4) AS UNSIGNED) < 200000')
             ->first();
-    
+
         $startValue = ($maxNumber && $maxNumber->max_num) ? $maxNumber->max_num + 1 : 100000;
-    
+
         // Verifique a unicidade da parte numérica do codlab em todo o banco de dados
         while (Animal::whereRaw('CAST(SUBSTRING(codlab, 4) AS UNSIGNED) = ?', [$startValue])->exists()) {
             $startValue += 1;
         }
-    
+
         return $sigla . strval($startValue);
     }
 
@@ -255,22 +256,47 @@ class OrdemServicoController extends Controller
         $sigla = substr($animal->especies, 0, 3);
         $pai = null;
         $mae = null;
-
+        $relation = AnimalToParent::where('animal_id', $animal->id)->first();
         switch ($dna_verify->verify_code) {
             case $sigla . 'PD':
-                $pai = Animal::with('alelos')->where('animal_name', $animal->pai)->first();
+                if ($relation) {
+                    // Try to find 'pai' by register number first, if not found, use 'pai_id'
+                    $pai = Animal::with('alelos')->where('number_definitive', $relation->register_pai)->first();
+                    if (!$pai) {
+                        $pai = Animal::with('alelos')->find($relation->pai_id);
+                    }
+                }
                 break;
             case $sigla . 'MD':
-                $mae = Animal::with('alelos')->where('animal_name', $animal->mae)->first();
+                if ($relation) {
+                    // Try to find 'mae' by register number first, if not found, use 'mae_id'
+                    $mae = Animal::with('alelos')->where('number_definitive', $relation->register_mae)->first();
+                    if (!$mae) {
+                        $mae = Animal::with('alelos')->find($relation->mae_id);
+                    }
+                }
                 break;
             case $sigla . 'TR':
-                $pai = Animal::with('alelos')->where('animal_name', $animal->pai)->first();
-                $mae = Animal::with('alelos')->where('animal_name', $animal->mae)->first();
+                if ($relation) {
+                    if ($relation->register_pai) {
+                        $pai = Animal::with('alelos')->where('number_definitive', $relation->register_pai)->first();
+                    }
+                    if (!$pai && $relation->pai_id) {
+                        $pai = Animal::with('alelos')->find($relation->pai_id);
+                    }
+
+                    if ($relation->register_mae) {
+                        $mae = Animal::with('alelos')->where('number_definitive', $relation->register_mae)->first();
+                    }
+                    if (!$mae && $relation->mae_id) {
+                        $mae = Animal::with('alelos')->find($relation->mae_id);
+                    }
+                }
                 break;
             default:
                 break;
         }
-        // dd($sigla, $dna_verify, $pai, $mae);
+        // dd($sigla, $relation, $pai, $mae);
 
         return view('admin.ordem-servico.alelo-compare', get_defined_vars());
     }
@@ -296,18 +322,45 @@ class OrdemServicoController extends Controller
         $result = Result::where('ordem_servico', $ordem->id)
             ->orderBy('id', 'desc')
             ->first();
-        $pai = null;
-        $mae = null;
+        $relation = AnimalToParent::where('animal_id', $animal->id)->first();
         switch ($dna_verify->verify_code) {
             case $sigla . 'PD':
-                $pai = Animal::with('alelos')->where('animal_name', $animal->pai)->first();
+                if ($relation) {
+                    if ($relation->register_pai) {
+                        $pai = Animal::with('alelos')->where('number_definitive', $relation->register_pai)->first();
+                    }
+                    if (!$pai && $relation->pai_id) {
+                        $pai = Animal::with('alelos')->find($relation->pai_id);
+                    }
+                }
                 break;
             case $sigla . 'MD':
-                $mae = Animal::with('alelos')->where('animal_name', $animal->mae)->first();
+                if ($relation) {
+            
+                    if ($relation->register_mae) {
+                        $mae = Animal::with('alelos')->where('number_definitive', $relation->register_mae)->first();
+                    }
+                    if (!$mae && $relation->mae_id) {
+                        $mae = Animal::with('alelos')->find($relation->mae_id);
+                    }
+                }
                 break;
             case $sigla . 'TR':
-                $pai = Animal::with('alelos')->where('animal_name', $animal->pai)->first();
-                $mae = Animal::with('alelos')->where('animal_name', $animal->mae)->first();
+                if ($relation) {
+                    if ($relation->register_pai) {
+                        $pai = Animal::with('alelos')->where('number_definitive', $relation->register_pai)->first();
+                    }
+                    if (!$pai && $relation->pai_id) {
+                        $pai = Animal::with('alelos')->find($relation->pai_id);
+                    }
+
+                    if ($relation->register_mae) {
+                        $mae = Animal::with('alelos')->where('number_definitive', $relation->register_mae)->first();
+                    }
+                    if (!$mae && $relation->mae_id) {
+                        $mae = Animal::with('alelos')->find($relation->mae_id);
+                    }
+                }
                 break;
             default:
                 break;
@@ -391,12 +444,12 @@ class OrdemServicoController extends Controller
             $laudoPai = [];
             foreach ($animal->alelos as $animalAlelo) {
                 $result = '';
-            
+
                 // Verifica se o alelo do animal possui asterisco ou está vazio
                 if (strpos($animalAlelo->alelo1, '*') !== false || strpos($animalAlelo->alelo2, '*') !== false || empty(trim($animalAlelo->alelo1)) || empty(trim($animalAlelo->alelo2))) {
                     $result = 'V';
                 }
-            
+
                 if (!$result) {
                     foreach ($pai->alelos as $paiAlelo) {
                         if ($animalAlelo->marcador == $paiAlelo->marcador) {
@@ -410,7 +463,7 @@ class OrdemServicoController extends Controller
                         }
                     }
                 }
-            
+
                 $laudoPai[] = [
                     'marcador' => $animalAlelo->marcador,
                     'include' => $result

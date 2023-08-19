@@ -359,6 +359,7 @@ Route::middleware(['auth:admin'])->group(function () {
 
     Route::get('get-dados-owner', [DadosController::class, 'getOwner'])->name('get.dados.owner');
     Route::get('get-dados-tecnico', [DadosController::class, 'getTecnico'])->name('get.dados.tecnico');
+    // Route::get('get-dados-tecnico', [DadosController::class, 'getTecnico'])->name('get.dados.tecnico');
 
     Route::get('get-dados-animal', [DadosController::class, 'getAnimal'])->name('get.dados.animal');
 

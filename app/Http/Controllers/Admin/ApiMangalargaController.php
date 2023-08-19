@@ -10,6 +10,7 @@ use App\Models\DnaVerify;
 use App\Models\OrderRequest;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\AnimalToParent;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 use Maatwebsite\Excel\Concerns\ToArray;
@@ -23,9 +24,9 @@ class ApiMangalargaController extends Controller
     public function getApi()
     {
 
-        $coletas = $this->fetchDataFromApi('coletas', 18, 1, ['dataEnvioInicio' => date('Y-m-d\TH:i:s', strtotime('-1 day'))]);
+        // $coletas = $this->fetchDataFromApi('coletas', 18, 1, ['dataEnvioInicio' => date('Y-m-d\TH:i:s', strtotime('-1 day'))]);
         // dd($coletas);
-        // $coletas = $this->fetchDataFromApi('coletas', 18, 1, ['dataEnvioInicio' => '2023-05-21T00:00:00']);
+        $coletas = $this->fetchDataFromApi('coletas', 18, 1, ['dataEnvioInicio' => '2023-07-21T00:00:00']);
         foreach ($coletas as $coleta) {
             $user = User::where('email', $coleta->cliente->email)->first();
             $tecnico = Tecnico::where('professional_name', $coleta->tecnico)->first();
@@ -100,12 +101,15 @@ class ApiMangalargaController extends Controller
 
             foreach ($coleta->animais as $animal) {
                 $existingAnimal = Animal::where('register_number_brand', $animal->rowidAnimal)->first();
+                $currentAnimal = null;  // Inicializa a variável que irá armazenar o animal atual
+
                 if ($existingAnimal) {
                     $codlab = $this->generateUniqueCodlab('EQU');
                     // $existingAnimal->status = 1;
                     $existingAnimal->codlab = $codlab;
                     $existingAnimal->order_id = $order->id; // atualize o status como necessário
                     $existingAnimal->save();
+                    $currentAnimal = $existingAnimal;
                 } else {
                     $codlab = $this->generateUniqueCodlab('EQU');
                     $newAnimal = Animal::create([
@@ -126,12 +130,22 @@ class ApiMangalargaController extends Controller
                         'row_id' => $animal->rowidAnimal,
                     ]);
 
+
+                    $currentAnimal = $newAnimal;
                     $verify = DnaVerify::create([
-                        'animal_id' => $newAnimal->id,
+                        'animal_id' => $currentAnimal->id,
                         'order_id' => $order->id,
                         'verify_code' => 'EQUTR',
                     ]);
                 }
+                $animalToParent = AnimalToParent::create([
+                    'animal_id' => $currentAnimal->id,
+                    'animal_name' => $animal->nome,
+                    'especies' => 'EQUINA',
+                    'animal_register' => null,
+                    'register_pai' => $animal->registroPai ?? null,
+                    'register_mae' =>  $animal->registroMae ?? null,
+                ]);
             }
         }
         return response()->json('ok');
@@ -221,11 +235,13 @@ class ApiMangalargaController extends Controller
             foreach ($coleta->animais as $animal) {
                 $codlab = $this->generateUniqueCodlab('EQU');
                 $existingAnimal = Animal::where('register_number_brand', $animal->rowidAnimal)->first();
+                $currentAnimal = null;
                 if ($existingAnimal) {
                     // $existingAnimal->status = 1;
                     $existingAnimal->codlab = $codlab;
                     $existingAnimal->order_id = $order->id; // atualize o status como necessário
                     $existingAnimal->save();
+                    $currentAnimal = $existingAnimal;
                 } else {
                     $codlab = $this->generateUniqueCodlab('EQU');
 
@@ -247,14 +263,22 @@ class ApiMangalargaController extends Controller
                         'row_id' => $animal->rowidAnimal,
                     ]);
 
-                    
+                    $currentAnimal = $newAnimal;
 
                     $verify = DnaVerify::create([
-                        'animal_id' => $newAnimal->id,
+                        'animal_id' => $currentAnimal->id,
                         'order_id' => $order->id,
                         'verify_code' => 'EQUTR',
                     ]);
                 }
+                $animalToParent = AnimalToParent::create([
+                    'animal_id' => $currentAnimal->id,
+                    'animal_name' => $animal->nome,
+                    'especies' => 'EQUINA',
+                    'animal_register' => null,
+                    'register_pai' => $animal->registroPai ?? null,
+                    'register_mae' =>  $animal->registroMae ?? null,
+                ]);
             }
         }
         return response()->json('ok');
@@ -262,13 +286,13 @@ class ApiMangalargaController extends Controller
 
     public function getRowId()
     {
-     $coletas = $this->fetchDataFromApi('coletas', 18, 2, ['dataEnvioInicio' => '2023-06-05T00:00:00']);
+        $coletas = $this->fetchDataFromApi('coletas', 18, 2, ['dataEnvioInicio' => '2023-06-05T00:00:00']);
 
         foreach ($coletas as $coleta) {
             foreach ($coleta->animais as $animal) {
-            //   dd($animal);
+                //   dd($animal);
                 $existingAnimal = Animal::where('animal_name', $animal->nome)->first();
-              
+
                 if ($existingAnimal) {
                     $existingAnimal->register_number_brand = $animal->rowidAnimal;
                     $existingAnimal->row_id = $animal->rowidAnimal;

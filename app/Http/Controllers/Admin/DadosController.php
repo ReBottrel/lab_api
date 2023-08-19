@@ -37,7 +37,14 @@ class DadosController extends Controller
     }
     public function getAnimal(Request $request)
     {
-        $animal = Animal::find($request->id);
-        return response()->json($animal);
+        $query = $request->get('q');
+        $results = [];
+
+        if ($query) {
+            $animals = Animal::where('animal_name', 'like', "%{$query}%")
+                ->limit(20)
+                ->get();
+        }
+        return response()->json($animals);
     }
 }

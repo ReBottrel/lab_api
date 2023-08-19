@@ -201,8 +201,11 @@
                                     </div>
                                     <div class="col-md-12 pai my-2">
                                         <div class="mb-3">
-                                            <label for="exampleFormControlInput1" class="form-label">Nome do pai</label>
-                                            <input type="text" name="pai" id="pai" class="form-control">
+                                            <label for="exampleFormControlInput1" class="form-label">Nome do
+                                                pai</label>
+                                            <select class="js-pai-basic-single" name="pai_id">
+
+                                            </select>
                                         </div>
                                     </div>
                                 </div>
@@ -215,6 +218,8 @@
                                                 class="form-control registro_mae">
                                         </div>
                                     </div>
+                                    <input type="hidden" name="pai" id="pai_animal">
+                                    <input type="hidden" name="mae" id="mae_animal">
                                     <div class="col-md-12 mae my-2">
                                         <div class="mb-3">
                                             <label for="exampleFormControlInput1" class="form-label">Espécie da
@@ -230,7 +235,9 @@
                                     <div class="col-md-12 mae my-2">
                                         <div class="mb-3">
                                             <label for="exampleFormControlInput1" class="form-label">Nome da mãe</label>
-                                            <input type="text" name="mae" id="mae" class="form-control">
+                                            <select class="js-mae-basic-single" name="mae_id">
+
+                                            </select>
                                         </div>
                                     </div>
 
@@ -249,7 +256,70 @@
 @section('js')
     <script>
         $(document).ready(function() {
+            $('.js-pai-basic-single').select2({
+                placeholder: 'Selecione o proprietário',
+                width: '100%',
+                ajax: {
+                    url: "{{ route('get.dados.animal') }}",
+                    dataType: "json",
+                    delay: 250,
+                    data: function(params) {
+                        return {
+                            q: params.term,
+                            page: params.page
+                        };
+                    },
+                    processResults: function(data) {
+                        var mappedData = data.map(function(item) {
+                            return {
+                                id: item.id, // ID da opção
+                                text: item.animal_name // Valor a ser exibido no Select2
+                            };
+                        });
 
+                        return {
+                            results: mappedData
+                        };
+                    },
+                    cache: true
+                },
+                minimumInputLength: 2,
+            }).on('change', function(e) {
+                var selectedAnimalName = $(this).select2('data')[0].text;
+                $('#pai_animal').val(selectedAnimalName);
+            });
+            $('.js-mae-basic-single').select2({
+                placeholder: 'Selecione o proprietário',
+                width: '100%',
+                ajax: {
+                    url: "{{ route('get.dados.animal') }}",
+                    dataType: "json",
+                    delay: 250,
+                    data: function(params) {
+                        return {
+                            q: params.term,
+                            page: params.page
+                        };
+                    },
+                    processResults: function(data) {
+                        var mappedData = data.map(function(item) {
+                            return {
+                                id: item.id, // ID da opção
+                                text: item.animal_name // Valor a ser exibido no Select2
+                            };
+                        });
+
+                        return {
+                            results: mappedData
+                        };
+                    },
+                    cache: true
+                },
+                minimumInputLength: 2,
+            }).on('change', function(e) {
+                var selectedAnimalName = $(this).select2('data')[0].text;
+                $('#mae_animal').val(selectedAnimalName);
+            });
             $(document).ready(function() {
                 $('#search-input').on('keyup', function() {
                     var query = $(this).val();

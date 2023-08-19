@@ -62,15 +62,20 @@ class AlelosController extends Controller
 
             // Verifica se o animal já existe no banco de dados
             $animal = Animal::where('animal_name', $animalData['nomeAnimal'])->first();
+            // \Log::info($animalData);
             $marcadores = Marcador::where('especie', 'EQUINA')->get();
             if ($animal) {
+                if (!$animal->codlab) {
+                    $animal->codlab = $this->generateUniqueCodlab('EQU');
+                }
+
                 // Atualiza o identificador do animal
                 $animal->identificador = $exameData['codigo'] ?? null;
+
                 $animal->save();
             } else {
                 $sigla = 'EQU';
                 $codlab = $this->generateUniqueCodlab($sigla);
-
                 // Cria um novo animal no banco de dados
                 $animal = Animal::create([
                     'animal_name' => $animalData['nomeAnimal'],
@@ -80,7 +85,7 @@ class AlelosController extends Controller
                     'birth_date' => $animalData['dataNascimento'],
                     'number_definitive' => $animalData['registro'],
                     'status' => 1,
-                    'codlab' => $this->generateUniqueCodlab('EQU'),
+                    'codlab' => $codlab,
                     'identificador' => $exameData['codigo'] ?? null,
                 ]);
             }
@@ -140,23 +145,21 @@ class AlelosController extends Controller
 
         return response()->json(['error' => 'erro']);
     }
-
     private function generateUniqueCodlab($sigla)
     {
         $maxNumber = Animal::selectRaw('MAX(CAST(SUBSTRING(codlab, 4) AS UNSIGNED)) as max_num')
             ->whereRaw('CAST(SUBSTRING(codlab, 4) AS UNSIGNED) >= 100000 AND CAST(SUBSTRING(codlab, 4) AS UNSIGNED) < 200000')
             ->first();
-    
+
         $startValue = ($maxNumber && $maxNumber->max_num) ? $maxNumber->max_num + 1 : 100000;
-    
+
         // Verifique a unicidade da parte numérica do codlab em todo o banco de dados
         while (Animal::whereRaw('CAST(SUBSTRING(codlab, 4) AS UNSIGNED) = ?', [$startValue])->exists()) {
             $startValue += 1;
         }
-    
+
         return $sigla . strval($startValue);
     }
-
     public function getAnimal(Request $request)
     {
         $animal = Animal::with('alelos')->where('animal_name', $request->name)->first();
