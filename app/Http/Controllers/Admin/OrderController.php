@@ -283,17 +283,17 @@ class OrderController extends Controller
                 ]);
             }
 
-            // if ($request->value == 7) {
-            //     $response = Http::post('https://api.z-api.io/instances/3B30881EC3E99084D3D3B6927F6ADC67/token/66E633717A0DCDD3D4A1BC19/send-text', [
-            //         "phone" => "55$telefoneOwner",
-            //         "message" => "Prezado Criador, a amostra do animal $animal->animal_name foi recebida e APROVADA para
-            //         realização do exame de DNA no laboratório Loci.
-            //         Em breve você receberá o Link para liberação do pagamento."
-            //     ]);
-            //     $order->update([
-            //         'status' => 4,
-            //     ]);
-            // }
+            if ($request->value == 7) {
+                $response = Http::post('https://api.z-api.io/instances/3B30881EC3E99084D3D3B6927F6ADC67/token/66E633717A0DCDD3D4A1BC19/send-text', [
+                    "phone" => "55$telefoneOwner",
+                    "message" => "Prezado Criador, a amostra do animal $animal->animal_name foi recebida e APROVADA para
+                    realização do exame de DNA no laboratório Loci.
+                    Em breve você receberá o Link para liberação do pagamento."
+                ]);
+                $order->update([
+                    'status' => 4,
+                ]);
+            }
             if ($request->value == 6) {
                 $response = Http::post('https://api.z-api.io/instances/3B30881EC3E99084D3D3B6927F6ADC67/token/66E633717A0DCDD3D4A1BC19/send-text', [
                     "phone" => "55$telefoneOwner",
@@ -517,15 +517,15 @@ class OrderController extends Controller
             $email = $veterinario->email;
 
             $url = route('user.dashboard');
-            // $response = Http::post('https://api.z-api.io/instances/3B30881EC3E99084D3D3B6927F6ADC67/token/66E633717A0DCDD3D4A1BC19/send-text', [
-            //     "phone" => "55$telefone",
-            //     "message" => "Prezado, Veterinário!
-            // Segue abaixo o Link de acesso para clicar, efetuar o pagamento e liberar o(s) exame(s) para execução.
-            // Ao acessar, digite seu E-MAIL: $email no campo USUÁRIO e o seu CPF: $senha em senha.",
-            //     "linkUrl" => $url,
-            //     "title" => "Locilab",
-            //     "linkDescription" => "LociLab e a melhor plataforma de exames de DNA do Brasil",
-            // ]);
+            $response = Http::post('https://api.z-api.io/instances/3B30881EC3E99084D3D3B6927F6ADC67/token/66E633717A0DCDD3D4A1BC19/send-text', [
+                "phone" => "55$telefone",
+                "message" => "Prezado, Veterinário!
+            Segue abaixo o Link de acesso para clicar, efetuar o pagamento e liberar o(s) exame(s) para execução.
+            Ao acessar, digite seu E-MAIL: $email no campo USUÁRIO e o seu CPF: $senha em senha.",
+                "linkUrl" => $url,
+                "title" => "Locilab",
+                "linkDescription" => "LociLab e a melhor plataforma de exames de DNA do Brasil",
+            ]);
 
             $order_request->update([
                 'status' => 2,
