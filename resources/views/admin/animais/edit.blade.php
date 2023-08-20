@@ -107,8 +107,11 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label for="exampleFormControlInput1" class="form-label">Nome do pai</label>
-                                    <input type="text" name="pai" id="pai" class="form-control">
+                                    <label for="exampleFormControlInput1" class="form-label">Nome do
+                                        pai</label>
+                                    <select class="js-pai-basic-single" name="pai_id">
+
+                                    </select>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -121,7 +124,9 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="exampleFormControlInput1" class="form-label">Nome da mãe</label>
-                                    <input type="text" name="mae" id="mae" class="form-control">
+                                    <select class="js-mae-basic-single" name="mae_id">
+
+                                    </select>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -129,6 +134,8 @@
                                     <input type="text" name="identificador" id="identificador" class="form-control">
                                 </div>
                             </div>
+                            <input type="hidden" name="mae" id="pai_animal">
+                            <input type="hidden" name="pai" id="mae_animal">
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary"
                                     data-bs-dismiss="modal">Cancelar</button>
@@ -151,19 +158,94 @@
                 url: `{{ url('animal-edit') }}/${id}`,
                 type: 'GET',
                 success: (data) => {
-                    console.log(data);
-                    for (i in data) {
+                    console.log(data.animal);
+                    for (i in data.animal) {
                         var inputField = $('#editar-produto').find(`[name="${i}"]`);
 
-                        if (inputField.attr('type') === 'date' && typeof data[i] === 'string' && data[i]
+                        if (inputField.attr('type') === 'date' && typeof data.animal[i] === 'string' && data.animal[i]
                             .length === 10) {
-                            var date = new Date(data[i] + "T00:00:00Z");
+                            var date = new Date(data.animal[i] + "T00:00:00Z");
                             inputField.val(date.toISOString().slice(0, 10));
                         } else {
-                            inputField.val(data[i]);
+                            inputField.val(data.animal[i]);
                         }
                     }
+                    if (data.pai) {
+                        var $paiSelect = $('.js-pai-basic-single');
+                        var newOption = new Option(data.pai.animal_name, data.pai.id, true, true);
+                        $paiSelect.append(newOption).trigger('change');
+                    }
+                    if (data.mae) {
+                        var $maeSelect = $('.js-mae-basic-single');
+                        var newOption = new Option(data.mae.animal_name, data.mae.id, true, true);
+                        $maeSelect.append(newOption).trigger('change');
+                    }
+
                 }
+            });
+            $('.js-pai-basic-single').select2({
+                placeholder: 'Selecione o proprietário',
+                width: '100%',
+                ajax: {
+                    url: "{{ route('get.dados.animal') }}",
+                    dataType: "json",
+                    delay: 250,
+                    data: function(params) {
+                        return {
+                            q: params.term,
+                            page: params.page
+                        };
+                    },
+                    processResults: function(data) {
+                        var mappedData = data.map(function(item) {
+                            return {
+                                id: item.id, // ID da opção
+                                text: item.animal_name // Valor a ser exibido no Select2
+                            };
+                        });
+
+                        return {
+                            results: mappedData
+                        };
+                    },
+                    cache: true
+                },
+                minimumInputLength: 2,
+            }).on('change', function(e) {
+                var selectedAnimalName = $(this).select2('data')[0].text;
+                $('#pai_animal').val(selectedAnimalName);
+            });
+            $('.js-mae-basic-single').select2({
+                placeholder: 'Selecione o proprietário',
+                width: '100%',
+                ajax: {
+                    url: "{{ route('get.dados.animal') }}",
+                    dataType: "json",
+                    delay: 250,
+                    data: function(params) {
+                        return {
+                            q: params.term,
+                            page: params.page
+                        };
+                    },
+                    processResults: function(data) {
+                        var mappedData = data.map(function(item) {
+                            return {
+                                id: item.id, // ID da opção
+                                text: item.animal_name // Valor a ser exibido no Select2
+                            };
+                        });
+
+                        return {
+                            results: mappedData
+                        };
+                    },
+                    cache: true
+                },
+                minimumInputLength: 2,
+            }).on('change', function(e) {
+                var selectedAnimalName = $(this).select2('data')[0].text;
+                $('#mae_animal').val(selectedAnimalName);
             });
         });
     </script>

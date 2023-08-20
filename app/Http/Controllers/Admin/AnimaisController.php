@@ -72,6 +72,15 @@ class AnimaisController extends Controller
         $data['codlab'] = $request->codlab ? $request->codlab : $codlab;
         // dd($data);
         $animal = Animal::create($data);
+        AnimalToParent::updateOrCreate(
+            ['animal_id' => $animal->id],
+            [
+                'mae_id' => $request->mae_id,
+                'pai_id' => $request->pai_id,
+                'register_pai' => $request->register_pai,
+                'register_mae' => $request->register_mae,
+            ]
+        );
         return redirect()->route('animais')->with('success', 'Animal cadastrado com sucesso!');
     }
     private function generateUniqueCodlab($sigla)
@@ -110,8 +119,35 @@ class AnimaisController extends Controller
     public function edit($id)
     {
         $animal = Animal::find($id);
-        return response()->json($animal);
+        if (!$animal) {
+            return response()->json(['error' => 'Animal não encontrado'], 404);
+        }
+    
+        $pai = null;
+        $mae = null;
+        $relation = AnimalToParent::where('animal_id', $animal->id)->first();
+    
+        if ($relation) {
+            // Buscar pelo pai
+            if ($relation->register_pai) {
+                $pai = Animal::with('alelos')->where('number_definitive', $relation->register_pai)->first();
+            }
+            if (!$pai && $relation->pai_id) {
+                $pai = Animal::with('alelos')->find($relation->pai_id);
+            }
+    
+            // Buscar pela mãe
+            if ($relation->register_mae) {
+                $mae = Animal::with('alelos')->where('number_definitive', $relation->register_mae)->first();
+            }
+            if (!$mae && $relation->mae_id) {
+                $mae = Animal::with('alelos')->find($relation->mae_id);
+            }
+        }
+    
+        return response()->json(['animal' => $animal, 'pai' => $pai, 'mae' => $mae]);
     }
+    
 
     /**
      * Update the specified resource in storage.
@@ -122,6 +158,7 @@ class AnimaisController extends Controller
      */
     public function update(Request $request, $id)
     {
+        // dd($request->all());
         $animal = Animal::find($id);
 
         $animal->update([
@@ -141,8 +178,15 @@ class AnimaisController extends Controller
             'identificador' => $request->identificador,
             'number_definitive' => $request->number_definitive,
         ]);
-
-
+        AnimalToParent::updateOrCreate(
+            ['animal_id' => $id],
+            [
+                'mae_id' => $request->mae_id,
+                'pai_id' => $request->pai_id,
+                'register_pai' => $request->register_pai,
+                'register_mae' => $request->register_mae,
+            ]
+        );
         $ordem = OrdemServico::where('animal_id', $id)->first();
 
         if ($ordem) {

@@ -138,14 +138,16 @@ class ApiMangalargaController extends Controller
                         'verify_code' => 'EQUTR',
                     ]);
                 }
-                $animalToParent = AnimalToParent::create([
-                    'animal_id' => $currentAnimal->id,
-                    'animal_name' => $animal->nome,
-                    'especies' => 'EQUINA',
-                    'animal_register' => null,
-                    'register_pai' => $animal->registroPai ?? null,
-                    'register_mae' =>  $animal->registroMae ?? null,
-                ]);
+                $animalToParent = AnimalToParent::updateOrCreate(
+                    ['animal_id' => $currentAnimal->id],  // Condições para encontrar um registro existente
+                    [
+                        'animal_name' => $animal->nome,
+                        'especies' => 'EQUINA',
+                        'animal_register' => null,
+                        'register_pai' => $animal->registroPai ?? null,
+                        'register_mae' => $animal->registroMae ?? null,
+                    ]  // Valores para atualizar ou criar
+                );
             }
         }
         return response()->json('ok');
@@ -271,14 +273,16 @@ class ApiMangalargaController extends Controller
                         'verify_code' => 'EQUTR',
                     ]);
                 }
-                $animalToParent = AnimalToParent::create([
-                    'animal_id' => $currentAnimal->id,
-                    'animal_name' => $animal->nome,
-                    'especies' => 'EQUINA',
-                    'animal_register' => null,
-                    'register_pai' => $animal->registroPai ?? null,
-                    'register_mae' =>  $animal->registroMae ?? null,
-                ]);
+                $animalToParent = AnimalToParent::updateOrCreate(
+                    ['animal_id' => $currentAnimal->id],  // Condições para encontrar um registro existente
+                    [
+                        'animal_name' => $animal->nome,
+                        'especies' => 'EQUINA',
+                        'animal_register' => null,
+                        'register_pai' => $animal->registroPai ?? null,
+                        'register_mae' => $animal->registroMae ?? null,
+                    ]  // Valores para atualizar ou criar
+                );
             }
         }
         return response()->json('ok');
