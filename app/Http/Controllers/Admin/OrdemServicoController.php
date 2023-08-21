@@ -322,6 +322,8 @@ class OrdemServicoController extends Controller
         $result = Result::where('ordem_servico', $ordem->id)
             ->orderBy('id', 'desc')
             ->first();
+        $pai = null;
+        $mae = null;
         $relation = AnimalToParent::where('animal_id', $animal->id)->first();
         switch ($dna_verify->verify_code) {
             case $sigla . 'PD':
@@ -336,7 +338,7 @@ class OrdemServicoController extends Controller
                 break;
             case $sigla . 'MD':
                 if ($relation) {
-            
+
                     if ($relation->register_mae) {
                         $mae = Animal::with('alelos')->where('number_definitive', $relation->register_mae)->first();
                     }
