@@ -260,18 +260,21 @@ class OrdemServicoController extends Controller
         switch ($dna_verify->verify_code) {
             case $sigla . 'PD':
                 if ($relation) {
-                    // Try to find 'pai' by register number first, if not found, use 'pai_id'
-                    $pai = Animal::with('alelos')->where('number_definitive', $relation->register_pai)->first();
-                    if (!$pai) {
+                    if ($relation->register_pai) {
+                        $pai = Animal::with('alelos')->where('number_definitive', $relation->register_pai)->first();
+                    }
+                    if (!$pai && $relation->pai_id) {
                         $pai = Animal::with('alelos')->find($relation->pai_id);
                     }
                 }
                 break;
             case $sigla . 'MD':
                 if ($relation) {
-                    // Try to find 'mae' by register number first, if not found, use 'mae_id'
-                    $mae = Animal::with('alelos')->where('number_definitive', $relation->register_mae)->first();
-                    if (!$mae) {
+
+                    if ($relation->register_mae) {
+                        $mae = Animal::with('alelos')->where('number_definitive', $relation->register_mae)->first();
+                    }
+                    if (!$mae && $relation->mae_id) {
                         $mae = Animal::with('alelos')->find($relation->mae_id);
                     }
                 }
