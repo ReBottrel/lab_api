@@ -106,9 +106,8 @@
                                             <ul class="dropdown-menu">
 
                                                 <a href="{{ route('animais.show', $animal->id) }}"
-                                                    class="dropdown-item">Editar</a>
-                                                <a href="{{ route('animais.status', $animal->id) }}"
-                                                    class="dropdown-item">Editar Status</a>
+                                                    class="dropdown-item"><i class="fa-solid fa-pen-to-square"></i> Editar</a>
+                                                <a data-id="{{ $animal->id }}" class="dropdown-item excluir-animal text-danger" role="button"><i class="fa-solid fa-trash"></i> Excluir animal</a>
                                             </ul>
                                         </div>
 
@@ -152,6 +151,39 @@
                     $('.pagin').removeClass('d-none');
                 }
             });
+            $(document).on('click', '.excluir-animal', function() {
+                var id = $(this).data('id');
+                Swal.fire({
+                    title: 'Você tem certeza?',
+                    text: "Esse processo pode ser irreversível!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Sim, deletar!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: `/animal-delete/`,
+                            type: 'POST',
+                            data: {
+                                id: id
+                            },
+                            success: function(data) {
+                                console.log(data);
+                                Swal.fire(
+                                    'Deletado!',
+                                    'Animal deletado com sucesso.',
+                                    'success'
+                                )
+                                location.reload();
+                            }
+                        });
+
+                    }
+                })
+
+            });
             $(document).on('click', '#buscar-codlab', function() {
                 var query = $('#codlab').val();
                 if (query != '') {
@@ -164,7 +196,7 @@
                         },
                         success: function(response) {
                             if (response.viewRender) {
-                        
+
                                 $('.filter').html(response.viewRender);
                             } else {
                                 Swal.fire({
