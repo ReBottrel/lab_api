@@ -498,7 +498,7 @@ class LaudoController extends Controller
     {
         if ($request->ajax()) {
             $busca = $request->busca;
-            $animal = Animal::where('animal_name', 'LIKE', '%' . $busca . '%')->first();
+            $animal = Animal::where('animal_name', 'LIKE', '%' . $busca . '%')->where('status', 9)->first();
             $laudos = Laudo::where('status', 1)->where('animal_id', $animal->id)
                 ->get();
 
