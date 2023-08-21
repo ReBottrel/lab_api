@@ -92,41 +92,45 @@
                                     <input type="date" name="birth_date" id="birth_date" class="form-control">
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-12">
                                 <div class="mb-3">
                                     <label for="exampleFormControlInput1" class="form-label">Numero do chip</label>
                                     <input type="text" name="chip_number" id="chip_number" class="form-control">
                                 </div>
                             </div>
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="exampleFormControlInput1" class="form-label">Numero de registro do
-                                        pai</label>
-                                    <input type="text" name="registro_pai" id="registro_pai" class="form-control">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="exampleFormControlInput1" class="form-label">Numero de registro do
+                                            pai</label>
+                                        <input type="text" name="registro_pai" id="registro_pai"
+                                            class="form-control">
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="exampleFormControlInput1" class="form-label">Nome do
-                                        pai</label>
-                                    <select class="js-pai-basic-single" name="pai_id">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="exampleFormControlInput1" class="form-label">Nome do
+                                            pai</label>
+                                        <select class="js-pai-basic-single" name="pai_id">
 
-                                    </select>
+                                        </select>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="exampleFormControlInput1" class="form-label">Numero de registro da
-                                        mãe</label>
-                                    <input type="text" name="registro_mae" id="registro_mae" class="form-control">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="exampleFormControlInput1" class="form-label">Numero de registro da
+                                            mãe</label>
+                                        <input type="text" name="registro_mae" id="registro_mae"
+                                            class="form-control">
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="exampleFormControlInput1" class="form-label">Nome da mãe</label>
-                                    <select class="js-mae-basic-single" name="mae_id">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="exampleFormControlInput1" class="form-label">Nome da mãe</label>
+                                        <select class="js-mae-basic-single" name="mae_id">
 
-                                    </select>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -162,7 +166,8 @@
                     for (i in data.animal) {
                         var inputField = $('#editar-produto').find(`[name="${i}"]`);
 
-                        if (inputField.attr('type') === 'date' && typeof data.animal[i] === 'string' && data.animal[i]
+                        if (inputField.attr('type') === 'date' && typeof data.animal[i] === 'string' &&
+                            data.animal[i]
                             .length === 10) {
                             var date = new Date(data.animal[i] + "T00:00:00Z");
                             inputField.val(date.toISOString().slice(0, 10));
@@ -199,8 +204,9 @@
                     processResults: function(data) {
                         var mappedData = data.map(function(item) {
                             return {
-                                id: item.id, // ID da opção
-                                text: item.animal_name // Valor a ser exibido no Select2
+                                id: item.id,
+                                text: item.animal_name + " (" + item.especies +
+                                    ")" // Adicionando a espécie ao nome
                             };
                         });
 
@@ -212,8 +218,10 @@
                 },
                 minimumInputLength: 2,
             }).on('change', function(e) {
-                var selectedAnimalName = $(this).select2('data')[0].text;
-                $('#pai_animal').val(selectedAnimalName);
+                var fullText = $(this).select2('data')[0].text;
+                var animalName = fullText.split(" (")[
+                    0]; // Isso pega a parte do texto antes de " (Especie)"
+                $('#pai_animal').val(animalName);
             });
             $('.js-mae-basic-single').select2({
                 placeholder: 'Selecione o proprietário',
@@ -231,8 +239,9 @@
                     processResults: function(data) {
                         var mappedData = data.map(function(item) {
                             return {
-                                id: item.id, // ID da opção
-                                text: item.animal_name // Valor a ser exibido no Select2
+                                id: item.id,
+                                text: item.animal_name + " (" + item.especies +
+                                    ")" // Adicionando a espécie ao nome
                             };
                         });
 
@@ -244,8 +253,10 @@
                 },
                 minimumInputLength: 2,
             }).on('change', function(e) {
-                var selectedAnimalName = $(this).select2('data')[0].text;
-                $('#mae_animal').val(selectedAnimalName);
+                var fullText = $(this).select2('data')[0].text;
+                var animalName = fullText.split(" (")[
+                0]; // Isso pega a parte do texto antes de " (Especie)"
+                $('#mae_animal').val(animalName);
             });
         });
     </script>
