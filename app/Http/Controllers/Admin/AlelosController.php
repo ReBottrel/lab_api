@@ -197,7 +197,7 @@ class AlelosController extends Controller
 
     public function storeAlelo(Request $request)
     {
-        $animal = Animal::with('alelos')->where('animal_name', $request->animal_name)->first();
+        $animal = Animal::with('alelos')->find($request->animal_id);
 
         if ($animal) {
             // Verifica se já existem alelos relacionados ao animal

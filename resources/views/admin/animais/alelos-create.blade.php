@@ -28,11 +28,12 @@
 
         </div>
         <div id="animalForm" class="d-none">
-            <input type="hidden" name="" id="id">
+       
             <div class="my-3">
                 <button  class="btn btn-danger delete-alelos">APAGAR ALELOS</button>
             </div>
             <form id="form">
+                <input type="hidden" name="animal_id" id="id">
                 <input type="hidden" name="animal_name">
                 <input type="hidden" id="especie">
                 @csrf
