@@ -5,13 +5,14 @@ namespace App\Http\Controllers\Admin;
 
 use DOMDocument;
 use Dompdf\Dompdf;
+use App\Models\User;
 use App\Models\Laudo;
 use App\Models\Owner;
 use App\Models\Animal;
 use App\Models\Result;
 use GuzzleHttp\Client;
-use App\Models\Tecnico;
 // use X509\CertificationPath;
+use App\Models\Tecnico;
 use BaconQrCode\Writer;
 use App\Models\Parceiro;
 use phpseclib\Crypt\RSA;
@@ -24,21 +25,21 @@ use App\Models\OrdemServico;
 use App\Models\OrderRequest;
 use Illuminate\Http\Request;
 use App\Mail\EnviarLaudoMail;
+use App\Models\AnimalToParent;
 use BaconQrCode\Renderer\Image\Png;
+
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Mail;
-
 use App\Models\QrCode as ModelQrCode;
-use App\Models\User;
 use BaconQrCode\Renderer\ImageRenderer;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Response;
 use RobRichards\XMLSecLibs\XMLSecurityKey;
 use RobRichards\XMLSecLibs\XMLSecurityDSig;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use BaconQrCode\Renderer\Image\ImagickImageBackEnd;
 use BaconQrCode\Renderer\RendererStyle\RendererStyle;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 
 class LaudoController extends Controller
@@ -65,7 +66,7 @@ class LaudoController extends Controller
         $laudo = Laudo::where('animal_id', $ordem->animal_id)->first();
         $codigo = rand(100000000, 999999999);
 
-       
+
 
         $laudoData = [
             'animal_id' => $ordem->animal_id,
@@ -135,16 +136,45 @@ class LaudoController extends Controller
         $ordem = OrdemServico::where('animal_id', $laudo->animal_id)->latest()->first();
         $pai = null;
         $mae = null;
+        $relation = AnimalToParent::where('animal_id', $animal->id)->first();
         switch ($dna_verify->verify_code) {
             case $sigla . 'PD':
-                $pai = Animal::with('alelos')->find($laudo->pai_id);
+                if ($relation) {
+                    if ($relation->register_pai) {
+                        $pai = Animal::with('alelos')->where('number_definitive', $relation->register_pai)->first();
+                    }
+                    if (!$pai && $relation->pai_id) {
+                        $pai = Animal::with('alelos')->find($relation->pai_id);
+                    }
+                }
                 break;
             case $sigla . 'MD':
-                $mae = Animal::with('alelos')->find($laudo->mae_id);
+                if ($relation) {
+
+                    if ($relation->register_mae) {
+                        $mae = Animal::with('alelos')->where('number_definitive', $relation->register_mae)->first();
+                    }
+                    if (!$mae && $relation->mae_id) {
+                        $mae = Animal::with('alelos')->find($relation->mae_id);
+                    }
+                }
                 break;
             case $sigla . 'TR':
-                $pai = Animal::with('alelos')->find($laudo->pai_id);
-                $mae = Animal::with('alelos')->find($laudo->mae_id);
+                if ($relation) {
+                    if ($relation->register_pai) {
+                        $pai = Animal::with('alelos')->where('number_definitive', $relation->register_pai)->first();
+                    }
+                    if (!$pai && $relation->pai_id) {
+                        $pai = Animal::with('alelos')->find($relation->pai_id);
+                    }
+
+                    if ($relation->register_mae) {
+                        $mae = Animal::with('alelos')->where('number_definitive', $relation->register_mae)->first();
+                    }
+                    if (!$mae && $relation->mae_id) {
+                        $mae = Animal::with('alelos')->find($relation->mae_id);
+                    }
+                }
                 break;
             default:
                 break;
@@ -166,16 +196,45 @@ class LaudoController extends Controller
         $ordem = OrdemServico::where('animal_id', $laudo->animal_id)->latest()->first();
         $pai = null;
         $mae = null;
+        $relation = AnimalToParent::where('animal_id', $animal->id)->first();
         switch ($dna_verify->verify_code) {
             case $sigla . 'PD':
-                $pai = Animal::with('alelos')->find($laudo->pai_id);
+                if ($relation) {
+                    if ($relation->register_pai) {
+                        $pai = Animal::with('alelos')->where('number_definitive', $relation->register_pai)->first();
+                    }
+                    if (!$pai && $relation->pai_id) {
+                        $pai = Animal::with('alelos')->find($relation->pai_id);
+                    }
+                }
                 break;
             case $sigla . 'MD':
-                $mae = Animal::with('alelos')->find($laudo->mae_id);
+                if ($relation) {
+
+                    if ($relation->register_mae) {
+                        $mae = Animal::with('alelos')->where('number_definitive', $relation->register_mae)->first();
+                    }
+                    if (!$mae && $relation->mae_id) {
+                        $mae = Animal::with('alelos')->find($relation->mae_id);
+                    }
+                }
                 break;
             case $sigla . 'TR':
-                $pai = Animal::with('alelos')->find($laudo->pai_id);
-                $mae = Animal::with('alelos')->find($laudo->mae_id);
+                if ($relation) {
+                    if ($relation->register_pai) {
+                        $pai = Animal::with('alelos')->where('number_definitive', $relation->register_pai)->first();
+                    }
+                    if (!$pai && $relation->pai_id) {
+                        $pai = Animal::with('alelos')->find($relation->pai_id);
+                    }
+
+                    if ($relation->register_mae) {
+                        $mae = Animal::with('alelos')->where('number_definitive', $relation->register_mae)->first();
+                    }
+                    if (!$mae && $relation->mae_id) {
+                        $mae = Animal::with('alelos')->find($relation->mae_id);
+                    }
+                }
                 break;
             default:
                 break;
@@ -283,8 +342,8 @@ class LaudoController extends Controller
         // dd($user->email);
         if ($order->parceiro == 'ABCCMM') {
             $xml = $this->gerarXML($animal, $laudo, $order, $results, $pai, $mae, $owner);
-            Mail::to($user->email)->send(new EnviarLaudoMail($laudo->pdf));
-            Mail::to('laudosdna.lfda-mg@agro.gov.br')->send(new EnviarLaudoMail($laudo->pdf));
+            // Mail::to($user->email)->send(new EnviarLaudoMail($laudo->pdf));
+            // Mail::to('laudosdna.lfda-mg@agro.gov.br')->send(new EnviarLaudoMail($laudo->pdf));
             $laudo->update([
                 'status' => 1
             ]);
@@ -360,7 +419,7 @@ class LaudoController extends Controller
             <REGISTRO><![CDATA[0]]></REGISTRO> 		
             <DATACONCLUSAO><![CDATA[' . date('d/m/Y', strtotime($laudo->created_at)) . ']]></DATACONCLUSAO> 
             <LABORATORIO><![CDATA[18]]></LABORATORIO> 		
-            <PROPRIETARIO><![CDATA[' . $order->creator . ']]></PROPRIETARIO>
+            <PROPRIETARIO><![CDATA[' . $order->creator_number . ']]></PROPRIETARIO>
             <TIPOEXAME><![CDATA[2]]></TIPOEXAME> 		
             <SUBTIPOEXAME><![CDATA[' . $subtipo . ']]></SUBTIPOEXAME> 		
             <TECNICO><![CDATA[' . $order->technical_manager . ']]></TECNICO> 		
@@ -394,8 +453,8 @@ class LaudoController extends Controller
         // dd($pdf);
         try {
 
-            $client = new \SoapClient('http://weblab.abccmm.org.br:8087/service.asmx?wsdl'); //produção
-            // $client = new \SoapClient('http://webserviceteste.abccmm.org.br:8083/service.asmx?wsdl'); //teste
+            // $client = new \SoapClient('http://weblab.abccmm.org.br:8087/service.asmx?wsdl'); //produção
+            $client = new \SoapClient('http://webserviceteste.abccmm.org.br:8083/service.asmx?wsdl'); //teste
 
 
             $params = array(
