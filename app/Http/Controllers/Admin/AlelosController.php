@@ -257,4 +257,17 @@ class AlelosController extends Controller
             return response()->json(['success' => 'ok']);
         }
     }
+
+    public function destroyAlelos(Request $request)
+    {
+        $alelos = Alelo::where('animal_id', $request->id)->get();
+
+        if ($alelos) {
+            foreach ($alelos as $alelo) {
+                $alelo->delete();
+            }
+
+            return response()->json(['success' => 'ok']);
+        }
+    }
 }

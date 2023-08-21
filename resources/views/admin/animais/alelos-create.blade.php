@@ -28,6 +28,10 @@
 
         </div>
         <div id="animalForm" class="d-none">
+            <input type="hidden" name="" id="id">
+            <div class="my-3">
+                <button  class="btn btn-danger delete-alelos">APAGAR ALELOS</button>
+            </div>
             <form id="form">
                 <input type="hidden" name="animal_name">
                 <input type="hidden" id="especie">
@@ -123,7 +127,7 @@
                                 $('#animalForm').removeClass('d-none');
                                 $('#especie').val(data.especie.id);
                             }
-
+                            $('#id').val(data.animal.id);
                             $('input[name="animal_name"]').val(data.animal.animal_name);
                             $('#animalForm').removeClass('d-none');
                             $('#lab').val(data.animal.alelos && data.animal.alelos[0] && data
@@ -140,7 +144,7 @@
             });
 
             $(document).on('click', '#buscarCodlab', function() {
-            
+
                 var codlab = $('#codlab').val();
                 if (codlab != '') {
                     $.ajax({
@@ -168,7 +172,7 @@
                                 $('#animalForm').removeClass('d-none');
                                 $('#especie').val(data.especie.id);
                             }
-
+                            $('#id').val(data.animal.id)
                             $('input[name="animal_name"]').val(data.animal.animal_name);
                             $('#animalForm').removeClass('d-none');
                             $('#lab').val(data.animal.alelos && data.animal.alelos[0] && data
@@ -182,6 +186,39 @@
                         }
                     });
                 }
+            });
+            $(document).on('click', '.delete-alelos', function() {
+                var id = $('#id').val();
+                Swal.fire({
+                    title: 'Você tem certeza?',
+                    text: "Esse processo pode ser irreversível!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Sim, deletar!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: "{{ route('alelos.delete') }}" ,
+                            type: 'POST',
+                            data: {
+                                id: id
+                            },
+                            success: function(data) {
+                                console.log(data);
+                                Swal.fire(
+                                    'Deletado!',
+                                    'Alelos deletado com sucesso.',
+                                    'success'
+                                )
+                                location.reload();
+                            }
+                        });
+
+                    }
+                })
+
             });
 
         });
