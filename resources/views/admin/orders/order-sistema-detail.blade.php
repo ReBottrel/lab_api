@@ -338,7 +338,18 @@
                         order: order
                     },
                     beforeSend: function() {
-                        $('#criar-ordem').html('Aguarde...');
+                        Swal.fire({
+                            title: 'Aguarde!',
+                            text: 'Estamos gerando a ordem de serviço.',
+                            icon: 'info',
+                            showConfirmButton: false,
+                            allowOutsideClick: false,
+                            allowEscapeKey: false,
+                            allowEnterKey: false,
+                            onOpen: () => {
+                                Swal.showLoading()
+                            }
+                        })
                     },
                     success: function(data) {
                         Swal.fire(
@@ -346,7 +357,7 @@
                             'Ordem de serviço gerada com sucesso.',
                             'success'
                         )
-                        
+
                         location.reload();
 
                     },
