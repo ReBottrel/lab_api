@@ -16,8 +16,10 @@
             </a>
 
             <ul class="dropdown-menu">
-                <a href="{{ route('animais.show', $animal->id) }}" class="dropdown-item">Editar</a>
-                <a href="{{ route('animais.status', $animal->id) }}" class="dropdown-item">Editar Status</a>
+
+                <a href="{{ route('animais.show', $animal->id) }}"
+                    class="dropdown-item"><i class="fa-solid fa-pen-to-square"></i> Editar</a>
+                <a data-id="{{ $animal->id }}" class="dropdown-item excluir-animal text-danger" role="button"><i class="fa-solid fa-trash"></i> Excluir animal</a>
             </ul>
         </div>
 
