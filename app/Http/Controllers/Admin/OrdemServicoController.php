@@ -29,68 +29,54 @@ class OrdemServicoController extends Controller
     public function store(Request $request)
     {
         $order = OrderRequest::find($request->order);
-
         if (!$order) {
-            // Ordem não encontrada
             return response()->json(['error' => 'Pedido não encontrado.'], 404);
         }
 
-        // Verificar se já existe uma ordem de serviço com o order_id
-        $existingOrder = OrdemServico::where('order', $order->id)->first();
-        if ($existingOrder) {
-            // Já existe uma ordem de serviço com o order_id
+        if (OrdemServico::where('order', $order->id)->exists()) {
             return response()->json(['error' => 'Já existe uma ordem de serviço para este pedido.'], 400);
         }
 
-        $orderRequest = OrderRequestPayment::where('order_request_id', $order->id)->get();
+        $orderRequests = OrderRequestPayment::where('order_request_id', $order->id)->get();
         $lote = OrderLote::create([
             'order_id' => $order->id,
             'owner' => $order->creator,
         ]);
 
-        foreach ($orderRequest as $item) {
+        $animalIds = $orderRequests->pluck('animal_id')->unique()->toArray();
+        $animals = Animal::whereIn('id', $animalIds)->get()->keyBy('id');
+
+        foreach ($orderRequests as $item) {
             $exame = Exam::find($item->exam_id);
-            $animal = Animal::find($item->animal_id) ? Animal::find($item->animal_id) : Animal::where('animal_name', $item->animal)->first();
+
+            $animal = $animals[$item->animal_id] ?? Animal::where('animal_name', $item->animal)->first();
+
             $data = Carbon::parse($item->updated_at)->addWeekdays($exame->days);
-            \Log::info($animal);
-            $randomNumber = mt_rand(0, 1000000);
+
             $dna_verify = DnaVerify::where('animal_id', $item->animal_id)->latest('created_at')->first();
+
             if (!$dna_verify) {
-                switch ($animal->especies) {
-                    case 'EQUINA':
-                        $tipo = 'EQUTR';
-                        break;
-                    case 'MUARES':
-                        $tipo = 'MUATR';
-                        break;
-                    case 'ASININO':
-                        $tipo = 'ASITR';
-                        break;
-                    case 'PEGA_EQUINO':
-                        $tipo = 'ASITR';
-                        break;
-                    case 'BOVINA':
-                        $tipo = 'BOVTR';
-                        break;
-                    default:
-                        $tipo = 'EQUTR';
+                $tipo = $this->determineTipo($animal->especies);
+            
+                if (!$tipo) {
+                    \Log::error("Tipo não determinado para a espécie: {$animal->especies}. Animal ID: {$item->animal_id}");
+                    continue; // pula para a próxima iteração do loop
                 }
+            
                 $dna_verify = DnaVerify::create([
                     'animal_id' => $item->animal_id,
                     'order_id' => $order->id,
                     'verify_code' => $tipo,
                 ]);
             }
-            $sigla = substr($animal->especies, 0, 3) ? substr($animal->especies, 0, 3) : 'EQU';
-            $codlab = $this->generateUniqueCodlab($sigla);
+            
+            $sigla = $this->determineSigla($animal->especies);
 
-            if ($animal->codlab == null) {
-                $animal->update([
-                    'codlab' => $codlab,
-                ]);
+            if ($animal->codlab === null) {
+                $animal->update(['codlab' => $this->generateUniqueCodlab($sigla)]);
             }
 
-            $ordemServico = OrdemServico::create([
+            OrdemServico::create([
                 'order' => $order->id,
                 'animal_id' => $animal->id,
                 'owner_id' => $order->owner_id,
@@ -111,6 +97,29 @@ class OrdemServicoController extends Controller
 
         return response()->json('success', 200);
     }
+
+    private function determineTipo($especies)
+    {
+        switch ($especies) {
+            case 'EQUINA':
+                return 'EQUTR';
+            case 'MUARES':
+                return 'MUATR';
+            case 'ASININO':
+            case 'PEGA_EQUINO':
+                return 'ASITR';
+            case 'BOVINA':
+                return 'BOVTR';
+            default:
+                return 'EQUTR';
+        }
+    }
+
+    private function determineSigla($especies)
+    {
+        return substr($especies, 0, 3) ?: 'EQU';
+    }
+
     private function generateUniqueCodlab($sigla)
     {
         $maxNumber = Animal::selectRaw('MAX(CAST(SUBSTRING(codlab, 4) AS UNSIGNED)) as max_num')
