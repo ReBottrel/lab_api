@@ -210,7 +210,15 @@
     <script src="{{ asset('adm/assets/js/script.min.js') }}"></script>
     <script src="{{ asset('adm/assets/js/main.js') }}"></script>
     @yield('js')
-
+    @if ($errors->any())
+    <script>
+        Swal.fire({
+            icon: 'error',
+            title: 'Erro!',
+            text: '{{ $errors->first() }}'
+        });
+    </script>
+@endif
     @if (Session::has('success'))
         <script type="text/javascript">
             Swal.fire({

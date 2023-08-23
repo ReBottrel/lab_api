@@ -255,9 +255,11 @@
             }).on('change', function(e) {
                 var fullText = $(this).select2('data')[0].text;
                 var animalName = fullText.split(" (")[
-                0]; // Isso pega a parte do texto antes de " (Especie)"
+                    0]; // Isso pega a parte do texto antes de " (Especie)"
                 $('#mae_animal').val(animalName);
             });
+
+
         });
     </script>
 @endsection

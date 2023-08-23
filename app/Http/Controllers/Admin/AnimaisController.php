@@ -122,11 +122,11 @@ class AnimaisController extends Controller
         if (!$animal) {
             return response()->json(['error' => 'Animal não encontrado'], 404);
         }
-    
+
         $pai = null;
         $mae = null;
         $relation = AnimalToParent::where('animal_id', $animal->id)->first();
-    
+
         if ($relation) {
             // Buscar pelo pai
             if ($relation->register_pai) {
@@ -135,7 +135,7 @@ class AnimaisController extends Controller
             if (!$pai && $relation->pai_id) {
                 $pai = Animal::with('alelos')->find($relation->pai_id);
             }
-    
+
             // Buscar pela mãe
             if ($relation->register_mae) {
                 $mae = Animal::with('alelos')->where('number_definitive', $relation->register_mae)->first();
@@ -144,10 +144,10 @@ class AnimaisController extends Controller
                 $mae = Animal::with('alelos')->find($relation->mae_id);
             }
         }
-    
+
         return response()->json(['animal' => $animal, 'pai' => $pai, 'mae' => $mae]);
     }
-    
+
 
     /**
      * Update the specified resource in storage.
@@ -160,6 +160,14 @@ class AnimaisController extends Controller
     {
         // dd($request->all());
         $animal = Animal::find($id);
+        $request->validate([
+            'codlab' => 'unique:animals,codlab,' . $id,
+
+        ], [
+            'codlab.unique' => 'O codlab já está em uso por outro animal.',
+
+        ]);
+
 
         $animal->update([
 
