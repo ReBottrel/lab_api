@@ -134,9 +134,9 @@ class LaudoController extends Controller
         $sigla = substr($animal->especies, 0, 3);
         $examType = substr($dna_verify->verify_code, 3, 2);
         $ordem = OrdemServico::where('order', $laudo->order_id)
-                     ->where('animal_id', $laudo->animal_id)
-                     ->latest()
-                     ->first();
+            ->where('animal_id', $laudo->animal_id)
+            ->latest()
+            ->first();
         $pai = null;
         $mae = null;
         $relation = AnimalToParent::where('animal_id', $animal->id)->first();
@@ -196,7 +196,10 @@ class LaudoController extends Controller
         $dna_verify = DnaVerify::where('animal_id', $animal->id)->latest('created_at')->first();
         $sigla = substr($animal->especies, 0, 3);
         $examType = substr($dna_verify->verify_code, 3, 2);
-        $ordem = OrdemServico::where('animal_id', $laudo->animal_id)->latest()->first();
+        $ordem = OrdemServico::where('order', $laudo->order_id)
+            ->where('animal_id', $laudo->animal_id)
+            ->latest()
+            ->first();
         $pai = null;
         $mae = null;
         $relation = AnimalToParent::where('animal_id', $animal->id)->first();
