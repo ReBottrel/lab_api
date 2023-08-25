@@ -619,7 +619,7 @@ class OrdemServicoController extends Controller
             return response()->json('Ordem não encontrada', 404);
         }
 
-        $ordemServicos = OrdemServico::where('lote', $ordem->id)->get();
+        $ordemServicos = OrdemServico::where('order', $ordem->order_id)->get();
 
         if ($ordemServicos->isEmpty()) {
             // return response()->json('Não foram encontradas ordens de serviço relacionadas', 404);
