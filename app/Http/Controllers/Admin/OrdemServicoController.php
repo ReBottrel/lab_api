@@ -57,19 +57,19 @@ class OrdemServicoController extends Controller
 
             if (!$dna_verify) {
                 $tipo = $this->determineTipo($animal->especies);
-            
+
                 if (!$tipo) {
                     \Log::error("Tipo não determinado para a espécie: {$animal->especies}. Animal ID: {$item->animal_id}");
                     continue; // pula para a próxima iteração do loop
                 }
-            
+
                 $dna_verify = DnaVerify::create([
                     'animal_id' => $item->animal_id,
                     'order_id' => $order->id,
                     'verify_code' => $tipo,
                 ]);
             }
-            
+
             $sigla = $this->determineSigla($animal->especies);
 
             if ($animal->codlab === null) {
@@ -308,7 +308,10 @@ class OrdemServicoController extends Controller
             default:
                 break;
         }
-        // dd($sigla, $relation, $pai, $mae);
+
+
+        // dd($animal, $relation, $pai, $mae);
+
 
         return view('admin.ordem-servico.alelo-compare', get_defined_vars());
     }
@@ -380,14 +383,13 @@ class OrdemServicoController extends Controller
                 break;
         }
 
-        // dd($pai);
-
         $alelosMae = [];
         $alelosPai = [];
         $laudoMae = [];
         $laudoMaeExclui = [];
         $alelosPai = [];
         $laudoGeral = [];
+        $laudoPai = [];
 
         // Comparar alelos entre mãe e animal
         if ($mae != null) {
@@ -416,38 +418,12 @@ class OrdemServicoController extends Controller
 
                 $laudoMae[] = [
                     'marcador' => $animalAlelo->marcador,
+                    'alelo1' => $maeAlelo->alelo1,
+                    'alelo2' => $maeAlelo->alelo2,
+                    'filho1' => $animalAlelo->alelo1,
+                    'filho2' => $animalAlelo->alelo2,
                     'include' => $result
                 ];
-            }
-            foreach ($alelosMae as $maeAl) {
-                if (($maeAl['alelo1'] != '' || $maeAl['alelo2'] != '') && ($maeAl['aleloMae1'] != '' || $maeAl['aleloMae2'] != '')) {
-                    if (
-                        $maeAl['alelo1'] == $maeAl['aleloMae1'] ||
-                        $maeAl['alelo1'] == $maeAl['aleloMae2'] ||
-                        $maeAl['alelo2'] == $maeAl['aleloMae1'] ||
-                        $maeAl['alelo2'] == $maeAl['aleloMae2']
-                    ) {
-                        $laudoMae[] = [
-                            'marcador' => $maeAl['marcador'],
-                            'include' => 'M'
-                        ];
-                        // \Log::info("Condição 1 cumprida" . $maeAl['marcador']);
-                    } else {
-                        $laudoMae[] = [
-                            'marcador' => $maeAl['marcador'],
-                            'include' => ''
-                        ];
-                        // \Log::info("Condição 2 cumprida" . $maeAl['marcador']);
-                    }
-                } elseif ($maeAl['alelo1'] == '' && $maeAl['alelo2'] == '' || empty($maeAl['aleloMae1']) && empty($maeAl['aleloMae2'])) {
-                    $laudoMae[] = [
-                        'marcador' => $maeAl['marcador'],
-                        'include' => 'V'
-                    ];
-                    // \Log::info("Condição 3 cumprida" . $maeAl['marcador']);
-                } else {
-                    // \Log::info("Nenhuma condição cumprida" . $maeAl['marcador']);
-                }
             }
         } else {
             $laudoMae = null;
@@ -480,45 +456,52 @@ class OrdemServicoController extends Controller
 
                 $laudoPai[] = [
                     'marcador' => $animalAlelo->marcador,
+                    'alelo1' => $paiAlelo->alelo1,
+                    'alelo2' => $paiAlelo->alelo2,
+                    'filho1' => $animalAlelo->alelo1,
+                    'filho2' => $animalAlelo->alelo2,
                     'include' => $result
                 ];
             }
+            foreach ($laudoMae as &$maeAl) {
+                foreach ($laudoPai as $paiAl) {
+                    if ($maeAl['marcador'] == $paiAl['marcador']) {
+                        $overlapping = false;
 
-            foreach ($alelosPai as $paiAl) {
-                if (($paiAl['alelo1'] != '' || $paiAl['alelo2'] != '') && ($paiAl['aleloPai1'] != '' || $paiAl['aleloPai2'] != '')) {
-                    if (
-                        $paiAl['alelo1'] == $paiAl['aleloPai1'] ||
-                        $paiAl['alelo1'] == $paiAl['aleloPai2'] ||
-                        $paiAl['alelo2'] == $paiAl['aleloPai1'] ||
-                        $paiAl['alelo2'] == $paiAl['aleloPai2']
-                    ) {
-                        $laudoPai[] = [
-                            'marcador' => $paiAl['marcador'],
-                            'include' => 'P'
-                        ];
-                        // \Log::info("Condição 1 cumprida" . $paiAl['marcador']);
-                    } else {
-                        $laudoPai[] = [
-                            'marcador' => $paiAl['marcador'],
-                            'include' => ''
-                        ];
-                        // \Log::info("Condição 2 cumprida" . $paiAl['marcador']);
+                        if (
+                            ($maeAl['filho1'] != $maeAl['filho2']) && // Verifica se os alelos do filho são diferentes entre si
+                            (
+                                ($maeAl['filho1'] == $maeAl['alelo1'] && ($maeAl['alelo1'] == $paiAl['alelo1'] || $maeAl['alelo1'] == $paiAl['alelo2'])) || // Verifica se há correspondência entre o alelo do filho, alelo da mãe e alelo do pai
+                                ($maeAl['filho1'] == $paiAl['alelo2'] && ($maeAl['alelo1'] == $paiAl['alelo2'] || $maeAl['alelo2'] == $paiAl['alelo1'] || $maeAl['alelo2'] == $paiAl['alelo2'])) ||
+                                ($maeAl['filho2'] == $maeAl['alelo2'] && ($maeAl['alelo2'] == $paiAl['alelo1'] || $maeAl['alelo2'] == $paiAl['alelo2'])) ||
+                                ($maeAl['filho2'] == $paiAl['alelo1'] && ($maeAl['alelo1'] == $paiAl['alelo2'] || $maeAl['alelo2'] == $paiAl['alelo1'] || $maeAl['alelo2'] == $paiAl['alelo2']))
+                            )
+                        ) {
+                            $overlapping = true;
+                        }
+
+                        if ($overlapping) {
+                            // Verificação especial para o caso onde o alelo do filho é um alelo da mãe e outro alelo do pai
+                            if (
+                                ($maeAl['filho1'] == $maeAl['alelo1'] && $maeAl['alelo1'] == $paiAl['alelo2']) ||
+                                ($maeAl['filho1'] == $paiAl['alelo2'] && $maeAl['alelo1'] == $paiAl['alelo1']) ||
+                                ($maeAl['filho2'] == $maeAl['alelo2'] && $maeAl['alelo2'] == $paiAl['alelo2']) ||
+                                ($maeAl['filho2'] == $paiAl['alelo1'] && $maeAl['alelo2'] == $paiAl['alelo1'])
+                            ) {
+                                $overlapping = false;
+                            }
+                        }
+
+                        if ($overlapping) {
+                            $maeAl['include'] = 'I';
+                            break; // Uma vez que foi encontrada uma sobreposição, não é necessário continuar verificando
+                        }
                     }
-                } elseif ($paiAl['alelo1'] == '' && $paiAl['alelo2'] == '' || empty($paiAl['aleloPai1']) && empty($paiAl['aleloPai2'])) {
-                    $laudoPai[] = [
-                        'marcador' => $paiAl['marcador'],
-                        'include' => 'V'
-                    ];
-                    // \Log::info("Condição 3 cumprida" . $paiAl['marcador']);
-                } else {
-                    // \Log::info("Nenhuma condição cumprida" . $paiAl['marcador']);
                 }
             }
         } else {
             $laudoPai = null;
         }
-
-        \Log::info($laudoPai);
 
         return response()->json([
             'laudoMae' => $laudoMae,
@@ -528,9 +511,9 @@ class OrdemServicoController extends Controller
             'mae' => $mae,
             'result' => $result,
             'marcadores' => $marcadores,
-
         ]);
     }
+
     public function storeResult(Request $request)
     {
         // The $request->ordem, $request->incluidos and $request->excluidos will contain your data.
