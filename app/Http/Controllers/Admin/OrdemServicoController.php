@@ -469,9 +469,9 @@ class OrdemServicoController extends Controller
                         $overlapping = false;
 
                         if (
-                            ($maeAl['filho1'] != $maeAl['filho2']) && // Verifica se os alelos do filho são diferentes entre si
+                            ($maeAl['filho1'] != $maeAl['filho2']) &&
                             (
-                                ($maeAl['filho1'] == $maeAl['alelo1'] && ($maeAl['alelo1'] == $paiAl['alelo1'] || $maeAl['alelo1'] == $paiAl['alelo2'])) || // Verifica se há correspondência entre o alelo do filho, alelo da mãe e alelo do pai
+                                ($maeAl['filho1'] == $maeAl['alelo1'] && ($maeAl['alelo1'] == $paiAl['alelo1'] || $maeAl['alelo1'] == $paiAl['alelo2'])) ||
                                 ($maeAl['filho1'] == $paiAl['alelo2'] && ($maeAl['alelo1'] == $paiAl['alelo2'] || $maeAl['alelo2'] == $paiAl['alelo1'] || $maeAl['alelo2'] == $paiAl['alelo2'])) ||
                                 ($maeAl['filho2'] == $maeAl['alelo2'] && ($maeAl['alelo2'] == $paiAl['alelo1'] || $maeAl['alelo2'] == $paiAl['alelo2'])) ||
                                 ($maeAl['filho2'] == $paiAl['alelo1'] && ($maeAl['alelo1'] == $paiAl['alelo2'] || $maeAl['alelo2'] == $paiAl['alelo1'] || $maeAl['alelo2'] == $paiAl['alelo2']))
@@ -481,7 +481,7 @@ class OrdemServicoController extends Controller
                         }
 
                         if ($overlapping) {
-                            // Verificação especial para o caso onde o alelo do filho é um alelo da mãe e outro alelo do pai
+
                             if (
                                 ($maeAl['filho1'] == $maeAl['alelo1'] && $maeAl['alelo1'] == $paiAl['alelo2']) ||
                                 ($maeAl['filho1'] == $paiAl['alelo2'] && $maeAl['alelo1'] == $paiAl['alelo1']) ||
@@ -494,7 +494,7 @@ class OrdemServicoController extends Controller
 
                         if ($overlapping) {
                             $maeAl['include'] = 'I';
-                            break; // Uma vez que foi encontrada uma sobreposição, não é necessário continuar verificando
+                            break;
                         }
                     }
                 }
