@@ -464,37 +464,22 @@ class OrdemServicoController extends Controller
                 ];
             }
             foreach ($laudoMae as &$maeAl) {
-                foreach ($laudoPai as $paiAl) {
+                foreach ($laudoPai as &$paiAl) {
                     if ($maeAl['marcador'] == $paiAl['marcador']) {
-                        $overlapping = false;
+                        $maeHasSameAlleles = $maeAl['alelo1'] == $maeAl['alelo2'] && !empty(trim($maeAl['alelo1'])) && strpos($maeAl['alelo1'], '*') === false;
+                        $paiHasSameAlleles = $paiAl['alelo1'] == $paiAl['alelo2'] && !empty(trim($paiAl['alelo1'])) && strpos($paiAl['alelo1'], '*') === false;
+                        $childHasSameAllelesAsParents = (
+                            ($maeHasSameAlleles && $maeAl['alelo1'] == $maeAl['filho1'] && $maeAl['alelo1'] == $maeAl['filho2']) ||
+                            ($paiHasSameAlleles && $paiAl['alelo1'] == $maeAl['filho1'] && $paiAl['alelo1'] == $maeAl['filho2'])
+                        );
 
-                        if (
-                            ($maeAl['filho1'] != $maeAl['filho2']) &&
-                            (
-                                ($maeAl['filho1'] == $maeAl['alelo1'] && ($maeAl['alelo1'] == $paiAl['alelo1'] || $maeAl['alelo1'] == $paiAl['alelo2'])) ||
-                                ($maeAl['filho1'] == $paiAl['alelo2'] && ($maeAl['alelo1'] == $paiAl['alelo2'] || $maeAl['alelo2'] == $paiAl['alelo1'] || $maeAl['alelo2'] == $paiAl['alelo2'])) ||
-                                ($maeAl['filho2'] == $maeAl['alelo2'] && ($maeAl['alelo2'] == $paiAl['alelo1'] || $maeAl['alelo2'] == $paiAl['alelo2'])) ||
-                                ($maeAl['filho2'] == $paiAl['alelo1'] && ($maeAl['alelo1'] == $paiAl['alelo2'] || $maeAl['alelo2'] == $paiAl['alelo1'] || $maeAl['alelo2'] == $paiAl['alelo2']))
-                            )
-                        ) {
-                            $overlapping = true;
-                        }
 
-                        if ($overlapping) {
-
-                            if (
-                                ($maeAl['filho1'] == $maeAl['alelo1'] && $maeAl['alelo1'] == $paiAl['alelo2']) ||
-                                ($maeAl['filho1'] == $paiAl['alelo2'] && $maeAl['alelo1'] == $paiAl['alelo1']) ||
-                                ($maeAl['filho2'] == $maeAl['alelo2'] && $maeAl['alelo2'] == $paiAl['alelo2']) ||
-                                ($maeAl['filho2'] == $paiAl['alelo1'] && $maeAl['alelo2'] == $paiAl['alelo1'])
-                            ) {
-                                $overlapping = false;
-                            }
-                        }
-
-                        if ($overlapping) {
+                        if ($maeHasSameAlleles && $paiHasSameAlleles && !$childHasSameAllelesAsParents) {
                             $maeAl['include'] = 'I';
-                            break;
+                        }
+
+                        if ($paiAl['marcador'] == $maeAl['marcador'] && $maeAl['include'] === 'I') {
+                            $paiAl['include'] = '  ';
                         }
                     }
                 }
