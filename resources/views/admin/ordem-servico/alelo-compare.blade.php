@@ -269,7 +269,7 @@
         <button class="btn text-white @if ($status == 1) btn-success @else btn-primary @endif"
             id="finalizar">
             @if ($status == 1)
-                FINALIZADO
+                FINALIZADO <i class="fa-solid fa-check"></i>
             @else
                 FINALIZAR
             @endif
