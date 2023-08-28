@@ -248,6 +248,16 @@
 <input type="hidden" name="" id="laudo">
 </div>
 <div id="buttons" class="d-none my-3">
+@php
+    $status = 0;
+    if ($laudo) {
+        if ($laudo->status == 1) {
+            $status = 1;
+        } else {
+            $status = 0;
+        }
+    }
+@endphp
 <div class="d-flex">
     <div>
         <button class="btn btn-primary" id="ver-laudo">
@@ -256,8 +266,14 @@
         <button class="btn btn-primary" id="pdf">
             GERAR PDF E ASSINAR
         </button>
-        <button class="btn btn-primary" id="finalizar">
-            FINALIZAR
+        <button class="btn text-white @if ($status == 1) btn-success @else btn-primary @endif"
+            id="finalizar">
+            @if ($status == 1)
+                FINALIZADO
+            @else
+                FINALIZAR
+            @endif
+
         </button>
     </div>
 </div>
