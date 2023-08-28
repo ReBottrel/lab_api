@@ -463,29 +463,29 @@ class OrdemServicoController extends Controller
                     'include' => $result
                 ];
             }
-            if($mae != null){
-            foreach ($laudoMae as &$maeAl) {
-                foreach ($laudoPai as &$paiAl) {
-                    if ($maeAl['marcador'] == $paiAl['marcador']) {
-                        $maeHasSameAlleles = $maeAl['alelo1'] == $maeAl['alelo2'] && !empty(trim($maeAl['alelo1'])) && strpos($maeAl['alelo1'], '*') === false;
-                        $paiHasSameAlleles = $paiAl['alelo1'] == $paiAl['alelo2'] && !empty(trim($paiAl['alelo1'])) && strpos($paiAl['alelo1'], '*') === false;
-                        $childHasSameAllelesAsParents = (
-                            ($maeHasSameAlleles && $maeAl['alelo1'] == $maeAl['filho1'] && $maeAl['alelo1'] == $maeAl['filho2']) ||
-                            ($paiHasSameAlleles && $paiAl['alelo1'] == $maeAl['filho1'] && $paiAl['alelo1'] == $maeAl['filho2'])
-                        );
+        //     if($mae != null){
+        //     foreach ($laudoMae as &$maeAl) {
+        //         foreach ($laudoPai as &$paiAl) {
+        //             if ($maeAl['marcador'] == $paiAl['marcador']) {
+        //                 $maeHasSameAlleles = $maeAl['alelo1'] == $maeAl['alelo2'] && !empty(trim($maeAl['alelo1'])) && strpos($maeAl['alelo1'], '*') === false;
+        //                 $paiHasSameAlleles = $paiAl['alelo1'] == $paiAl['alelo2'] && !empty(trim($paiAl['alelo1'])) && strpos($paiAl['alelo1'], '*') === false;
+        //                 $childHasSameAllelesAsParents = (
+        //                     ($maeHasSameAlleles && $maeAl['alelo1'] == $maeAl['filho1'] && $maeAl['alelo1'] == $maeAl['filho2']) ||
+        //                     ($paiHasSameAlleles && $paiAl['alelo1'] == $maeAl['filho1'] && $paiAl['alelo1'] == $maeAl['filho2'])
+        //                 );
 
 
-                        if ($maeHasSameAlleles && $paiHasSameAlleles && !$childHasSameAllelesAsParents) {
-                            $maeAl['include'] = 'I';
-                        }
+        //                 if ($maeHasSameAlleles && $paiHasSameAlleles && !$childHasSameAllelesAsParents) {
+        //                     $maeAl['include'] = 'I';
+        //                 }
 
-                        if ($paiAl['marcador'] == $maeAl['marcador'] && $maeAl['include'] === 'I') {
-                            $paiAl['include'] = '  ';
-                        }
-                    }
-                }
-            }
-        }
+        //                 if ($paiAl['marcador'] == $maeAl['marcador'] && $maeAl['include'] === 'I') {
+        //                     $paiAl['include'] = '  ';
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
         } else {
             $laudoPai = null;
         }
