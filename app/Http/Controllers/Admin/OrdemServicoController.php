@@ -463,6 +463,7 @@ class OrdemServicoController extends Controller
                     'include' => $result
                 ];
             }
+            if($mae != null){
             foreach ($laudoMae as &$maeAl) {
                 foreach ($laudoPai as &$paiAl) {
                     if ($maeAl['marcador'] == $paiAl['marcador']) {
@@ -484,6 +485,7 @@ class OrdemServicoController extends Controller
                     }
                 }
             }
+        }
         } else {
             $laudoPai = null;
         }
