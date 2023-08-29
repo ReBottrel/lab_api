@@ -114,15 +114,23 @@ class TesteController extends Controller
 
         return $codlabs;
     }
-
-    public function getDuplicatedCodlab()
+    public function exportDuplicatedCodlabToTxt()
     {
-        $duplicatedCodlab = Animal::select('codlab', DB::raw('count(codlab) as count'))
-            ->groupBy('codlab')
+        $duplicatedCodlab = Animal::select('nome', 'codlab', DB::raw('count(codlab) as count'))
+            ->groupBy('nome', 'codlab')
             ->havingRaw('COUNT(codlab) > 1')
             ->get();
-
-        return $duplicatedCodlab;
+    
+        $txtContent = '';
+    
+        foreach ($duplicatedCodlab as $animal) {
+            $txtContent .= "Nome do Animal: " . $animal->nome . ", Codlab: " . $animal->codlab . "\n";
+        }
+    
+        $fileName = 'duplicated_codlab.txt';
+        file_put_contents($fileName, $txtContent);
+    
+        return response()->download($fileName)->deleteFileAfterSend(true);
     }
 
 
