@@ -392,6 +392,7 @@ class OrdemServicoController extends Controller
         $laudoPai = [];
 
         // Comparar alelos entre mãe e animal
+        // Comparar alelos entre mãe e animal
         if ($mae != null) {
             $laudoMae = [];
             foreach ($animal->alelos as $animalAlelo) {
@@ -403,15 +404,19 @@ class OrdemServicoController extends Controller
                 }
 
                 if (!$result) {
+                    $aleloEncontrado = false; // Adicione esta variável
                     foreach ($mae->alelos as $maeAlelo) {
                         if ($animalAlelo->marcador == $maeAlelo->marcador) {
                             // Verifica se o alelo da mãe possui asterisco ou está vazio apenas para o marcador correspondente
                             if (strpos($maeAlelo->alelo1, '*') !== false || strpos($maeAlelo->alelo2, '*') !== false || empty(trim($maeAlelo->alelo1)) || empty(trim($maeAlelo->alelo2))) {
                                 $result = 'V';
                                 break;
+                            } elseif (($maeAlelo->alelo1 !== $animalAlelo->alelo1 && $maeAlelo->alelo2 !== $animalAlelo->alelo2) && ($maeAlelo->alelo1 !== $animalAlelo->alelo2 && $maeAlelo->alelo2 !== $animalAlelo->alelo1)) {
+                                $result = '';
+                            } else {
+
+                                $result = 'M';
                             }
-                            $result = 'M';
-                            break;
                         }
                     }
                 }
@@ -428,6 +433,7 @@ class OrdemServicoController extends Controller
         } else {
             $laudoMae = null;
         }
+
 
         // Comparar alelos entre pai e animal
         if ($pai != null) {
@@ -447,9 +453,12 @@ class OrdemServicoController extends Controller
                             if (strpos($paiAlelo->alelo1, '*') !== false || strpos($paiAlelo->alelo2, '*') !== false || empty(trim($paiAlelo->alelo1)) || empty(trim($paiAlelo->alelo2))) {
                                 $result = 'V';
                                 break;
+                            } elseif (($paiAlelo->alelo1 !== $animalAlelo->alelo1 && $paiAlelo->alelo2 !== $animalAlelo->alelo2) && ($paiAlelo->alelo1 !== $animalAlelo->alelo2 && $paiAlelo->alelo2 !== $animalAlelo->alelo1)) {
+                                $result = '';
+                            } else {
+
+                                $result = 'P';
                             }
-                            $result = 'P';
-                            break;
                         }
                     }
                 }
@@ -463,29 +472,29 @@ class OrdemServicoController extends Controller
                     'include' => $result
                 ];
             }
-            if($mae != null){
-            foreach ($laudoMae as &$maeAl) {
-                foreach ($laudoPai as &$paiAl) {
-                    if ($maeAl['marcador'] == $paiAl['marcador']) {
-                        // $maeHasSameAlleles = $maeAl['alelo1'] == $maeAl['alelo2'] && !empty(trim($maeAl['alelo1'])) && strpos($maeAl['alelo1'], '*') === false;
-                        // $paiHasSameAlleles = $paiAl['alelo1'] == $paiAl['alelo2'] && !empty(trim($paiAl['alelo1'])) && strpos($paiAl['alelo1'], '*') === false;
-                        // $childHasSameAllelesAsParents = (
-                        //     ($maeHasSameAlleles && $maeAl['alelo1'] == $maeAl['filho1'] && $maeAl['alelo1'] == $maeAl['filho2']) ||
-                        //     ($paiHasSameAlleles && $paiAl['alelo1'] == $maeAl['filho1'] && $paiAl['alelo1'] == $maeAl['filho2'])
-                        // );
+            if ($mae != null) {
+                foreach ($laudoMae as &$maeAl) {
+                    foreach ($laudoPai as &$paiAl) {
+                        if ($maeAl['marcador'] == $paiAl['marcador']) {
+                            // $maeHasSameAlleles = $maeAl['alelo1'] == $maeAl['alelo2'] && !empty(trim($maeAl['alelo1'])) && strpos($maeAl['alelo1'], '*') === false;
+                            // $paiHasSameAlleles = $paiAl['alelo1'] == $paiAl['alelo2'] && !empty(trim($paiAl['alelo1'])) && strpos($paiAl['alelo1'], '*') === false;
+                            // $childHasSameAllelesAsParents = (
+                            //     ($maeHasSameAlleles && $maeAl['alelo1'] == $maeAl['filho1'] && $maeAl['alelo1'] == $maeAl['filho2']) ||
+                            //     ($paiHasSameAlleles && $paiAl['alelo1'] == $maeAl['filho1'] && $paiAl['alelo1'] == $maeAl['filho2'])
+                            // );
 
 
-                        // if ($maeHasSameAlleles && $paiHasSameAlleles && !$childHasSameAllelesAsParents) {
-                        //     $maeAl['include'] = 'I';
-                        // }
+                            // if ($maeHasSameAlleles && $paiHasSameAlleles && !$childHasSameAllelesAsParents) {
+                            //     $maeAl['include'] = 'I';
+                            // }
 
-                        // if ($paiAl['marcador'] == $maeAl['marcador'] && $maeAl['include'] === 'I') {
-                        //     $paiAl['include'] = '  ';
-                        // }
+                            // if ($paiAl['marcador'] == $maeAl['marcador'] && $maeAl['include'] === 'I') {
+                            //     $paiAl['include'] = '  ';
+                            // }
+                        }
                     }
                 }
             }
-        }
         } else {
             $laudoPai = null;
         }

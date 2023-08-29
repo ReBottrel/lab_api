@@ -114,17 +114,34 @@ class TesteController extends Controller
 
         return $codlabs;
     }
+
     public function exportDuplicatedCodlabToTxt()
     {
-        $duplicatedCodlab = Animal::select('animal_name', 'codlab', DB::raw('count(codlab) as count'))
-            ->groupBy('animal_name', 'codlab')
-            ->havingRaw('COUNT(codlab) > 1')
+        $animalsByCodlab = Animal::select('codlab', 'animal_name')
             ->get();
+    
+        $groupedCodlabs = [];
+    
+        foreach ($animalsByCodlab as $animal) {
+            $codlab_number = substr($animal->codlab, 3);
+            $groupedCodlabs[$codlab_number][] = "{$animal->animal_name}: {$animal->codlab}";
+        }
+    
+        $duplicatedCodlabs = [];
+    
+        foreach ($groupedCodlabs as $codlab_number => $animals) {
+            if (count($animals) > 1) {
+                $duplicatedCodlabs[$codlab_number] = $animals;
+            }
+        }
     
         $txtContent = '';
     
-        foreach ($duplicatedCodlab as $animal) {
-            $txtContent .= "Nome do Animal: " . $animal->animal_name . ", Codlab: " . $animal->codlab . "\n";
+        foreach ($duplicatedCodlabs as $codlab_number => $animals) {
+            $txtContent .= "Códigos de laboratório com o número {$codlab_number}:\n";
+            foreach ($animals as $animal) {
+                $txtContent .= " - {$animal}\n";
+            }
         }
     
         $fileName = 'duplicated_codlab.txt';
@@ -132,6 +149,8 @@ class TesteController extends Controller
     
         return response()->download($fileName)->deleteFileAfterSend(true);
     }
+    
+
 
 
     public function updateCodlabInRange()
@@ -141,23 +160,23 @@ class TesteController extends Controller
             ->whereRaw('CAST(SUBSTRING(codlab, 4) AS UNSIGNED) >= 100000 AND CAST(SUBSTRING(codlab, 4) AS UNSIGNED) < 200000')
             ->orderByRaw('CAST(SUBSTRING(codlab, 4) AS UNSIGNED)')
             ->get();
-    
+
         $updates = [];
         $startValue = 100000;
-    
+
         foreach ($codlabs as $animal) {
             // Geramos um novo codlab com o próximo valor numérico disponível
-            while(Animal::whereRaw('CAST(SUBSTRING(codlab, 4) AS UNSIGNED) = ?', [$startValue])->exists()) {
+            while (Animal::whereRaw('CAST(SUBSTRING(codlab, 4) AS UNSIGNED) = ?', [$startValue])->exists()) {
                 $startValue++;
             }
-            
+
             $prefix = substr($animal->codlab, 0, 3);
             $newCodlab = $prefix . strval($startValue);
-    
+
             $updates[$animal->id] = ['codlab' => $newCodlab];
             $startValue++;
         }
-    
+
         DB::beginTransaction();
         try {
             foreach ($updates as $id => $update) {
@@ -166,11 +185,11 @@ class TesteController extends Controller
             DB::commit();
         } catch (\Exception $e) {
             DB::rollback();
-    
+
             throw $e;
         }
     }
-    
+
 
 
     public function pdfLaudo($id)
