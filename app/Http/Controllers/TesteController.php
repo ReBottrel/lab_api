@@ -124,7 +124,7 @@ class TesteController extends Controller
         $txtContent = '';
     
         foreach ($duplicatedCodlab as $animal) {
-            $txtContent .= "Nome do Animal: " . $animal->nome . ", Codlab: " . $animal->codlab . "\n";
+            $txtContent .= "Nome do Animal: " . $animal->animal_name . ", Codlab: " . $animal->codlab . "\n";
         }
     
         $fileName = 'duplicated_codlab.txt';
