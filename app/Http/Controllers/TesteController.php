@@ -116,8 +116,8 @@ class TesteController extends Controller
     }
     public function exportDuplicatedCodlabToTxt()
     {
-        $duplicatedCodlab = Animal::select('nome', 'codlab', DB::raw('count(codlab) as count'))
-            ->groupBy('nome', 'codlab')
+        $duplicatedCodlab = Animal::select('animal_name', 'codlab', DB::raw('count(codlab) as count'))
+            ->groupBy('animal_name', 'codlab')
             ->havingRaw('COUNT(codlab) > 1')
             ->get();
     
