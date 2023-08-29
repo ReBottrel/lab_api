@@ -709,8 +709,19 @@
                                                     .html(
                                                         'FINALIZAR'
                                                     );
-                                                // window.location.href =
-                                                //     "{{ route('laudos') }}";
+                                                $.ajax({
+                                                    url: "{{ route('atualiza.laudo.status') }}",
+                                                    type: 'POST',
+                                                    data: {
+                                                        _token: "{{ csrf_token() }}",
+                                                        laudo: laudo,
+                                                    },
+                                                    success: function(response)
+                                                    {
+
+                                                    }
+                                                });
+                                                
                                             } else {
                                                 Swal.fire({
                                                     icon: 'error',

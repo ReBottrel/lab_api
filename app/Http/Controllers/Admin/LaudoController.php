@@ -345,14 +345,13 @@ class LaudoController extends Controller
         $mae = Animal::with('alelos')->where('animal_name', $animal->mae)->first();
         $results = Result::where('ordem_servico', $laudo->ordem_id)->latest()->first();
         $user = User::where('id', $order->user_id)->first();
+        $tecnico = Tecnico::where('professional_name', $order->technical_manager)->first();
+        // dd($tecnico);
         // dd($user->email);
         if ($order->parceiro == 'ABCCMM') {
-            $xml = $this->gerarXML($animal, $laudo, $order, $results, $pai, $mae, $owner);
+            $xml = $this->gerarXML($animal, $laudo, $order, $results, $pai, $mae, $owner, $tecnico);
             // Mail::to($user->email)->send(new EnviarLaudoMail($laudo->pdf));
             // Mail::to('laudosdna.lfda-mg@agro.gov.br')->send(new EnviarLaudoMail($laudo->pdf));
-            $laudo->update([
-                'status' => 1
-            ]);
             return response()->json([$xml, $parceiro], 200);
         } else {
             Mail::to($parceiro->email)->send(new EnviarLaudoMail($laudo->pdf));
@@ -365,7 +364,16 @@ class LaudoController extends Controller
         }
     }
 
-    public function gerarXML($animal, $laudo, $order, $results, $pai, $mae, $owner)
+    public function alteraStatus(Request $request)
+    {
+        $laudo = Laudo::find($request->laudo);
+        $laudo->update([
+            'status' => 1
+        ]);
+        return response()->json($laudo, 200);
+    }
+
+    public function gerarXML($animal, $laudo, $order, $results, $pai, $mae, $owner, $tecnico)
     {
         $microssatellites = ["AHT4", "AHT5", "ASB2", "ASB23", "HMS2", "HMS3", "HMS6", "HMS7", "HTG10", "HTG4", "HTG7", "VHL20"];
         $excluidos = str_split($results->excluido);
@@ -428,7 +436,7 @@ class LaudoController extends Controller
             <PROPRIETARIO><![CDATA[' . $order->creator_number . ']]></PROPRIETARIO>
             <TIPOEXAME><![CDATA[2]]></TIPOEXAME> 		
             <SUBTIPOEXAME><![CDATA[' . $subtipo . ']]></SUBTIPOEXAME> 		
-            <TECNICO><![CDATA[' . $order->technical_manager . ']]></TECNICO> 		
+            <TECNICO><![CDATA[' . $tecnico->forma_tratamento . ']]></TECNICO> 		
             <DATACOLETA><![CDATA[' . $laudo->data_coleta . ']]></DATACOLETA> 	
             <TIPOMATERIAL><![CDATA[2]]></TIPOMATERIAL> 	
             <NOMEIMAGEM><![CDATA[' . $laudo->pdf . ']]></NOMEIMAGEM> 
@@ -446,8 +454,9 @@ class LaudoController extends Controller
         </VP>
         </document>';
 
+        $animalId = substr($animal->codlab, 3);
         $xml = str_replace('﻿', '', $xml);
-        $name = 'LOVP23-' . $animal->identificador . '.xml';
+        $name = 'LOVP23-' . $animalId . '.xml';
         $saveXml = public_path('xml/' . $name);
         file_put_contents($saveXml, $xml);
         $pemContent = file_get_contents(public_path('certificado/certw.pem'));
@@ -459,8 +468,8 @@ class LaudoController extends Controller
         // dd($pdf);
         try {
 
-            // $client = new \SoapClient('http://weblab.abccmm.org.br:8087/service.asmx?wsdl'); //produção
-            $client = new \SoapClient('http://webserviceteste.abccmm.org.br:8083/service.asmx?wsdl'); //teste
+            $client = new \SoapClient('http://weblab.abccmm.org.br:8087/service.asmx?wsdl'); //produção
+            // $client = new \SoapClient('http://webserviceteste.abccmm.org.br:8083/service.asmx?wsdl'); //teste
 
 
             $params = array(
