@@ -107,7 +107,7 @@ class OrdemServicoController extends Controller
                 return 'MUATR';
             case 'ASININO':
             case 'PEGA_EQUINO':
-                return 'ASITR';
+                return 'PEGTR';
             case 'BOVINA':
                 return 'BOVTR';
             default:
@@ -251,11 +251,11 @@ class OrdemServicoController extends Controller
         $animal = Animal::with('alelos')->find($ordem->animal_id);
         $dna_verify = DnaVerify::where('animal_id', $ordem->animal_id)->orderBy('id', 'desc')
             ->first();
-        if ($animal->especies == null) {
-            $animal->update([
-                'especies' => "EQUINA",
-            ]);
-        }
+        // if ($animal->especies == null) {
+        //     $animal->update([
+        //         'especies' => "EQUINA",
+        //     ]);
+        // }
         $laudo = Laudo::where('ordem_id', $id)
             ->orderBy('id', 'desc')
             ->first();

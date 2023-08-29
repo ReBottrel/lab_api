@@ -8,7 +8,7 @@
                     <h1>Criar Animal</h1>
                 </div>
                 <div class="card-body">
-                    <form action="{{ route('animais.store') }}" method="POST">
+                    <form id="animal-form" action="{{ route('animais.store') }}" method="POST">
                         @csrf
                         <div class="row">
                             <div class="col-md-12">
@@ -145,6 +145,7 @@
 @section('js')
     <script>
         $(document).ready(function() {
+
             $('.js-pai-basic-single').select2({
                 placeholder: 'Selecione o pai',
                 width: '100%',
@@ -209,6 +210,48 @@
                 var selectedAnimalName = $(this).select2('data')[0].text;
                 $('#mae_animal').val(selectedAnimalName);
             });
+
+            $('#animal-form').on('submit', function(e) {
+                e.preventDefault();
+                var form = $(this);
+                var url = form.attr('action');
+                var type = form.attr('method');
+                var data = form.serialize();
+                $.ajax({
+                    url: url,
+                    type: type,
+                    data: data,
+                    dataType: 'json',
+                    beforeSend: function() {
+                        Swal.fire({
+                            title: 'Aguarde...',
+                            html: 'Salvando dados',
+                            allowOutsideClick: false,
+                            showCancelButton: false,
+                            showConfirmButton: false,
+                            willOpen: () => {
+                                Swal.showLoading()
+                            },
+                        });
+                    },
+                    success: function(response) {
+                        Swal.fire({
+                            title: 'Sucesso!',
+                            text: response.message,
+                            icon: 'success',
+                            confirmButtonText: 'Fechar',
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = "{{ route('animais') }}";
+                            }
+                        })
+                    },
+                    error: function(response) {
+                        
+                    }
+                });
+            });
+
         })
     </script>
 @endsection

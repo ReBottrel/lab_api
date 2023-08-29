@@ -81,7 +81,7 @@ class AnimaisController extends Controller
                 'register_mae' => $request->register_mae,
             ]
         );
-        return redirect()->route('animais')->with('success', 'Animal cadastrado com sucesso!');
+        return response()->json(['success' => 'Animal cadastrado com sucesso!']);
     }
     private function generateUniqueCodlab($sigla)
     {
