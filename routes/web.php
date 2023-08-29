@@ -109,7 +109,7 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::get('update-status-animal-mass', [TesteController::class, 'updateStatus'])->name('update.status.animal.mass');
     Route::get('get-all-order-not-create', [TesteController::class, 'getOrderNotCreate'])->name('get.all.order.not.create');
     Route::get('get-all-codlab', [TesteController::class, 'selectCodlabInRange'])->name('get.all.codlab');
-    Route::get('get-duplicated-codlab', [TesteController::class, 'getDuplicatedCodlab'])->name('get.duplicated.codlab');
+    Route::get('get-duplicated-codlab', [TesteController::class, 'exportDuplicatedCodlabToTxt'])->name('get.duplicated.codlab');
     Route::get('get-all-codlab-update', [TesteController::class, 'updateCodlabInRange'])->name('get.all.update.codlab');
     Route::get('ver-pdf/{id}', [TesteController::class, 'pdfLaudo'])->name('ver.pdf');
     Route::get('alelos-duplicados', [TesteController::class, 'alelosDuplicados'])->name('alelos.duplicados');
