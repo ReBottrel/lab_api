@@ -67,7 +67,7 @@
                                         <option value="MANGALARGA MARCHADOR">MANGALARGA MARCHADOR</option>
                                         <option value="MANGALARGA">MANGALARGA</option>
                                         <option value="PÊGA">PÊGA</option>
-                                        <option value="QUARTO DE MILHO">QUARTO DE MILHA</option>
+                                        <option value="QUARTO DE MILHA">QUARTO DE MILHA</option>
                                         <option value="PAMPA">PAMPA</option>
                                         <option value="DESCONHECIDA">DESCONHECIDA</option>
                                         <option value="NELORE">NELORE</option>

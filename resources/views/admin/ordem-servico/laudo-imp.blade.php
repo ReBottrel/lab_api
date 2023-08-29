@@ -558,6 +558,8 @@
                                 EQUINA
                             @elseif($animal->especies == 'MUARES')
                                 MUAR
+                            @elseif($animal->especies == 'QUARTO DE MILHO')
+                                QUARTO DE MILHA
                             @else
                                 {{ $animal->especies ?? 'Não informado' }}
                             @endif
