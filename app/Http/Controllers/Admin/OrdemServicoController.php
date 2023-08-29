@@ -632,7 +632,7 @@ class OrdemServicoController extends Controller
         if ($request->ajax()) {
             $codlab = $request->codlab;
 
-            $item = OrdemServico::where('codlab', 'LIKE', '%' . $codlab . '%')
+            $item = OrdemServico::where('codlab',  $codlab)
                 ->first();
             // dd($item);
 

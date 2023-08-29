@@ -131,6 +131,13 @@
                     },
                     success: function(response) {
                         $('.table').html(response.viewRender);
+                    },
+                    error: function(response) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Codlab não encontrado!, ou imcompleto',
+                        })
                     }
                 });
             });
