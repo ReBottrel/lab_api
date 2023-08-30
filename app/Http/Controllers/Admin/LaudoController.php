@@ -436,7 +436,7 @@ class LaudoController extends Controller
             <PROPRIETARIO><![CDATA[' . $order->creator_number . ']]></PROPRIETARIO>
             <TIPOEXAME><![CDATA[2]]></TIPOEXAME> 		
             <SUBTIPOEXAME><![CDATA[' . $subtipo . ']]></SUBTIPOEXAME> 		
-            <TECNICO><![CDATA[' . $tecnico->parceiro_id . ']]></TECNICO> 		
+            <TECNICO><![CDATA[' . $order->technical_manager . ']]></TECNICO> 		
             <DATACOLETA><![CDATA[' . $laudo->data_coleta . ']]></DATACOLETA> 	
             <TIPOMATERIAL><![CDATA[2]]></TIPOMATERIAL> 	
             <NOMEIMAGEM><![CDATA[' . $laudo->pdf . ']]></NOMEIMAGEM> 
@@ -468,8 +468,8 @@ class LaudoController extends Controller
         // dd($pdf);
         try {
 
-            // $client = new \SoapClient('http://weblab.abccmm.org.br:8087/service.asmx?wsdl'); //produção
-            $client = new \SoapClient('http://webserviceteste.abccmm.org.br:8083/service.asmx?wsdl'); //teste
+            $client = new \SoapClient('http://weblab.abccmm.org.br:8087/service.asmx?wsdl'); //produção
+            // $client = new \SoapClient('http://webserviceteste.abccmm.org.br:8083/service.asmx?wsdl'); //teste
 
 
             $params = array(
