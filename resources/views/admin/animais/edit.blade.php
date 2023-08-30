@@ -205,8 +205,8 @@
                         var mappedData = data.map(function(item) {
                             return {
                                 id: item.id,
-                                text: item.animal_name + " (" + item.especies +
-                                    ")" // Adicionando a espécie ao nome
+                                text: item.animal_name + " (" + item.codlab + " - " + item
+                                    .especies + ")" // Adicionando codlab e especies ao nome
                             };
                         });
 
@@ -220,7 +220,7 @@
             }).on('change', function(e) {
                 var fullText = $(this).select2('data')[0].text;
                 var animalName = fullText.split(" (")[
-                    0]; // Isso pega a parte do texto antes de " (Especie)"
+                0]; // Isso pega a parte do texto antes de " (Codlab - Especies)"
                 $('#pai_animal').val(animalName);
             });
             $('.js-mae-basic-single').select2({
@@ -240,8 +240,8 @@
                         var mappedData = data.map(function(item) {
                             return {
                                 id: item.id,
-                                text: item.animal_name + " (" + item.especies +
-                                    ")" // Adicionando a espécie ao nome
+                                text: item.animal_name + " (" + item.codlab + " - " + item
+                                    .especies + ")" // Adicionando codlab e especies ao nome
                             };
                         });
 
@@ -255,10 +255,9 @@
             }).on('change', function(e) {
                 var fullText = $(this).select2('data')[0].text;
                 var animalName = fullText.split(" (")[
-                    0]; // Isso pega a parte do texto antes de " (Especie)"
+                0]; // Isso pega a parte do texto antes de " (Codlab - Especies)"
                 $('#mae_animal').val(animalName);
             });
-
 
         });
     </script>

@@ -39,12 +39,14 @@ class DadosController extends Controller
     {
         $query = $request->get('q');
         $results = [];
-
+    
         if ($query) {
             $animals = Animal::where('animal_name', 'like', "%{$query}%")
-                ->limit(20)
+                ->orWhere('codlab', 'like', "%{$query}%")
+                ->limit(50)
                 ->get();
         }
         return response()->json($animals);
     }
+    
 }
