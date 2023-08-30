@@ -424,8 +424,8 @@ class OrdemServicoController extends Controller
 
                 $laudoMae[] = [
                     'marcador' => $animalAlelo->marcador,
-                    'alelo1' => $maeAlelo->alelo1,
-                    'alelo2' => $maeAlelo->alelo2,
+                    'alelo1' => $maeAlelo->alelo1 ?? null,
+                    'alelo2' => $maeAlelo->alelo2 ?? null,
                     'filho1' => $animalAlelo->alelo1,
                     'filho2' => $animalAlelo->alelo2,
                     'include' => $result
@@ -466,8 +466,8 @@ class OrdemServicoController extends Controller
 
                 $laudoPai[] = [
                     'marcador' => $animalAlelo->marcador,
-                    'alelo1' => $paiAlelo->alelo1,
-                    'alelo2' => $paiAlelo->alelo2,
+                    'alelo1' => $paiAlelo->alelo1 ?? null,
+                    'alelo2' => $paiAlelo->alelo2 ?? null,
                     'filho1' => $animalAlelo->alelo1,
                     'filho2' => $animalAlelo->alelo2,
                     'include' => $result
