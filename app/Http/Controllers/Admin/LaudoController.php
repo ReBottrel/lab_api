@@ -346,7 +346,7 @@ class LaudoController extends Controller
         $results = Result::where('ordem_servico', $laudo->ordem_id)->latest()->first();
         $user = User::where('id', $order->user_id)->first();
         $tecnico = Tecnico::where('professional_name', $order->technical_manager)->first();
-        // dd($tecnico);
+        dd($tecnico);
         // dd($user->email);
         if ($order->parceiro == 'ABCCMM') {
             $xml = $this->gerarXML($animal, $laudo, $order, $results, $pai, $mae, $owner, $tecnico);
