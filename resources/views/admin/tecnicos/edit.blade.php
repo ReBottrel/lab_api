@@ -23,6 +23,12 @@
                             <input type="text" name="document" value="{{ $tecnico->document }}" id="cpfcnpj" class="form-control">
                         </div>
                     </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="exampleFormControlInput1" class="form-label">Matricula</label>
+                            <input type="text" name="matricula" value="{{ $tecnico->matricula }}"  class="form-control">
+                        </div>
+                    </div>
 
                     <div class="col-md-4">
                         <div class="mb-3">

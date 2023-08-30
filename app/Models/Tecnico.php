@@ -32,5 +32,6 @@ class Tecnico extends Model
         'parceiro_id',
         'observacao',
         'status',
+        'matricula',
     ];
 }
