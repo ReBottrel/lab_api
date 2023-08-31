@@ -166,11 +166,12 @@ class ApiMangalargaController extends Controller
             $tecnico = Tecnico::where('professional_name', $coleta->tecnico)->first();
             $owner = Owner::where('email', $coleta->cliente->email)->first();
             $ownerid = $owner->id ?? null;
-            if (!$tecnico) {
-                $tecnicoc = Tecnico::create([
-                    'name' => $coleta->tecnico,
-                ]);
-            }
+            // if (!$tecnico) {
+            //     $tecnicoc = Tecnico::create([
+            //         'name' => $coleta->tecnico,
+            //         'matricula' => $coleta->matricula,
+            //     ]);
+            // }
             if (!$user) {
                 $userc = User::create([
                     'name' => $coleta->cliente->nome,
