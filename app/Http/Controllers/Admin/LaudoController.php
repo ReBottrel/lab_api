@@ -135,7 +135,6 @@ class LaudoController extends Controller
         $examType = substr($dna_verify->verify_code, 3, 2);
         $ordem = OrdemServico::where('order', $laudo->order_id)
             ->where('animal_id', $laudo->animal_id)
-            ->latest()
             ->first();
         $pai = null;
         $mae = null;
@@ -198,7 +197,6 @@ class LaudoController extends Controller
         $examType = substr($dna_verify->verify_code, 3, 2);
         $ordem = OrdemServico::where('order', $laudo->order_id)
             ->where('animal_id', $laudo->animal_id)
-            ->latest()
             ->first();
         $pai = null;
         $mae = null;

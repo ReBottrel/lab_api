@@ -275,6 +275,10 @@
             @endif
 
         </button>
+        @if ($laudo)
+            <button class="btn btn-primary" id="download-pdf" data-laudo="{{ $laudo->id }}">BAIXAR
+                PDF</button>
+        @endif
     </div>
 </div>
 </div>
@@ -328,7 +332,40 @@
     });
 
 
+    $(document).on('click', '#download-pdf', function() {
+        const laudo = $(this).data('laudo');
+        $.ajax({
+            url: `{{ url('laudo-download') }}/${laudo}`,
+            type: 'GET',
+            data: {
+                _token: "{{ csrf_token() }}",
 
+            },
+            beforeSend: function() {
+                Swal.fire({
+                    title: 'Aguarde!',
+                    html: 'Estamos gerando o PDF.',
+                    allowOutsideClick: false,
+                    onBeforeOpen: () => {
+                        Swal.showLoading()
+                    },
+                })
+            },
+            success: function(response) {
+                console.log(response);
+                window.open(`/laudo-download/${laudo}`, '_blank');
+                Swal.close();
+            },
+            error: function(response) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Não foi possível gerar o PDF.',
+                })
+            }
+
+        })
+    });
 
     $(document).ready(function() {
         $('.alelo1').keyup(function() {
@@ -716,12 +753,13 @@
                                                         _token: "{{ csrf_token() }}",
                                                         laudo: laudo,
                                                     },
-                                                    success: function(response)
-                                                    {
+                                                    success: function(
+                                                        response
+                                                    ) {
 
                                                     }
                                                 });
-                                                
+
                                             } else {
                                                 Swal.fire({
                                                     icon: 'error',
