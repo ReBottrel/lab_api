@@ -589,7 +589,7 @@
                 </div>
             </div>
             <div class="content_3">
-                <p>
+                <p style="padding: 11px 0;">
                     <strong>Responsável pela Coleta/Registro Profissional ou CPF:</strong>
                     <span>{{ $ordem->tecnico ?? 'Não informado' }} -
                         {{ $tecnico->document ?? 'Não informado' }}</span>
