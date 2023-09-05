@@ -239,7 +239,7 @@
 
     .content_2 {
         position: absolute;
-        top: 0;
+        top: -10px;
         right: 0;
     }
 
