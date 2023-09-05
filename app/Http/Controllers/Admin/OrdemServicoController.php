@@ -88,6 +88,7 @@ class OrdemServicoController extends Controller
                 'proprietario' => $order->creator,
                 'tecnico' => $order->technical_manager,
                 'data' => $data,
+                'observacao' => $animal->description,
                 'data_payment' => $item->updated_at,
                 'rg_pai' => $animal->registro_pai,
                 'rg_mae' => $animal->registro_mae,
@@ -398,6 +399,7 @@ class OrdemServicoController extends Controller
             $laudoMae = [];
             foreach ($animal->alelos as $animalAlelo) {
                 $result = '';
+                $maeAlelo = null; // Inicialize a variável $maeAlelo fora do loop
 
                 // Verifica se o alelo do animal possui asterisco ou está vazio
                 if (strpos($animalAlelo->alelo1, '*') !== false || strpos($animalAlelo->alelo2, '*') !== false || empty(trim($animalAlelo->alelo1)) || empty(trim($animalAlelo->alelo2))) {
@@ -405,19 +407,21 @@ class OrdemServicoController extends Controller
                 }
 
                 if (!$result) {
-                    $aleloEncontrado = false; // Adicione esta variável
-                    foreach ($mae->alelos as $maeAlelo) {
-                        if ($animalAlelo->marcador == $maeAlelo->marcador) {
+                    $aleloEncontrado = false;
+                    foreach ($mae->alelos as $maeAleloAtual) {
+                        if ($animalAlelo->marcador == $maeAleloAtual->marcador) {
                             // Verifica se o alelo da mãe possui asterisco ou está vazio apenas para o marcador correspondente
-                            if (strpos($maeAlelo->alelo1, '*') !== false || strpos($maeAlelo->alelo2, '*') !== false || empty(trim($maeAlelo->alelo1)) || empty(trim($maeAlelo->alelo2))) {
+                            if (strpos($maeAleloAtual->alelo1, '*') !== false || strpos($maeAleloAtual->alelo2, '*') !== false || empty(trim($maeAleloAtual->alelo1)) || empty(trim($maeAleloAtual->alelo2))) {
                                 $result = 'V';
                                 break;
-                            } elseif (($maeAlelo->alelo1 !== $animalAlelo->alelo1 && $maeAlelo->alelo2 !== $animalAlelo->alelo2) && ($maeAlelo->alelo1 !== $animalAlelo->alelo2 && $maeAlelo->alelo2 !== $animalAlelo->alelo1)) {
+                            } elseif (($maeAleloAtual->alelo1 !== $animalAlelo->alelo1 && $maeAleloAtual->alelo2 !== $animalAlelo->alelo2) && ($maeAleloAtual->alelo1 !== $animalAlelo->alelo2 && $maeAleloAtual->alelo2 !== $animalAlelo->alelo1)) {
                                 $result = '';
                             } else {
-
                                 $result = 'M';
                             }
+
+                            // Atribua os valores dos alelos da mãe à variável $maeAlelo
+                            $maeAlelo = $maeAleloAtual;
                         }
                     }
                 }
@@ -441,7 +445,7 @@ class OrdemServicoController extends Controller
             $laudoPai = [];
             foreach ($animal->alelos as $animalAlelo) {
                 $result = '';
-
+                $paiAleloNovo = null; // Inicialize a variável $paiAlelo fora do loop
                 // Verifica se o alelo do animal possui asterisco ou está vazio
                 if (strpos($animalAlelo->alelo1, '*') !== false || strpos($animalAlelo->alelo2, '*') !== false || empty(trim($animalAlelo->alelo1)) || empty(trim($animalAlelo->alelo2))) {
                     $result = 'V';
@@ -460,41 +464,96 @@ class OrdemServicoController extends Controller
 
                                 $result = 'P';
                             }
+                            $paiAleloNovo = $paiAlelo;
                         }
                     }
                 }
 
                 $laudoPai[] = [
                     'marcador' => $animalAlelo->marcador,
-                    'alelo1' => $paiAlelo->alelo1 ?? null,
-                    'alelo2' => $paiAlelo->alelo2 ?? null,
+                    'alelo1' => $paiAleloNovo->alelo1 ?? null,
+                    'alelo2' => $paiAleloNovo->alelo2 ?? null,
                     'filho1' => $animalAlelo->alelo1,
                     'filho2' => $animalAlelo->alelo2,
                     'include' => $result
                 ];
             }
             if ($mae != null) {
-                foreach ($laudoMae as &$maeAl) {
-                    foreach ($laudoPai as &$paiAl) {
-                        if ($maeAl['marcador'] == $paiAl['marcador']) {
-                            // $maeHasSameAlleles = $maeAl['alelo1'] == $maeAl['alelo2'] && !empty(trim($maeAl['alelo1'])) && strpos($maeAl['alelo1'], '*') === false;
-                            // $paiHasSameAlleles = $paiAl['alelo1'] == $paiAl['alelo2'] && !empty(trim($paiAl['alelo1'])) && strpos($paiAl['alelo1'], '*') === false;
-                            // $childHasSameAllelesAsParents = (
-                            //     ($maeHasSameAlleles && $maeAl['alelo1'] == $maeAl['filho1'] && $maeAl['alelo1'] == $maeAl['filho2']) ||
-                            //     ($paiHasSameAlleles && $paiAl['alelo1'] == $maeAl['filho1'] && $paiAl['alelo1'] == $maeAl['filho2'])
-                            // );
+                // \Log::info($laudoMae);
+                // foreach ($laudoMae as &$maeAl) {
+                //     $variavel = collect($laudoPai)->where('marcador', $maeAl['marcador']);
+                //     $varKey = $variavel->keys()[0];
+                //     $variavel = $variavel->first();
+                //     $points = 0;
+                //     // \Log::info($variavel);
+                //     // Comparação dos alelos entre mãe e filho
+                //     if ($maeAl['filho1'] !== $maeAl['filho2']) {
+                //         if ($maeAl['alelo1'] === $variavel['alelo1']) {
+                //             $points += 1;
+                //         }
+                //         if ($maeAl['alelo2'] === $variavel['alelo2']) {
+                //             $points += 1;
+                //         }
+                //         if ($maeAl['alelo1'] === $variavel['alelo2']) {
+                //             $points += 1;
+                //         }
+                //         if ($maeAl['alelo2'] === $variavel['alelo1']) {
+                //             $points += 1;
+                //         }
 
+                //         if ($maeAl['alelo1'] === $variavel['filho1']) {
+                //             $points += 1;
+                //         }
+                //         if ($maeAl['alelo2'] === $variavel['filho2']) {
+                //             $points += 1;
+                //         }
+                //         if ($maeAl['alelo2'] === $variavel['filho1']) {
+                //             $points += 1;
+                //         }
+                //         if ($maeAl['alelo1'] === $variavel['filho2']) {
+                //             $points += 1;
+                //         }
+                //     } else {
+                //         if ($maeAl['alelo1'] === $variavel['alelo1']) {
+                //             $points += 2;
+                //         }
+                //         if ($maeAl['alelo2'] === $variavel['alelo2']) {
+                //             $points += 2;
+                //         }
+                //         if ($maeAl['alelo1'] === $variavel['alelo2']) {
+                //             $points += 2;
+                //         }
+                //         if ($maeAl['alelo2'] === $variavel['alelo1']) {
+                //             $points += 2;
+                //         }
 
-                            // if ($maeHasSameAlleles && $paiHasSameAlleles && !$childHasSameAllelesAsParents) {
-                            //     $maeAl['include'] = 'I';
-                            // }
+                //         if ($maeAl['alelo1'] === $variavel['filho1']) {
+                //             $points += 2;
+                //         }
+                //         if ($maeAl['alelo2'] === $variavel['filho2']) {
+                //             $points += 2;
+                //         }
+                //         if ($maeAl['alelo2'] === $variavel['filho1']) {
+                //             $points += 2;
+                //         }
+                //         if ($maeAl['alelo1'] === $variavel['filho2']) {
+                //             $points += 2;
+                //         }
+                //     }
 
-                            // if ($paiAl['marcador'] == $maeAl['marcador'] && $maeAl['include'] === 'I') {
-                            //     $paiAl['include'] = '  ';
-                            // }
-                        }
-                    }
-                }
+         
+
+                //     \Log::info([$maeAl['marcador'], $points]);
+
+                //     if ($points == 3) {
+                //         $maeAl['include'] = 'I';
+
+                //         // Remova o marcador de $laudoPai, se aplicável
+                //         if ($variavel) {
+                //             $laudoPai[$varKey]['include'] = '  ';
+                //         }
+                //     }
+                // }
             }
         } else {
             $laudoPai = null;

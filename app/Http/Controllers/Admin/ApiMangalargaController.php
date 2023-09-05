@@ -229,7 +229,7 @@ class ApiMangalargaController extends Controller
                 'creator_number' => $coleta->cliente->matricula,
                 'technical_manager' => $coleta->tecnico,
                 'collection_date' => $coleta->dataColeta,
-                'id_tecnico' => $tecnico->id ?? $tecnicoc->id,
+                'id_tecnico' => $tecnico->id ?? null,
                 'status' => 1,
                 'owner_id' => $ownerid,
                 'parceiro' => 'ABCCMM'
