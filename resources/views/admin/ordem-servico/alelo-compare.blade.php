@@ -360,7 +360,7 @@
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
-                    text: 'Não foi possível gerar o PDF.',
+                    text: 'Laudo não encontrado. por favor gere o laudo antes de baixar o PDF.',
                 })
             }
 
