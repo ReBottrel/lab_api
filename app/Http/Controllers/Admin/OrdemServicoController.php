@@ -608,7 +608,7 @@ class OrdemServicoController extends Controller
 
         $log = Log::create([
             'ordem_id' => $ordem,
-            'user_id' => Auth::user()->id,
+            'user' => Auth::user()->name,
             'action' => 'Salvou resultado do log',
         ]);
 
@@ -649,7 +649,7 @@ class OrdemServicoController extends Controller
 
         $log = Log::create([
             'ordem_id' => $alelo->animal->ordemServico->id,
-            'user_id' => Auth::user()->id,
+            'user' => Auth::user()->name,
             'action' => 'Atualizou o alelo',
         ]);
 
@@ -666,7 +666,7 @@ class OrdemServicoController extends Controller
 
         $log = Log::create([
             'ordem_id' => $ordem->id,
-            'user_id' => Auth::user()->id,
+            'user' => Auth::user()->name,
             'action' => 'Atualizou a data de análise',
         ]);
 
@@ -687,7 +687,7 @@ class OrdemServicoController extends Controller
 
         $log = Log::create([
             'ordem_id' => $ordem->id,
-            'user_id' => Auth::user()->id,
+            'user' => Auth::user()->name,
             'action' => 'Gerou o código de barras',
         ]);
 
@@ -717,7 +717,7 @@ class OrdemServicoController extends Controller
 
         $log = Log::create([
             'ordem_id' => $ordem->id,
-            'user_id' => Auth::user()->id,
+            'user' => Auth::user()->name,
             'action' => 'Excluiu a ordem de serviço',
         ]);
 
@@ -793,7 +793,7 @@ class OrdemServicoController extends Controller
 
         $log = Log::create([
             'ordem_id' => $ordemServico->id,
-            'user_id' => Auth::user()->id,
+            'user' => Auth::user()->name,
             'action' => 'Atualizou a ordem de serviço',
         ]);
 
