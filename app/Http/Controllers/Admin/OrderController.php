@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\Fur;
+use App\Models\Log;
 use App\Models\Exam;
 use App\Models\User;
 use App\Models\Owner;
@@ -330,6 +331,13 @@ class OrderController extends Controller
             }
         }
 
+        $log = Log::create([
+            'user' => auth()->user()->name,
+            'action' => 'Alterou status de amostra do animal ' . $request->value,
+            'animal' => $animal->animal_name,
+            'order_id' => $animal->order_id,
+        ]);
+
         \Log::channel('admins_actions')->info(['Usuário', auth()->user()->name], ['Alterou status de:', $animal->animal_name, 'para', $request->value]);
 
         return response()->json($animal);
@@ -453,7 +461,11 @@ class OrderController extends Controller
                 "title" => "Locilab",
                 "linkDescription" => "LociLab e a melhor plataforma de exames de DNA do Brasil",
             ]);
-
+            $log = Log::create([
+                'user' => auth()->user()->name,
+                'action' => 'Criou pagamento para o pedido ',
+                'order_id' => $order_request->id,
+            ]);
             Mail::to($email)->send(new \App\Mail\NewOrder($email, $senha));
             return response()->json($ordernew);
         } elseif ($order_request->origin == 'app') {
@@ -530,6 +542,11 @@ class OrderController extends Controller
             $order_request->update([
                 'status' => 2,
                 'user_id' => $user->id,
+            ]);
+            $log = Log::create([
+                'user' => auth()->user()->name,
+                'action' => 'Criou pagamento para o pedido ',
+                'order_id' => $order_request->id,
             ]);
 
             Mail::to($email)->send(new \App\Mail\NewOrder($email, $senha));
@@ -657,8 +674,14 @@ class OrderController extends Controller
                 'tipo' => $request->tipo,
                 'parceiro' => $request->parceiro
             ]);
+            $log = Log::create([
+                'user_id' => auth()->user()->id,
+                'action' => 'Criou um pedido de exame',
+                'order_id' => $order_request->id,
+            ]);
             return redirect()->route('admin.order-animal', [$order_request->id, $request->tipo]);
         }
+
         return redirect()->back()->with('error', 'Proprietário não possui cadastro no sistema');
     }
 
@@ -789,13 +812,19 @@ class OrderController extends Controller
             'animal_id' => $create->id ?? $animal->id,
             'animal_name' => $request->animal_name,
             'especies' => $request->especies,
-            'animal_register' => $request->register_number_brand ?? null, 
+            'animal_register' => $request->register_number_brand ?? null,
             'mae_id' => $request->mae_id ?? null,
             'pai_id' => $request->pai_id ?? null,
             'register_pai' => $request->registro_pai ?? null,
             'register_mae' => $request->registro_mae ?? null,
         ]);
 
+        $log = Log::create([
+            'user_id' => auth()->user()->id,
+            'action' => 'Cadastrou animal no pedido',
+            'animal' => $create->animal_name ?? $animal->animal_name,
+            'order_id' => $order->id,
+        ]);
         return redirect()->route('admin.order-animal', [$order->id, $order->tipo]);
     }
     public function orderAddAnimalEdit(Request $request)

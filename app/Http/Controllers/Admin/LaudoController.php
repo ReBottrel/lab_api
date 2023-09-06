@@ -5,13 +5,14 @@ namespace App\Http\Controllers\Admin;
 
 use DOMDocument;
 use Dompdf\Dompdf;
+use App\Models\Log;
 use App\Models\User;
 use App\Models\Laudo;
 use App\Models\Owner;
 use App\Models\Animal;
 use App\Models\Result;
-use GuzzleHttp\Client;
 // use X509\CertificationPath;
+use GuzzleHttp\Client;
 use App\Models\Tecnico;
 use BaconQrCode\Writer;
 use App\Models\Parceiro;
@@ -26,9 +27,10 @@ use App\Models\OrderRequest;
 use Illuminate\Http\Request;
 use App\Mail\EnviarLaudoMail;
 use App\Models\AnimalToParent;
-use BaconQrCode\Renderer\Image\Png;
 
+use BaconQrCode\Renderer\Image\Png;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use App\Models\QrCode as ModelQrCode;
 use BaconQrCode\Renderer\ImageRenderer;
@@ -118,7 +120,13 @@ class LaudoController extends Controller
             ]);
         }
 
-
+        $log = Log::create([
+            'user' => Auth::user()->name,
+            'action' => 'Gerou o laudo',
+            'animal' => $animal->animal_name,
+            'ordem_id' => $laudo->ordem_id ?? null,
+            'order_id' => $laudo->order_id ?? null,
+        ]);
 
         return response()->json($laudo, 200);
     }
@@ -320,6 +328,15 @@ class LaudoController extends Controller
 
         // Gera a resposta de download
         $path = Storage::disk('public')->path($filename);
+
+        $log = Log::create([
+            'user' => Auth::user()->name,
+            'action' => 'Assinou o pdf do laudo',
+            'animal' => $animal->animal_name,
+            'ordem_id' => $laudo->ordem_id ?? null,
+            'order_id' => $laudo->order_id ?? null,
+        ]);
+
         return response()->download($path, $filename);
     }
 
@@ -350,6 +367,13 @@ class LaudoController extends Controller
             $xml = $this->gerarXML($animal, $laudo, $order, $results, $pai, $mae, $owner, $tecnico);
             Mail::to($user->email)->send(new EnviarLaudoMail($laudo->pdf));
             Mail::to('laudosdna.lfda-mg@agro.gov.br')->send(new EnviarLaudoMail($laudo->pdf));
+            $log = Log::create([
+                'user' => Auth::user()->name,
+                'action' => 'Enviou o laudo para a ABCCMM',
+                'animal' => $animal->animal_name,
+                'ordem_id' => $laudo->ordem_id ?? null,
+                'order_id' => $order->id ?? null,
+            ]);
             return response()->json([$xml, $parceiro], 200);
         } else {
             Mail::to($parceiro->email)->send(new EnviarLaudoMail($laudo->pdf));
@@ -357,6 +381,13 @@ class LaudoController extends Controller
             Mail::to('laudosdna.lfda-mg@agro.gov.br')->send(new EnviarLaudoMail($laudo->pdf));
             $laudo->update([
                 'status' => 1
+            ]);
+            $log = Log::create([
+                'user' => Auth::user()->name,
+                'action' => 'Enviou o laudo para o parceiro',
+                'animal' => $animal->animal_name,
+                'ordem_id' => $laudo->ordem_id ?? null,
+                'order_id' => $order->id ?? null,
             ]);
             return response()->json([$laudo, $parceiro], 200);
         }

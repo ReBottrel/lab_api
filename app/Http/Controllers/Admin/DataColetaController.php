@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
+use App\Models\Log;
 use App\Models\DataColeta;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class DataColetaController extends Controller
 {
@@ -52,6 +54,10 @@ class DataColetaController extends Controller
             ['id_animal' => $request->id_animal],
             $data
         );
+        $log = Log::create([
+            'user' => Auth::user()->name,
+            'action' => 'Atualizou as datas de coleta',
+        ]);
         return response()->json($datas);
     }
 
@@ -66,6 +72,10 @@ class DataColetaController extends Controller
             ['id_animal' => $request->id_animal],
             $data
         );
+        $log = Log::create([
+            'user' => Auth::user()->name,
+            'action' => 'Atualizou o tipo de coleta',
+        ]);
         return response()->json($datas);
     }
    

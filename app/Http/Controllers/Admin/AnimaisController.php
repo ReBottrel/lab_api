@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
-use App\Models\Animal;
-use App\Models\AnimalToParent;
 use App\Models\Fur;
+use App\Models\Log;
+use App\Models\Animal;
 use App\Models\OrdemServico;
 use Illuminate\Http\Request;
+use App\Models\AnimalToParent;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class AnimaisController extends Controller
 {
@@ -81,6 +83,12 @@ class AnimaisController extends Controller
                 'register_mae' => $request->register_mae,
             ]
         );
+        $log = Log::create([
+            'user' => Auth::user()->name,
+            'action' => 'Criou o animal ' . $animal->animal_name,
+            'animal' => $animal->animal_name,
+            'order_id' => $animal->order_id ?? null,
+        ]);
         return response()->json(['success' => 'Animal cadastrado com sucesso!']);
     }
     private function generateUniqueCodlab($sigla)
@@ -207,6 +215,14 @@ class AnimaisController extends Controller
             ]);
         }
 
+        $log = Log::create([
+            'user' => Auth::user()->name,
+            'action' => 'Editou o animal ' . $animal->animal_name,
+            'animal' => $animal->animal_name,
+            'order_id' => $animal->order_id ?? null,
+            'ordem_id' => $ordem->id ?? null,
+        ]);
+
         return redirect()->route('animais')->with('success', 'Animal editado com sucesso!');
     }
 
@@ -220,6 +236,12 @@ class AnimaisController extends Controller
     {
         $animal = Animal::find($request->id);
         $animal->delete();
+        $log = Log::create([
+            'user' => Auth::user()->name,
+            'action' => 'Deletou o animal ' . $animal->animal_name,
+            'animal' => $animal->animal_name,
+            'order_id' => $animal->order_id ?? null,
+        ]);
         return response()->json(['success' => 'Animal deletado com sucesso!']);
     }
     public function search(Request $request)

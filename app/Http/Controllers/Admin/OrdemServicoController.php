@@ -3,20 +3,22 @@
 namespace App\Http\Controllers\Admin;
 
 use Carbon\Carbon;
+use App\Models\Log;
 use App\Models\Exam;
+use App\Models\Alelo;
+use App\Models\Laudo;
 use App\Models\Animal;
+use App\Models\Result;
+use App\Models\Marcador;
+use App\Models\DnaVerify;
 use App\Models\OrderLote;
 use App\Models\OrdemServico;
 use App\Models\OrderRequest;
 use Illuminate\Http\Request;
+use App\Models\AnimalToParent;
 use App\Models\OrderRequestPayment;
 use App\Http\Controllers\Controller;
-use App\Models\Alelo;
-use App\Models\AnimalToParent;
-use App\Models\DnaVerify;
-use App\Models\Laudo;
-use App\Models\Marcador;
-use App\Models\Result;
+use Illuminate\Support\Facades\Auth;
 use Picqer\Barcode\BarcodeGeneratorPNG;
 
 
@@ -76,7 +78,7 @@ class OrdemServicoController extends Controller
                 $animal->update(['codlab' => $this->generateUniqueCodlab($sigla)]);
             }
 
-            OrdemServico::create([
+          $ordem =  OrdemServico::create([
                 'order' => $order->id,
                 'animal_id' => $animal->id,
                 'owner_id' => $order->owner_id,
@@ -95,6 +97,13 @@ class OrdemServicoController extends Controller
                 'status' => 1,
             ]);
         }
+
+        $log = Log::create([
+            'user' => Auth::user()->name,
+            'action' => 'Criou uma nova ordem de serviço',
+            'ordem_id' => $ordem->id,
+            'order_id' => $order->id,
+        ]);
 
         return response()->json('success', 200);
     }
@@ -233,6 +242,10 @@ class OrdemServicoController extends Controller
                     }
                 }
 
+                $log = Log::create([
+                    'user' => Auth::user()->name,
+                    'action' => 'Importou um arquivo txt de alelos',
+                ]);
 
                 // Retorne uma resposta adequada após a importação
                 return redirect()->back()->with('success', 'Arquivo importado com sucesso');
@@ -324,6 +337,12 @@ class OrdemServicoController extends Controller
         $ordem->update([
             'data_bar' => $request->data
         ]);
+
+        $log = Log::create([
+            'user' => Auth::user()->name,
+            'action' => 'Atualizou a data de entrada na area tecnica',
+        ]);
+
         return response()->json($ordem);
     }
 
@@ -541,7 +560,7 @@ class OrdemServicoController extends Controller
                 //         }
                 //     }
 
-         
+
 
                 //     \Log::info([$maeAl['marcador'], $points]);
 
@@ -587,6 +606,12 @@ class OrdemServicoController extends Controller
         $result->excluido = json_encode($excluidos);
         $result->save();
 
+        $log = Log::create([
+            'ordem_id' => $ordem,
+            'user_id' => Auth::user()->id,
+            'action' => 'Salvou resultado do log',
+        ]);
+
         // Return a response to the AJAX call
         return response()->json(['message' => 'Data saved successfully!']);
     }
@@ -622,6 +647,12 @@ class OrdemServicoController extends Controller
 
         $alelo->update($data);
 
+        $log = Log::create([
+            'ordem_id' => $alelo->animal->ordemServico->id,
+            'user_id' => Auth::user()->id,
+            'action' => 'Atualizou o alelo',
+        ]);
+
         return response()->json($alelo);
     }
 
@@ -632,6 +663,13 @@ class OrdemServicoController extends Controller
         $ordem->update([
             'data_analise' =>  $request->data,
         ]);
+
+        $log = Log::create([
+            'ordem_id' => $ordem->id,
+            'user_id' => Auth::user()->id,
+            'action' => 'Atualizou a data de análise',
+        ]);
+
         return response()->json($ordem);
     }
 
@@ -646,6 +684,12 @@ class OrdemServicoController extends Controller
         $barcode = $generator->getBarcode($ordem->codlab, $generator::TYPE_CODE_128);
 
         $barcodex = base64_encode($barcode);
+
+        $log = Log::create([
+            'ordem_id' => $ordem->id,
+            'user_id' => Auth::user()->id,
+            'action' => 'Gerou o código de barras',
+        ]);
 
         return view('admin.ordem-servico.bar-code', get_defined_vars());
     }
@@ -670,6 +714,12 @@ class OrdemServicoController extends Controller
         }
 
         $ordem->delete();
+
+        $log = Log::create([
+            'ordem_id' => $ordem->id,
+            'user_id' => Auth::user()->id,
+            'action' => 'Excluiu a ordem de serviço',
+        ]);
 
         return response()->json('Ordem e ordens de serviço relacionadas foram excluídas com sucesso', 200);
     }
@@ -740,6 +790,12 @@ class OrdemServicoController extends Controller
         }
 
         $ordemServico->update($request->all());
+
+        $log = Log::create([
+            'ordem_id' => $ordemServico->id,
+            'user_id' => Auth::user()->id,
+            'action' => 'Atualizou a ordem de serviço',
+        ]);
 
         return redirect()->back()->with('success', 'Ordem de serviço atualizada com sucesso');
     }

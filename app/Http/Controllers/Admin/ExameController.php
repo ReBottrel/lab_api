@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\Log;
 use App\Models\Exam;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class ExameController extends Controller
 {
@@ -46,6 +48,10 @@ class ExameController extends Controller
             'value' => str_replace(['.', ','], ['', '.'], $request->value),
             'extra_value' => str_replace(['.', ','], ['', '.'], $request->extra_value),
 
+        ]);
+        $log = Log::create([
+            'user' => Auth::user()->name,
+            'action' => 'Criou um novo exame',
         ]);
 
         return redirect()->back()->with('success', 'Exame criado com sucesso!');
