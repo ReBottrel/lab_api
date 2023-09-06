@@ -30,12 +30,13 @@ class ApiMangalargaController extends Controller
         $coletas = $this->fetchDataFromApi('coletas', 18, 1, ['dataEnvioInicio' => '2023-07-21T00:00:00']);
         foreach ($coletas as $coleta) {
             $user = User::where('email', $coleta->cliente->email)->first();
-            $tecnico = Tecnico::where('professional_name', $coleta->tecnico)->first();
+            $tecnico = Tecnico::where('professional_name', $coleta->tecnico->nome)->first();
             $owner = Owner::where('email', $coleta->cliente->email)->first();
             $ownerid = $owner->id ?? null;
             if (!$tecnico) {
                 $tecnicoc = Tecnico::create([
-                    'name' => $coleta->tecnico,
+                    'name' => $coleta->tecnico->nome,
+                    'matricula' => $coleta->matricula->matricula,
                 ]);
             }
             if (!$user) {
@@ -92,7 +93,7 @@ class ApiMangalargaController extends Controller
                 'user_id' => $user->id ?? $userc->id,
                 'creator' => $coleta->cliente->nome,
                 'creator_number' => $coleta->cliente->matricula,
-                'technical_manager' => $coleta->tecnico,
+                'technical_manager' => $coleta->tecnico->nome,
                 'collection_date' => $coleta->dataColeta,
                 'id_tecnico' => $tecnico->id ?? $tecnicoc->id,
                 'status' => 1,
@@ -170,17 +171,21 @@ class ApiMangalargaController extends Controller
         // $coletas = $this->fetchDataFromApi('coletas', 18, 2, ['dataEnvioInicio' => '2023-06-05T00:00:00']);
         foreach ($coletas as $coleta) {
             // find owner, user, and tecnico by email or create them if they don't exist
+            
+
             $user = User::where('email', $coleta->cliente->email)->first();
-            $tecnico = Tecnico::where('professional_name', $coleta->tecnico)->first();
+            $tecnico = Tecnico::where('professional_name', $coleta->tecnico->nome)->first();
             $owner = Owner::where('email', $coleta->cliente->email)->first();
             $ownerid = $owner->id ?? null;
-            // if (!$tecnico) {
-            //     $tecnicoc = Tecnico::create([
-            //         'name' => $coleta->tecnico,
-            //         'matricula' => $coleta->matricula,
-            //     ]);
-            // }
+            if (!$tecnico) {
+               
+                $tecnicoc = Tecnico::create([
+                    'name' => $coleta->tecnico->nome,
+                    'matricula' => $coleta->matricula->matricula,
+                ]);
+            }
             if (!$user) {
+         
                 $userc = User::create([
                     'name' => $coleta->cliente->nome,
                     'email' => $coleta->cliente->email,
@@ -201,6 +206,7 @@ class ApiMangalargaController extends Controller
                     'zip_code' => $coleta->cliente->enderecos[0]->cep,
                 ]);
                 if ($owner) {
+                 
                     $owner->update([
                         'user_id' => $userc->id ? $userc->id : $user->id,
                     ]);
@@ -227,23 +233,24 @@ class ApiMangalargaController extends Controller
                 $ownerid = $ownerc->id;
             }
 
-
+      
             $order = OrderRequest::firstOrCreate([
-                'collection_number' => $coleta->rowidColeta
+                'collection_number' => $coleta->rowidColeta,
             ], [
                 'origin' => 'API',
                 'user_id' => $user->id ?? $userc->id,
                 'creator' => $coleta->cliente->nome,
                 'creator_number' => $coleta->cliente->matricula,
-                'technical_manager' => $coleta->tecnico,
+                'technical_manager' => $coleta->tecnico->nome,
                 'collection_date' => $coleta->dataColeta,
-                'id_tecnico' => $tecnico->id ?? null,
+                'id_tecnico' => $tecnico->id ?? $tecnicoc->id,
                 'status' => 1,
                 'owner_id' => $ownerid,
-                'parceiro' => 'ABCCMM'
+                'parceiro' => 'ABCCMM',
             ]);
 
             foreach ($coleta->animais as $animal) {
+          
                 $codlab = $this->generateUniqueCodlab('EQU');
                 $existingAnimal = Animal::where('register_number_brand', $animal->rowidAnimal)->first();
                 $currentAnimal = null;
