@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\Log;
 use App\Models\User;
 use App\Models\Owner;
 use App\Models\Animal;
@@ -9,8 +10,8 @@ use App\Models\Tecnico;
 use App\Models\DnaVerify;
 use App\Models\OrderRequest;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use App\Models\AnimalToParent;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 use Maatwebsite\Excel\Concerns\ToArray;
@@ -150,6 +151,13 @@ class ApiMangalargaController extends Controller
                 );
             }
         }
+
+        $log = Log::create([
+            'user' => 'Sistema API',
+            'action' => 'Criou pedido de exame',
+            'order_id' => $order->id ?? 'deu erro',
+            'animal' => $animal->nome ?? 'deu erro',
+        ]);
         return response()->json('ok');
     }
 
@@ -286,6 +294,12 @@ class ApiMangalargaController extends Controller
                 );
             }
         }
+        $log = Log::create([
+            'user' => 'Sistema API',
+            'action' => 'Criou pedido de exame',
+            'order_id' => $order->id ?? 'deu erro',
+            'animal' => $animal->nome ?? 'deu erro',
+        ]);
         return response()->json('ok');
     }
 
