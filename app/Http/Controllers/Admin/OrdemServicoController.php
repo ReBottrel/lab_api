@@ -78,7 +78,7 @@ class OrdemServicoController extends Controller
                 $animal->update(['codlab' => $this->generateUniqueCodlab($sigla)]);
             }
 
-          $ordem =  OrdemServico::create([
+            $ordem =  OrdemServico::create([
                 'order' => $order->id,
                 'animal_id' => $animal->id,
                 'owner_id' => $order->owner_id,
@@ -499,80 +499,55 @@ class OrdemServicoController extends Controller
             }
             if ($mae != null) {
                 // \Log::info($laudoMae);
-                // foreach ($laudoMae as &$maeAl) {
-                //     $variavel = collect($laudoPai)->where('marcador', $maeAl['marcador']);
-                //     $varKey = $variavel->keys()[0];
-                //     $variavel = $variavel->first();
-                //     $points = 0;
-                //     // \Log::info($variavel);
-                //     // Comparação dos alelos entre mãe e filho
-                //     if ($maeAl['filho1'] !== $maeAl['filho2']) {
-                //         if ($maeAl['alelo1'] === $variavel['alelo1']) {
-                //             $points += 1;
-                //         }
-                //         if ($maeAl['alelo2'] === $variavel['alelo2']) {
-                //             $points += 1;
-                //         }
-                //         if ($maeAl['alelo1'] === $variavel['alelo2']) {
-                //             $points += 1;
-                //         }
-                //         if ($maeAl['alelo2'] === $variavel['alelo1']) {
-                //             $points += 1;
-                //         }
+                foreach ($laudoMae as &$maeAl) {
+                    $variavel = collect($laudoPai)->where('marcador', $maeAl['marcador']);
+                    $varKey = $variavel->keys()[0];
+                    $variavel = $variavel->first();
+                    $points = 0;
+                    // \Log::info($variavel);
+                    // Comparação dos alelos entre mãe e filho
+                    $arraypai = [$variavel['alelo1'], $variavel['alelo2']];
+                    $arrayfilho = [$variavel['filho1'], $variavel['filho2']];
+                    $arrayMae = [$maeAl['alelo1'], $maeAl['alelo2']];
 
-                //         if ($maeAl['alelo1'] === $variavel['filho1']) {
-                //             $points += 1;
-                //         }
-                //         if ($maeAl['alelo2'] === $variavel['filho2']) {
-                //             $points += 1;
-                //         }
-                //         if ($maeAl['alelo2'] === $variavel['filho1']) {
-                //             $points += 1;
-                //         }
-                //         if ($maeAl['alelo1'] === $variavel['filho2']) {
-                //             $points += 1;
-                //         }
-                //     } else {
-                //         if ($maeAl['alelo1'] === $variavel['alelo1']) {
-                //             $points += 2;
-                //         }
-                //         if ($maeAl['alelo2'] === $variavel['alelo2']) {
-                //             $points += 2;
-                //         }
-                //         if ($maeAl['alelo1'] === $variavel['alelo2']) {
-                //             $points += 2;
-                //         }
-                //         if ($maeAl['alelo2'] === $variavel['alelo1']) {
-                //             $points += 2;
-                //         }
+                    // Verifica se todos os alelos do filho estão presentes na mãe e no pai
+                    // $alelosPresentes = true;
+                    $alele1status = false;
+                    $alele2status = false;
 
-                //         if ($maeAl['alelo1'] === $variavel['filho1']) {
-                //             $points += 2;
-                //         }
-                //         if ($maeAl['alelo2'] === $variavel['filho2']) {
-                //             $points += 2;
-                //         }
-                //         if ($maeAl['alelo2'] === $variavel['filho1']) {
-                //             $points += 2;
-                //         }
-                //         if ($maeAl['alelo1'] === $variavel['filho2']) {
-                //             $points += 2;
-                //         }
-                //     }
+                    // foreach ($arrayfilho as $alelo) {
+                    if (in_array($variavel['filho1'], $arrayMae) || in_array($variavel['filho1'], $arraypai)) {
+                        $alele1status = true;
+                        // \Log::info([$alelo, $arrayMae, $arraypai]);
+                    }
+                    if (in_array($variavel['filho2'], $arraypai) || in_array($variavel['filho2'], $arrayMae)) {
+                        $alele2status = true;
+                        // \Log::info([$alelo, $arrayMae, $arraypai]);
+                    }
+         
 
+                    $maefilter = array_filter($arrayMae, function ($value) {
+                        if (strpos($value, '*') !== false || empty(trim($value))) {
+                            return false;
+                        }
+                        return true;
+                    });
+                    $paifilter = array_filter($arraypai, function ($value) {
+                        if (strpos($value, '*') !== false || empty(trim($value))) {
+                            return false;
+                        }
+                        return true;
+                    });
 
+                    if (count($maefilter) >= 1 && count($paifilter) >= 1) {
 
-                //     \Log::info([$maeAl['marcador'], $points]);
-
-                //     if ($points == 3) {
-                //         $maeAl['include'] = 'I';
-
-                //         // Remova o marcador de $laudoPai, se aplicável
-                //         if ($variavel) {
-                //             $laudoPai[$varKey]['include'] = '  ';
-                //         }
-                //     }
-                // }
+                        if ($alele1status && $alele2status) {
+                        } else {
+                            $maeAl['include'] = 'I';
+                            $laudoPai[$varKey]['include'] = '  ';
+                        }
+                    }    
+                }
             }
         } else {
             $laudoPai = null;
