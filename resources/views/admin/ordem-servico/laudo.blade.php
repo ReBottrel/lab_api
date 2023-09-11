@@ -251,7 +251,7 @@
     #animalinfo {
         width: 90%;
     }
-
+BOV97834
     .float-right {
         float: right;
     }
