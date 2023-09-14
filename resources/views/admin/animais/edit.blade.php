@@ -179,7 +179,7 @@
                         }
                     }
                     if (data.pai) {
-                        var $paiSelect = $('.js-pai-basic-sisngle');
+                        var $paiSelect = $('.js-pai-basic-single');
                         var newOption = new Option(data.pai.animal_name, data.pai.id, true, true);
                         $paiSelect.append(newOption).trigger('change');
                     }
