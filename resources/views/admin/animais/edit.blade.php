@@ -162,21 +162,23 @@
                 url: `{{ url('animal-edit') }}/${id}`,
                 type: 'GET',
                 success: (data) => {
-                    console.log(data.animal);
                     for (i in data.animal) {
-                        var inputField = $('#editar-produto').find(`[name="${i}"]`);
-
-                        if (inputField.attr('type') === 'date' && typeof data.animal[i] === 'string' &&
-                            data.animal[i]
-                            .length === 10) {
-                            var date = new Date(data.animal[i] + "T00:00:00Z");
-                            inputField.val(date.toISOString().slice(0, 10));
+                        if (i === 'birth_date') { // Verifica se a chave é 'data_nascimento'
+                            var dataString = data.animal[i];
+                            var dataObj = new Date(dataString);
+                            var ano = dataObj.getFullYear();
+                            var mes = String(dataObj.getMonth() + 1).padStart(2, '0');
+                            var dia = String(dataObj.getDate()).padStart(2, '0');
+                            var dataFormatada = `${ano}-${mes}-${dia}`;
+                            var inputField = $('#editar-produto').find(`[name="${i}"]`);
+                            inputField.val(dataFormatada);
                         } else {
+                            var inputField = $('#editar-produto').find(`[name="${i}"]`);
                             inputField.val(data.animal[i]);
                         }
                     }
                     if (data.pai) {
-                        var $paiSelect = $('.js-pai-basic-single');
+                        var $paiSelect = $('.js-pai-basic-sisngle');
                         var newOption = new Option(data.pai.animal_name, data.pai.id, true, true);
                         $paiSelect.append(newOption).trigger('change');
                     }
@@ -185,9 +187,10 @@
                         var newOption = new Option(data.mae.animal_name, data.mae.id, true, true);
                         $maeSelect.append(newOption).trigger('change');
                     }
-
-                }
+                },
             });
+
+
             $('.js-pai-basic-single').select2({
                 placeholder: 'Selecione o proprietário',
                 width: '100%',
@@ -220,7 +223,7 @@
             }).on('change', function(e) {
                 var fullText = $(this).select2('data')[0].text;
                 var animalName = fullText.split(" (")[
-                0]; // Isso pega a parte do texto antes de " (Codlab - Especies)"
+                    0]; // Isso pega a parte do texto antes de " (Codlab - Especies)"
                 $('#pai_animal').val(animalName);
             });
             $('.js-mae-basic-single').select2({
@@ -255,7 +258,7 @@
             }).on('change', function(e) {
                 var fullText = $(this).select2('data')[0].text;
                 var animalName = fullText.split(" (")[
-                0]; // Isso pega a parte do texto antes de " (Codlab - Especies)"
+                    0]; // Isso pega a parte do texto antes de " (Codlab - Especies)"
                 $('#mae_animal').val(animalName);
             });
 

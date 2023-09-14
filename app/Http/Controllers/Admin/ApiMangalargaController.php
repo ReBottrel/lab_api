@@ -168,7 +168,7 @@ class ApiMangalargaController extends Controller
     {
 
         $coletas = $this->fetchDataFromApi('coletas', 18, 2, ['dataEnvioInicio' => date('Y-m-d\TH:i:s', strtotime('-1 day'))]);
-        // $coletas = $this->fetchDataFromApi('coletas', 18, 2, ['dataEnvioInicio' => '2023-06-05T00:00:00']);
+        // $coletas = $this->fetchDataFromApi('coletas', 18, 2, ['dataEnvioInicio' => '2023-07-05T00:00:00']);
         foreach ($coletas as $coleta) {
             // find owner, user, and tecnico by email or create them if they don't exist
             
@@ -250,7 +250,7 @@ class ApiMangalargaController extends Controller
             ]);
 
             foreach ($coleta->animais as $animal) {
-          
+                \Log::info([$animal]);
                 $codlab = $this->generateUniqueCodlab('EQU');
                 $existingAnimal = Animal::where('register_number_brand', $animal->rowidAnimal)->first();
                 $currentAnimal = null;
