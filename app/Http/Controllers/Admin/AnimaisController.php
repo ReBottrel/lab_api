@@ -134,7 +134,7 @@ class AnimaisController extends Controller
         $pai = null;
         $mae = null;
         $relation = AnimalToParent::where('animal_id', $animal->id)->first();
-        dd($relation);
+      
         if ($relation) {
             // Buscar pelo pai
             if ($relation->register_pai) {
