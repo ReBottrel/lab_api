@@ -162,6 +162,7 @@
                 url: `{{ url('animal-edit') }}/${id}`,
                 type: 'GET',
                 success: (data) => {
+                    console.log(data);
                     for (i in data.animal) {
                         if (i === 'birth_date') { // Verifica se a chave é 'data_nascimento'
                             var dataString = data.animal[i];
