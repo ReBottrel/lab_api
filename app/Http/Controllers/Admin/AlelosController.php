@@ -200,47 +200,34 @@ class AlelosController extends Controller
         $animal = Animal::with('alelos')->find($request->animal_id);
 
         if ($animal) {
-            // Verifica se já existem alelos relacionados ao animal
-            if ($animal->alelos->isNotEmpty()) {
-                $alelos1 = $request->input('alelo1', []);
-                $alelos2 = $request->input('alelo2', []);
+            $alelos1 = $request->input('alelo1', []);
+            $alelos2 = $request->input('alelo2', []);
+            $alelos1 = array_map('strtoupper', $alelos1);
+            $alelos2 = array_map('strtoupper', $alelos2);
+            $marcadores = $request->input('marcador', []);
 
-                $alelos1 = array_map('strtoupper', $alelos1);
-                $alelos2 = array_map('strtoupper', $alelos2);
+            foreach ($marcadores as $key => $marcador) {
+                // Verifica se o marcador existe na relação de alelos
+                $existingAlelo = $animal->alelos->where('marcador', $marcador)->first();
 
-                foreach ($animal->alelos as $alelo) {
-                    $key = array_search($alelo->marcador, $request->marcador);
-
-                    // Verifica se o campo 'alelo1' ou 'alelo2' está preenchido
-                    if ($key !== false) {
-                        $alelo->update([
-                            'alelo1' => $alelos1[$key] !== null ? $alelos1[$key] : '',
-                            'alelo2' => $alelos2[$key] !== null ? $alelos2[$key] : '',
-                            'lab' => $request->input('lab'),
-                            'data' => $request->input('data'),
-                        ]);
-                    }
-                }
-            } else {
-                // Se não existirem alelos, cria novos registros
-                $alelos1 = $request->input('alelo1', []);
-                $alelos2 = $request->input('alelo2', []);
-
-                $alelos1 = array_map('strtoupper', $alelos1);
-                $alelos2 = array_map('strtoupper', $alelos2);
-
-                foreach ($alelos1 as $key => $item) {
-                    // Verifica se o campo 'alelo1' ou 'alelo2' está preenchido
-                    if ($item !== null || $alelos2[$key] !== null) {
-                        Alelo::create([
-                            'animal_id' => $animal->id,
-                            'marcador' => $request->input('marcador.' . $key),
-                            'alelo1' => $item !== null ? $item : '',
-                            'alelo2' => $alelos2[$key] !== null ? $alelos2[$key] : '',
-                            'lab' => $request->input('lab'),
-                            'data' => $request->input('data'),
-                        ]);
-                    }
+                if ($existingAlelo) {
+                    // Atualiza o alelo existente
+                    $existingAlelo->update([
+                        'alelo1' => $alelos1[$key] !== null ? $alelos1[$key] : '',
+                        'alelo2' => $alelos2[$key] !== null ? $alelos2[$key] : '',
+                        'lab' => $request->input('lab'),
+                        'data' => $request->input('data'),
+                    ]);
+                } else {
+                    // Cria um novo alelo
+                    Alelo::create([
+                        'animal_id' => $animal->id,
+                        'marcador' => $marcador,
+                        'alelo1' => $alelos1[$key] !== null ? $alelos1[$key] : '',
+                        'alelo2' => $alelos2[$key] !== null ? $alelos2[$key] : '',
+                        'lab' => $request->input('lab'),
+                        'data' => $request->input('data'),
+                    ]);
                 }
             }
 
@@ -257,6 +244,7 @@ class AlelosController extends Controller
             return response()->json(['success' => 'ok']);
         }
     }
+
 
     public function destroyAlelos(Request $request)
     {
