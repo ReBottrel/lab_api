@@ -497,58 +497,92 @@ class OrdemServicoController extends Controller
                     'include' => $result
                 ];
             }
-            // if ($mae != null) {
-            //     // \Log::info($laudoMae);
-            //     foreach ($laudoMae as &$maeAl) {
-            //         $variavel = collect($laudoPai)->where('marcador', $maeAl['marcador']);
-            //         $varKey = $variavel->keys()[0];
-            //         $variavel = $variavel->first();
-            //         $points = 0;
-            //         // \Log::info($variavel);
-            //         // Comparação dos alelos entre mãe e filho
-            //         $arraypai = [$variavel['alelo1'], $variavel['alelo2']];
-            //         $arrayfilho = [$variavel['filho1'], $variavel['filho2']];
-            //         $arrayMae = [$maeAl['alelo1'], $maeAl['alelo2']];
+            if ($mae != null) {
+                // \Log::info($laudoMae);
+                foreach ($laudoMae as &$maeAl) {
+                    $variavel = collect($laudoPai)->where('marcador', $maeAl['marcador']);
+                    $varKey = $variavel->keys()[0];
+                    $variavel = $variavel->first();
+                    $points = 0;
+                    // \Log::info($variavel);
+                    // Comparação dos alelos entre mãe e filho
+                    $arraypai = [$variavel['alelo1'], $variavel['alelo2']];
+                    $arrayfilho = [$variavel['filho1'], $variavel['filho2']];
+                    $arrayMae = [$maeAl['alelo1'], $maeAl['alelo2']];
 
-            //         // Verifica se todos os alelos do filho estão presentes na mãe e no pai
-            //         // $alelosPresentes = true;
-            //         $alele1status = false;
-            //         $alele2status = false;
+                    // Verifica se todos os alelos do filho estão presentes na mãe e no pai
+                    // $alelosPresentes = true;
+                    $alele1status = false;
+                    $alele2status = false;
 
-            //         // foreach ($arrayfilho as $alelo) {
-            //         if (in_array($variavel['filho1'], $arrayMae) || in_array($variavel['filho1'], $arraypai)) {
-            //             $alele1status = true;
-            //             // \Log::info([$alelo, $arrayMae, $arraypai]);
-            //         }
-            //         if (in_array($variavel['filho2'], $arraypai) || in_array($variavel['filho2'], $arrayMae)) {
-            //             $alele2status = true;
-            //             // \Log::info([$alelo, $arrayMae, $arraypai]);
-            //         }
-         
+                    // foreach ($arrayfilho as $alelo) {
+                    if (in_array($variavel['filho1'], $arrayMae) || in_array($variavel['filho1'], $arraypai)) {
+                        $alele1status = true;
+                        // \Log::info([$alelo, $arrayMae, $arraypai]);
+                    }
+                    if (in_array($variavel['filho2'], $arraypai) || in_array($variavel['filho2'], $arrayMae)) {
+                        $alele2status = true;
+                        // \Log::info([$alelo, $arrayMae, $arraypai]);
+                    }
 
-            //         $maefilter = array_filter($arrayMae, function ($value) {
-            //             if (strpos($value, '*') !== false || empty(trim($value))) {
-            //                 return false;
-            //             }
-            //             return true;
-            //         });
-            //         $paifilter = array_filter($arraypai, function ($value) {
-            //             if (strpos($value, '*') !== false || empty(trim($value))) {
-            //                 return false;
-            //             }
-            //             return true;
-            //         });
 
-            //         if (count($maefilter) >= 1 && count($paifilter) >= 1) {
 
-            //             if ($alele1status && $alele2status) {
-            //             } else {
-            //                 $maeAl['include'] = 'I';
-            //                 $laudoPai[$varKey]['include'] = '  ';
-            //             }
-            //         }    
-            //     }
-            // }
+                    $maefilter = array_filter($arrayMae, function ($value) {
+                        if (strpos($value, '*') !== false || empty(trim($value))) {
+                            return false;
+                        }
+                        return true;
+                    });
+                    $paifilter = array_filter($arraypai, function ($value) {
+                        if (strpos($value, '*') !== false || empty(trim($value))) {
+                            return false;
+                        }
+                        return true;
+                    });
+
+                    if (count($maefilter) >= 1 && count($paifilter) >= 1) {
+
+                        if ($alele1status && $alele2status) {
+                        } else {
+
+                            $alelo1statuspai = false;
+                            $alelo2statuspai = false;
+                            $alelo1statusmae = false;
+                            $alelo2statusmae = false;
+                            if (in_array($variavel['filho1'], $arrayMae)) {
+                                $alelo1statusmae = true;
+                            }
+                            if (in_array($variavel['filho1'], $arraypai)) {
+                                $alelo1statuspai = true;
+                            }
+                            if (in_array($variavel['filho2'], $arrayMae)) {
+                                $alelo2statusmae = true;
+                            }
+                            if (in_array($variavel['filho2'], $arraypai)) {
+                                $alelo2statuspai = true;
+                            }
+
+
+                            if ($alelo1statusmae || $alelo1statuspai) {
+                                \Log::info([$alelo2statusmae, $alelo2statuspai, $maeAl['marcador']]);
+                                if ($alelo1statusmae && $alelo1statuspai) {
+                                    if (!$alelo2statusmae && !$alelo2statuspai) {
+                                        $maeAl['include'] = 'I';
+                                        $laudoPai[$varKey]['include'] = '  ';
+                                    }
+                                }
+                            } elseif ($alelo2statusmae || $alelo2statuspai) {
+                                if ($alelo2statusmae && $alelo2statuspai) {
+                                    if (!$alelo1statusmae && !$alelo1statuspai) {
+                                        $maeAl['include'] = 'I';
+                                        $laudoPai[$varKey]['include'] = '  ';
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         } else {
             $laudoPai = null;
         }

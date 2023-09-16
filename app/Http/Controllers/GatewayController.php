@@ -55,6 +55,8 @@ class GatewayController extends Controller
             "payment_type" => $request->payment_type,
         ];
 
+
+
         $total_value = 0;
         foreach ($order->orderRequestPayment as  $or_payment) {
             $or_payment = OrderRequestPayment::find($or_payment->id);
@@ -304,8 +306,10 @@ class GatewayController extends Controller
         if (!empty($user->info)) UserInfo::where('user_id', $user->id)->update(collect($info_add)->toArray());
         // $user = user_token();
         // $name = explode(' ', $user->name);
+      
         $user = UserInfo::where('user_id', auth()->user()->id)->first();
         $documents = str_replace(['.', '-', '/'], ['', '', ''],  $user->document);
+     
         if (!$user->buyer_id) {
             $data = [
                 "first_name" => auth()->user()->name,
