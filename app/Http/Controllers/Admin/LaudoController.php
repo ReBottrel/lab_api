@@ -365,8 +365,8 @@ class LaudoController extends Controller
         // dd($user->email);
         if ($order->parceiro == 'ABCCMM') {
             $xml = $this->gerarXML($animal, $laudo, $order, $results, $pai, $mae, $owner, $tecnico);
-            // Mail::to($user->email)->send(new EnviarLaudoMail($laudo->pdf));
-            // Mail::to('laudosdna.lfda-mg@agro.gov.br')->send(new EnviarLaudoMail($laudo->pdf));
+            Mail::to($user->email)->send(new EnviarLaudoMail($laudo->pdf));
+            Mail::to('laudosdna.lfda-mg@agro.gov.br')->send(new EnviarLaudoMail($laudo->pdf));
             $log = Log::create([
                 'user' => Auth::user()->name,
                 'action' => 'Enviou o laudo para a ABCCMM',
@@ -376,9 +376,9 @@ class LaudoController extends Controller
             ]);
             return response()->json([$xml, $parceiro], 200);
         } else {
-            // Mail::to($parceiro->email)->send(new EnviarLaudoMail($laudo->pdf));
-            // Mail::to($user->email)->send(new EnviarLaudoMail($laudo->pdf));
-            // Mail::to('laudosdna.lfda-mg@agro.gov.br')->send(new EnviarLaudoMail($laudo->pdf));
+            Mail::to($parceiro->email)->send(new EnviarLaudoMail($laudo->pdf));
+            Mail::to($user->email)->send(new EnviarLaudoMail($laudo->pdf));
+            Mail::to('laudosdna.lfda-mg@agro.gov.br')->send(new EnviarLaudoMail($laudo->pdf));
             $laudo->update([
                 'status' => 1
             ]);
@@ -497,8 +497,8 @@ class LaudoController extends Controller
         // dd($pdf);
         try {
 
-            // $client = new \SoapClient('http://weblab.abccmm.org.br:8087/service.asmx?wsdl'); //produção
-            $client = new \SoapClient('http://webserviceteste.abccmm.org.br:8083/service.asmx?wsdl'); //teste
+            $client = new \SoapClient('http://weblab.abccmm.org.br:8087/service.asmx?wsdl'); //produção
+            // $client = new \SoapClient('http://webserviceteste.abccmm.org.br:8083/service.asmx?wsdl'); //teste
 
 
             $params = array(
