@@ -138,8 +138,8 @@
                                     <input type="text" name="identificador" id="identificador" class="form-control">
                                 </div>
                             </div>
-                            <input type="hidden" name="mae" id="pai_animal">
-                            <input type="hidden" name="pai" id="mae_animal">
+                            <input type="hidden" name="mae" id="mae_animal">
+                            <input type="hidden" name="pai" id="pai_animal">
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary"
                                     data-bs-dismiss="modal">Cancelar</button>

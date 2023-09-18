@@ -9,6 +9,7 @@ use App\Models\OrdemServico;
 use Illuminate\Http\Request;
 use App\Models\AnimalToParent;
 use App\Http\Controllers\Controller;
+use App\Models\OrderRequest;
 use Illuminate\Support\Facades\Auth;
 
 class AnimaisController extends Controller
@@ -134,7 +135,7 @@ class AnimaisController extends Controller
         $pai = null;
         $mae = null;
         $relation = AnimalToParent::where('animal_id', $animal->id)->first();
-      
+
         if ($relation) {
             // Buscar pelo pai
             if ($relation->register_pai) {
@@ -207,6 +208,7 @@ class AnimaisController extends Controller
                 'register_mae' => $request->register_mae,
             ]
         );
+        $order = OrderRequest::find($animal->order_id);
         $ordem = OrdemServico::where('animal_id', $id)->first();
 
         if ($ordem) {
@@ -214,7 +216,7 @@ class AnimaisController extends Controller
                 'codlab' => $request->codlab,
             ]);
         }
-
+   
         $log = Log::create([
             'user' => Auth::user()->name,
             'action' => 'Editou o animal ' . $animal->animal_name,
@@ -222,6 +224,9 @@ class AnimaisController extends Controller
             'order_id' => $animal->order_id ?? null,
             'ordem_id' => $ordem->id ?? null,
         ]);
+
+
+
 
         return redirect()->route('animais')->with('success', 'Animal editado com sucesso!');
     }
