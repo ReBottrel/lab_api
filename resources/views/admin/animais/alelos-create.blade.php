@@ -41,7 +41,7 @@
                     <div class="row">
                         <div class="mb-3 col-4">
                             <label for="exampleFormControlInput1" class="form-label">Laboratório</label>
-                            <input type="text" name="lab" class="form-control" id="lab">
+                            <input type="text" name="lab" class="form-control" id="lab" >
                         </div>
                         <div class="mb-3 col-4">
                             <label for="exampleFormControlInput1" class="form-label">Número</label>

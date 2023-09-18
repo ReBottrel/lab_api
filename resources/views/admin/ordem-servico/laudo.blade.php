@@ -251,8 +251,8 @@
     #animalinfo {
         width: 90%;
     }
-BOV97834
-    .float-right {
+
+    BOV97834 .float-right {
         float: right;
     }
 
@@ -777,6 +777,26 @@ BOV97834
                         com base nos seguintes laudos:
                     </p>
                 </div>
+                @php
+                    $datalaudomae = '';
+                    $datalaudopai = '';
+                    if ($mae != null) {
+                        $laudomae = \App\Models\Laudo::where('animal_id', $mae->id)->first();
+                        if ($laudomae) {
+                            $datalaudomae = $laudomae->updated_at;
+                        } else {
+                            $datalaudomae = $mae->alelos[0]->data;
+                        }
+                    }
+                    if ($pai != null) {
+                        $laudopai = \App\Models\Laudo::where('animal_id', $pai->id)->first();
+                        if ($laudopai) {
+                            $datalaudopai = $laudopai->updated_at;
+                        } else {
+                            $datalaudopai = $pai->alelos[0]->data;
+                        }
+                    }
+                @endphp
                 <div id="animalinfo mb-1">
                     <p class="spn">
                         @if ($mae != null)
@@ -784,7 +804,7 @@ BOV97834
                                 GENITORA: animal {{ $mae->animal_name }}, número {{ $mae->identificador }}, emitido
                                 pelo
                                 laboratório
-                                {{ $mae->alelos[0]->lab }} em {{ date('d/m/Y', strtotime($mae->alelos[0]->data)) }}.
+                                {{ $mae->alelos[0]->lab }} em {{ date('d/m/Y', strtotime($datalaudomae)) }}.
                             </span>
                         @endif
                         <br>
@@ -804,7 +824,7 @@ BOV97834
                             <span>
                                 GENITOR: {{ $pai->animal_name }}, número {{ $pai->identificador }},
                                 emitido pelo laboratório {{ $pai->alelos[0]->lab }} em
-                                {{ date('d/m/Y', strtotime($pai->alelos[0]->data)) }}.
+                                {{ date('d/m/Y', strtotime($datalaudopai)) }}.
                             </span>
                         @endif
 
