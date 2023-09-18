@@ -49,7 +49,7 @@
                         </div>
                         <div class="mb-3 col-4">
                             <label for="exampleFormControlInput1" class="form-label">Data</label>
-                            <input type="date" name="data" class="form-control" id="data">
+                            <input type="date" name="data" class="form-control" id="data" required>
                         </div>
                     </div>
                     <div id="marcadores">
