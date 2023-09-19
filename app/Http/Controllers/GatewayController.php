@@ -52,7 +52,7 @@ class GatewayController extends Controller
                 "number_installments" => ($request->installments ?? 1),
             ],
             "io_seller_id" => env('IOPAY_IO_SELLER_ID'),
-            "expiration_date" => $request->payment_type === 'boleto' ? date('Y-m-d', strtotime('+170 day')) : null,
+            "expiration_date" => $request->payment_type === 'boleto' ? date('Y-m-d', strtotime('+15 day')) : null,
             "payment_limit_date" => $request->payment_type === 'boleto' ? date('Y-m-d', strtotime('+170 day')) : null,
             "payment_type" => $request->payment_type,
         ];
