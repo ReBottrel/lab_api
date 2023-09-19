@@ -52,6 +52,7 @@ class GatewayController extends Controller
                 "number_installments" => ($request->installments ?? 1),
             ],
             "io_seller_id" => env('IOPAY_IO_SELLER_ID'),
+            'payment_limit_date' => $request->payment_type === 'boleto' ? date('Y-m-d', strtotime('+170 day')) : null,
             "payment_type" => $request->payment_type,
         ];
 
@@ -306,10 +307,10 @@ class GatewayController extends Controller
         if (!empty($user->info)) UserInfo::where('user_id', $user->id)->update(collect($info_add)->toArray());
         // $user = user_token();
         // $name = explode(' ', $user->name);
-      
+
         $user = UserInfo::where('user_id', auth()->user()->id)->first();
         $documents = str_replace(['.', '-', '/'], ['', '', ''],  $user->document);
-     
+
         if (!$user->buyer_id) {
             $data = [
                 "first_name" => auth()->user()->name,
