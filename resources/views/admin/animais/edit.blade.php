@@ -166,9 +166,16 @@
                     for (i in data.animal) {
                         if (i === 'birth_date') { // Verifica se a chave é 'data_nascimento'
                             var dataString = data.animal[i];
-                            var dataObj = new Date(dataString);
+                            if (dataString.includes('T')) {
+                                // A data já está no formato 'YYYY-MM-DDTHH:MM:SS', não precisa de ajuste
+                                var dataObj = new Date(dataString);
+                            } else {
+                                // A data está no formato 'YYYY-MM-DD', então acrescente 'T00:00:00' para evitar problemas
+                                var dataObj = new Date(dataString + 'T00:00:00');
+                            }
                             var ano = dataObj.getFullYear();
-                            var mes = String(dataObj.getMonth() + 1).padStart(2, '0');
+                            var mes = String(dataObj.getMonth() + 1).padStart(2,
+                            '0'); // Note o +1 aqui para ajustar o mês
                             var dia = String(dataObj.getDate()).padStart(2, '0');
                             var dataFormatada = `${ano}-${mes}-${dia}`;
                             var inputField = $('#editar-produto').find(`[name="${i}"]`);
