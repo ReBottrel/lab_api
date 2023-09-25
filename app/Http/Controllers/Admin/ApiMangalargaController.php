@@ -25,9 +25,9 @@ class ApiMangalargaController extends Controller
     public function getApi()
     {
 
-        // $coletas = $this->fetchDataFromApi('coletas', 18, 1, ['dataEnvioInicio' => date('Y-m-d\TH:i:s', strtotime('-1 day'))]);
+        $coletas = $this->fetchDataFromApi('coletas', 18, 1, ['dataEnvioInicio' => date('Y-m-d\TH:i:s', strtotime('-1 day'))]);
         // dd($coletas);
-        $coletas = $this->fetchDataFromApi('coletas', 18, 1, ['dataEnvioInicio' => '2023-07-21T00:00:00']);
+        // $coletas = $this->fetchDataFromApi('coletas', 18, 1, ['dataEnvioInicio' => '2023-07-21T00:00:00']);
         foreach ($coletas as $coleta) {
             $user = User::where('email', $coleta->cliente->email)->first();
             $tecnico = Tecnico::where('professional_name', $coleta->tecnico->nome)->first();
