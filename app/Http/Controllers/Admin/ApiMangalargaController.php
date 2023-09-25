@@ -108,7 +108,7 @@ class ApiMangalargaController extends Controller
                 if ($existingAnimal) {
                     $codlab = $this->generateUniqueCodlab('EQU');
                     // $existingAnimal->status = 1;
-                    $existingAnimal->codlab = $codlab;
+        
                     $existingAnimal->order_id = $order->id; // atualize o status como necessário
                     $existingAnimal->save();
                     $currentAnimal = $existingAnimal;
@@ -256,7 +256,7 @@ class ApiMangalargaController extends Controller
                 $currentAnimal = null;
                 if ($existingAnimal) {
                     // $existingAnimal->status = 1;
-                    $existingAnimal->codlab = $codlab;
+                  
                     $existingAnimal->order_id = $order->id; // atualize o status como necessário
                     $existingAnimal->save();
                     $currentAnimal = $existingAnimal;
