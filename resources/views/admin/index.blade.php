@@ -81,7 +81,7 @@
         <div class="container">
             <div class="row">
                 <div class="col">
-                    <h5>PEDIDOS</h5>
+                    <iframe width="100%" height="650" src="https://lookerstudio.google.com/embed/reporting/a4cbcfc2-4782-4f40-b8c3-61341c8e7170/page/KNBeD" frameborder="0" style="border:0" allowfullscreen></iframe>
                 </div>
             </div>
         </div>
