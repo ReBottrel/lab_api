@@ -128,6 +128,8 @@ Route::middleware(['auth:admin'])->group(function () {
 
     Route::get('relatorios', [RelatoriosController::class, 'index'])->name('relatorios');  
     Route::get('get-laudo-total-exclusao', [RelatoriosController::class, 'getLaudoTotal'])->name('get.laudo.total.exclusao');
+    Route::get('get-laudo-total-exclusao-genitora', [RelatoriosController::class, 'getLaudoTotalGenitora'])->name('get.laudo.total.exclusao.genitora');
+    Route::get('get-laudo-total-exclusao-genitor', [RelatoriosController::class, 'getLaudoTotalGenitor'])->name('get.laudo.total.exclusao.genitor');
     Route::get('get-laudo-total', [RelatoriosController::class, 'getLaudosTotal'])->name('get.laudo.total');
 
     Route::post('search-by-codlab', [OrdemServicoController::class, 'searchByCodlab'])->name('search.by.codlab');
