@@ -35,27 +35,35 @@ class OrdemServicoController extends Controller
             return response()->json(['error' => 'Pedido não encontrado.'], 404);
         }
 
-        if (OrdemServico::where('order', $order->id)->exists()) {
-            return response()->json(['error' => 'Já existe uma ordem de serviço para este pedido.'], 400);
-        }
+        // if (OrdemServico::where('order', $order->id)->exists()) {
+        //     return response()->json(['error' => 'Já existe uma ordem de serviço para este pedido.'], 400);
+        // }
 
-        $orderRequests = OrderRequestPayment::where('order_request_id', $order->id)->get();
-        $lote = OrderLote::create([
+        $orderRequests = OrderRequestPayment::where('order_request_id', $order->id)->where('payment_status', 1)->get();
+        $lote = OrderLote::updateOrCreate([
             'order_id' => $order->id,
             'owner' => $order->creator,
         ]);
+
 
         $animalIds = $orderRequests->pluck('animal_id')->unique()->toArray();
         $animals = Animal::whereIn('id', $animalIds)->get()->keyBy('id');
 
         foreach ($orderRequests as $item) {
             $exame = Exam::find($item->exam_id);
-
+            \Log::info([$exame]);
             $animal = $animals[$item->animal_id] ?? Animal::where('animal_name', $item->animal)->first();
+
+
+
 
             $data = Carbon::parse($item->updated_at)->addWeekdays($exame->days);
 
             $dna_verify = DnaVerify::where('animal_id', $item->animal_id)->latest('created_at')->first();
+            
+            if (OrdemServico::where('animal_id', $animal->id)->where('order', $order->id)->exists()) {
+                continue; // Se existir, pula para a próxima iteração
+            }
 
             if (!$dna_verify) {
                 $tipo = $this->determineTipo($animal->especies);
@@ -336,6 +344,11 @@ class OrdemServicoController extends Controller
         $ordem = OrdemServico::find($request->ordem_id);
         $ordem->update([
             'data_bar' => $request->data
+        ]);
+
+        $animal = Animal::find($ordem->animal_id);
+        $animal->update([
+            'status' => 3,
         ]);
 
         $log = Log::create([
@@ -754,6 +767,19 @@ class OrdemServicoController extends Controller
             $item = OrdemServico::where('codlab',  $codlab)
                 ->first();
             // dd($item);
+
+            $viewRender = view('admin.ordem-servico.include.search-codlab', compact('item'))->render();
+
+            return response()->json(['viewRender' => $viewRender]);
+        }
+    }
+
+    public function searchByAnimal(Request $request)
+    {
+        if ($request->ajax()) {
+            $busca = $request->animal;
+
+            $item = OrdemServico::where('animal', $busca)->first();
 
             $viewRender = view('admin.ordem-servico.include.search-codlab', compact('item'))->render();
 

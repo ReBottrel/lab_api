@@ -311,12 +311,14 @@ class LaudoController extends Controller
         $codlabMae = str_replace(['/', '\\'], '_', $codlabMae);
         $codlabPai = str_replace(['/', '\\'], '_', $codlabPai);
 
+        $retValue = $laudo->ret ? $laudo->ret . '-' : '';
+
         if ($siglaPais == 'AP') {
             $codlabMae = str_replace('N_A', '', $codlabMae);
             $codlabPai = str_replace('N_A', '', $codlabPai);
-            $filename = "LO23-{$codlabAnimal}" . '.pdf'; // Remova os pontos aqui
+            $filename = "LO23-{$retValue}{$codlabAnimal}" . '.pdf';
         } else {
-            $filename = "LO{$siglaPais}23-{$codlabMae}.{$codlabAnimal}.{$codlabPai}" . '.pdf';
+            $filename = "LO{$siglaPais}23-{$retValue}{$codlabMae}.{$codlabAnimal}.{$codlabPai}" . '.pdf';
         }
 
         // Salva o PDF assinado no diretório público
@@ -382,6 +384,10 @@ class LaudoController extends Controller
             $laudo->update([
                 'status' => 1
             ]);
+            $animal = Animal::find($laudo->animal_id);
+            $animal->update([
+                'status' => 10
+            ]);
             $log = Log::create([
                 'user' => Auth::user()->name,
                 'action' => 'Enviou o laudo para o parceiro',
@@ -399,6 +405,18 @@ class LaudoController extends Controller
         $laudo->update([
             'status' => 1
         ]);
+        $animal = Animal::find($laudo->animal_id);
+        $animal->update([
+            'status' => 10
+        ]);
+        $log = Log::create([
+            'user' => Auth::user()->name,
+            'action' => 'Alterou o status do laudo',
+            'animal' => $laudo->animal->animal_name,
+            'ordem_id' => $laudo->ordem_id ?? null,
+            'order_id' => $laudo->order_id ?? null,
+        ]);
+
         return response()->json($laudo, 200);
     }
 
@@ -602,6 +620,20 @@ class LaudoController extends Controller
         if ($request->ajax()) {
             $busca = $request->busca;
             $animal = Animal::where('animal_name', 'LIKE', '%' . $busca . '%')->where('status', 9)->first();
+            $laudos = Laudo::where('status', 1)->where('animal_id', $animal->id)
+                ->get();
+
+            $viewRender = view('admin.laudos.include.search', compact('laudos'))->render();
+
+            return response()->json(['viewRender' => $viewRender]);
+        }
+    }
+
+    public function searchByCodlab(Request $request)
+    {
+        if ($request->ajax()) {
+            $busca = $request->codlab;
+            $animal = Animal::where('codlab', $busca)->where('status', 9)->first();
             $laudos = Laudo::where('status', 1)->where('animal_id', $animal->id)
                 ->get();
 

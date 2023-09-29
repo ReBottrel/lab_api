@@ -16,6 +16,13 @@
             <div class="col-2 mt-4">
                 <button class="btn btn-primary" id="buscar-codlab" style="margin-top: 6px;">BUSCAR CODLAB</button>
             </div>
+            <div class="mb-3 col-8">
+                <label for="exampleFormControlInput1" class="form-label">Buscar por animal</label>
+                <input type="text" class="form-control" id="animal">
+            </div>
+            <div class="col-2 mt-4">
+                <button class="btn btn-primary" id="buscar-animal" style="margin-top: 6px;">BUSCAR ANIMAL</button>
+            </div>
         </div>
         <table class="table">
             <thead>
@@ -137,6 +144,35 @@
                             icon: 'error',
                             title: 'Oops...',
                             text: 'Codlab não encontrado!, ou imcompleto',
+                        })
+                    }
+                });
+            });
+            $('#buscar-animal').click(function() {
+                var animal = $('#animal').val();
+
+                if (animal === '') {
+                    // Ação a ser realizada quando o campo de busca estiver vazio
+                    // Por exemplo, recarregar a página ou redefinir os resultados da busca
+                    $('.table-busca').html(''); // Limpa os resultados da busca
+                    return; // Sai da função para evitar a requisição AJAX
+                }
+
+                $.ajax({
+                    url: "{{ route('search.by.animal') }}",
+                    type: "POST",
+                    data: {
+                        animal: animal,
+                        _token: "{{ csrf_token() }}"
+                    },
+                    success: function(response) {
+                        $('.table').html(response.viewRender);
+                    },
+                    error: function(response) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Animal não encontrado!, ou imcompleto',
                         })
                     }
                 });

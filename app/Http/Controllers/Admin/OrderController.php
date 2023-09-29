@@ -122,9 +122,8 @@ class OrderController extends Controller
         $stats = [
             1 => 'Aguardando amostra',
             2 => 'Amostra recebida',
-            3 => 'Em análise',
+            3 => 'Amostra em análise',
             4 => 'Análise concluída',
-            5 => 'Resultado disponível',
             6 => 'Análise reprovada',
             7 => 'Análise Aprovada',
             8 => 'Recoleta solicitada',
@@ -146,9 +145,8 @@ class OrderController extends Controller
         $stats = [
             1 => 'Aguardando amostra',
             2 => 'Amostra recebida',
-            3 => 'Em análise',
+            3 => 'Amostra em análise',
             4 => 'Análise concluída',
-            5 => 'Resultado disponível',
             6 => 'Análise reprovada',
             7 => 'Análise Aprovada',
             8 => 'Recoleta solicitada',
@@ -308,8 +306,10 @@ class OrderController extends Controller
             'status' => $request->value,
         ]);
 
-        $orderRequest = OrderRequestPayment::where('animal_id', $animal->id)->first();
+        $orderRequest = OrderRequestPayment::where('animal_id', $animal->id)->where('order_request_id', $request->od)->first();
+
         if ($orderRequest) {
+
             if ($request->value == 10) {
 
                 $orderRequest->update([
@@ -641,6 +641,19 @@ class OrderController extends Controller
     {
         if ($request->ajax()) {
             $animals = Animal::with('order')->where('animal_name', $request->animal)->get();
+            $viewRender = view('admin.includes.search-animal', get_defined_vars())->render();
+            return response()->json([get_defined_vars()]);
+        }
+    }
+    public function searchCodlab(Request $request)
+    {
+        if ($request->ajax()) {
+            $animals = Animal::with('order')->where('codlab', $request->codlab)->get();
+
+            if ($animals->isEmpty()) {
+                return response()->json(['error' => 'Animal não encontrado.'], 404);
+            }
+
             $viewRender = view('admin.includes.search-animal', get_defined_vars())->render();
             return response()->json([get_defined_vars()]);
         }

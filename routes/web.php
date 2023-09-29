@@ -125,6 +125,7 @@ Route::middleware(['auth:admin'])->group(function () {
 
 
     Route::post('search-by-codlab', [OrdemServicoController::class, 'searchByCodlab'])->name('search.by.codlab');
+    Route::post('search-by-animal', [OrdemServicoController::class, 'searchByAnimal'])->name('search.by.animal');
     Route::get('result-by-codlab/{id}', [OrdemServicoController::class, 'resultado'])->name('result.by.codlab');
 
     Route::get('import-txt-view', [AlelosController::class, 'importTxt'])->name('import.txt.view');
@@ -159,6 +160,7 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::get('validacao/{codigo}', [LaudoController::class, 'verify'])->name('verify.pdf');
     Route::post('finalizar-laudo', [LaudoController::class, 'finalizar'])->name('finalizar.laudo');
     Route::post('search-laudo', [LaudoController::class, 'searchByAnimal'])->name('search.laudo');
+    Route::post('search-laudo-codlab', [LaudoController::class, 'searchByCodlab'])->name('search.laudo.codlab');
 
     Route::get('alelos-create', [AlelosController::class, 'alelosCreate'])->name('alelos.create');
     Route::get('alelos-get-api', [AlelosController::class, 'alelosApi'])->name('alelos.get.api');
@@ -235,6 +237,7 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::post('filter-search', [OrderController::class, 'search'])->name('filter.search');
     Route::post('filter-search-number', [OrderController::class, 'searchNumber'])->name('filter.search.number');
     Route::post('filter-search-animal', [OrderController::class, 'searchAnimal'])->name('filter.search.animal');
+    Route::post('filter-search-codlab', [OrderController::class, 'searchCodlab'])->name('filter.search.codlab');
     Route::post('filter-payment', [OrderController::class, 'filterPayment'])->name('filter.payment');
     Route::get('filter-date', [OrderController::class, 'dateFilter'])->name('filter.date');
 
@@ -371,6 +374,7 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::get('gerar-barcode/{id}', [OrdemServicoController::class, 'gerarBarCode'])->name('gerar.barcode');
     Route::get('ordem-edit/{id}', [OrdemServicoController::class, 'edit'])->name('ordem.servico.edit');
     Route::post('ordem-update/', [OrdemServicoController::class, 'update'])->name('ordem.servico.update');
+
 });
 
 Route::get('vet-login', [AuthVetController::class, 'showLoginForm'])->name('vet.login');

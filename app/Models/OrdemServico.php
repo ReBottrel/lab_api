@@ -30,4 +30,6 @@ class OrdemServico extends Model
         'rg_mae',
         'data_analise'
     ];
+
+
 }

@@ -70,6 +70,17 @@
                         </form>
                     </div>
                 </div>
+                <div class="row my-3">
+                    <div class="col-8">
+                        <form>
+                            <label for="exampleFormControlInput1" class="form-label">Buscar por codlab</label>
+                            <input class="form-control codlab-search" type="search" placeholder="">
+                        </form>
+                    </div>
+                    <div class="col-2 mt-4">
+                        <button class="btn btn-primary" id="busca-codlab">BUSCAR CODLAB</button>
+                    </div>
+                </div>
                 <div class="row">
                     <div>
                         <p>Filtro por data de pagamento</p>
@@ -296,6 +307,31 @@
                     success: function(data) {
                         console.log(data);
                         $('.filter').html(data[0].viewRender);
+                    }
+                });
+            });
+
+            $('#busca-codlab').on('click', function() {
+
+                var search = $('.codlab-search').val();
+                $.ajax({
+                    url: "{{ route('filter.search.codlab') }}",
+                    type: "POST",
+                    data: {
+                        _token: "{{ csrf_token() }}",
+                        codlab: search
+                    },
+                    success: function(data) {
+                        console.log(data);
+                        $('.filter').html(data[0].viewRender);
+                    },
+                    error: function(er) {
+                        console.log(er);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Animal não encontrado!',
+                        })
                     }
                 });
             });

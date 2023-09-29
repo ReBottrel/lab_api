@@ -61,7 +61,7 @@
                                     @endphp
                                 @elseif($animal->status == 3)
                                     @php
-                                        $status = 'Em análise';
+                                        $status = 'Amostra em análise/execução';
                                     @endphp
                                 @elseif($animal->status == 4)
                                     @php
@@ -175,7 +175,7 @@
                                     </li>
                                     <li class="list-group-item">
                                         <label for="exampleFormControlInput1" class="form-label">Status do pedido</label>
-                                        <select class="form-select status-select" data-order="{{ $order->id }}"
+                                        <select class="form-select status-select" data-order="{{ $order->id }}" data-od="{{ $order->id }}"
                                             data-id="{{ $animal->id ?? '' }}" aria-label="Default select example">
                                             @if ($animal)
                                                 @foreach ($stats as $key => $stat)
@@ -508,6 +508,7 @@
         });
         $(document).on('change', '.status-select', function() {
             var id = $(this).data('id');
+            var od = $(this).data('od');
             var data1 = $(`#data-rece-${id}`).val();
             var data2 = $(`#data-coleta-${id}`).val();
             var data3 = $(`#data-chamado-${id}`).val();
@@ -515,7 +516,7 @@
             var isValid = true;
 
             var order;
-            if ($(this).val() == 6 || $(this).val() == 7) {
+            if ($(this).val() == 6 || $(this).val() == 7 ) {
                 order = $(this).data('order');
             }
             if (isValid == true) {
@@ -524,7 +525,8 @@
                     type: 'POST',
                     data: {
                         value: $(this).val(),
-                        order: order
+                        order: order,
+                        od: od,
                     },
                     success: function(data) {
                         console.log(data);

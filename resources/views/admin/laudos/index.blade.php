@@ -5,9 +5,16 @@
             <h3>Todos os laudos</h3>
         </div>
         <div class="row">
-            <div class="mb-3 col-6">
+            <div class="mb-3 col-10">
                 <label for="exampleFormControlInput1" class="form-label">Buscar por animal</label>
                 <input type="text" id="busca" class="form-control">
+            </div>
+            <div class="mb-3 col-8">
+                <label for="exampleFormControlInput1" class="form-label">Buscar por codlab</label>
+                <input type="text" id="codlab" class="form-control">
+            </div>
+            <div class="mb-3 mt-4 col-2">
+                <button class="btn btn-primary" id="busca-codlab">BUSCAR CODLAB</button>
             </div>
         </div>
         <table class="table">
@@ -62,6 +69,28 @@
                 type: "POST",
                 data: {
                     busca: busca,
+                    _token: "{{ csrf_token() }}"
+                },
+                success: function(response) {
+                    $('.table-busca').html(response.viewRender);
+                }
+            });
+        });
+
+        $('#busca-codlab').click(function() {
+            var codlab = $('#codlab').val();
+
+            if (codlab === '') {
+                // Redefine para os itens iniciais
+                $('.table-busca').html(initialItems);
+                return;
+            }
+
+            $.ajax({
+                url: "{{ route('search.laudo.codlab') }}",
+                type: "POST",
+                data: {
+                    codlab: codlab,
                     _token: "{{ csrf_token() }}"
                 },
                 success: function(response) {
