@@ -37,6 +37,7 @@ use App\Http\Controllers\Veterinario\AuthVetController;
 use App\Http\Controllers\Veterinario\ResenhaController;
 use App\Http\Controllers\Admin\Auth\AdminAuthController;
 use App\Http\Controllers\Admin\LaudoController;
+use App\Http\Controllers\Admin\RelatoriosController;
 use App\Http\Controllers\Veterinario\VetOrderController;
 use App\Http\Controllers\Veterinario\VetOwnerController;
 use App\Http\Controllers\Veterinario\VetAnimalController;
@@ -122,7 +123,12 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::get('alterar-status-laudo', [TesteController::class, 'alterarStatusLaudo']);
     Route::get('alterar-status-animal-view', [TesteController::class, 'viewStatus']);
     Route::post('alterar-status-animal-store', [TesteController::class, 'alterarStatusAnimalByOrder'])->name('alterar.status.animal.store');
+    Route::get('get-laudo-total-exclusao', [TesteController::class, 'getLaudoTotal'])->name('get.laudo.total.exclusao');
+    Route::get('get-laudo-total', [TesteController::class, 'getLaudosTotal'])->name('get.laudo.total');
 
+    Route::get('relatorios', [RelatoriosController::class, 'index'])->name('relatorios');  
+    Route::get('get-laudo-total-exclusao', [RelatoriosController::class, 'getLaudoTotal'])->name('get.laudo.total.exclusao');
+    Route::get('get-laudo-total', [RelatoriosController::class, 'getLaudosTotal'])->name('get.laudo.total');
 
     Route::post('search-by-codlab', [OrdemServicoController::class, 'searchByCodlab'])->name('search.by.codlab');
     Route::post('search-by-animal', [OrdemServicoController::class, 'searchByAnimal'])->name('search.by.animal');

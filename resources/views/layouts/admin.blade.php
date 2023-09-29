@@ -117,6 +117,10 @@
                                 style="color: var(--bs-dark);"><i class="fas fa-user-nurse"
                                     style="color: var(--bs-dark);"></i><span>Parceiros</span></a>
                         </li>
+                        <li class="nav-item"><a class="nav-link" href="{{ route('relatorios') }}"
+                                style="color: var(--bs-dark);"><i class="fas fa-user-nurse"
+                                    style="color: var(--bs-dark);"></i><span>Relatórios</span></a>
+                        </li>
 
                         <li class="nav-item"><a class="nav-link" href="{{ route('configs') }}"><i
                                     class="fa fa-gear"

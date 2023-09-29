@@ -13,11 +13,13 @@ use App\Models\DnaVerify;
 use App\Models\DataColeta;
 use App\Models\OrdemServico;
 use App\Models\OrderRequest;
-use App\Models\OrderRequestPayment;
 use App\Models\PedidoAnimal;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\LaudosExport;
 use App\Models\ResenhaAnimal;
 use Illuminate\Support\Facades\DB;
+use App\Models\OrderRequestPayment;
 use Illuminate\Support\Facades\Http;
 
 class TesteController extends Controller
@@ -119,37 +121,37 @@ class TesteController extends Controller
     {
         $animalsByCodlab = Animal::select('codlab', 'animal_name')
             ->get();
-    
+
         $groupedCodlabs = [];
-    
+
         foreach ($animalsByCodlab as $animal) {
             $codlab_number = substr($animal->codlab, 3);
             $groupedCodlabs[$codlab_number][] = "{$animal->animal_name}: {$animal->codlab}";
         }
-    
+
         $duplicatedCodlabs = [];
-    
+
         foreach ($groupedCodlabs as $codlab_number => $animals) {
             if (count($animals) > 1) {
                 $duplicatedCodlabs[$codlab_number] = $animals;
             }
         }
-    
+
         $txtContent = '';
-    
+
         foreach ($duplicatedCodlabs as $codlab_number => $animals) {
             $txtContent .= "Códigos de laboratório com o número {$codlab_number}:\n";
             foreach ($animals as $animal) {
                 $txtContent .= " - {$animal}\n";
             }
         }
-    
+
         $fileName = 'duplicated_codlab.txt';
         file_put_contents($fileName, $txtContent);
-    
+
         return response()->download($fileName)->deleteFileAfterSend(true);
     }
-    
+
 
 
 
@@ -357,4 +359,75 @@ class TesteController extends Controller
             $animal->mae = Animal::find($animal->mae);
         }
     }
+
+    public function getLaudoTotal()
+    {
+        $laudos = Laudo::where('status', 1)
+            ->where('conclusao', 'like', '%não está qualificado pela genitora%')
+            ->where('conclusao', 'like', '%não está qualificado pelo genitor%')
+            ->select(
+                'animal_id',
+                'mae_id',
+                'pai_id',
+                'veterinario',
+                'owner_id',
+                'data_coleta',
+                'data_realizacao',
+                'data_lab',
+                'codigo_busca',
+                'observacao',
+                'conclusao',
+                'tipo',
+                'veterinario_id',
+                'ordem_id',
+                'order_id',
+                'pdf',
+                'ret',
+                'status',
+                'data_retificacao',
+                'created_at',
+                'updated_at'
+            )
+            ->get();
+
+        $totalLaudos = count($laudos);
+
+        \Log::info('Total de laudos com status 1 e texto específico na conclusão: ' . $totalLaudos);
+        return Excel::download(new LaudosExport($laudos), 'laudos-total-exclusao.xlsx');
+    }
+
+    public function getLaudosTotal() 
+    {
+        $laudos = Laudo::where('status', 1)
+        ->select(
+            'animal_id',
+            'mae_id',
+            'pai_id',
+            'veterinario',
+            'owner_id',
+            'data_coleta',
+            'data_realizacao',
+            'data_lab',
+            'codigo_busca',
+            'observacao',
+            'conclusao',
+            'tipo',
+            'veterinario_id',
+            'ordem_id',
+            'order_id',
+            'pdf',
+            'ret',
+            'status',
+            'data_retificacao',
+            'created_at',
+            'updated_at'
+        )
+        ->get();
+
+    $totalLaudos = count($laudos);
+
+    \Log::info('Total de laudos com status 1 e texto específico na conclusão: ' . $totalLaudos);
+    return Excel::download(new LaudosExport($laudos), 'laudos-total.xlsx');
+    }
+
 }
