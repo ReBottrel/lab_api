@@ -14,7 +14,7 @@ class RelatoriosController extends Controller
     {
         $laudosExcluidos = Laudo::where('status', 1)
             ->where('conclusao', 'like', '%não está qualificado pela genitora%')
-            ->where('conclusao', 'like', '%não está qualificado pelo genitor%')
+            ->orWhere('conclusao', 'like', '%não está qualificado pelo genitor%')
             ->select(
                 'animal_id',
                 'mae_id',
@@ -76,7 +76,7 @@ class RelatoriosController extends Controller
     {
         $laudos = Laudo::where('status', 1)
             ->where('conclusao', 'like', '%não está qualificado pela genitora%')
-            ->where('conclusao', 'like', '%não está qualificado pelo genitor%')
+            ->orWhere('conclusao', 'like', '%não está qualificado pelo genitor%')
             ->select(
                 'animal_id',
                 'mae_id',
