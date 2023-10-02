@@ -167,8 +167,8 @@ class ApiMangalargaController extends Controller
     public function getResenha()
     {
 
-        $coletas = $this->fetchDataFromApi('coletas', 18, 2, ['dataEnvioInicio' => date('Y-m-d\TH:i:s', strtotime('-1 day'))]);
-        // $coletas = $this->fetchDataFromApi('coletas', 18, 2, ['rowidColeta' => '756260']);
+        // $coletas = $this->fetchDataFromApi('coletas', 18, 2, ['dataEnvioInicio' => date('Y-m-d\TH:i:s', strtotime('-1 day'))]);
+        $coletas = $this->fetchDataFromApi('coletas', 18, 2, ['rowidColeta' => '756744']);
         foreach ($coletas as $coleta) {
             // find owner, user, and tecnico by email or create them if they don't exist
             
