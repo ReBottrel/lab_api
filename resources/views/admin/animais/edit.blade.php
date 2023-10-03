@@ -14,6 +14,12 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="mb-3">
+                                    <label for="exampleFormControlInput1" class="form-label">ID do sistema</label>
+                                    <input type="text" name="id" id="id" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="mb-3">
                                     <label for="exampleFormControlInput1" class="form-label">Nome do animal</label>
                                     <input type="text" name="animal_name" id="animal_name" class="form-control">
                                 </div>
