@@ -258,6 +258,7 @@
         }
     }
 @endphp
+
 <div class="d-flex">
     <div>
         <button class="btn btn-primary" id="ver-laudo">
@@ -286,6 +287,23 @@
 @endsection
 @section('js')
 <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var status = @json($status); // Obtém o valor de status do Laravel para JavaScript
+        var retInput = document.getElementById('ret');
+        var pdfButton = document.getElementById('pdf');
+
+        // Função para habilitar ou desabilitar o botão de PDF com base no valor do input ret
+        var togglePdfButton = function() {
+            pdfButton.disabled = status == 1 && !retInput.value
+        .trim(); // Adicionado .trim() para tratar strings em branco como vazias
+        };
+
+        // Desabilita o botão PDF inicialmente se necessário
+        togglePdfButton();
+
+        // Adiciona um ouvinte de evento para desabilitar/habilitar o botão PDF quando o valor do input ret mudar
+        retInput.addEventListener('input', togglePdfButton);
+    });
     $(document).ready(function() {
         var id = $('#ordem_id').val();
         $.ajax({
