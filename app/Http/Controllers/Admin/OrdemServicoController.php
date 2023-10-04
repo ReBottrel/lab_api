@@ -109,7 +109,7 @@ class OrdemServicoController extends Controller
         $log = Log::create([
             'user' => Auth::user()->name,
             'action' => 'Criou uma nova ordem de serviço',
-            'ordem_id' => $ordem->id,
+            'ordem_id' => $ordem->id ?? null,
             'order_id' => $order->id,
         ]);
 
