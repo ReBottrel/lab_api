@@ -379,9 +379,11 @@ class LaudoController extends Controller
             return response()->json([$xml, $parceiro], 200);
         } else {
             Mail::to($parceiro->email)->send(new EnviarLaudoMail($laudo->pdf));
-            Mail::to($parceiro->email2)->send(new EnviarLaudoMail($laudo->pdf));
             Mail::to($user->email)->send(new EnviarLaudoMail($laudo->pdf));
             Mail::to('laudosdna.lfda-mg@agro.gov.br')->send(new EnviarLaudoMail($laudo->pdf));
+            if ($parceiro->email2 != null) {
+                Mail::to($parceiro->email2)->send(new EnviarLaudoMail($laudo->pdf));
+            }
             $laudo->update([
                 'status' => 1
             ]);
