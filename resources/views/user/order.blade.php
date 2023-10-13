@@ -114,16 +114,16 @@
                                             </select>
                                         </div>
                                     </div>
-                                    {{-- <div class="col-md-4">
-                                        <label for="exampleFormControlInput1" class="form-label">Pagar agora ou
-                                            depois</label>
-                                        <select class="form-select paynow" data-id="{{ $item->id }}" name="paynow"
-                                            id="paynow">
-                                            <option value="1" selected>Pagar agora</option>
-                                            <option value="0">Pagar depois</option>
-                                        </select>
-
-                                    </div> --}}
+                                    <div class="col-md-6">
+                                        <div class="form-check">
+                                            <input class="form-check-input item-select-checkbox" type="checkbox"
+                                                value="{{ $item->id }}" name="selectedItems[]"
+                                                id="item-{{ $item->id }}" checked>
+                                            <label class="form-check-label" for="item-{{ $item->id }}">
+                                                Selecionar para pagamento
+                                            </label>
+                                        </div>
+                                    </div>
                                 @endif
                                 @if ($payment)
                                     @if ($payment->payment_type == 'boleto')
@@ -156,14 +156,14 @@
                     @endif
                 @endforeach
                 @php
-                    
+
                     $total = $order->orderRequestPayment
                         ->where('payment_status', 0)
                         ->map(function ($query) {
                             return $query->value;
                         })
                         ->sum();
-                    
+
                 @endphp
                 <div class="card-body">
                     <div class="row">
@@ -187,6 +187,26 @@
 
 @section('scripts')
     <script>
+        $(document).ready(function() {
+            // Ouvinte de evento para checkboxes de seleção de item
+            function updateTotal() {
+                var totalPrice = 0;
+                $('.item-select-checkbox:checked').each(function() {
+                    var itemId = $(this).val();
+                    totalPrice += parseFloat($(`.valor-${itemId}`).text().replace('R$ ', '').replace(',',
+                        '.'));
+                });
+                $(`.total-price`).text(`R$ ${totalPrice.toFixed(2).replace('.', ',')}`);
+                $(`.price-total`).val(`${totalPrice.toFixed(2).replace('.', ',')}`);
+            }
+
+            // Ouvinte de evento para checkboxes de seleção de item
+            $('.item-select-checkbox').change(function() {
+                updateTotal();
+            });
+
+            // ... código existente ...
+        });
         $(document).on('change', '.sel-price', function() {
             var orderId = $('#orderId').val();
             var totalPrice = 0;
