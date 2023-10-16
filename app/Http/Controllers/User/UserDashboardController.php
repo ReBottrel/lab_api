@@ -49,7 +49,7 @@ class UserDashboardController extends Controller
 
     public function updatePayNow(Request $request)
     {
-        $orderItem = OrderRequestPayment::find($request->id);   
+        $orderItem = OrderRequestPayment::find($request->id);
 
         $orderItem->update([
             'paynow' => $request->paynow,
@@ -94,9 +94,11 @@ class UserDashboardController extends Controller
             }
         }
 
-        foreach ($order->orderRequestPayment as $key => $payment) {
-            $payment->update([
-                'paynow' => in_array($payment->id, $request->paynow) ? 1 : 0,
+
+        foreach ($request->paynow as $key2 => $pay) {
+            $dayexplodido = explode('-', $pay);
+            $orderRequest = OrderRequestPayment::find($dayexplodido[0])->update([
+                'paynow' => $dayexplodido[1],
             ]);
         }
 

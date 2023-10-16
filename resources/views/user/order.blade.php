@@ -133,14 +133,16 @@
                                     @endif
                                 @endif
                                 <div class="col-md-6 d-none">
-                                    <div class="form-check">
-                                        <input class="form-check-input item-select-checkbox" type="checkbox"
-                                            value="{{ $item->id }}" name="selectedItems[]"
-                                            id="item-{{ $item->id }}" checked>
-                                        <label class="form-check-label" for="item-{{ $item->id }}">
-                                            Selecionar para pagamento
-                                        </label>
-                                    </div>
+                                    <select class="form-select" name="selectedItems[]"
+                                        @if ($item->payment_status == 1) disabled @endif
+                                        aria-label="Default select example">
+                                        <option value="{{ $item->id }}-1">
+                                            Pagar Agora
+                                        </option>
+                                        <option value="{{ $item->id }}-0">
+                                            Pagar Depois
+                                        </option>
+                                    </select>
                                 </div>
                                 <div class="col-md-6 d-none">
                                     <div class="form-check">
@@ -188,24 +190,34 @@
 @section('scripts')
     <script>
         $(document).ready(function() {
-            // Ouvinte de evento para checkboxes de seleção de item
+            $('select[name^="selectedItems"]').change(function() {
+                updateTotal();
+            });
+
+            // Função para atualizar o total
             function updateTotal() {
                 var totalPrice = 0;
-                $('.item-select-checkbox:checked').each(function() {
-                    var itemId = $(this).val();
-                    totalPrice += parseFloat($(`.valor-${itemId}`).text().replace('R$ ', '').replace(',',
-                        '.'));
+
+                $('select[name^="selectedItems"]').each(function() {
+                    var optionValue = $(this).val(); // Valor selecionado no select (por exemplo, "9175-1")
+                    var optionParts = optionValue.split('-'); // Divide o valor em partes
+
+                    var itemId = optionParts[0]; // ID do item
+                    var selectedOption = optionParts[
+                    1]; // Opção selecionada (1 para Pagar Agora, 0 para Pagar Depois)
+
+                    // Se a opção for "Pagar Agora", adicione o valor ao total
+                    if (selectedOption === '1') {
+                        var itemValue = parseFloat($(`.valor-${itemId}`).text().replace('R$ ', '').replace(
+                            ',', '.'));
+                        totalPrice += itemValue;
+                    }
                 });
+
                 $(`.total-price`).text(`R$ ${totalPrice.toFixed(2).replace('.', ',')}`);
                 $(`.price-total`).val(`${totalPrice.toFixed(2).replace('.', ',')}`);
             }
 
-            // Ouvinte de evento para checkboxes de seleção de item
-            $('.item-select-checkbox').change(function() {
-                updateTotal();
-            });
-
-            // ... código existente ...
         });
         $(document).on('change', '.sel-price', function() {
             var orderId = $('#orderId').val();
@@ -259,7 +271,7 @@
             var values = $("select[name^='days']").map(function(idx, ele) {
                 return $(ele).val();
             }).get();
-            var paynow = $("input[name^='selectedItems']").map(function(idx, ele) {
+            var paynow = $("select[name^='selectedItems']").map(function(idx, ele) {
                 return $(ele).val();
             }).get();
 
