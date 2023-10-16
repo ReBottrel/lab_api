@@ -114,7 +114,7 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
+                                    {{-- <div class="col-md-6">
                                         <div class="form-check">
                                             <input class="form-check-input item-select-checkbox" type="checkbox"
                                                 value="{{ $item->id }}" name="selectedItems[]"
@@ -123,7 +123,7 @@
                                                 Selecionar para pagamento
                                             </label>
                                         </div>
-                                    </div>
+                                    </div> --}}
                                 @endif
                                 @if ($payment)
                                     @if ($payment->payment_type == 'boleto')
