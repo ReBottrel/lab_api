@@ -622,7 +622,12 @@ class LaudoController extends Controller
     {
         if ($request->ajax()) {
             $busca = $request->busca;
-            $animal = Animal::where('animal_name', 'LIKE', '%' . $busca . '%')->where('status', 9)->first();
+            $animal = Animal::where('animal_name', 'LIKE', '%' . $busca . '%')
+                ->where(function ($query) {
+                    $query->where('status', 9)
+                        ->orWhere('status', 10);
+                })->first();
+
             $laudos = Laudo::where('status', 1)->where('animal_id', $animal->id)
                 ->get();
 
@@ -632,11 +637,17 @@ class LaudoController extends Controller
         }
     }
 
+
     public function searchByCodlab(Request $request)
     {
         if ($request->ajax()) {
             $busca = $request->codlab;
-            $animal = Animal::where('codlab', $busca)->where('status', 9)->first();
+            $animal = Animal::where('animal_name', 'LIKE', '%' . $busca . '%')
+            ->where(function ($query) {
+                $query->where('status', 9)
+                    ->orWhere('status', 10);
+            })->first();
+
             $laudos = Laudo::where('status', 1)->where('animal_id', $animal->id)
                 ->get();
 
