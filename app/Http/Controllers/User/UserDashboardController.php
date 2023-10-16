@@ -94,8 +94,6 @@ class UserDashboardController extends Controller
             }
         }
 
-        // dd($request->all());
-
         foreach ($order->orderRequestPayment as $key => $payment) {
             $payment->update([
                 'paynow' => in_array($payment->id, $request->paynow) ? 1 : 0,

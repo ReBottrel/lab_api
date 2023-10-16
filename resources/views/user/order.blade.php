@@ -114,16 +114,6 @@
                                             </select>
                                         </div>
                                     </div>
-                                    {{-- <div class="col-md-6">
-                                        <div class="form-check">
-                                            <input class="form-check-input item-select-checkbox" type="checkbox"
-                                                value="{{ $item->id }}" name="selectedItems[]"
-                                                id="item-{{ $item->id }}" checked>
-                                            <label class="form-check-label" for="item-{{ $item->id }}">
-                                                Selecionar para pagamento
-                                            </label>
-                                        </div>
-                                    </div> --}}
                                 @endif
                                 @if ($payment)
                                     @if ($payment->payment_type == 'boleto')
@@ -142,6 +132,16 @@
                                         </div>
                                     @endif
                                 @endif
+                                <div class="col-md-6 d-none">
+                                    <div class="form-check">
+                                        <input class="form-check-input item-select-checkbox" type="checkbox"
+                                            value="{{ $item->id }}" name="selectedItems[]"
+                                            id="item-{{ $item->id }}" checked>
+                                        <label class="form-check-label" for="item-{{ $item->id }}">
+                                            Selecionar para pagamento
+                                        </label>
+                                    </div>
+                                </div>
                                 <div class="col-md-6 d-none">
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" value="{{ $item->id }}"
@@ -259,7 +259,7 @@
             var values = $("select[name^='days']").map(function(idx, ele) {
                 return $(ele).val();
             }).get();
-            var paynow = $("input[name^='paynow']").map(function(idx, ele) {
+            var paynow = $("input[name^='selectedItems']").map(function(idx, ele) {
                 return $(ele).val();
             }).get();
 

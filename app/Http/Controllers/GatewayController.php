@@ -24,6 +24,7 @@ class GatewayController extends Controller
         ];
         $response = Http::post(env('IOPAY_URL') . 'auth/login', $data)->object();
         $this->bearer_token = "Bearer $response->access_token";
+     
     }
 
     public function listPayment(Request $request, $id = null)
@@ -31,6 +32,7 @@ class GatewayController extends Controller
         $data['page'] = $request->page ?? 1;
         if (!isset($id)) $response = Http::withHeaders(['Authorization' => $this->bearer_token])->get(env('IOPAY_URL') . 'v1/transaction/list', $data)->object();
         if (isset($id)) $response = Http::withHeaders(['Authorization' => $this->bearer_token])->get(env('IOPAY_URL') . 'v1/transaction/get/' . $id)->object();
+        \Log::info(collect($response)->toArray());
         return response()->json($response);
     }
 
@@ -58,7 +60,7 @@ class GatewayController extends Controller
         ];
 
 
-
+    
         $total_value = 0;
         foreach ($order->orderRequestPayment as  $or_payment) {
             $or_payment = OrderRequestPayment::find($or_payment->id);
@@ -79,9 +81,9 @@ class GatewayController extends Controller
             $data['token'] = $this->cardToken($request->card);
         }
         $id_customer = $this->buyer($request->info_add ?? null);
-
+        
         $response = Http::withHeaders(['Authorization' => $this->bearer_token])->post(env('IOPAY_URL') . 'v1/transaction/new/' . $id_customer, $data)->object();
-        // \Log::info(collect($response)->toArray());
+
         \Log::channel('iopay_response_payment')->info(collect($response)->toArray());
         if (isset($response->error)) return response()->json($response, 402);
         if ($request->payment_type == 'credit') {
