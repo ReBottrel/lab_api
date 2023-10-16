@@ -454,6 +454,7 @@ Route::get('duplicados-e-filhos-daputa', [TesteController::class, 'duplicate']);
 Route::get('mangalarga-api', [ApiMangalargaController::class, 'getApi'])->name('api.manga');
 Route::get('mangalarga-api-animal', [ApiMangalargaController::class, 'getAnimal'])->name('api.animal');
 Route::get('get-resenha', [ApiMangalargaController::class, 'getResenha'])->name('api.resenha');
+Route::get('get-resenha-row/{row}', [ApiMangalargaController::class, 'getResenhaRequest'])->name('api.resenha.request');
 Route::get('get-row-id', [ApiMangalargaController::class, 'getRowId'])->name('get.row.id');
 
 Route::get('get-states', [AddressController::class, 'estados'])->name('get.states');
