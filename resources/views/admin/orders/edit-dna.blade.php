@@ -6,7 +6,7 @@
                 <h4>Criar ou adicionar produto</h4>
             </div>
             <div class="card-body">
-            
+
 
                 <div class="mt-4">
                     <h5>Cadastrar novo animal</h5>
@@ -60,10 +60,11 @@
                                     <label for="exampleFormControlInput1" class="form-label">Espécie</label>
                                     <select class="form-select species" name="especies">
                                         <option>Selecione e espécie</option>
-                                        @foreach ($species as $specie)
-                                            <option value="{{ $specie->name }}" data-specie="{{ $specie->id }}">
-                                                {{ $specie->name }}</option>
-                                        @endforeach
+                                        <option value="EQUINA">EQUINA</option>
+                                        <option value="BOVINA">BOVINA</option>
+                                        <option value="ASININO">ASININOS</option>
+                                        <option value="MUARES">MUARES</option>
+                                        <option value="PEGA_EQUINO">EQUINO PÊGA</option>
                                     </select>
                                 </div>
                             </div>
@@ -72,7 +73,13 @@
                                     <label for="exampleFormControlInput1" class="form-label">Raça</label>
                                     <select class="form-select breeds" name="breed">
                                         <option>Selecione a raça</option>
-
+                                        <option value="MANGALARGA MARCHADOR">MANGALARGA MARCHADOR</option>
+                                        <option value="MANGALARGA">MANGALARGA</option>
+                                        <option value="PÊGA">PÊGA</option>
+                                        <option value="QUARTO DE MILHA">QUARTO DE MILHA</option>
+                                        <option value="PAMPA">PAMPA</option>
+                                        <option value="DESCONHECIDA">DESCONHECIDA</option>
+                                        <option value="NELORE">NELORE</option>
                                     </select>
                                 </div>
                             </div>
@@ -101,7 +108,7 @@
                                     Verificação de parentesco
                                 </label>
                             </div>
-                            <div class="col-md-6 type-verify d-none">
+                            <div class="col-md-6 type-verify">
                                 <div class="mb-3">
                                     <label for="exampleFormControlInput1" class="form-label">Tipo de verificação</label>
                                     <select class="form-select verify-type" name="extra_verify">
@@ -126,57 +133,74 @@
                                         <option value="MUAMD" data-verify="2">MUAMD</option>
                                         <option value="MUAPD" data-verify="3">MUAPD</option>
                                         <option value="MUATR" data-verify="4">MUATR</option>
+                                        <option value="PEGGN" data-verify="1">EQUPEGGN</option>
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-md-6 pai">
-                                <div class="mb-3">
-                                    <label for="exampleFormControlInput1" class="form-label">Numero de registro do
-                                        pai</label>
-                                    <input type="text" name="registro_pai" id="registro_pai"
-                                        class="form-control registro_pai">
+                            <div class="d-flex">
+                                <div class="row mx-2">
+                                    <div class="col-md-12 pai my-2">
+                                        <div class="mb-3">
+                                            <label for="exampleFormControlInput1" class="form-label">Numero de registro do
+                                                pai</label>
+                                            <input type="text" name="registro_pai" id="registro_pai"
+                                                class="form-control registro_pai">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 pai my-2">
+                                        <div class="mb-3">
+                                            <label for="exampleFormControlInput1" class="form-label">Espécie do
+                                                pai</label>
+                                            <select class="form-select" name="especie_pai">
+                                                <option>Selecione a espécie</option>
+                                                @foreach ($species as $specie)
+                                                    <option value="{{ $specie->name }}">{{ $specie->name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 pai my-2">
+                                        <div class="mb-3">
+                                            <label for="exampleFormControlInput1" class="form-label">Nome do
+                                                pai</label>
+                                            <select class="js-pai-basic-single" name="pai_id">
+
+                                            </select>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-md-6 pai">
-                                <div class="mb-3">
-                                    <label for="exampleFormControlInput1" class="form-label">Espécie do pai</label>
-                                    <select class="form-select" name="especie_pai">
-                                        <option>Selecione a espécie</option>
-                                        @foreach ($species as $specie)
-                                            <option value="{{ $specie->name }}">{{ $specie->name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-6 pai">
-                                <div class="mb-3">
-                                    <label for="exampleFormControlInput1" class="form-label">Nome do pai</label>
-                                    <input type="text" name="pai" id="pai" class="form-control">
-                                </div>
-                            </div>
-                            <div class="col-md-6 mae">
-                                <div class="mb-3">
-                                    <label for="exampleFormControlInput1" class="form-label">Numero de registro da
-                                        mãe</label>
-                                    <input type="text" name="registro_mae" id="registro_mae"
-                                        class="form-control registro_mae">
-                                </div>
-                            </div>
-                            <div class="col-md-6 mae">
-                                <div class="mb-3">
-                                    <label for="exampleFormControlInput1" class="form-label">Espécie da mãe</label>
-                                    <select class="form-select" name="especie_mae">
-                                        <option>Selecione a espécie</option>
-                                        @foreach ($species as $specie)
-                                            <option value="{{ $specie->name }}">{{ $specie->name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-6 mae">
-                                <div class="mb-3">
-                                    <label for="exampleFormControlInput1" class="form-label">Nome da mãe</label>
-                                    <input type="text" name="mae" id="mae" class="form-control">
+                                <div class="row mx-2">
+                                    <div class="col-md-12 mae my-2">
+                                        <div class="mb-3">
+                                            <label for="exampleFormControlInput1" class="form-label">Numero de registro da
+                                                mãe</label>
+                                            <input type="text" name="registro_mae" id="registro_mae"
+                                                class="form-control registro_mae">
+                                        </div>
+                                    </div>
+                                    <input type="hidden" name="pai" id="pai_animal">
+                                    <input type="hidden" name="mae" id="mae_animal">
+                                    <div class="col-md-12 mae my-2">
+                                        <div class="mb-3">
+                                            <label for="exampleFormControlInput1" class="form-label">Espécie da
+                                                mãe</label>
+                                            <select class="form-select" name="especie_mae">
+                                                <option>Selecione a espécie</option>
+                                                @foreach ($species as $specie)
+                                                    <option value="{{ $specie->name }}">{{ $specie->name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 mae my-2">
+                                        <div class="mb-3">
+                                            <label for="exampleFormControlInput1" class="form-label">Nome da mãe</label>
+                                            <select class="js-mae-basic-single" name="mae_id">
+
+                                            </select>
+                                        </div>
+                                    </div>
+
                                 </div>
                             </div>
 
@@ -194,7 +218,70 @@
 @section('js')
     <script>
         $(document).ready(function() {
+            $('.js-pai-basic-single').select2({
+                placeholder: 'Selecione o pai',
+                width: '100%',
+                ajax: {
+                    url: "{{ route('get.dados.animal') }}",
+                    dataType: "json",
+                    delay: 250,
+                    data: function(params) {
+                        return {
+                            q: params.term,
+                            page: params.page
+                        };
+                    },
+                    processResults: function(data) {
+                        var mappedData = data.map(function(item) {
+                            return {
+                                id: item.id, // ID da opção
+                                text: item.animal_name // Valor a ser exibido no Select2
+                            };
+                        });
 
+                        return {
+                            results: mappedData
+                        };
+                    },
+                    cache: true
+                },
+                minimumInputLength: 2,
+            }).on('change', function(e) {
+                var selectedAnimalName = $(this).select2('data')[0].text;
+                $('#pai_animal').val(selectedAnimalName);
+            });
+            $('.js-mae-basic-single').select2({
+                placeholder: 'Selecione a mae',
+                width: '100%',
+                ajax: {
+                    url: "{{ route('get.dados.animal') }}",
+                    dataType: "json",
+                    delay: 250,
+                    data: function(params) {
+                        return {
+                            q: params.term,
+                            page: params.page
+                        };
+                    },
+                    processResults: function(data) {
+                        var mappedData = data.map(function(item) {
+                            return {
+                                id: item.id, // ID da opção
+                                text: item.animal_name // Valor a ser exibido no Select2
+                            };
+                        });
+
+                        return {
+                            results: mappedData
+                        };
+                    },
+                    cache: true
+                },
+                minimumInputLength: 2,
+            }).on('change', function(e) {
+                var selectedAnimalName = $(this).select2('data')[0].text;
+                $('#mae_animal').val(selectedAnimalName);
+            });
             $(document).ready(function() {
                 $.ajax({
                     url: `{{ route('edit.animal.homozigose', $animal->id) }}`,
@@ -205,7 +292,7 @@
                         for (i in data.animal) {
                             $('#form').find(`[name="${i}"]`).val(data.animal[i]);
                         }
-                     
+
                     }
                 });
                 $('#search-input').on('keyup', function() {
