@@ -88,6 +88,7 @@ class LaudoController extends Controller
             'order_id' => $order->id,
             'ret' => $request->ret,
             'data_retificacao' => $request->data_ret,
+            'data_ret_new' => $request->data_ret_new,
         ];
 
 

@@ -239,7 +239,7 @@
 
     .content_2 {
         position: absolute;
-    top: -10px;
+        top: -10px;
         right: 0;
     }
 
@@ -504,7 +504,7 @@
                                 @php
                                     // Verifica se está no formato 'Y-m-d' (0000-00-00)
                                     $isYmd = date_create_from_format('Y-m-d', $animal->birth_date) !== false;
-                                    
+
                                     // Verifica se está no formato 'd/m/Y' (00/00/0000)
                                     $isDmy = date_create_from_format('d/m/Y', $animal->birth_date) !== false;
                                 @endphp
@@ -672,12 +672,12 @@
 
                             @php
                                 $dados = [];
-                                
+
                                 foreach ($animal->alelos as $item) {
                                     if ($item->marcador === 'ASB17' && ($item->alelo1 === '' && $item->alelo2 === '')) {
                                         continue; // Ignora o marcador ABS17 se não houver valores
                                     }
-                                
+
                                     $alelo_mae = $mae != null ? $mae->alelos->firstWhere('marcador', $item->marcador) : null;
                                     $alelo_pai = $pai != null ? $pai->alelos->firstWhere('marcador', $item->marcador) : null;
                                     $dados[] = [
@@ -687,7 +687,7 @@
                                         'alelo_pai' => $alelo_pai != null ? [$alelo_pai->alelo1, $alelo_pai->alelo2] : [null, null],
                                     ];
                                 }
-                                
+
                                 usort($dados, function ($a, $b) {
                                     return strcmp($a['marcador'], $b['marcador']);
                                 });
@@ -775,25 +775,25 @@
                     </p>
                 </div>
                 @php
-                $datalaudomae = '';
-                $datalaudopai = '';
-                if ($mae != null) {
-                    $laudomae = \App\Models\Laudo::where('animal_id', $mae->id)->first();
-                    if ($laudomae) {
-                        $datalaudomae = $laudomae->updated_at;
-                    } else {
-                        $datalaudomae = $mae->alelos[0]->data;
+                    $datalaudomae = '';
+                    $datalaudopai = '';
+                    if ($mae != null) {
+                        $laudomae = \App\Models\Laudo::where('animal_id', $mae->id)->first();
+                        if ($laudomae) {
+                            $datalaudomae = $laudomae->updated_at;
+                        } else {
+                            $datalaudomae = $mae->alelos[0]->data;
+                        }
                     }
-                }
-                if ($pai != null) {
-                    $laudopai = \App\Models\Laudo::where('animal_id', $pai->id)->first();
-                    if ($laudopai) {
-                        $datalaudopai = $laudopai->updated_at;
-                    } else {
-                        $datalaudopai = $pai->alelos[0]->data;
+                    if ($pai != null) {
+                        $laudopai = \App\Models\Laudo::where('animal_id', $pai->id)->first();
+                        if ($laudopai) {
+                            $datalaudopai = $laudopai->updated_at;
+                        } else {
+                            $datalaudopai = $pai->alelos[0]->data;
+                        }
                     }
-                }
-            @endphp
+                @endphp
                 <div id="animalinfo mb-1">
                     <p class="spn">
                         @if ($mae != null)
@@ -841,15 +841,21 @@
             </div>
             @php
                 setlocale(LC_TIME, 'pt_BR.utf8');
-                if ($laudo->id == 11) {
-                    $date = new DateTime('2023-07-14');
+
+                if ($laudo->data_ret_new != null) {
+                    $date = new DateTime($laudo->data_ret_new);
+                    $textDate = strftime('%d de %B de %Y', $date->getTimestamp());
                 } else {
-                    $date = new DateTime();
+                    if ($laudo->id == 11) {
+                        $date = new DateTime('2023-07-14');
+                    } else {
+                        $date = new DateTime();
+                    }
+
+                    $textDate = strftime('%d de %B de %Y', $date->getTimestamp());
                 }
-                
                 $textDate = $date->format('d \d\e F \d\e Y');
                 $textDate = str_replace(['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'], ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'], $textDate);
-                
             @endphp
             <br>
             <p>Lagoa Santa {{ $textDate }}.</p>
