@@ -633,6 +633,8 @@
 
                     } else if (mptrue == true && mpfalse == true) {
                         $('.resultadoAnalise').val(msg[0]);
+                    } else if (mptrue == false && mpfalse == true) {
+                        $('.resultadoAnalise').val(msg[0]);
                     } else if (mptrue == true && naoExisteP == true) {
                         $('.resultadoAnalise').val(msg[2]);
                     } else if (mptrue == true && naoExisteM == true) {

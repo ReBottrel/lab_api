@@ -96,6 +96,8 @@ class AlelosController extends Controller
                     $alelo = Alelo::where('animal_id', $animal->id)
                         ->where('marcador', $marcador->gene)
                         ->first();
+                        \Log::info([$exameData['dataResultado']]);
+                    
                     if ($apiAlelos) {
                         if ($alelo) {
                             // Atualiza o alelo se já existir
