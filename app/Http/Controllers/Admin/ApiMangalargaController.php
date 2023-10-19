@@ -308,6 +308,7 @@ class ApiMangalargaController extends Controller
             'order_id' => $order->id ?? 'deu erro',
             'animal' => $animal->nome ?? 'deu erro',
         ]);
+        \Log::info('tudo certo com a importação');
         return response()->json('ok');
     }
     public function getResenhaRequest($row)
