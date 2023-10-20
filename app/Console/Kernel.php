@@ -18,7 +18,7 @@ class Kernel extends ConsoleKernel
         // $schedule->command('inspire')->hourly();
         // $schedule->command('order:searchmail')->hourly();
         // $schedule->command('order:resend_charge')->hourly();
-        $schedule->command('api:orders')->hourly();
+        $schedule->command('api:orders')->everyThreeHours();
         // $schedule->call(route('api.resenha'))->everyTwoMinutes();
     }
 
