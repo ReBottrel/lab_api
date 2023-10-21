@@ -132,7 +132,7 @@
                                         </div>
                                     @endif
                                 @endif
-                                <div class="col-md-6 d-none">
+                                <div class="col-md-6 mt-3">
                                     <select class="form-select" name="selectedItems[]"
                                         @if ($item->payment_status == 1) disabled @endif
                                         aria-label="Default select example">
