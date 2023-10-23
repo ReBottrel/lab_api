@@ -14,6 +14,7 @@ use App\Models\AnimalToParent;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Cache;
 use Maatwebsite\Excel\Concerns\ToArray;
 
 class ApiMangalargaController extends Controller
@@ -251,7 +252,7 @@ class ApiMangalargaController extends Controller
             ]);
 
             foreach ($coleta->animais as $animal) {
-                \Log::info([$animal]);
+           
                 $codlab = $this->generateUniqueCodlab('EQU');
                 $existingAnimal = Animal::where('register_number_brand', $animal->rowidAnimal)->first();
                 $currentAnimal = null;
@@ -308,12 +309,12 @@ class ApiMangalargaController extends Controller
             'order_id' => $order->id ?? 'deu erro',
             'animal' => $animal->nome ?? 'deu erro',
         ]);
-        \Log::info('tudo certo com a importação');
+   
         return response()->json('ok');
     }
     public function getResenhaRequest($row)
     {
-       
+
         // $coletas = $this->fetchDataFromApi('coletas', 18, 2, ['dataEnvioInicio' => date('Y-m-d\TH:i:s', strtotime('-1 day'))]);
         $coletas = $this->fetchDataFromApi('coletas', 18, 2, ['rowidColeta' => $row]);
         //  $coletas = $this->fetchDataFromApi('coletas', 18, 2, ['dataEnvioInicio' => '2023-10-09T00:00:00']);
@@ -398,7 +399,7 @@ class ApiMangalargaController extends Controller
             ]);
 
             foreach ($coleta->animais as $animal) {
-                \Log::info([$animal]);
+             
                 $codlab = $this->generateUniqueCodlab('EQU');
                 $existingAnimal = Animal::where('register_number_brand', $animal->rowidAnimal)->first();
                 $currentAnimal = null;
@@ -478,19 +479,22 @@ class ApiMangalargaController extends Controller
 
     private function generateUniqueCodlab($sigla)
     {
-        $maxNumber = Animal::selectRaw('MAX(CAST(SUBSTRING(codlab, 4) AS UNSIGNED)) as max_num')
-            ->whereRaw('CAST(SUBSTRING(codlab, 4) AS UNSIGNED) >= 100000 AND CAST(SUBSTRING(codlab, 4) AS UNSIGNED) < 200000')
-            ->first();
+        // Recuperar o último número usado do cache ou de uma configuração (opcional)
+        $lastUsedNumber = Cache::get('lastUsedNumber', 200000);
 
-        $startValue = ($maxNumber && $maxNumber->max_num) ? $maxNumber->max_num + 1 : 100000;
+        $startValue = max(200000, $lastUsedNumber + 1);
 
-        // Verifique a unicidade da parte numérica do codlab em todo o banco de dados
-        while (Animal::whereRaw('CAST(SUBSTRING(codlab, 4) AS UNSIGNED) = ?', [$startValue])->exists()) {
-            $startValue += 1;
+        // Verificar se o valor inicial já existe
+        while (Animal::where('codlab', $sigla . strval($startValue))->exists()) {
+            $startValue++;
         }
+
+        // Armazenar o último número usado no cache ou em uma configuração (opcional)
+        Cache::put('lastUsedNumber', $startValue, 3600); // 3600 segundos = 1 hora
 
         return $sigla . strval($startValue);
     }
+
     public function fetchDataFromApi($resource, $id, $tipo, $query = [])
     {
         $url = "http://laboratorios.abccmm.org.br/api/$resource/$id/$tipo" . '?' . http_build_query($query);

@@ -6,11 +6,12 @@ use App\Models\Fur;
 use App\Models\Log;
 use App\Models\Animal;
 use App\Models\OrdemServico;
+use App\Models\OrderRequest;
 use Illuminate\Http\Request;
 use App\Models\AnimalToParent;
 use App\Http\Controllers\Controller;
-use App\Models\OrderRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 
 class AnimaisController extends Controller
 {
@@ -94,19 +95,22 @@ class AnimaisController extends Controller
     }
     private function generateUniqueCodlab($sigla)
     {
-        $maxNumber = Animal::selectRaw('MAX(CAST(SUBSTRING(codlab, 4) AS UNSIGNED)) as max_num')
-            ->whereRaw('CAST(SUBSTRING(codlab, 4) AS UNSIGNED) >= 100000 AND CAST(SUBSTRING(codlab, 4) AS UNSIGNED) < 200000')
-            ->first();
+        // Recuperar o último número usado do cache ou de uma configuração (opcional)
+        $lastUsedNumber = Cache::get('lastUsedNumber', 200000);
 
-        $startValue = ($maxNumber && $maxNumber->max_num) ? $maxNumber->max_num + 1 : 100000;
+        $startValue = max(200000, $lastUsedNumber + 1);
 
-        // Verifique a unicidade da parte numérica do codlab em todo o banco de dados
-        while (Animal::whereRaw('CAST(SUBSTRING(codlab, 4) AS UNSIGNED) = ?', [$startValue])->exists()) {
-            $startValue += 1;
+        // Verificar se o valor inicial já existe
+        while (Animal::where('codlab', $sigla . strval($startValue))->exists()) {
+            $startValue++;
         }
+
+        // Armazenar o último número usado no cache ou em uma configuração (opcional)
+        Cache::put('lastUsedNumber', $startValue, 3600); // 3600 segundos = 1 hora
 
         return $sigla . strval($startValue);
     }
+
     /**
      * Display the specified resource.
      *
@@ -216,7 +220,7 @@ class AnimaisController extends Controller
                 'codlab' => $request->codlab,
             ]);
         }
-   
+
         $log = Log::create([
             'user' => Auth::user()->name,
             'action' => 'Editou o animal ' . $animal->animal_name,

@@ -26,6 +26,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 use Rap2hpoutre\FastExcel\FastExcel;
+use Illuminate\Support\Facades\Cache;
 
 class OrderController extends Controller
 {
@@ -851,22 +852,20 @@ class OrderController extends Controller
     }
     private function generateUniqueCodlab($sigla)
     {
-        $startValue = 100000;
-        $maxNumber = Animal::selectRaw('MAX(CAST(SUBSTRING(codlab, 4) AS UNSIGNED)) as max_num')
-            ->whereRaw('CAST(SUBSTRING(codlab, 4) AS UNSIGNED) >= 100000 AND CAST(SUBSTRING(codlab, 4) AS UNSIGNED) < 200000')
-            ->first();
+        // Recuperar o último número usado do cache ou de uma configuração (opcional)
+        $lastUsedNumber = Cache::get('lastUsedNumber', 200000);
 
-        if ($maxNumber !== null && $maxNumber->max_num !== null) {
-            $startValue = $maxNumber->max_num + 1;
+        $startValue = max(200000, $lastUsedNumber + 1);
+
+        // Verificar se o valor inicial já existe
+        while (Animal::where('codlab', $sigla . strval($startValue))->exists()) {
+            $startValue++;
         }
 
-        while (Animal::where('codlab', '=', $sigla . strval($startValue))->exists()) {
-            $startValue += 1;
-        }
+        // Armazenar o último número usado no cache ou em uma configuração (opcional)
+        Cache::put('lastUsedNumber', $startValue, 3600); // 3600 segundos = 1 hora
 
-        $codlab = $sigla . strval($startValue);
-
-        return $codlab;
+        return $sigla . strval($startValue);
     }
     public function updateAnimalOrder(Request $request)
     {

@@ -19,6 +19,7 @@ use App\Models\AnimalToParent;
 use App\Models\OrderRequestPayment;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Picqer\Barcode\BarcodeGeneratorPNG;
 
 
@@ -60,7 +61,7 @@ class OrdemServicoController extends Controller
             $data = Carbon::parse($item->updated_at)->addWeekdays($exame->days);
 
             $dna_verify = DnaVerify::where('animal_id', $item->animal_id)->latest('created_at')->first();
-            
+
             if (OrdemServico::where('animal_id', $animal->id)->where('order', $order->id)->exists()) {
                 continue; // Se existir, pula para a próxima iteração
             }
@@ -140,16 +141,18 @@ class OrdemServicoController extends Controller
 
     private function generateUniqueCodlab($sigla)
     {
-        $maxNumber = Animal::selectRaw('MAX(CAST(SUBSTRING(codlab, 4) AS UNSIGNED)) as max_num')
-            ->whereRaw('CAST(SUBSTRING(codlab, 4) AS UNSIGNED) >= 100000 AND CAST(SUBSTRING(codlab, 4) AS UNSIGNED) < 200000')
-            ->first();
+        // Recuperar o último número usado do cache ou de uma configuração (opcional)
+        $lastUsedNumber = Cache::get('lastUsedNumber', 200000);
 
-        $startValue = ($maxNumber && $maxNumber->max_num) ? $maxNumber->max_num + 1 : 100000;
+        $startValue = max(200000, $lastUsedNumber + 1);
 
-        // Verifique a unicidade da parte numérica do codlab em todo o banco de dados
-        while (Animal::whereRaw('CAST(SUBSTRING(codlab, 4) AS UNSIGNED) = ?', [$startValue])->exists()) {
-            $startValue += 1;
+        // Verificar se o valor inicial já existe
+        while (Animal::where('codlab', $sigla . strval($startValue))->exists()) {
+            $startValue++;
         }
+
+        // Armazenar o último número usado no cache ou em uma configuração (opcional)
+        Cache::put('lastUsedNumber', $startValue, 3600); // 3600 segundos = 1 hora
 
         return $sigla . strval($startValue);
     }
