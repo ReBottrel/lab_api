@@ -28,7 +28,7 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="exampleFormControlInput1" class="form-label">Codlab</label>
-                                    <input type="text" name="codlab" id="codlab" class="form-control">
+                                    <input type="text" name="codlab" id="codlab" class="form-control" @if($laudo->status == 1) readonly @endif>
                                 </div>
                             </div>
                             <div class="col-md-6">

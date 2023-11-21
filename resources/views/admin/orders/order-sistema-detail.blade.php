@@ -99,6 +99,7 @@
                             @endif
                             <div class="card my-5">
                                 <ul class="list-group m-3">
+                                    <li class="list-group-item"><span>ID SISTEMA INTERNO: {{ $animal->id }}</span></li>
                                     <li class="list-group-item"><span>ID: {{ $animal->register_number_brand }}</span></li>
                                     <li class="list-group-item"><span>PRODUTO: {{ $animal->animal_name }}</span></li>
                                     <li class="list-group-item"><span>SEXO: {{ $animal->sex }}</span></li>

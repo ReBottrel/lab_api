@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\Fur;
 use App\Models\Log;
+use App\Models\Laudo;
 use App\Models\Animal;
 use App\Models\OrdemServico;
 use App\Models\OrderRequest;
@@ -120,6 +121,7 @@ class AnimaisController extends Controller
     public function show($id)
     {
         $animal = Animal::find($id);
+        $laudo = Laudo::where('animal_id', $id)->first();
         return view('admin.animais.edit', get_defined_vars());
     }
 
@@ -324,11 +326,11 @@ class AnimaisController extends Controller
         if ($request->ajax()) {
             $codlab = $request->codlab;
 
-            $animal = Animal::where('codlab', 'LIKE', '%' . $codlab . '%')
-                ->first();
+            $animals = Animal::where('codlab', 'LIKE', '%' . $codlab . '%')
+                ->get();
 
-            if ($animal) {
-                $viewRender = view('admin.animais.includes.codlab-search', compact('animal'))->render();
+            if ($animals) {
+                $viewRender = view('admin.animais.includes.codlab-search', compact('animals'))->render();
 
                 return response()->json(['viewRender' => $viewRender]);
             } else {
