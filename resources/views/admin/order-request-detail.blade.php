@@ -1,17 +1,17 @@
 @extends('layouts.admin')
 @section('content')
-    <div class="container" style="margin-bottom: 25px;">
+    <div class="container mt-4">
         <div class="card">
             <div class="card-body">
-                <h4 class="card-title">Detalhe do pedido #{{ $order->id }}</h4>
+                <h2 class="card-title">Detalhe do Pedido #{{ $order->id }}</h2>
             </div>
         </div>
     </div>
     <section></section>
-    <div class="container">
+    <div class="container my-4">
         <div class="card">
             <div class="card-header">
-                <h5 class="mb-0">CLIENTE: {{ $order->owner->name }}</h5>
+                <h4 class="mb-0">CLIENTE: {{ $order->owner->name }}</h4>
             </div>
             <div class="card-body">
                 <div class="row">
@@ -25,6 +25,7 @@
                             </li>
                             <li class="list-group-item"><span>TELEFONE: {{ $order->owner->cell }}</span>
                             </li>
+
                         </ul>
                     </div>
 
@@ -32,10 +33,10 @@
             </div>
         </div>
     </div>
-    <div class="container" style="margin-top: 20px;">
+    <div class="container mt-4">
         <div class="card">
             <div class="card-header">
-                <h5 class="mb-0">PRODUTOS DO PEDIDO</h5>
+                <h4 class="mb-0">PRODUTOS DO PEDIDO</h4>
             </div>
             <div class="card-body">
                 <div class="row">
@@ -110,6 +111,12 @@
                                     </span></li>
                                 <li class="list-group-item"><span>ID DE PAGAMENTO: {{ $item->payment_id }}
                                     </span></li>
+                                <li class="list-group-item"><span>DATA DE PAGAMENTO: @if ($item->payment_status == 1)
+                                            {{ date('d/m/Y H:i:s', strtotime($item->updated_at)) }}
+                                        @else
+                                            -
+                                        @endif
+                                    </span></li>
                             </ul>
                         @endforeach
 
@@ -121,42 +128,9 @@
                 <form action="{{ route('export') }}" method="post">
                     @csrf
                     <input type="hidden" name="id" value="{{ $order->id }}">
-                    <button type="submit" class="btn btn-success export">EXPORTAR EXCEL</button>
+                    <button type="submit" class="btn btn-success"><i class="fas fa-file-excel"></i> EXPORTAR EXCEL</button>
                 </form>
             </div>
         </div>
     </div>
-    {{-- <div class="container" style="margin-top: 20px;">
-        <div class="card">
-            <div class="card-body">
-                <div class="row align-items-baseline">
-                    <div class="col align-self-center me-auto"></div>
-                    <div class="col text-center align-self-center"><button class="btn fw-bold link-light" type="button"
-                            style="background: var(--bs-info);">PDF</button><button class="btn fw-bold link-light"
-                            type="button" style="background: var(--bs-green);margin: 15px;">EXCEL</button></div>
-                    <div class="col"></div>
-                </div>
-            </div>
-        </div>
-    </div> --}}
-@endsection
-@section('js')
-    <script>
-        // $(document).ready(function() {
-        //     $('.export').click(function() {
-        //         var id = $(this).prev().val();
-        //         $.ajax({
-        //             url: '/export/',
-        //             type: 'POST',
-        //             data: {
-        //                 id: id,
-        //                 _token: '{{ csrf_token() }}'
-        //             },
-        //             success: function(data) {
-        //                 console.log(data);
-        //             }
-        //         });
-        //     });
-        // });
-    </script>
 @endsection
