@@ -359,8 +359,28 @@ class LaudoController extends Controller
         $owner = Owner::find($laudo->owner_id);
         $parceiro = Parceiro::where('nome', $order->parceiro)->first();
         $animal = Animal::with('alelos')->find($laudo->animal_id);
-        $pai = Animal::with('alelos')->where('animal_name', $animal->pai)->first();
-        $mae = Animal::with('alelos')->where('animal_name', $animal->mae)->first();
+        $relation = AnimalToParent::where('animal_id', $animal->id)->first();
+        
+        $pai = null;
+        $mae = null;
+  
+        if ($relation) {
+            // Buscar pelo pai
+            if ($relation->register_pai) {
+                $pai = Animal::with('alelos')->where('number_definitive', $relation->register_pai)->first();
+            }
+            if (!$pai && $relation->pai_id) {
+                $pai = Animal::with('alelos')->find($relation->pai_id);
+            }
+
+            // Buscar pela mãe
+            if ($relation->register_mae) {
+                $mae = Animal::with('alelos')->where('number_definitive', $relation->register_mae)->first();
+            }
+            if (!$mae && $relation->mae_id) {
+                $mae = Animal::with('alelos')->find($relation->mae_id);
+            }
+        }
         $results = Result::where('ordem_servico', $laudo->ordem_id)->latest()->first();
         $user = User::where('id', $order->user_id)->first();
         $tecnico = Tecnico::where('professional_name', $order->technical_manager)->first();
@@ -644,10 +664,10 @@ class LaudoController extends Controller
         if ($request->ajax()) {
             $busca = $request->codlab;
             $animal = Animal::where('animal_name', 'LIKE', '%' . $busca . '%')
-            ->where(function ($query) {
-                $query->where('status', 9)
-                    ->orWhere('status', 10);
-            })->first();
+                ->where(function ($query) {
+                    $query->where('status', 9)
+                        ->orWhere('status', 10);
+                })->first();
 
             $laudos = Laudo::where('status', 1)->where('animal_id', $animal->id)
                 ->get();

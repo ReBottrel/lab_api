@@ -46,6 +46,8 @@ class OrdemServicoController extends Controller
             'owner' => $order->creator,
         ]);
 
+       
+
 
         $animalIds = $orderRequests->pluck('animal_id')->unique()->toArray();
         $animals = Animal::whereIn('id', $animalIds)->get()->keyBy('id');
