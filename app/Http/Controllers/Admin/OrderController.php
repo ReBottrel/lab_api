@@ -23,6 +23,7 @@ use Illuminate\Http\Request;
 use App\Models\AnimalToParent;
 use App\Models\OrderRequestPayment;
 use App\Http\Controllers\Controller;
+use App\Models\OrderLote;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 use Rap2hpoutre\FastExcel\FastExcel;
@@ -87,6 +88,7 @@ class OrderController extends Controller
         $order = OrderRequest::find($id);
         $samples = Sample::get();
         $parceiros = Parceiro::get();
+        $lote = OrderLote::where('order_id', $id)->first();
         $stats = [
             1 => 'Aguardando amostra',
             2 => 'Amostra recebida',
@@ -120,6 +122,7 @@ class OrderController extends Controller
         $order = OrderRequest::find($id);
         $samples = Sample::get();
         $parceiros = Parceiro::get();
+        $lote = OrderLote::where('order_id', $id)->first();
         $stats = [
             1 => 'Aguardando amostra',
             2 => 'Amostra recebida',

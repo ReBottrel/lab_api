@@ -7,6 +7,13 @@
                 <h4 class="card-title">Detalhe do pedido #{{ $order->id }}</h4>
             </div>
         </div>
+        @if ($lote)
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <h4 class="card-title">Este pedido já possuí uma ordem de serviço</h4>
+                </div>
+            </div>
+        @endif
     </div>
     <section></section>
     <div class="container">
@@ -48,7 +55,7 @@
                         @foreach ($animals as $animal)
                             @php
                                 $datas = App\Models\DataColeta::where('id_animal', $animal->id)->first();
-                                
+
                             @endphp
                             @if ($animal)
                                 @if ($animal->status == 1)
@@ -176,8 +183,9 @@
                                     </li>
                                     <li class="list-group-item">
                                         <label for="exampleFormControlInput1" class="form-label">Status do pedido</label>
-                                        <select class="form-select status-select" data-order="{{ $order->id }}" data-od="{{ $order->id }}"
-                                            data-id="{{ $animal->id ?? '' }}" aria-label="Default select example">
+                                        <select class="form-select status-select" data-order="{{ $order->id }}"
+                                            data-od="{{ $order->id }}" data-id="{{ $animal->id ?? '' }}"
+                                            aria-label="Default select example">
                                             @if ($animal)
                                                 @foreach ($stats as $key => $stat)
                                                     <option value="{{ $key }}"
@@ -517,7 +525,7 @@
             var isValid = true;
 
             var order;
-            if ($(this).val() == 6 || $(this).val() == 7 ) {
+            if ($(this).val() == 6 || $(this).val() == 7) {
                 order = $(this).data('order');
             }
             if (isValid == true) {

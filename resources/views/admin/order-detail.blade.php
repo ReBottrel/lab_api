@@ -7,6 +7,13 @@
                 <h4 class="card-title">Detalhe do pedido #{{ $order->id }}</h4>
             </div>
         </div>
+        @if ($lote)
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <h4 class="card-title">Este pedido já possuí uma ordem de serviço</h4>
+                </div>
+            </div>
+        @endif
     </div>
     <section></section>
     <div class="container">
@@ -47,7 +54,7 @@
                     <div class="col">
                         @foreach ($order->data_g['data_table'] as $item)
                             @php
-                                
+
                                 $animal = App\Models\Animal::where('id', $item['id'])
                                     ->orWhere('register_number_brand', $item['id'])
                                     ->first();
@@ -55,7 +62,7 @@
                                     $get = App\Models\PedidoAnimal::where('id_animal', $animal->id)->first();
                                     $datas = App\Models\DataColeta::where('id_animal', $animal->id)->first();
                                 }
-                                
+
                                 $status = 'Aguardando amostra';
                             @endphp
                             @if ($animal)
