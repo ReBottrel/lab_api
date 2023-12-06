@@ -60,7 +60,6 @@
         <div class="row">
             <div class="col-2 bg-light border rounded">
                 <div class="d-flex flex-column text-center mt-2">
-
                     @php
                         $marcadores = [];
                     @endphp
@@ -76,13 +75,15 @@
                     @endphp
 
                     @foreach ($marcadores as $marcador)
-                        <div>
-                            <p>
-                                {{ $marcador }}
-                            </p>
-                        </div>
+                        @if ($marcador != 'ASB17')
+                            {{-- Verifique se o marcador não é ASB17 --}}
+                            <div>
+                                <p>
+                                    {{ $marcador }}
+                                </p>
+                            </div>
+                        @endif
                     @endforeach
-
                 </div>
             </div>
             <div class="col-2 bg-light border rounded">
@@ -93,29 +94,31 @@
                                 @php
                                     $encontrado = false;
                                 @endphp
-                                @foreach ($mae->alelos as $item)
-                                    @if (strtolower(trim($item->marcador)) == strtolower(trim($marcador)))
-                                        @php
-                                            $encontrado = true;
-                                        @endphp
-                                        <div class="col-6 @if ($item->alelo1 == '') py-2 @endif">
-                                            @if ($item->alelo1 == '')
-                                                *
-                                            @else
-                                                <p>{{ $item->alelo1 }}</p>
-                                            @endif
-                                        </div>
-                                        <div class="col-6 @if ($item->alelo2 == '') py-2 @endif">
-                                            @if ($item->alelo2 == '')
-                                                *
-                                            @else
-                                                <p>{{ $item->alelo2 }}</p>
-                                            @endif
-                                        </div>
-                                    @break
+                                @if ($marcador != 'ASB17')
+                                    @foreach ($mae->alelos as $item)
+                                        @if (strtolower(trim($item->marcador)) == strtolower(trim($marcador)))
+                                            @php
+                                                $encontrado = true;
+                                            @endphp
+                                            <div class="col-6 @if ($item->alelo1 == '') py-2 @endif">
+                                                @if ($item->alelo1 == '')
+                                                    *
+                                                @else
+                                                    <p>{{ $item->alelo1 }}</p>
+                                                @endif
+                                            </div>
+                                            <div class="col-6 @if ($item->alelo2 == '') py-2 @endif">
+                                                @if ($item->alelo2 == '')
+                                                    *
+                                                @else
+                                                    <p>{{ $item->alelo2 }}</p>
+                                                @endif
+                                            </div>
+                                        @break
+                                    @endif
+                                @endforeach
+                                @if (!$encontrado)
                                 @endif
-                            @endforeach
-                            @if (!$encontrado)
                             @endif
                         @endforeach
                     @endif
@@ -130,32 +133,35 @@
                     @php
                         $encontrado = false;
                     @endphp
-                    @foreach ($animal->alelos as $item)
-                        @if ($item->marcador == $marcador)
-                            @php
-                                $encontrado = true;
-                            @endphp
-                            <div class="col-6">
-                                @if ($item->alelo1 == '')
-                                    <input class="form-control alelo1" data-id="{{ $item->id }}" type="text"
-                                        value="*">
-                                @else
-                                    <input class="form-control alelo1" data-id="{{ $item->id }}" type="text"
-                                        value="{{ $item->alelo1 }}">
-                                @endif
-                            </div>
-                            <div class="col-6">
-                                @if ($item->alelo2 == '')
-                                    <input class="form-control alelo2" data-id="{{ $item->id }}" type="text"
-                                        value="*">
-                                @else
-                                    <input class="form-control alelo2" data-id="{{ $item->id }}" type="text"
-                                        value="{{ $item->alelo2 }}">
-                                @endif
-                            </div>
-                        @break
-                    @endif
-                @endforeach
+
+                    @if ($marcador != 'ASB17') {{-- Verifique se o marcador não é ASB17 --}}
+                        @foreach ($animal->alelos as $item)
+                            @if (strtolower(trim($item->marcador)) == strtolower(trim($marcador)))
+                                @php
+                                    $encontrado = true;
+                                @endphp
+                                <div class="col-6">
+                                    @if ($item->alelo1 == '')
+                                        <input class="form-control alelo1" data-id="{{ $item->id }}" type="text"
+                                            value="*">
+                                    @else
+                                        <input class="form-control alelo1" data-id="{{ $item->id }}" type="text"
+                                            value="{{ $item->alelo1 }}">
+                                    @endif
+                                </div>
+                                <div class="col-6">
+                                    @if ($item->alelo2 == '')
+                                        <input class="form-control alelo2" data-id="{{ $item->id }}" type="text"
+                                            value="*">
+                                    @else
+                                        <input class="form-control alelo2" data-id="{{ $item->id }}" type="text"
+                                            value="{{ $item->alelo2 }}">
+                                    @endif
+                                </div>
+                            @break
+                        @endif
+                    @endforeach
+                @endif
             @endforeach
         </div>
     </div>
@@ -168,30 +174,32 @@
                         @php
                             $encontrado = false;
                         @endphp
-                        @foreach ($pai->alelos as $item)
-                            @if ($item->marcador == $marcador)
-                                @php
-                                    $encontrado = true;
-                                @endphp
-                                <div class="col-6 @if ($item->alelo1 == '') py-2 @endif">
-                                    @if ($item->alelo1 == '')
-                                        *
-                                    @else
-                                        <p>{{ $item->alelo1 }}</p>
-                                    @endif
-                                </div>
-                                <div class="col-6 @if ($item->alelo2 == '') py-2 @endif">
-                                    @if ($item->alelo2 == '')
-                                        *
-                                    @else
-                                        <p>{{ $item->alelo2 }}</p>
-                                    @endif
-                                </div>
-                            @break
+                        @if ($marcador != 'ASB17')
+                            @foreach ($pai->alelos as $item)
+                                @if ($item->marcador == $marcador)
+                                    @php
+                                        $encontrado = true;
+                                    @endphp
+                                    <div class="col-6 @if ($item->alelo1 == '') py-2 @endif">
+                                        @if ($item->alelo1 == '')
+                                            *
+                                        @else
+                                            <p>{{ $item->alelo1 }}</p>
+                                        @endif
+                                    </div>
+                                    <div class="col-6 @if ($item->alelo2 == '') py-2 @endif">
+                                        @if ($item->alelo2 == '')
+                                            *
+                                        @else
+                                            <p>{{ $item->alelo2 }}</p>
+                                        @endif
+                                    </div>
+                                @break
+                            @endif
+                        @endforeach
+                        @if (!$encontrado)
+                            <!-- Lógica para o caso de o marcador não ser encontrado na mãe -->
                         @endif
-                    @endforeach
-                    @if (!$encontrado)
-                        <!-- Lógica para o caso de o marcador não ser encontrado na mãe -->
                     @endif
                 @endforeach
             @endif
