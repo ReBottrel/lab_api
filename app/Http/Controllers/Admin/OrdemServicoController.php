@@ -294,6 +294,7 @@ class OrdemServicoController extends Controller
         $pai = null;
         $mae = null;
         $relation = AnimalToParent::where('animal_id', $animal->id)->first();
+        $marks = Marcador::where('especie', $animal->especies)->get();
         switch ($dna_verify->verify_code) {
             case $sigla . 'PD':
                 if ($relation) {

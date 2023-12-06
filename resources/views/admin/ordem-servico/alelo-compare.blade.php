@@ -7,11 +7,12 @@
             <div class="col-2 bg-light border rounded text-center">
                 <h5>Compare alelos</h5>
             </div>
+
             @php
                 $marcadores = [];
             @endphp
 
-            <div class="col-2 bg-light border rounded text-center">
+            <div class="col-2 b g-light border rounded text-center">
                 <h5>{{ $mae->codlab ?? 'Sem verificação' }}</h5>
             </div>
             <div class="col-3 bg-light border rounded text-center">
@@ -64,9 +65,9 @@
                         $marcadores = [];
                     @endphp
 
-                    @foreach ($animal->alelos as $item)
+                    @foreach ($marks as $marcador)
                         @php
-                            $marcadores[] = $item->marcador;
+                            $marcadores[] = $marcador->gene;
                         @endphp
                     @endforeach
 
@@ -91,7 +92,6 @@
                             @foreach ($marcadores as $marcador)
                                 @php
                                     $encontrado = false;
-                                    // var_dump($marcador);
                                 @endphp
                                 @foreach ($mae->alelos as $item)
                                     @if (strtolower(trim($item->marcador)) == strtolower(trim($marcador)))
@@ -119,7 +119,6 @@
                             @endif
                         @endforeach
                     @endif
-
 
                 </div>
             </div>
@@ -301,7 +300,7 @@
         // Função para habilitar ou desabilitar o botão de PDF com base no valor do input ret
         var togglePdfButton = function() {
             pdfButton.disabled = status == 1 && !retInput.value
-        .trim(); // Adicionado .trim() para tratar strings em branco como vazias
+                .trim(); // Adicionado .trim() para tratar strings em branco como vazias
         };
 
         // Desabilita o botão PDF inicialmente se necessário
