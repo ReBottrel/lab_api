@@ -32,7 +32,7 @@
                     <button class="btn btn-primary" id="enviar">BUSCAR</button>
                 </div>
             </div>
-            <div id="genealogyTree">
+            <div class="mt-4" id="genealogyTree">
                 <!-- Aqui você vai inserir a representação da árvore genealógica -->
             </div>
         </div>
