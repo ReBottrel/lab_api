@@ -102,6 +102,9 @@ Route::middleware(['auth:web'])->group(function () {
 
 
 Route::middleware(['auth:admin'])->group(function () {
+
+    Route::post('get-codlab-relatorio', [RelatoriosController::class, 'getCodlab'])->name('get.codlab.relatorio');
+
     Route::get('new-orders', [OrderController::class, 'getNewOrders'])->name('get.new.orders');
 
     Route::get('gerar-xml', [LaudoController::class, 'gerarXML'])->name('gerar.xml');

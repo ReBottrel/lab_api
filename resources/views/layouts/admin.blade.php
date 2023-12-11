@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="{{ asset('adm/assets/fonts/fontawesome5-overrides.min.css') }}">
     <link rel="stylesheet"
         href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.11/themes/default/style.min.css" />
     <script src="https://kit.fontawesome.com/0ab2bcde1c.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="{{ asset('adm/assets/css/style.min.css') }}">
 </head>
@@ -210,19 +211,20 @@
     <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-maskmoney/3.0.2/jquery.maskMoney.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.11/jstree.min.js"></script>
     <script src="{{ asset('adm/assets/js/fabric.min.js') }}"></script>
     <script src="{{ asset('adm/assets/js/script.min.js') }}"></script>
     <script src="{{ asset('adm/assets/js/main.js') }}"></script>
     @yield('js')
     @if ($errors->any())
-    <script>
-        Swal.fire({
-            icon: 'error',
-            title: 'Erro!',
-            text: '{{ $errors->first() }}'
-        });
-    </script>
-@endif
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Erro!',
+                text: '{{ $errors->first() }}'
+            });
+        </script>
+    @endif
     @if (Session::has('success'))
         <script type="text/javascript">
             Swal.fire({

@@ -77,4 +77,14 @@ class Animal extends Model
         return $this->hasMany(Alelo::class, 'animal_id');
     }
 
+    public function paiRel()
+    {
+        return $this->belongsTo(Animal::class, 'pai', 'animal_name');
+    }
+
+    public function maeRel()
+    {
+        return $this->belongsTo(Animal::class, 'mae', 'animal_name');
+    }
+
 }

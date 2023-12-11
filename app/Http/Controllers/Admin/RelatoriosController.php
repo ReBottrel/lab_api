@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\Laudo;
+use App\Models\Animal;
 use Illuminate\Http\Request;
 use App\Exports\LaudosExport;
 use App\Http\Controllers\Controller;
@@ -190,5 +191,12 @@ class RelatoriosController extends Controller
 
         \Log::info('Total de laudos com status 1 e texto específico na conclusão: ' . $totalLaudos);
         return Excel::download(new LaudosExport($laudos), 'laudos-total.xlsx');
+    }
+    public function getCodlab(Request $request)
+    {
+        $animal = Animal::where('codlab', $request->codlab)
+            ->with('paiRel', 'maeRel')
+            ->first();
+        return response()->json($animal);
     }
 }
