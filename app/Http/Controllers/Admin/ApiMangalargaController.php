@@ -692,7 +692,7 @@ class ApiMangalargaController extends Controller
         }
 
         // Armazenar o último número usado no cache ou em uma configuração (opcional)
-        Cache::put('lastUsedNumber', $startValue, 3600); // 3600 segundos = 1 hora
+        Cache::forever('lastUsedNumber', $startValue);
 
         return $sigla . strval($startValue);
     }

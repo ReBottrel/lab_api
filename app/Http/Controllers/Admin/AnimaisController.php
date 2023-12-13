@@ -107,7 +107,7 @@ class AnimaisController extends Controller
         }
 
         // Armazenar o último número usado no cache ou em uma configuração (opcional)
-        Cache::put('lastUsedNumber', $startValue, 3600); // 3600 segundos = 1 hora
+        Cache::forever('lastUsedNumber', $startValue);
 
         return $sigla . strval($startValue);
     }
@@ -141,7 +141,7 @@ class AnimaisController extends Controller
         $pai = null;
         $mae = null;
         $relation = AnimalToParent::where('animal_id', $animal->id)->first();
-  
+
         if ($relation) {
             // Buscar pelo pai
             if ($relation->register_pai) {
@@ -159,7 +159,7 @@ class AnimaisController extends Controller
                 $mae = Animal::with('alelos')->find($relation->mae_id);
             }
         }
- 
+
 
         return response()->json(['animal' => $animal, 'pai' => $pai, 'mae' => $mae]);
     }
