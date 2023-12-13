@@ -28,9 +28,9 @@
 
         </div>
         <div id="animalForm" class="d-none">
-       
+
             <div class="my-3">
-                <button  class="btn btn-danger delete-alelos">APAGAR ALELOS</button>
+                <button class="btn btn-danger delete-alelos">APAGAR ALELOS</button>
             </div>
             <form id="form">
                 <input type="hidden" name="animal_id" id="id">
@@ -41,7 +41,7 @@
                     <div class="row">
                         <div class="mb-3 col-4">
                             <label for="exampleFormControlInput1" class="form-label">Laboratório</label>
-                            <input type="text" name="lab" class="form-control" id="lab" >
+                            <input type="text" name="lab" class="form-control" id="lab">
                         </div>
                         <div class="mb-3 col-4">
                             <label for="exampleFormControlInput1" class="form-label">Número</label>
@@ -133,8 +133,14 @@
                             $('#animalForm').removeClass('d-none');
                             $('#lab').val(data.animal.alelos && data.animal.alelos[0] && data
                                 .animal.alelos[0].lab ? data.animal.alelos[0].lab : '');
-                            $('#data').val(data.animal.alelos && data.animal.alelos[0] && data
-                                .animal.alelos[0].data ? data.animal.alelos[0].data : '');
+                            if (data.animal.alelos && data.animal.alelos[0] && data.animal
+                                .alelos[0].data) {
+                                var rawData = data.animal.alelos[0].data;
+                                var formattedDate = formatDate(rawData);
+                                $('#data').val(formattedDate);
+                            } else {
+                                $('#data').val('');
+                            }
                             $('#identificador').val(data.animal.identificador ? data.animal
                                 .identificador : '');
                             $('#marcadores').html(data.view);
@@ -178,8 +184,14 @@
                             $('#animalForm').removeClass('d-none');
                             $('#lab').val(data.animal.alelos && data.animal.alelos[0] && data
                                 .animal.alelos[0].lab ? data.animal.alelos[0].lab : '');
-                            $('#data').val(data.animal.alelos && data.animal.alelos[0] && data
-                                .animal.alelos[0].data ? data.animal.alelos[0].data : '');
+                            if (data.animal.alelos && data.animal.alelos[0] && data.animal
+                                .alelos[0].data) {
+                                var rawData = data.animal.alelos[0].data;
+                                var formattedDate = formatDate(rawData);
+                                $('#data').val(formattedDate);
+                            } else {
+                                $('#data').val('');
+                            }
                             $('#identificador').val(data.animal.identificador ? data.animal
                                 .identificador : '');
                             $('#marcadores').html(data.view);
@@ -188,6 +200,15 @@
                     });
                 }
             });
+
+            function formatDate(dateString) {
+                var date = new Date(dateString);
+                var year = date.getFullYear();
+                var month = ('0' + (date.getMonth() + 1)).slice(-2);
+                var day = ('0' + date.getDate()).slice(-2);
+                return year + '-' + month + '-' + day;
+            }
+
             $(document).on('click', '.delete-alelos', function() {
                 var id = $('#id').val();
                 Swal.fire({
@@ -201,7 +222,7 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
-                            url: "{{ route('alelos.delete') }}" ,
+                            url: "{{ route('alelos.delete') }}",
                             type: 'POST',
                             data: {
                                 id: id
