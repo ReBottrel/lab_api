@@ -4,7 +4,16 @@
     <div class="container" style="margin-bottom: 25px;">
         <div class="card">
             <div class="card-body">
-                <h4 class="card-title">Detalhe do pedido #{{ $order->id }}</h4>
+                <div class="row">
+                    <div class="col-6">
+                        <h4 class="card-title">Detalhe do pedido #{{ $order->id }}</h4>
+                    </div>
+                    <div class="col-6">
+                        <a href="{{ route('admin.order-create-animal', $order->id) }}"> <button
+                                class="btn btn-secondary">Adicionar Produto</button></a>
+                    </div>
+                </div>
+
             </div>
         </div>
         @if ($lote)
@@ -108,6 +117,7 @@
                                 <ul class="list-group m-3">
                                     <li class="list-group-item"><span>ID SISTEMA INTERNO: {{ $animal->id }}</span></li>
                                     <li class="list-group-item"><span>ID: {{ $animal->register_number_brand }}</span></li>
+                                    <li class="list-group-item"><span>CODLAB: {{ $animal->codlab }}</span></li>
                                     <li class="list-group-item"><span>PRODUTO: {{ $animal->animal_name }}</span></li>
                                     <li class="list-group-item"><span>SEXO: {{ $animal->sex }}</span></li>
                                     <li class="list-group-item"><span>NASCIMENTO: {{ $animal->birth_date }}</span></li>

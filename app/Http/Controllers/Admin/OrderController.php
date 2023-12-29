@@ -758,7 +758,14 @@ class OrderController extends Controller
             'especie_mae' => $request->especie_mae,
 
         ];
-        $codlab = $this->generateUniqueCodlab($sigla);
+        $codlab = '';
+
+        if ($request->extra == 1) {
+            $codlab = $request->codlab;
+        } else {
+            $codlab = $this->generateUniqueCodlab($sigla);
+        }
+
         $data['codlab'] = $codlab;
 
 

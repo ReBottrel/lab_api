@@ -236,6 +236,9 @@
     </textarea>
 </div>
 <div class="mb-3 px-5 pt-2">
+    <p>{{ $animal->description }}</p>
+</div>
+<div class="mb-3 px-5 pt-2">
     <label for="exampleFormControlTextarea1" class="form-label">Retificação</label>
     <input class="form-control" id="ret"
         value="@if ($laudo) {{ $laudo->ret }} @endif">

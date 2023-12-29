@@ -96,8 +96,8 @@ class AlelosController extends Controller
                     $alelo = Alelo::where('animal_id', $animal->id)
                         ->where('marcador', $marcador->gene)
                         ->first();
-                        \Log::info([$exameData['dataResultado']]);
-                    
+                    \Log::info([$exameData['dataResultado']]);
+
                     if ($apiAlelos) {
                         if ($alelo) {
                             // Atualiza o alelo se já existir
@@ -257,6 +257,43 @@ class AlelosController extends Controller
                 $alelo->delete();
             }
 
+            return response()->json(['success' => 'ok']);
+        }
+    }
+    public function replicate(Request $request)
+    {
+        // Obtém o primeiro animal com os respectivos alelos
+        $firstAnimal = Animal::with('alelos')->find($request->id);
+
+        $otherAnimals = Animal::where('codlab',  $request->codlab)->get();
+
+        if ($firstAnimal) {
+            foreach ($otherAnimals as $animal) {
+                if ($animal->id != $firstAnimal->id) {
+                    foreach ($firstAnimal->alelos as $alelo) {
+                        $existingAlelo = $animal->alelos->where('marcador', $alelo->marcador)->first();
+
+                        if ($existingAlelo) {
+                            $existingAlelo->update([
+                                'alelo1' => $alelo->alelo1,
+                                'alelo2' => $alelo->alelo2,
+                                'lab' => $alelo->lab,
+                                'data' => $alelo->data,
+                            ]);
+                        } else {
+                            Alelo::create([
+                                'animal_id' => $animal->id,
+                                'marcador' => $alelo->marcador,
+                                'alelo1' => $alelo->alelo1,
+                                'alelo2' => $alelo->alelo2,
+                                'lab' => $alelo->lab,
+                                'data' => $alelo->data,
+                            ]);
+                        }
+                    }
+                }
+            }
+            \Log::info($otherAnimals);
             return response()->json(['success' => 'ok']);
         }
     }

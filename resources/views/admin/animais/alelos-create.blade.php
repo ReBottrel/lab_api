@@ -31,11 +31,13 @@
 
             <div class="my-3">
                 <button class="btn btn-danger delete-alelos">APAGAR ALELOS</button>
+                <button class="btn btn-success replicate">REPLICAR PARA TODOS</button>
             </div>
             <form id="form">
                 <input type="hidden" name="animal_id" id="id">
                 <input type="hidden" name="animal_name">
                 <input type="hidden" id="especie">
+                <input type="hidden" id="codlab">
                 @csrf
                 <div class="card px-2">
                     <div class="row">
@@ -55,8 +57,10 @@
                     <div id="marcadores">
 
                     </div>
-                    <div>
-                        <button type="submit" class="btn btn-primary">SALVAR</button>
+                    <div class="row">
+                        <div class="col-6">
+                            <button type="submit" class="btn btn-primary">SALVAR</button>
+                        </div>
                     </div>
             </form>
 
@@ -67,6 +71,44 @@
     <script>
         $(document).ready(function() {
             let id = 1;
+
+            $(document).on('click', '.replicate', function() {
+                var codlab = $('#codlab').val();
+                var id = $('#id').val();
+                Swal.fire({
+                    title: 'Você tem certeza?',
+                    text: "Esse processo pode ser irreversível!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+
+                    confirmButtonText: 'Sim, replicar!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: "{{ route('alelos.replicate') }}",
+                            type: 'POST',
+                            data: {
+                                codlab: codlab,
+                                id: id
+                            },
+                            success: function(data) {
+                                console.log(data);
+                                Swal.fire(
+                                    'Replicado!',
+                                    'Alelos replicado com sucesso.',
+                                    'success'
+                                )
+                                location.reload();
+                            }
+                        });
+
+                    }
+                })
+
+            });
+
             $('.js-example-basic-animal').select2({
                 width: "100%",
                 placeholder: "Buscar animal pelo nome",
@@ -129,6 +171,7 @@
                                 $('#especie').val(data.especie.id);
                             }
                             $('#id').val(data.animal.id);
+                            $('#codlab').val(data.animal.codlab);
                             $('input[name="animal_name"]').val(data.animal.animal_name);
                             $('#animalForm').removeClass('d-none');
                             $('#lab').val(data.animal.alelos && data.animal.alelos[0] && data

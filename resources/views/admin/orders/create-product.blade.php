@@ -43,6 +43,19 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="mb-3">
+                                    <label for="exampleFormControlInput1" class="form-label">Verificação Extra</label>
+                                    <input class="form-check-input" name="extra" type="checkbox" value=""
+                                        id="extraVerify">
+                                </div>
+                            </div>
+                            <div class="col-md-12 d-none codlab">
+                                <div class="mb-3">
+                                    <label for="exampleFormControlInput1" class="form-label">CODLAB</label>
+                                    <input type="text" name="codlab" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="mb-3">
                                     <label for="exampleFormControlInput1" class="form-label">Nome do animal</label>
                                     <input type="text" name="animal_name" id="animal_name" class="form-control">
                                 </div>
@@ -256,6 +269,18 @@
 @section('js')
     <script>
         $(document).ready(function() {
+            $(document).on('change', '#extraVerify', function() {
+
+                if ($(this).is(':checked')) {
+                    $('#extraVerify').val('1');
+                    $('.codlab').removeClass('d-none');
+
+                } else {
+                    $('#extraVerify').val('0');
+                    $('.codlab').addClass('d-none');
+                }
+            });
+
             $('.js-pai-basic-single').select2({
                 placeholder: 'Selecione o proprietário',
                 width: '100%',

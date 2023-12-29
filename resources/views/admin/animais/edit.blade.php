@@ -24,6 +24,14 @@
                                     <input type="text" name="animal_name" id="animal_name" class="form-control">
                                 </div>
                             </div>
+                            <div class="col-md-12">
+                                <div class="mb-3">
+                                    <label for="exampleFormControlInput1" class="form-label">Verificação Extra(Mesmo
+                                        Produto)</label>
+                                    <input class="form-check-input" name="extra" type="checkbox" value=""
+                                        id="extraVerify">
+                                </div>
+                            </div>
 
                             <div class="col-md-6">
                                 <div class="mb-3">
@@ -164,8 +172,19 @@
 @section('js')
     <script>
         $(document).ready(function() {
+            $(document).on('change', '#extraVerify', function() {
+
+                if ($(this).is(':checked')) {
+                    $('#extraVerify').val('1');
+
+
+                } else {
+                    $('#extraVerify').val('0');
+
+                }
+            });
             var id = $('.id').val();
-            console.log(id);
+
             $.ajax({
                 url: `{{ url('animal-edit') }}/${id}`,
                 type: 'GET',

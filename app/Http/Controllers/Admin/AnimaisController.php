@@ -180,10 +180,11 @@ class AnimaisController extends Controller
         $rules = [];
         $messages = [];
 
-        // Adicione a verificação apenas se o campo "codlab" não estiver vazio
-        if (!empty($request->codlab)) {
-            $rules['codlab'] = 'unique:animals,codlab,' . $id;
-            $messages['codlab.unique'] = 'O codlab já está em uso por outro animal.';
+        if ($request->extra != 1) {
+            if (!empty($request->codlab)) {
+                $rules['codlab'] = 'unique:animals,codlab,' . $id;
+                $messages['codlab.unique'] = 'O codlab já está em uso por outro animal.';
+            }
         }
 
         $request->validate($rules, $messages);
