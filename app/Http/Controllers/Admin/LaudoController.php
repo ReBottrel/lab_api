@@ -527,7 +527,7 @@ class LaudoController extends Controller
 
         $animalId = substr($animal->codlab, 3);
         $xml = str_replace('﻿', '', $xml);
-        $name = 'LOVP23-' . $animalId . '.xml';
+        $name = 'LOVP24-' . $animalId . '.xml';
         $saveXml = public_path('xml/' . $name);
         file_put_contents($saveXml, $xml);
         $pemContent = file_get_contents(public_path('certificado/certw.pem'));
