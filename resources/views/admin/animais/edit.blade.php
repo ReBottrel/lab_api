@@ -85,6 +85,7 @@
                                         <option value="PÊGA">PÊGA</option>
                                         <option value="QUARTO DE MILHA">QUARTO DE MILHA</option>
                                         <option value="PAMPA">PAMPA</option>
+                                        <option value="CAMPOLINA">CAMPOLINA</option>
                                         <option value="DESCONHECIDA">DESCONHECIDA</option>
                                         <option value="NELORE">NELORE</option>
                                     </select>
