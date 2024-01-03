@@ -317,9 +317,9 @@ class LaudoController extends Controller
         if ($siglaPais == 'AP') {
             $codlabMae = str_replace('N_A', '', $codlabMae);
             $codlabPai = str_replace('N_A', '', $codlabPai);
-            $filename = "LO23-{$retValue}{$codlabAnimal}" . '.pdf';
+            $filename = "LO24-{$retValue}{$codlabAnimal}" . '.pdf';
         } else {
-            $filename = "LO{$siglaPais}23-{$retValue}{$codlabMae}.{$codlabAnimal}.{$codlabPai}" . '.pdf';
+            $filename = "LO{$siglaPais}24-{$retValue}{$codlabMae}.{$codlabAnimal}.{$codlabPai}" . '.pdf';
         }
 
         // Salva o PDF assinado no diretório público
