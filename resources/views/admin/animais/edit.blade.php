@@ -80,14 +80,9 @@
                                 <div class="mb-3">
                                     <label for="exampleFormControlInput1" class="form-label">Raça</label>
                                     <select class="form-select" name="breed">
-                                        <option value="MANGALARGA MARCHADOR">MANGALARGA MARCHADOR</option>
-                                        <option value="MANGALARGA">MANGALARGA</option>
-                                        <option value="PÊGA">PÊGA</option>
-                                        <option value="QUARTO DE MILHA">QUARTO DE MILHA</option>
-                                        <option value="PAMPA">PAMPA</option>
-                                        <option value="CAMPOLINA">CAMPOLINA</option>
-                                        <option value="DESCONHECIDA">DESCONHECIDA</option>
-                                        <option value="NELORE">NELORE</option>
+                                        @foreach ($breeds as $breed)
+                                            <option value="{{ $breed->name }}">{{ $breed->name }}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                             </div>

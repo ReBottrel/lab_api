@@ -11,6 +11,7 @@ use App\Models\OrderRequest;
 use Illuminate\Http\Request;
 use App\Models\AnimalToParent;
 use App\Http\Controllers\Controller;
+use App\Models\Breed;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 
@@ -122,6 +123,9 @@ class AnimaisController extends Controller
     {
         $animal = Animal::find($id);
         $laudo = Laudo::where('animal_id', $id)->first();
+        
+        $breeds = Breed::all();
+
         return view('admin.animais.edit', get_defined_vars());
     }
 
