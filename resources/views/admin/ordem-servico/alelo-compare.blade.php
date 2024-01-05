@@ -329,7 +329,7 @@
                 _token: "{{ csrf_token() }}",
             },
             success: function(response) {
-                console.log(response);
+
 
                 const incluidosString = response.incluido ||
                     '[]'; // Definir como string vazia se for null ou undefined
@@ -431,7 +431,7 @@
                     alelo2: alelo2,
                 },
                 success: function(response) {
-                    console.log(response);
+
                 }
             });
         });
@@ -456,7 +456,7 @@
                     excluidos: excluidos,
                 },
                 success: function(response) {
-                    console.log(response);
+
 
                 }
             });
@@ -533,9 +533,14 @@
                             .length); // pega o menor tamanho entre os três arrays
 
                         for (let i = 0; i < incluidos.length; i++) {
+                            // Verifica se o marcador atual é 'ASB17'
+                            if (response.animal.alelos[i].marcador === 'ASB17') {
+                                continue; // Pula para a próxima iteração do loop
+                            }
+
                             markersAndValues.push({
                                 marker: response.animal.alelos[i].marcador ||
-                                    'No Marker', // Note a correção aqui
+                                    'No Marker',
                                 included: incluidos[i] || '',
                                 excluded: excluidos[i] || ''
                             });
