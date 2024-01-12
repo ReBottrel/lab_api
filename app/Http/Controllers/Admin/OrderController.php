@@ -734,6 +734,12 @@ class OrderController extends Controller
     public function orderAddAnimalPost(Request $request)
     {
         $order = OrderRequest::findOrFail($request->order);
+        $tipo = 1;
+        if ($order->tipo == null) {
+            $tipo = 1;
+        } else {
+            $tipo = $order->tipo;
+        }
         $owner = Owner::findOrFail($order->owner_id);
         $randomNumber = mt_rand(0, 1000000);
         $sigla = substr($request->especies, 0, 3);
@@ -849,7 +855,7 @@ class OrderController extends Controller
             'animal' => $create->animal_name ?? $animal->animal_name,
             'order_id' => $order->id,
         ]);
-        return redirect()->route('admin.order-animal', [$order->id, $order->tipo]);
+        return redirect()->route('admin.order-animal', [$order->id,  $tipo]);
     }
     public function orderAddAnimalEdit(Request $request)
     {
