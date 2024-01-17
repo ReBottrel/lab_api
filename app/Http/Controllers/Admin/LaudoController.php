@@ -480,19 +480,22 @@ class LaudoController extends Controller
         }
 
         // Cria sequências para pai
-        $seqXmlPai = "";
-        for ($i = 0; $i < count($microssatellites); $i++) {
-            $marcador = $pai->alelos[$i]->alelo1 . '/' . $pai->alelos[$i]->alelo2;
-            $exclusao = ($excluidos[$i] == "P" || $excluidos[$i] == "MP") ? 0 : 1;
-            $seqXmlPai .= '<SEQUENCIA Microssatelite="' . $microssatellites[$i] . '" Marcador="' . $marcador . '" Exclusao="' . $exclusao . '" />';
+        if ($pai) {
+            $seqXmlPai = "";
+            for ($i = 0; $i < count($microssatellites); $i++) {
+                $marcador = $pai->alelos[$i]->alelo1 . '/' . $pai->alelos[$i]->alelo2;
+                $exclusao = ($excluidos[$i] == "P" || $excluidos[$i] == "MP") ? 0 : 1;
+                $seqXmlPai .= '<SEQUENCIA Microssatelite="' . $microssatellites[$i] . '" Marcador="' . $marcador . '" Exclusao="' . $exclusao . '" />';
+            }
         }
-
         // Cria sequências para mãe
-        $seqXmlMae = "";
-        for ($i = 0; $i < count($microssatellites); $i++) {
-            $marcador = $mae->alelos[$i]->alelo1 . '/' . $mae->alelos[$i]->alelo2;
-            $exclusao = ($excluidos[$i] == "M" || $excluidos[$i] == "MP") ? 0 : 1;
-            $seqXmlMae .= '<SEQUENCIA Microssatelite="' . $microssatellites[$i] . '" Marcador="' . $marcador . '" Exclusao="' . $exclusao . '" />';
+        if ($mae) {
+            $seqXmlMae = "";
+            for ($i = 0; $i < count($microssatellites); $i++) {
+                $marcador = $mae->alelos[$i]->alelo1 . '/' . $mae->alelos[$i]->alelo2;
+                $exclusao = ($excluidos[$i] == "M" || $excluidos[$i] == "MP") ? 0 : 1;
+                $seqXmlMae .= '<SEQUENCIA Microssatelite="' . $microssatellites[$i] . '" Marcador="' . $marcador . '" Exclusao="' . $exclusao . '" />';
+            }
         }
 
         // Determine se a paternidade e a maternidade são confirmadas
