@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 @section('content')
-    <div class="container">
+    <div class="container" id="edit-app">
         <div class="card my-4">
             <div class="card-header">
                 <h4>Criar ou adicionar produto</h4>
@@ -48,11 +48,15 @@
                                         id="extraVerify">
                                 </div>
                             </div>
-                            <div class="col-md-12 d-none codlab">
-                                <div class="mb-3">
+                            <div class="col-md-12 d-none row codlab">
+                                <div class="mb-3 col-6">
                                     <label for="exampleFormControlInput1" class="form-label">CODLAB</label>
-                                    <input type="text" name="codlab" class="form-control">
+                                    <input type="text" name="codlab" id="codlab" class="form-control">
                                 </div>
+                                <div class="col-6 mt-4">
+                                    <button class="btn btn-primary" type="button" id="buscar-codlab">BUSCAR CODLAB</button>
+                                </div>
+
                             </div>
                             <div class="col-md-12">
                                 <div class="mb-3">
@@ -279,6 +283,68 @@
                     $('#extraVerify').val('0');
                     $('.codlab').addClass('d-none');
                 }
+            });
+
+            $(document).on('click', '#buscar-codlab', function() {
+                var query = $('#codlab').val();
+                $.ajax({
+                    url: '{{ route('busca.codlab.animal') }}',
+                    type: 'POST',
+                    data: {
+                        codlab: query
+                    },
+                    dataType: 'json',
+                    beforeSend: function() {
+                        Swal.fire({
+                            title: 'Aguarde!',
+                            html: 'Estamos buscando o animal no CODLAB',
+                            allowOutsideClick: false,
+                            showCancelButton: false,
+                            showConfirmButton: false,
+                            onBeforeOpen: () => {
+                                Swal.showLoading()
+                            },
+                        });
+                    },
+                    success: function(data) {
+
+                        Swal.close();
+                        for (i in data) {
+                            if (i === 'id') continue; // Ignora o campo com o nome 'id'
+
+                            if (i === 'birth_date') { // Verifica se a chave é 'data_nascimento'
+                                var dataString = data[i];
+                                if (dataString != null) {
+                                    if (dataString.includes('T')) {
+                                        // A data já está no formato 'YYYY-MM-DDTHH:MM:SS', não precisa de ajuste
+                                        var dataObj = new Date(dataString);
+                                    } else {
+                                        // A data está no formato 'YYYY-MM-DD', então acrescente 'T00:00:00' para evitar problemas
+                                        var dataObj = new Date(dataString + 'T00:00:00');
+                                    }
+
+                                    var ano = dataObj.getFullYear();
+                                    var mes = String(dataObj.getMonth() + 1).padStart(2,
+                                        '0'); // Note o +1 aqui para ajustar o mês
+                                    var dia = String(dataObj.getDate()).padStart(2, '0');
+                                    var dataFormatada = `${ano}-${mes}-${dia}`;
+                                    var inputField = $('#edit-app').find(`[name="${i}"]`);
+                                    inputField.val(dataFormatada);
+                                }
+                            } else {
+                                var inputField = $('#edit-app').find(`[name="${i}"]`);
+                                inputField.val(data[i]);
+                            }
+                        }
+                    },
+                    error: function(error) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Animal não encontrado!',
+                        });
+                    }
+                });
             });
 
             $('.js-pai-basic-single').select2({

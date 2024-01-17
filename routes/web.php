@@ -297,6 +297,7 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::any('product-delete/{id}', [OrderController::class, 'orderAddAnimalDelete'])->name('admin.produto.delete');
     Route::get('order-admin-end/{id}', [OrderController::class, 'orderEnd'])->name('order.end.painel');
     Route::post('order-edit-animal/{id}', [OrderController::class, 'orderAddAnimalEdit'])->name('order.edit.animal');
+    Route::post('busca-animal-codlab', [OrderController::class, 'buscaCodlab'])->name('busca.codlab.animal');
 
 
     Route::get('admin-edit/{id}', [ConfigController::class, 'adminEdit'])->name('config.edit.admin');

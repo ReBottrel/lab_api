@@ -49,7 +49,8 @@ class Animal extends Model
         'collect_date',
         'portaria_habilitacao',
         'number_definitive',
-        'identificador'
+        'identificador',
+        'tag',
     ];
 
     public function owner()

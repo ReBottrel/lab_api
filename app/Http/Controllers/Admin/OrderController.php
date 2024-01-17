@@ -733,6 +733,8 @@ class OrderController extends Controller
 
     public function orderAddAnimalPost(Request $request)
     {
+
+        // dd($request->all());
         $order = OrderRequest::findOrFail($request->order);
         $tipo = 1;
         if ($order->tipo == null) {
@@ -743,6 +745,14 @@ class OrderController extends Controller
         $owner = Owner::findOrFail($order->owner_id);
         $randomNumber = mt_rand(0, 1000000);
         $sigla = substr($request->especies, 0, 3);
+
+        $tag = "Principal";
+
+        if ($request->extra == 1) {
+            $tag = "Secundário";
+        } else {
+            $tag = "Principal";
+        }
 
         $data = [
             'user_id' => $owner->user_id,
@@ -762,7 +772,7 @@ class OrderController extends Controller
             'owner_id' => $owner->id,
             'especie_pai' => $request->especie_pai,
             'especie_mae' => $request->especie_mae,
-
+            'tag' => $tag,
         ];
         $codlab = '';
 
@@ -804,6 +814,7 @@ class OrderController extends Controller
             $verify_code = $request->verify_code;
         }
 
+       
         if ($request->id) {
             $animal = Animal::findOrFail($request->id);
             $animal->update($data);
@@ -922,6 +933,18 @@ class OrderController extends Controller
             return redirect()->route('admin.order-animal', [$order->id, $order->tipo]);
         } else {
             return redirect()->back()->with('error', 'Animal não possui espécie cadastrada, va até a o menu de animais e edite o animal para adicionar a espécie');
+        }
+    }
+
+    public function buscaCodlab(Request $request)
+    {
+        if ($request->ajax()) {
+            $animal = Animal::where('codlab', $request->codlab)->first();
+            if ($animal) {
+                return response()->json($animal);
+            } else {
+                return response()->json(['error' => 'Animal não encontrado.'], 404);
+            }
         }
     }
 
