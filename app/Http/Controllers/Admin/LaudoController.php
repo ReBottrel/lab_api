@@ -360,10 +360,10 @@ class LaudoController extends Controller
         $parceiro = Parceiro::where('nome', $order->parceiro)->first();
         $animal = Animal::with('alelos')->find($laudo->animal_id);
         $relation = AnimalToParent::where('animal_id', $animal->id)->first();
-        
+
         $pai = null;
         $mae = null;
-  
+
         if ($relation) {
             // Buscar pelo pai
             if ($relation->register_pai) {
@@ -451,8 +451,13 @@ class LaudoController extends Controller
         $incluidos = str_split($results->incluido);
 
         $animalId = $this->removePrefix($animal->codlab);
-        $paiId = $this->removePrefix($pai->codlab);
-        $maeId = $this->removePrefix($mae->codlab);
+        if ($pai) {
+            $paiId = $this->removePrefix($pai->codlab);
+        }
+        if ($mae) {
+            $maeId = $this->removePrefix($mae->codlab);
+        }
+
 
         // dd($laudo);
 
