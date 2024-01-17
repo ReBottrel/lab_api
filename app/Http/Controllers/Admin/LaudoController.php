@@ -449,7 +449,8 @@ class LaudoController extends Controller
         $microssatellites = ["AHT4", "AHT5", "ASB2", "ASB23", "HMS2", "HMS3", "HMS6", "HMS7", "HTG10", "HTG4", "HTG7", "VHL20"];
         $excluidos = str_split($results->excluido);
         $incluidos = str_split($results->incluido);
-
+        $paiId = '';
+        $maeId = '';
         $animalId = $this->removePrefix($animal->codlab);
         if ($pai) {
             $paiId = $this->removePrefix($pai->codlab);
@@ -501,9 +502,13 @@ class LaudoController extends Controller
         // Determine se a paternidade e a maternidade são confirmadas
         $confirmaPaternidade = !in_array("P", $excluidos) && !in_array("MP", $excluidos) ? 1 : 0;
         $confirmaMaternidade = !in_array("M", $excluidos) && !in_array("MP", $excluidos) ? 1 : 0;
+        if ($pai) {
+            $paiXml = '<PAI CodigoLaboratorio="' . $pai->identificador . '" ConfirmaPaternidade="' . $confirmaPaternidade . '">' . $seqXmlPai . '</PAI>';
+        }
+        if ($mae) {
+            $maeXml = '<MAE CodigoLaboratorio="' . $mae->identificador . '" ConfirmaMaternidade="' . $confirmaMaternidade . '">' . $seqXmlMae . '</MAE>';
+        }
 
-        $paiXml = '<PAI CodigoLaboratorio="' . $pai->identificador . '" ConfirmaPaternidade="' . $confirmaPaternidade . '">' . $seqXmlPai . '</PAI>';
-        $maeXml = '<MAE CodigoLaboratorio="' . $mae->identificador . '" ConfirmaMaternidade="' . $confirmaMaternidade . '">' . $seqXmlMae . '</MAE>';
         $xml = '<?xml version="1.0" encoding="iso-8859-1" ?>
         <document>
           <CASO>
