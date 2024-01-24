@@ -77,7 +77,8 @@ class OrderController extends Controller
             8 => 'Recoleta solicitada',
             9 => 'Amostra paga',
             10 => 'Pedido Concluído',
-            11 => 'Aguardando Pagamento'
+            11 => 'Aguardando Pagamento',
+            12 => 'Morto'
 
         ];
         return view('admin.orders.order-vet-detail', get_defined_vars());
@@ -100,7 +101,8 @@ class OrderController extends Controller
             8 => 'Recoleta solicitada',
             9 => 'Amostra paga',
             10 => 'Pedido Concluído',
-            11 => 'Aguardando Pagamento'
+            11 => 'Aguardando Pagamento',
+            12 => 'Morto'
 
         ];
         $animals = Animal::where('order_id', $id)->get();
@@ -133,7 +135,8 @@ class OrderController extends Controller
             8 => 'Recoleta solicitada',
             9 => 'Amostra paga',
             10 => 'Pedido Concluído',
-            11 => 'Aguardando Pagamento'
+            11 => 'Aguardando Pagamento',
+            12 => 'Morto'
 
         ];
         // $animals = Animal::where('order_id', $id)->get();
@@ -156,7 +159,8 @@ class OrderController extends Controller
             8 => 'Recoleta solicitada',
             9 => 'Amostra paga',
             10 => 'Pedido Concluído',
-            11 => 'Aguardando Pagamento'
+            11 => 'Aguardando Pagamento',
+            12 => 'Morto'
 
         ];
 
@@ -319,6 +323,9 @@ class OrderController extends Controller
                 $orderRequest->update([
                     'payment_status' => 2,
                 ]);
+            }
+            if ($request->value == 12) {
+                $orderRequest->delete();
             }
 
             if ($request->value == 9) {
@@ -814,7 +821,7 @@ class OrderController extends Controller
             $verify_code = $request->verify_code;
         }
 
-       
+
         if ($request->id) {
             $animal = Animal::findOrFail($request->id);
             $animal->update($data);

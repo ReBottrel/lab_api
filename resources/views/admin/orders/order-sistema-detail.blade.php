@@ -111,6 +111,10 @@
                                     @php
                                         $status = 'Aguardando Pagamento';
                                     @endphp
+                                @elseif($animal->status == 12)
+                                    @php
+                                        $status = 'Morto';
+                                    @endphp
                                 @endif
                             @endif
                             <div class="card my-5">
@@ -130,7 +134,7 @@
                                     <li class="list-group-item"><span>Obs: {{ $animal->description ?? '' }}</span></li>
 
                                     <li
-                                        class="list-group-item text-uppercase  @if ($status == 'Análise Aprovada') bg-success @elseif($status == 'Pedido Concluído') bg-success @elseif($status == 'Amostra paga') bg-success @elseif($status == 'Análise reprovada') bg-danger @elseif($status == 'Recoleta solicitada') bg-warning @else bg-primary @endif  text-white">
+                                        class="list-group-item text-uppercase  @if ($status == 'Análise Aprovada') bg-success  @elseif($status == 'Morto') bg-warning @elseif($status == 'Pedido Concluído') bg-success @elseif($status == 'Amostra paga') bg-success @elseif($status == 'Análise reprovada') bg-danger @elseif($status == 'Recoleta solicitada') bg-warning @else bg-primary @endif  text-white">
                                         <span>STATUS:
                                             {{ $status }}</span>
                                     </li>
