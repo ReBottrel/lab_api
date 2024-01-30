@@ -501,18 +501,20 @@ class LaudoController extends Controller
                     $seqXmlMae .= '<SEQUENCIA Microssatelite="' . $microssatellites[$i] . '" Marcador="' . $marcador . '" Exclusao="' . $exclusao . '" />';
                 }
             }
-        } 
+        }
 
         // Determine se a paternidade e a maternidade são confirmadas
         $confirmaPaternidade = !in_array("P", $excluidos) && !in_array("MP", $excluidos) ? 1 : 0;
         $confirmaMaternidade = !in_array("M", $excluidos) && !in_array("MP", $excluidos) ? 1 : 0;
         $paiXml = "";
         $maeXml = "";
-        if ($pai) {
-            $paiXml = '<PAI CodigoLaboratorio="' . $pai->identificador . '" ConfirmaPaternidade="' . $confirmaPaternidade . '">' . $seqXmlPai . '</PAI>';
-        }
-        if ($mae) {
-            $maeXml = '<MAE CodigoLaboratorio="' . $mae->identificador . '" ConfirmaMaternidade="' . $confirmaMaternidade . '">' . $seqXmlMae . '</MAE>';
+        if ($ordem->tipo_exame != 'EQUGN') {
+            if ($pai) {
+                $paiXml = '<PAI CodigoLaboratorio="' . $pai->identificador . '" ConfirmaPaternidade="' . $confirmaPaternidade . '">' . $seqXmlPai . '</PAI>';
+            }
+            if ($mae) {
+                $maeXml = '<MAE CodigoLaboratorio="' . $mae->identificador . '" ConfirmaMaternidade="' . $confirmaMaternidade . '">' . $seqXmlMae . '</MAE>';
+            }
         }
 
         $xml = '<?xml version="1.0" encoding="iso-8859-1" ?>
