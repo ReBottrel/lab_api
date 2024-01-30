@@ -360,7 +360,7 @@ class LaudoController extends Controller
         $parceiro = Parceiro::where('nome', $order->parceiro)->first();
         $animal = Animal::with('alelos')->find($laudo->animal_id);
         $relation = AnimalToParent::where('animal_id', $animal->id)->first();
-
+        $ordem = OrdemServico::find($laudo->ordem_id);
         $pai = null;
         $mae = null;
 
@@ -387,7 +387,7 @@ class LaudoController extends Controller
         // dd($tecnico);
         // dd($user->email);
         if ($order->parceiro == 'ABCCMM') {
-            $xml = $this->gerarXML($animal, $laudo, $order, $results, $pai, $mae, $owner, $tecnico);
+            $xml = $this->gerarXML($animal, $laudo, $order, $ordem, $results, $pai, $mae, $owner, $tecnico);
             Mail::to($user->email)->send(new EnviarLaudoMail($laudo->pdf));
             Mail::to('laudosdna.lfda-mg@agro.gov.br')->send(new EnviarLaudoMail($laudo->pdf));
             $log = Log::create([
@@ -444,7 +444,7 @@ class LaudoController extends Controller
         return response()->json($laudo, 200);
     }
 
-    public function gerarXML($animal, $laudo, $order, $results, $pai, $mae, $owner, $tecnico)
+    public function gerarXML($animal, $laudo, $order, $results, $pai, $mae, $owner, $tecnico, $ordem)
     {
         $microssatellites = ["AHT4", "AHT5", "ASB2", "ASB23", "HMS2", "HMS3", "HMS6", "HMS7", "HTG10", "HTG4", "HTG7", "VHL20"];
         $excluidos = str_split($results->excluido);
@@ -481,21 +481,23 @@ class LaudoController extends Controller
         }
 
         // Cria sequências para pai
-        if ($pai) {
-            $seqXmlPai = "";
-            for ($i = 0; $i < count($microssatellites); $i++) {
-                $marcador = $pai->alelos[$i]->alelo1 . '/' . $pai->alelos[$i]->alelo2;
-                $exclusao = ($excluidos[$i] == "P" || $excluidos[$i] == "MP") ? 0 : 1;
-                $seqXmlPai .= '<SEQUENCIA Microssatelite="' . $microssatellites[$i] . '" Marcador="' . $marcador . '" Exclusao="' . $exclusao . '" />';
+        if ($ordem->tipo != 'EQUGN') {
+            if ($pai) {
+                $seqXmlPai = "";
+                for ($i = 0; $i < count($microssatellites); $i++) {
+                    $marcador = $pai->alelos[$i]->alelo1 . '/' . $pai->alelos[$i]->alelo2;
+                    $exclusao = ($excluidos[$i] == "P" || $excluidos[$i] == "MP") ? 0 : 1;
+                    $seqXmlPai .= '<SEQUENCIA Microssatelite="' . $microssatellites[$i] . '" Marcador="' . $marcador . '" Exclusao="' . $exclusao . '" />';
+                }
             }
-        }
-        // Cria sequências para mãe
-        if ($mae) {
-            $seqXmlMae = "";
-            for ($i = 0; $i < count($microssatellites); $i++) {
-                $marcador = $mae->alelos[$i]->alelo1 . '/' . $mae->alelos[$i]->alelo2;
-                $exclusao = ($excluidos[$i] == "M" || $excluidos[$i] == "MP") ? 0 : 1;
-                $seqXmlMae .= '<SEQUENCIA Microssatelite="' . $microssatellites[$i] . '" Marcador="' . $marcador . '" Exclusao="' . $exclusao . '" />';
+            // Cria sequências para mãe
+            if ($mae) {
+                $seqXmlMae = "";
+                for ($i = 0; $i < count($microssatellites); $i++) {
+                    $marcador = $mae->alelos[$i]->alelo1 . '/' . $mae->alelos[$i]->alelo2;
+                    $exclusao = ($excluidos[$i] == "M" || $excluidos[$i] == "MP") ? 0 : 1;
+                    $seqXmlMae .= '<SEQUENCIA Microssatelite="' . $microssatellites[$i] . '" Marcador="' . $marcador . '" Exclusao="' . $exclusao . '" />';
+                }
             }
         }
 
