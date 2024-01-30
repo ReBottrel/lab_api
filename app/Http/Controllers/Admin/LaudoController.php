@@ -447,7 +447,7 @@ class LaudoController extends Controller
     public function gerarXML($animal, $laudo, $order, $results, $pai, $mae, $owner, $tecnico, $ordem)
     {
 
-        dd($ordem);
+
         $microssatellites = ["AHT4", "AHT5", "ASB2", "ASB23", "HMS2", "HMS3", "HMS6", "HMS7", "HTG10", "HTG4", "HTG7", "VHL20"];
         $excluidos = str_split($results->excluido);
         $incluidos = str_split($results->incluido);
