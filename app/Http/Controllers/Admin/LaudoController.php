@@ -387,7 +387,7 @@ class LaudoController extends Controller
         // dd($tecnico);
         // dd($user->email);
         if ($order->parceiro == 'ABCCMM') {
-            $xml = $this->gerarXML($animal, $laudo, $order, $ordem, $results, $pai, $mae, $owner, $tecnico);
+            $xml = $this->gerarXML($animal, $laudo, $order,  $results, $pai, $mae, $owner, $tecnico, $ordem);
             Mail::to($user->email)->send(new EnviarLaudoMail($laudo->pdf));
             Mail::to('laudosdna.lfda-mg@agro.gov.br')->send(new EnviarLaudoMail($laudo->pdf));
             $log = Log::create([
@@ -446,6 +446,8 @@ class LaudoController extends Controller
 
     public function gerarXML($animal, $laudo, $order, $results, $pai, $mae, $owner, $tecnico, $ordem)
     {
+
+        dd($ordem);
         $microssatellites = ["AHT4", "AHT5", "ASB2", "ASB23", "HMS2", "HMS3", "HMS6", "HMS7", "HTG10", "HTG4", "HTG7", "VHL20"];
         $excluidos = str_split($results->excluido);
         $incluidos = str_split($results->incluido);
