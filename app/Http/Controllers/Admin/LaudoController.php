@@ -483,7 +483,7 @@ class LaudoController extends Controller
         }
 
         // Cria sequências para pai
-        if ($ordem->tipo != 'EQUGN') {
+        if ($ordem->tipo_exame != 'EQUGN') {
             if ($pai) {
                 $seqXmlPai = "";
                 for ($i = 0; $i < count($microssatellites); $i++) {
@@ -501,7 +501,7 @@ class LaudoController extends Controller
                     $seqXmlMae .= '<SEQUENCIA Microssatelite="' . $microssatellites[$i] . '" Marcador="' . $marcador . '" Exclusao="' . $exclusao . '" />';
                 }
             }
-        }
+        } 
 
         // Determine se a paternidade e a maternidade são confirmadas
         $confirmaPaternidade = !in_array("P", $excluidos) && !in_array("MP", $excluidos) ? 1 : 0;
