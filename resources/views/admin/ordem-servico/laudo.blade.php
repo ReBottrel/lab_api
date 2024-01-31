@@ -815,7 +815,11 @@
                             {{ $animal->alelos[0]->lab }} em @if ($laudo->data_retificacao)
                                 {{ date('d/m/Y', strtotime($laudo->data_retificacao)) }}
                             @else
-                                {{ date('d/m/Y') }}
+                                @if ($animal->alelos[0]->lab == 'Loci Genética Laboratorial')
+                                    {{ date('d/m/Y') }}
+                                @else
+                                    {{ date('d/m/Y', strtotime($animal->alelos[0]->data)) }}
+                                @endif
                             @endif.
 
                         </span>
