@@ -208,13 +208,13 @@
             });
         });
 
-        $('#imprimir').click(function() {
-            var conteudo = $('.conteudo').html();
-            var tela_impressao = window.open('about:blank');
-            tela_impressao.document.write(conteudo);
-            tela_impressao.window.print();
-            tela_impressao.window.close();
-        });
+            $('#imprimir').click(function() {
+                var conteudo = $('.conteudo').html();
+                var tela_impressao = window.open('about:blank');
+                tela_impressao.document.write(conteudo);
+                tela_impressao.window.print();
+                tela_impressao.window.close();
+            });
         $(document).on('click', '#openModal', function() {
             let id = $(this).data('id');
             let data = $(this).data('bar');
