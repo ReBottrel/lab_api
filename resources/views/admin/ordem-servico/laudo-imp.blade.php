@@ -809,15 +809,19 @@
                         <span>
                             FILHO(A): animal {{ $animal->animal_name }}, número {{ $animal->identificador }}, emitido
                             pelo laboratório
-                            {{ $animal->alelos[0]->lab }} em @if ($laudo->data_retificacao)
-                                {{ date('d/m/Y', strtotime($laudo->data_retificacao)) }}
+                            {{ $animal->alelos[0]->lab }} em @if ($animal->utility == 1)
+                                {{ date('d/m/Y') }}
                             @else
-                                @if ($animal->alelos[0]->lab == 'LOCI GENÉTICA LABORATORIAL')
-                                    {{ date('d/m/Y') }}
+                                @if ($laudo->data_retificacao)
+                                    {{ date('d/m/Y', strtotime($laudo->data_retificacao)) }}
                                 @else
-                                    {{ date('d/m/Y', strtotime($animal->alelos[0]->data)) }}
-                                @endif
-                            @endif.
+                                    @if ($animal->alelos[0]->lab == 'LOCI GENÉTICA LABORATORIAL')
+                                        {{ date('d/m/Y') }}
+                                    @else
+                                        {{ date('d/m/Y', strtotime($animal->alelos[0]->data)) }}
+                                    @endif
+                                @endif.
+                            @endif
 
                         </span>
                         @if ($pai != null)
