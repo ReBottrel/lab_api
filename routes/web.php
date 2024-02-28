@@ -470,3 +470,4 @@ Route::get('view-resenha/{id}', [ResenhaController::class, 'viewResenha'])->name
 Route::get('resenha-pdf/{id}', [ResenhaController::class, 'gerarPDF'])->name('resenha.pdf');
 
 
+Route::get('teste-email', [TesteController::class, 'testeEnvioEmail']);

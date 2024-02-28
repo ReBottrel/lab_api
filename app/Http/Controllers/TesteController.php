@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Support\Facades\Mail;
 use Dompdf\Dompdf;
 use App\Models\Alelo;
 use App\Models\Laudo;
@@ -15,12 +15,12 @@ use App\Models\OrdemServico;
 use App\Models\OrderRequest;
 use App\Models\PedidoAnimal;
 use Illuminate\Http\Request;
-use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\LaudosExport;
 use App\Models\ResenhaAnimal;
 use Illuminate\Support\Facades\DB;
 use App\Models\OrderRequestPayment;
 use Illuminate\Support\Facades\Http;
+use Maatwebsite\Excel\Facades\Excel;
 
 class TesteController extends Controller
 {
@@ -396,38 +396,50 @@ class TesteController extends Controller
         return Excel::download(new LaudosExport($laudos), 'laudos-total-exclusao.xlsx');
     }
 
-    public function getLaudosTotal() 
+    public function getLaudosTotal()
     {
         $laudos = Laudo::where('status', 1)
-        ->select(
-            'animal_id',
-            'mae_id',
-            'pai_id',
-            'veterinario',
-            'owner_id',
-            'data_coleta',
-            'data_realizacao',
-            'data_lab',
-            'codigo_busca',
-            'observacao',
-            'conclusao',
-            'tipo',
-            'veterinario_id',
-            'ordem_id',
-            'order_id',
-            'pdf',
-            'ret',
-            'status',
-            'data_retificacao',
-            'created_at',
-            'updated_at'
-        )
-        ->get();
+            ->select(
+                'animal_id',
+                'mae_id',
+                'pai_id',
+                'veterinario',
+                'owner_id',
+                'data_coleta',
+                'data_realizacao',
+                'data_lab',
+                'codigo_busca',
+                'observacao',
+                'conclusao',
+                'tipo',
+                'veterinario_id',
+                'ordem_id',
+                'order_id',
+                'pdf',
+                'ret',
+                'status',
+                'data_retificacao',
+                'created_at',
+                'updated_at'
+            )
+            ->get();
 
-    $totalLaudos = count($laudos);
+        $totalLaudos = count($laudos);
 
-    \Log::info('Total de laudos com status 1 e texto específico na conclusão: ' . $totalLaudos);
-    return Excel::download(new LaudosExport($laudos), 'laudos-total.xlsx');
+        \Log::info('Total de laudos com status 1 e texto específico na conclusão: ' . $totalLaudos);
+        return Excel::download(new LaudosExport($laudos), 'laudos-total.xlsx');
     }
 
+
+    public function testeEnvioEmail()
+    {
+        $data = [
+            'name' => 'Teste',
+            'body' => 'Teste de envio de email'
+        ];
+        Mail::send('mails.teste', $data, function ($message) {
+            $message->to('compras@kswbike.com.br', 'Teste')->subject('Teste de envio de email');
+            $message->from('felipephplow@gmail.com', 'Teste');
+        });
+    }
 }
