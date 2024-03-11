@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\Animal;
 use App\Models\Parceiro;
+use App\Models\OrderRequest;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -26,5 +28,22 @@ class ParceiroController extends Controller
         $parceiro = Parceiro::find($request->id);
         $parceiro->delete();
         return response()->json(['success' => 'Parceiro deletado com sucesso!']);
+    }
+
+
+    public function searchOrdersView()
+    {
+        return view('admin.parcerios.buscar-pedido', get_defined_vars());
+    }
+
+    public function searchOrders(Request $request)
+    {
+        $pedido = Animal::where('animal_name', $request->name)->get();
+
+        if ($pedido->isEmpty()) {
+            return response()->json(['error' => 'Nenhum pedido encontrado']);
+        } else {
+            return response()->json($pedido);
+        }
     }
 }

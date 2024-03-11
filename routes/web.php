@@ -43,6 +43,7 @@ use App\Http\Controllers\Veterinario\VetOwnerController;
 use App\Http\Controllers\Veterinario\VetAnimalController;
 use App\Http\Controllers\Veterinario\VetConfigController;
 use App\Models\OrdemServico;
+use App\Models\Parceiro;
 
 /*
 |--------------------------------------------------------------------------
@@ -388,6 +389,9 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::get('ordem-edit/{id}', [OrdemServicoController::class, 'edit'])->name('ordem.servico.edit');
     Route::post('ordem-update/', [OrdemServicoController::class, 'update'])->name('ordem.servico.update');
 
+    Route::get('buscar-pedido-parceiro', [ParceiroController::class, 'searchOrdersView'])->name('buscar.pedido.parceiro');
+    Route::post('buscar-pedido-parceiro-store', [ParceiroController::class, 'searchOrders'])->name('buscar.pedido.parceiro.store');
+
 });
 
 Route::get('vet-login', [AuthVetController::class, 'showLoginForm'])->name('vet.login');
@@ -450,6 +454,8 @@ Route::middleware(['auth:veterinario'])->prefix('vet')->group(function () {
     Route::post('configs-store', [VetConfigController::class, 'updateUser'])->name('vet.configs.store');
 
     Route::any('logout', [AuthVetController::class, 'sair'])->name('vet.logout');
+
+ 
 
   
 });
