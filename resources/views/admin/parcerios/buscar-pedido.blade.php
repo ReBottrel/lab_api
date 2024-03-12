@@ -53,6 +53,7 @@
                                 _token: '{{ csrf_token() }}'
                             },
                             success: function(data) {
+                                console.log(data);
                                 // Primeiro, criamos o cabeçalho da tabela
                                 let tableContent = `
                     <table class="table">
@@ -60,8 +61,8 @@
                             <tr>
                                 <th scope="col">ID</th>
                                 <th scope="col">Nome</th>
-                                <th scope="col">Pai</th>
-                                <th scope="col">Mãe</th>
+                                <th scope="col">Data prevista</th>
+                                <th scope="col">Laudo</th>
                                 <th scope="col">Status</th>
                             </tr>
                         </thead>
@@ -74,16 +75,22 @@
                                     let statusDescription = statusMap[pedido
                                         .status] || 'Status desconhecido';
 
+                                    let downloadLink =
+                                        "{{ route('laudo.download', ':pdf') }}";
+                                    downloadLink = downloadLink.replace(':pdf',
+                                        pedido.pdf);
+
                                     tableContent += `
-                        <tr>
-                            <td>${pedido.register_number_brand}</td>
-                            <td>${pedido.animal_name}</td>
-                            <td>${pedido.pai}</td>
-                            <td>${pedido.mae}</td>
-                            <td>${statusDescription}</td>
-                        </tr>
-                    `;
+        <tr>
+            <td>${pedido.register_number_brand}</td>
+            <td>${pedido.animal_name}</td>
+            <td>${pedido.data}</td>
+            <td><a href="${downloadLink}">Download</a></td>
+            <td>${statusDescription}</td>
+        </tr>
+    `;
                                 });
+
 
                                 // Fechamos a tabela
                                 tableContent += `

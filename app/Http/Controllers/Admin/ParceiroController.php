@@ -7,6 +7,8 @@ use App\Models\Parceiro;
 use App\Models\OrderRequest;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Laudo;
+use App\Models\OrdemServico;
 
 class ParceiroController extends Controller
 {
@@ -38,12 +40,24 @@ class ParceiroController extends Controller
 
     public function searchOrders(Request $request)
     {
-        $pedido = Animal::where('animal_name', $request->name)->get();
+        $pedidos = Animal::where('animal_name', $request->name)->get();
 
-        if ($pedido->isEmpty()) {
-            return response()->json(['error' => 'Nenhum pedido encontrado']);
-        } else {
-            return response()->json($pedido);
+        $dados = [];
+
+        foreach ($pedidos as $pedido) {
+        
+            $laudo = Laudo::where('animal_id', $pedido->id)->first();
+            $ordemServico = OrdemServico::where('animal_id', $pedido->id)->first();
+
+            $dados[] = [
+                'id' => $pedido->register_number_brand,
+                'animal_name' => $pedido->animal_name,
+                'status' => $pedido->status,
+                'data' => $ordemServico->data ?? null,
+                'pdf' => $laudo->id ?? null,
+            ];
         }
+
+        return response()->json($dados);
     }
 }
