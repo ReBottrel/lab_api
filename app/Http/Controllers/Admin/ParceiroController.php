@@ -53,7 +53,7 @@ class ParceiroController extends Controller
                 'id' => $pedido->register_number_brand,
                 'animal_name' => $pedido->animal_name,
                 'status' => $pedido->status,
-                'data' => $ordemServico->data ?? null,
+                'data' =>   date('d/m/Y', strtotime($ordemServico->data)),
                 'pdf' => $laudo->id ?? null,
             ];
         }
