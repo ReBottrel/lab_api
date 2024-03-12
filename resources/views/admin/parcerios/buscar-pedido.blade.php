@@ -82,7 +82,7 @@
 
                                     tableContent += `
         <tr>
-            <td>${pedido.register_number_brand}</td>
+            <td>${pedido.id}</td>
             <td>${pedido.animal_name}</td>
             <td>${pedido.data}</td>
             <td><a href="${downloadLink}">Download</a></td>
