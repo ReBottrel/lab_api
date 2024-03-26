@@ -650,12 +650,22 @@ class OrderController extends Controller
     }
     public function searchAnimal(Request $request)
     {
-        if ($request->ajax()) {
-            $animals = Animal::with('order')->where('animal_name', $request->animal)->get();
-            $viewRender = view('admin.includes.search-animal', get_defined_vars())->render();
+        if ($request->ajax() && $request->has('animal')) {
+            // Busca apenas animais com um order_id associado e que correspondam ao nome fornecido.
+            $animals = Animal::with('order')
+                ->where('animal_name', $request->animal)
+                ->whereNotNull('order_id')
+                ->get();
+
+            $viewRender = view('admin.includes.search-animal', compact('animals'))->render();
+
             return response()->json([get_defined_vars()]);
         }
+
+        // Considerar retornar uma resposta adequada caso não seja uma requisição ajax ou o parâmetro 'animal' não esteja presente
+        return response()->json(['error' => 'Requisição inválida'], 400);
     }
+
     public function searchCodlab(Request $request)
     {
         if ($request->ajax()) {

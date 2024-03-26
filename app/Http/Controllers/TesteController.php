@@ -438,7 +438,7 @@ class TesteController extends Controller
             'body' => 'Teste de envio de email'
         ];
         Mail::send('mails.teste', $data, function ($message) {
-            $message->to('compras@kswbike.com.br', 'Teste')->subject('Teste de envio de email');
+            $message->to('fffelipecruz.13@gmail.com', 'Teste')->subject('Teste de envio de email');
             $message->from('felipephplow@gmail.com', 'Teste');
         });
     }
