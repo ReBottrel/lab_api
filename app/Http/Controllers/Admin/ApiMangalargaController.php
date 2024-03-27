@@ -140,7 +140,7 @@ class ApiMangalargaController extends Controller
                         'especies' => 'EQUINA',
                         'breed' => 'MANGALARGA MARCHADOR',
                         'number_definitive' => $animal->registroPai,
-                        'codlab' => $codlab,
+                        'codlab' => $this->generateUniqueCodlab('EQU'),
                     ]);
 
                     $mae = Animal::create([
@@ -148,7 +148,7 @@ class ApiMangalargaController extends Controller
                         'especies' => 'EQUINA',
                         'breed' => 'MANGALARGA MARCHADOR',
                         'number_definitive' => $animal->registroMae,
-                        'codlab' => $codlab,
+                        'codlab' => $this->generateUniqueCodlab('EQU'),
                     ]);
 
                     $currentAnimal = $newAnimal;
@@ -307,7 +307,7 @@ class ApiMangalargaController extends Controller
                         'especies' => 'EQUINA',
                         'breed' => 'MANGALARGA MARCHADOR',
                         'number_definitive' => $animal->registroPai,
-                        'codlab' => $codlab,
+                        'codlab' => $this->generateUniqueCodlab('EQU'),
                     ]);
 
                     $mae = Animal::create([
@@ -315,7 +315,7 @@ class ApiMangalargaController extends Controller
                         'especies' => 'EQUINA',
                         'breed' => 'MANGALARGA MARCHADOR',
                         'number_definitive' => $animal->registroMae,
-                        'codlab' => $codlab,
+                        'codlab' => $this->generateUniqueCodlab('EQU'),
                     ]);
 
                     $currentAnimal = $newAnimal;
@@ -470,7 +470,7 @@ class ApiMangalargaController extends Controller
                         'especies' => 'EQUINA',
                         'breed' => 'MANGALARGA MARCHADOR',
                         'number_definitive' => $animal->registroPai,
-                        'codlab' => $codlab,
+                        'codlab' => $this->generateUniqueCodlab('EQU'),
                     ]);
 
                     $mae = Animal::create([
@@ -478,7 +478,7 @@ class ApiMangalargaController extends Controller
                         'especies' => 'EQUINA',
                         'breed' => 'MANGALARGA MARCHADOR',
                         'number_definitive' => $animal->registroMae,
-                        'codlab' => $codlab,
+                        'codlab' => $this->generateUniqueCodlab('EQU'),
                     ]);
 
                     $currentAnimal = $newAnimal;
@@ -632,7 +632,7 @@ class ApiMangalargaController extends Controller
                         'especies' => 'EQUINA',
                         'breed' => 'MANGALARGA MARCHADOR',
                         'number_definitive' => $animal->registroPai,
-                        'codlab' => $codlab,
+                        'codlab' => $this->generateUniqueCodlab('EQU'),
                     ]);
 
                     $mae = Animal::create([
@@ -640,7 +640,7 @@ class ApiMangalargaController extends Controller
                         'especies' => 'EQUINA',
                         'breed' => 'MANGALARGA MARCHADOR',
                         'number_definitive' => $animal->registroMae,
-                        'codlab' => $codlab,
+                        'codlab' => $this->generateUniqueCodlab('EQU'),
                     ]);
 
                     $currentAnimal = $newAnimal;
