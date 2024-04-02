@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers;
-use Illuminate\Support\Facades\Mail;
 use Dompdf\Dompdf;
 use App\Models\Alelo;
 use App\Models\Laudo;
@@ -20,7 +19,9 @@ use App\Models\ResenhaAnimal;
 use Illuminate\Support\Facades\DB;
 use App\Models\OrderRequestPayment;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Mail;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Cache;
 
 class TesteController extends Controller
 {
@@ -119,13 +120,13 @@ class TesteController extends Controller
 
     public function exportDuplicatedCodlabToTxt()
     {
-        $animalsByCodlab = Animal::select('codlab', 'animal_name')
+        $animalsByCodlab = Animal::select('codlab', 'animal_name')->whereNotNull('codlab')->orderBy('codlab')
             ->get();
 
         $groupedCodlabs = [];
 
         foreach ($animalsByCodlab as $animal) {
-            $codlab_number = substr($animal->codlab, 3);
+            $codlab_number = $animal->codlab;
             $groupedCodlabs[$codlab_number][] = "{$animal->animal_name}: {$animal->codlab}";
         }
 
@@ -152,6 +153,87 @@ class TesteController extends Controller
         return response()->download($fileName)->deleteFileAfterSend(true);
     }
 
+    private function generateUniqueCodlab($sigla)
+    {
+        // Recuperar o último número usado do cache ou de uma configuração (opcional)
+        $lastUsedNumber = Cache::get('lastUsedNumber', 200000);
+
+        $startValue = max(200000, $lastUsedNumber + 1);
+
+        // Verificar se o valor inicial já existe
+        while (Animal::where('codlab', $sigla . strval($startValue))->exists()) {
+            $startValue++;
+        }
+
+        // Armazenar o último número usado no cache ou em uma configuração (opcional)
+        Cache::forever('lastUsedNumber', $startValue);
+
+        return $sigla . strval($startValue);
+    }
+
+    public function updateAndExportDuplicatedCodlabToTxt()
+    {
+        $animalsByCodlab = Animal::select('id', 'codlab', 'animal_name', 'order_id')
+                                  ->whereNotNull('codlab')
+                                  ->orderBy('codlab')
+                                  ->get();
+
+        $groupedCodlabs = [];
+
+        foreach ($animalsByCodlab as $animal) {
+            $codlab_number = $animal->codlab;
+            $groupedCodlabs[$codlab_number][] = $animal;
+        }
+
+        $duplicatedCodlabs = [];
+        $animalsToUpdate = [];
+
+        foreach ($groupedCodlabs as $codlab_number => $animals) {
+            if (count($animals) > 1) {
+                $duplicatedCodlabs[$codlab_number] = $animals;
+
+                foreach ($animals as $animal) {
+                    if (is_null($animal->order_id)) {
+                        $isNameUnique = true;
+                        foreach ($animals as $otherAnimal) {
+                            if ($animal->id !== $otherAnimal->id && $animal->animal_name === $otherAnimal->animal_name) {
+                                $isNameUnique = false;
+                                break;
+                            }
+                        }
+
+                        if ($isNameUnique) {
+                            $newCodlab = $this->generateUniqueCodlab('EQU'); // Substitua 'SIGLA' conforme necessário
+                            $animalsToUpdate[] = [
+                                'id' => $animal->id,
+                                'newCodlab' => $newCodlab
+                            ];
+                        }
+                    }
+                }
+            }
+        }
+
+        // Atualizar os codlabs dos animais selecionados
+        foreach ($animalsToUpdate as $animalUpdate) {
+            Animal::where('id', $animalUpdate['id'])->update(['codlab' => $animalUpdate['newCodlab']]);
+        }
+
+        // Gerar o arquivo txt com os codlabs duplicados
+        $txtContent = '';
+        foreach ($duplicatedCodlabs as $codlab_number => $animals) {
+            $txtContent .= "Códigos de laboratório com o número {$codlab_number}:\n";
+            foreach ($animals as $animal) {
+                $txtContent .= " - {$animal->animal_name}: {$animal->codlab}\n";
+            }
+        }
+
+        $fileName = 'duplicated_codlab.txt';
+        file_put_contents($fileName, $txtContent);
+
+        // Retornar o arquivo para download e deletá-lo após o envio
+        return response()->download($fileName)->deleteFileAfterSend(true);
+    }
 
 
 
