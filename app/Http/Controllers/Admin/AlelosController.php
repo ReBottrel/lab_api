@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Marcador;
 use Illuminate\Support\Facades\Http;
 use RealRashid\SweetAlert\Facades\Alert;
+use Illuminate\Support\Facades\Cache;
 
 class AlelosController extends Controller
 {
@@ -149,19 +150,22 @@ class AlelosController extends Controller
     }
     private function generateUniqueCodlab($sigla)
     {
-        $maxNumber = Animal::selectRaw('MAX(CAST(SUBSTRING(codlab, 4) AS UNSIGNED)) as max_num')
-            ->whereRaw('CAST(SUBSTRING(codlab, 4) AS UNSIGNED) >= 100000 AND CAST(SUBSTRING(codlab, 4) AS UNSIGNED) < 200000')
-            ->first();
+        // Recuperar o último número usado do cache ou de uma configuração (opcional)
+        $lastUsedNumber = Cache::get('lastUsedNumber', 200000);
 
-        $startValue = ($maxNumber && $maxNumber->max_num) ? $maxNumber->max_num + 1 : 100000;
+        $startValue = max(200000, $lastUsedNumber + 1);
 
-        // Verifique a unicidade da parte numérica do codlab em todo o banco de dados
-        while (Animal::whereRaw('CAST(SUBSTRING(codlab, 4) AS UNSIGNED) = ?', [$startValue])->exists()) {
-            $startValue += 1;
+        // Verificar se o valor inicial já existe
+        while (Animal::where('codlab', $sigla . strval($startValue))->exists()) {
+            $startValue++;
         }
+
+        // Armazenar o último número usado no cache ou em uma configuração (opcional)
+        Cache::forever('lastUsedNumber', $startValue);
 
         return $sigla . strval($startValue);
     }
+
     public function getAnimal(Request $request)
     {
         $animal = Animal::with('alelos')->where('animal_name', $request->name)->first();
