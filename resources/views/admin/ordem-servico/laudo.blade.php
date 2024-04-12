@@ -857,7 +857,7 @@
             @else
                 <div id="animalinfo">
                     <p>
-                        <strong>Conclusão </strong>
+                        <strong>Observação </strong>
                         {{ $laudo->conclusao }}
                     </p>
                 </div>
