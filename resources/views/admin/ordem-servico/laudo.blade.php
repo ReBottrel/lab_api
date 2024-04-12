@@ -681,13 +681,21 @@
                                         continue; // Ignora o marcador ABS17 se não houver valores
                                     }
 
-                                    $alelo_mae = $mae != null ? $mae->alelos->firstWhere('marcador', $item->marcador) : null;
-                                    $alelo_pai = $pai != null ? $pai->alelos->firstWhere('marcador', $item->marcador) : null;
+                                    $alelo_mae =
+                                        $mae != null ? $mae->alelos->firstWhere('marcador', $item->marcador) : null;
+                                    $alelo_pai =
+                                        $pai != null ? $pai->alelos->firstWhere('marcador', $item->marcador) : null;
                                     $dados[] = [
                                         'marcador' => $item->marcador,
                                         'alelo_animal' => [$item->alelo1, $item->alelo2],
-                                        'alelo_mae' => $alelo_mae != null ? [$alelo_mae->alelo1, $alelo_mae->alelo2] : [null, null],
-                                        'alelo_pai' => $alelo_pai != null ? [$alelo_pai->alelo1, $alelo_pai->alelo2] : [null, null],
+                                        'alelo_mae' =>
+                                            $alelo_mae != null
+                                                ? [$alelo_mae->alelo1, $alelo_mae->alelo2]
+                                                : [null, null],
+                                        'alelo_pai' =>
+                                            $alelo_pai != null
+                                                ? [$alelo_pai->alelo1, $alelo_pai->alelo2]
+                                                : [null, null],
                                     ];
                                 }
 
@@ -846,6 +854,13 @@
 
 
                 </div>
+            @else
+                <div id="animalinfo">
+                    <p>
+                        <strong>Conclusão </strong>
+                        {{ $laudo->conclusao }}
+                    </p>
+                </div>
             @endif
             <div>
                 <p>{!! $laudo->observacao !!}</p>
@@ -866,7 +881,37 @@
                     $textDate = strftime('%d de %B de %Y', $date->getTimestamp());
                 }
                 $textDate = $date->format('d \d\e F \d\e Y');
-                $textDate = str_replace(['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'], ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'], $textDate);
+                $textDate = str_replace(
+                    [
+                        'January',
+                        'February',
+                        'March',
+                        'April',
+                        'May',
+                        'June',
+                        'July',
+                        'August',
+                        'September',
+                        'October',
+                        'November',
+                        'December',
+                    ],
+                    [
+                        'janeiro',
+                        'fevereiro',
+                        'março',
+                        'abril',
+                        'maio',
+                        'junho',
+                        'julho',
+                        'agosto',
+                        'setembro',
+                        'outubro',
+                        'novembro',
+                        'dezembro',
+                    ],
+                    $textDate,
+                );
             @endphp
             <br>
             <p>Lagoa Santa {{ $textDate }}.</p>
