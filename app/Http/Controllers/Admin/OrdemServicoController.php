@@ -770,11 +770,11 @@ class OrdemServicoController extends Controller
         if ($request->ajax()) {
             $codlab = $request->codlab;
 
-            $item = OrdemServico::where('codlab',  $codlab)
-                ->first();
+            $items = OrdemServico::where('codlab',  $codlab)
+                ->get();
             // dd($item);
 
-            $viewRender = view('admin.ordem-servico.include.search-codlab', compact('item'))->render();
+            $viewRender = view('admin.ordem-servico.include.search-codlab', compact('items'))->render();
 
             return response()->json(['viewRender' => $viewRender]);
         }

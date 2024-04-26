@@ -137,6 +137,7 @@
                         _token: "{{ csrf_token() }}"
                     },
                     success: function(response) {
+                        console.log(response);
                         $('.table').html(response.viewRender);
                     },
                     error: function(response) {

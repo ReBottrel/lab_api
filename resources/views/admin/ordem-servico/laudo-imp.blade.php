@@ -854,7 +854,6 @@
             @else
                 <div id="animalinfo">
                     <p>
-                        
                         {{ $laudo->conclusao }}
                     </p>
                 </div>
