@@ -785,9 +785,9 @@ class OrdemServicoController extends Controller
         if ($request->ajax()) {
             $busca = $request->animal;
 
-            $item = OrdemServico::where('animal', $busca)->first();
+            $items = OrdemServico::where('animal', $busca)->get();
 
-            $viewRender = view('admin.ordem-servico.include.search-codlab', compact('item'))->render();
+            $viewRender = view('admin.ordem-servico.include.search-codlab', compact('items'))->render();
 
             return response()->json(['viewRender' => $viewRender]);
         }
