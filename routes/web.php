@@ -38,10 +38,12 @@ use App\Http\Controllers\Veterinario\ResenhaController;
 use App\Http\Controllers\Admin\Auth\AdminAuthController;
 use App\Http\Controllers\Admin\LaudoController;
 use App\Http\Controllers\Admin\RelatoriosController;
+use App\Http\Controllers\ExamController;
 use App\Http\Controllers\Veterinario\VetOrderController;
 use App\Http\Controllers\Veterinario\VetOwnerController;
 use App\Http\Controllers\Veterinario\VetAnimalController;
 use App\Http\Controllers\Veterinario\VetConfigController;
+use App\Models\Exam;
 use App\Models\OrdemServico;
 use App\Models\Parceiro;
 
@@ -103,6 +105,8 @@ Route::middleware(['auth:web'])->group(function () {
 
 
 Route::middleware(['auth:admin'])->group(function () {
+
+ 
 
     Route::post('get-codlab-relatorio', [RelatoriosController::class, 'getCodlab'])->name('get.codlab.relatorio');
 
@@ -392,6 +396,8 @@ Route::middleware(['auth:admin'])->group(function () {
 
     Route::get('buscar-pedido-parceiro', [ParceiroController::class, 'searchOrdersView'])->name('buscar.pedido.parceiro');
     Route::post('buscar-pedido-parceiro-store', [ParceiroController::class, 'searchOrders'])->name('buscar.pedido.parceiro.store');
+
+    Route::get('adm-exames-especies', [ExameController::class, 'getByEspecies'])->name('admin.exames.especies');
 
 });
 

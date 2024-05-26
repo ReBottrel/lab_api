@@ -19,5 +19,6 @@ class Exam extends Model
         'extra_value',
         'status',
         'type',
+        'days'
     ];
 }

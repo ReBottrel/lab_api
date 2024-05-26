@@ -21,6 +21,26 @@ class ExameController extends Controller
         return view('admin.exames', get_defined_vars());
     }
 
+    public function getByEspecies(Request $request)
+    {
+          
+        $query = Exam::query();
+
+
+        if ($request->has('animal') && $request->animal != '') {
+            $query->where('animal', $request->animal);
+        }
+    
+        if ($request->has('category') && $request->category != '') {
+            $query->where('category', $request->category);
+        }
+    
+
+        $exames = $query->paginate(20);
+
+        return view('admin.exames', compact('exames'));
+    }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -97,8 +117,7 @@ class ExameController extends Controller
             'title' => $request->title,
             'short_description' => $request->short_description,
             'value' => str_replace(['.', ','], ['', '.'], $request->value),
-            'extra_value' => str_replace(['.', ','], ['', '.'], $request->extra_value),
-
+            'days' => $request->days,
         ]);
 
         return redirect()->back()->with('success', 'Exame alterado com sucesso!');
