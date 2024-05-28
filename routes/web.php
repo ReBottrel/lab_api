@@ -1,18 +1,24 @@
 <?php
 
+use App\Models\Exam;
+use App\Models\Parceiro;
+use App\Models\OrdemServico;
 use App\Models\OrderRequest;
 use function Ramsey\Uuid\v6;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ExamController;
 use App\Http\Controllers\TesteController;
 use App\Http\Controllers\AnimalController;
 use App\Http\Controllers\GatewayController;
 use App\Http\Controllers\Admin\FurController;
 use App\Http\Controllers\Loja\HomeController;
 use App\Http\Controllers\Admin\MarkController;
+use App\Http\Controllers\Admin\AjudaController;
 use App\Http\Controllers\Admin\CupomController;
 use App\Http\Controllers\Admin\DadosController;
 use App\Http\Controllers\Admin\ExameController;
+use App\Http\Controllers\Admin\LaudoController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\OwnerController;
 use App\Http\Controllers\Admin\AlelosController;
@@ -27,6 +33,7 @@ use App\Http\Controllers\User\UserOrderController;
 use App\Http\Controllers\User\Auth\LoginController;
 use App\Http\Controllers\Veterinario\VetController;
 use App\Http\Controllers\Admin\DataColetaController;
+use App\Http\Controllers\Admin\RelatoriosController;
 use App\Http\Controllers\Admin\AnimalOrderController;
 use App\Http\Controllers\Admin\OrdemServicoController;
 use App\Http\Controllers\User\UserDashboardController;
@@ -36,16 +43,10 @@ use App\Http\Controllers\Admin\SpeciesBreedsController;
 use App\Http\Controllers\Veterinario\AuthVetController;
 use App\Http\Controllers\Veterinario\ResenhaController;
 use App\Http\Controllers\Admin\Auth\AdminAuthController;
-use App\Http\Controllers\Admin\LaudoController;
-use App\Http\Controllers\Admin\RelatoriosController;
-use App\Http\Controllers\ExamController;
 use App\Http\Controllers\Veterinario\VetOrderController;
 use App\Http\Controllers\Veterinario\VetOwnerController;
 use App\Http\Controllers\Veterinario\VetAnimalController;
 use App\Http\Controllers\Veterinario\VetConfigController;
-use App\Models\Exam;
-use App\Models\OrdemServico;
-use App\Models\Parceiro;
 
 /*
 |--------------------------------------------------------------------------
@@ -106,7 +107,7 @@ Route::middleware(['auth:web'])->group(function () {
 
 Route::middleware(['auth:admin'])->group(function () {
 
- 
+    Route::get('ajuda-erro-2001', [AjudaController::class, 'erroPagamento'])->name('ajuda.erro.2001');
 
     Route::post('get-codlab-relatorio', [RelatoriosController::class, 'getCodlab'])->name('get.codlab.relatorio');
 
