@@ -64,7 +64,7 @@
                                 style="color: var(--bs-dark);"><i class="fa-solid fa-horse"
                                     style="color: var(--bs-dark);"></i><span>Animais</span></a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                                @if (auth()->user()->permission == 10 || auth()->user()->permission == 8)
+                                @if (auth()->user()->permission == 10 || auth()->user()->association_id == 2)
                                     <li><a class="dropdown-item" href="{{ route('animais') }}">Todos os animais</a>
                                     </li>
 
@@ -72,10 +72,7 @@
                                     <li><a class="dropdown-item" href="{{ route('breeds') }}">Raça</a></li>
                                     <li><a class="dropdown-item" href="{{ route('fur') }}">Pelagem</a></li>
                                     <li><a class="dropdown-item" href="{{ route('marks') }}">Marcas da Resenha</a></li>
-                                    @if(auth()->user()->association_id == 2)
-                                        <li><a class="dropdown-item" href="{{ route('animais.create') }}">Criar Animal</a></li>
-                                    @endif
-                                   
+                               
                                 @endif
                             </ul>
                         </li>
