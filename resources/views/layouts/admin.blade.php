@@ -48,7 +48,7 @@
                                 </li>
                                 <li><a class="dropdown-item" href="#">Concluídos</a></li>
                             @endif
-                            @if ((auth()->user()->permission == 10))
+                            @if ((auth()->user()->permission == 10 || auth()->user()->association_id == 2))
                                 <li><a class="dropdown-item" href="{{ route('order.create.painel') }}">Criar Pedido</a>
                                 </li>
                             @endif

@@ -58,7 +58,7 @@ class OrdemServicoController extends Controller
             $animal = $animals[$item->animal_id] ?? Animal::where('animal_name', $item->animal)->first();
 
 
-
+            
 
             $data = Carbon::parse($item->updated_at)->addWeekdays($exame->days);
 
