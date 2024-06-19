@@ -48,34 +48,36 @@
                                 </li>
                                 <li><a class="dropdown-item" href="#">Concluídos</a></li>
                             @endif
-                            @if ((auth()->user()->permission == 10 || auth()->user()->association_id == 2))
+                            @if (auth()->user()->permission == 10 || auth()->user()->association_id == 2)
                                 <li><a class="dropdown-item" href="{{ route('order.create.painel') }}">Criar Pedido</a>
                                 </li>
                             @endif
-                            @if ( (auth()->user()->permission == 8))
-                                <li><a class="dropdown-item" href="{{ route('buscar.pedido.parceiro') }}">Buscar Pedido</a>
+                            @if (auth()->user()->permission == 8)
+                                <li><a class="dropdown-item" href="{{ route('buscar.pedido.parceiro') }}">Buscar
+                                        Pedido</a>
                                 </li>
                             @endif
                         </ul>
                     </li>
-                    @if (auth()->user()->permission == 10)
 
+                    @if (auth()->user()->permission == 10 || auth()->user()->association_id == 2)
                         <li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href="#"
                                 style="color: var(--bs-dark);"><i class="fa-solid fa-horse"
                                     style="color: var(--bs-dark);"></i><span>Animais</span></a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                                @if (auth()->user()->permission == 10 || auth()->user()->association_id == 2)
-                                    <li><a class="dropdown-item" href="{{ route('animais') }}">Todos os animais</a>
-                                    </li>
 
-                                    <li><a class="dropdown-item" href="{{ route('species') }}">Espécie</a></li>
-                                    <li><a class="dropdown-item" href="{{ route('breeds') }}">Raça</a></li>
-                                    <li><a class="dropdown-item" href="{{ route('fur') }}">Pelagem</a></li>
-                                    <li><a class="dropdown-item" href="{{ route('marks') }}">Marcas da Resenha</a></li>
-                               
-                                @endif
+                                <li><a class="dropdown-item" href="{{ route('animais') }}">Todos os animais</a>
+                                </li>
+
+                                <li><a class="dropdown-item" href="{{ route('species') }}">Espécie</a></li>
+                                <li><a class="dropdown-item" href="{{ route('breeds') }}">Raça</a></li>
+                                <li><a class="dropdown-item" href="{{ route('fur') }}">Pelagem</a></li>
+                                <li><a class="dropdown-item" href="{{ route('marks') }}">Marcas da Resenha</a></li>
+
                             </ul>
                         </li>
+                    @endif
+                    @if (auth()->user()->permission == 10)
                         <li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href="#"
                                 style="color: var(--bs-dark);"><i class="fas fa-table"
                                     style="color: var(--bs-dark);"></i><span>Alelos</span></a>
@@ -91,48 +93,68 @@
 
                             </ul>
                         </li>
+                    @endif
+                    @if (auth()->user()->permission == 10)
                         <li class="nav-item">
                             <a class="nav-link " href="{{ route('ordem.servico.all') }}"><i class="fas fa-user"
                                     style="color: var(--bs-dark);"></i><span>Ordem de Serviços</span></a>
                         </li>
+                    @endif
+                    @if (auth()->user()->permission == 10)
                         <li class="nav-item">
                             <a class="nav-link " href="{{ route('laudos') }}"><i class="fas fa-user"
                                     style="color: var(--bs-dark);"></i><span>Laudos</span></a>
                         </li>
+                    @endif
+                    @if (auth()->user()->permission == 10)
                         <li class="nav-item">
                             <a class="nav-link " href="#"><i class="fas fa-user"
                                     style="color: var(--bs-dark);"></i><span>Usuários</span></a>
                         </li>
+                    @endif
+                    @if (auth()->user()->permission == 10)
                         <li class="nav-item"><a class="nav-link" href="{{ route('exames') }}"
                                 style="color: var(--bs-dark);"><i class="far fa-list-alt"
                                     style="color: var(--bs-dark);"></i><span>Exames</span></a>
                         </li>
+                    @endif
+                    @if (auth()->user()->permission == 10 || auth()->user()->association_id == 2)
                         <li class="nav-item"><a class="nav-link" href="{{ route('owners') }}"><i
                                     class="fas fa-users"
                                     style="color: var(--bs-dark);"></i><span>Proprietarios</span></a>
                         </li>
+                    @endif
+                    @if (auth()->user()->permission == 10)
                         <li class="nav-item"><a class="nav-link" href="{{ route('cupons') }}"
                                 style="color: var(--bs-dark);"><i class="fa-solid fa-percent"
                                     style="color: var(--bs-dark);"></i><span>Cupons</span></a>
                         </li>
+                    @endif
+                    @if (auth()->user()->permission == 10 || auth()->user()->association_id == 2)
                         <li class="nav-item"><a class="nav-link" href="{{ route('techinicals') }}"
                                 style="color: var(--bs-dark);"><i class="fas fa-user-nurse"
                                     style="color: var(--bs-dark);"></i><span>Técnicos</span></a>
                         </li>
+                    @endif
+                    @if (auth()->user()->permission == 10)
                         <li class="nav-item"><a class="nav-link" href="{{ route('parceiros') }}"
                                 style="color: var(--bs-dark);"><i class="fas fa-user-nurse"
                                     style="color: var(--bs-dark);"></i><span>Parceiros</span></a>
                         </li>
+                    @endif
+                    @if (auth()->user()->permission == 10)
                         <li class="nav-item"><a class="nav-link" href="{{ route('relatorios') }}"
                                 style="color: var(--bs-dark);"><i class="fas fa-user-nurse"
                                     style="color: var(--bs-dark);"></i><span>Relatórios</span></a>
                         </li>
-
+                    @endif
+                    @if (auth()->user()->permission == 10)
                         <li class="nav-item"><a class="nav-link" href="{{ route('configs') }}"><i
                                     class="fa fa-gear"
                                     style="color: var(--bs-dark);"></i><span>Configurações</span></a>
                         </li>
                     @endif
+
                 </ul>
                 <div class="text-center d-none d-md-inline"><button class="btn rounded-circle border-0"
                         id="sidebarToggle" type="button"></button></div>
