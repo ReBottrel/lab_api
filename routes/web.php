@@ -306,6 +306,9 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::post('order-edit-animal/{id}', [OrderController::class, 'orderAddAnimalEdit'])->name('order.edit.animal');
     Route::post('busca-animal-codlab', [OrderController::class, 'buscaCodlab'])->name('busca.codlab.animal');
 
+    Route::get('orders-pega', [OrderController::class, 'orderPega'])->name('orders.pega');
+    Route::get('orders-pega-detail/{id}', [OrderController::class, 'orderPegaDetail'])->name('orders.pega.detail');
+
 
     Route::get('admin-edit/{id}', [ConfigController::class, 'adminEdit'])->name('config.edit.admin');
     Route::post('admin-update/{id}', [AdminAuthController::class, 'update'])->name('config.update.admin');

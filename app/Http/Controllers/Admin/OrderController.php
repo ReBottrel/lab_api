@@ -53,6 +53,12 @@ class OrderController extends Controller
 
         return view('admin.orders.orders-sistema', get_defined_vars());
     }
+    public function orderPega()
+    {
+        $orders = OrderRequest::where('status', '!=', 0)->where('status', '!=', 5)->where('status', '!=', 7)->orderBy('id', 'desc')->paginate(10);
+
+        return view('admin.orders.orders-pega', get_defined_vars());
+    }
 
     public function orderVet()
     {
@@ -107,6 +113,30 @@ class OrderController extends Controller
         ];
         $animals = Animal::where('order_id', $id)->get();
         return view('admin.orders.order-sistema-detail', get_defined_vars());
+    }
+    public function orderPegaDetail($id)
+    {
+        $order = OrderRequest::find($id);
+        $samples = Sample::get();
+        $parceiros = Parceiro::get();
+        $lote = OrderLote::where('order_id', $id)->first();
+        $stats = [
+            1 => 'Aguardando amostra',
+            2 => 'Amostra recebida',
+            3 => 'Em análise',
+            4 => 'Análise concluída',
+            5 => 'Resultado disponível',
+            6 => 'Análise reprovada',
+            7 => 'Análise Aprovada',
+            8 => 'Recoleta solicitada',
+            9 => 'Amostra paga',
+            10 => 'Pedido Concluído',
+            11 => 'Aguardando Pagamento',
+            12 => 'Morto'
+
+        ];
+        $animals = Animal::where('order_id', $id)->get();
+        return view('admin.orders.show-order-pega', get_defined_vars());
     }
 
     public function alterarParceiro(Request $request)
@@ -1024,7 +1054,13 @@ class OrderController extends Controller
         $order->status = 1;
         $order->creator_number = '' . $code . '00' . $order->id . '';
         $order->save();
-        return redirect()->route('orders.all')->with('success', 'Pedido criado com sucesso');
+        
+        if(auth()->user()->association_id == 2){
+            return redirect()->route('orders.pega')->with('success', 'Pedido criado com sucesso');
+        }else{
+            return redirect()->route('orders.all')->with('success', 'Pedido criado com sucesso');
+        }
+        
     }
     public function orderListSistem()
     {

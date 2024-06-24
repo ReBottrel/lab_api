@@ -52,6 +52,11 @@
                                 <li><a class="dropdown-item" href="{{ route('order.create.painel') }}">Criar Pedido</a>
                                 </li>
                             @endif
+                            @if (auth()->user()->association_id == 2)
+                                <li><a class="dropdown-item" href="{{ route('orders.pega') }}">Ver
+                                        Pedidos</a>
+                                </li>
+                            @endif
                             @if (auth()->user()->permission == 8)
                                 <li><a class="dropdown-item" href="{{ route('buscar.pedido.parceiro') }}">Buscar
                                         Pedido</a>
