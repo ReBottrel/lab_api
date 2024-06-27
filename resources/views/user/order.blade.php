@@ -90,7 +90,7 @@
                                             class="valor-{{ $item->id }}">{{ 'R$ ' . number_format($item->value, 2, ',', '.') }}</span>
                                     </p>
                                 </div>
-                                @if ($order->origin == 'sistema' || $order->origin == 'API')
+                                @if ($order->origin == 'sistema' || $order->origin == 'API' || $order->origin == 'email')
                                     <div class="col-md-6">
                                         <div class="mb-3">
                                             <label for="exampleFormControlInput1" class="form-label">Tempo de
