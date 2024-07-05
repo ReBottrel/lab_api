@@ -4,28 +4,16 @@
         <div class="card">
             <div class="card-body">
                 <div class="row">
-                    <div class="col">
+                    <div class="">
                         <h4>Pedidos</h4>
                     </div>
-                    <div class="col">
-                        <form><input class="form-control search" type="search" placeholder="Buscar pelo nome..."></form>
+                    <div class="col-12">
+                        <form><input class="form-control search-animal" type="search" placeholder="Buscar pelo animal"></form>
                     </div>
-                    <div class="col">
-                        <form>
-                            <select class="form-select status-filter">
-                                <optgroup label="Status">
-                                    <option value="0"> Todos</option>
-                                    <option value="1"> Aguardando amostra</option>
-                                    <option value="2"> Amostra recebida</option>
-                                    <option value="7"> Análise Aprovada</option>
-                                    <option value="6"> Análise Reprovada</option>
-                                    <option value="7"> Aguardando pagamento</option>
-                                    <option value="9"> Pagamento confirmado</option>
-                                    <option value="10"> Pedido concluído</option>
-                                </optgroup>
-                            </select>
-                        </form>
+                    <div class="col-12 mt-3">
+                        <form><input class="form-control search-proprierty" type="search" placeholder="Buscar pelo proprietario"></form>
                     </div>
+             
                 </div>
                 <div class="filter">
                     @foreach ($orders as $order)
@@ -135,10 +123,10 @@
                     }
                 });
             });
-            $('.search').keyup(function() {
+            $('.search-animal').keyup(function() {
                 var search = $(this).val();
                 $.ajax({
-                    url: "{{ route('filter.search') }}",
+                    url: "{{ route('animal.search.pega') }}",
                     type: "POST",
                     data: {
                         _token: "{{ csrf_token() }}",

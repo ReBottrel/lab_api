@@ -43,6 +43,7 @@ use App\Http\Controllers\Admin\SpeciesBreedsController;
 use App\Http\Controllers\Veterinario\AuthVetController;
 use App\Http\Controllers\Veterinario\ResenhaController;
 use App\Http\Controllers\Admin\Auth\AdminAuthController;
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Veterinario\VetOrderController;
 use App\Http\Controllers\Veterinario\VetOwnerController;
 use App\Http\Controllers\Veterinario\VetAnimalController;
@@ -106,6 +107,14 @@ Route::middleware(['auth:web'])->group(function () {
 
 
 Route::middleware(['auth:admin'])->group(function () {
+
+    Route::get('users', [UserController::class, 'index'])->name('users');
+    Route::post('users-search', [UserController::class, 'search'])->name('users.search');
+    Route::post('users-delete', [UserController::class, 'destroy'])->name('users.delete');
+    
+    Route::post('order-payment-delete', [OrderController::class, 'deletePayment'])->name('order.payment.delete');
+
+    Route::post('animal-search-pega', [OrderController::class, 'searchAnimalPega'])->name('animal.search.pega');
 
     Route::get('ajuda-erro-2001', [AjudaController::class, 'erroPagamento'])->name('ajuda.erro.2001');
 

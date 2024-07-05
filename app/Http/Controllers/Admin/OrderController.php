@@ -1228,4 +1228,29 @@ class OrderController extends Controller
 
         return response()->download(public_path('arquivos/' . $name), $name, $http_response_header)->deleteFileAfterSend(true);
     }
+
+    public function deletePayment(Request $request)
+    {
+        $order = OrderRequestPayment::find($request->id);
+        $order->delete();
+        return response()->json($order);
+    }
+
+    public function searchAnimalPega(Request $request)
+    {
+        if ($request->ajax() && $request->has('search')) {
+            // Busca apenas animais com um order_id associado e que correspondam ao nome fornecido.
+            $animals = Animal::with('order')
+                ->where('animal_name', $request->search)
+                ->whereNotNull('order_id')
+                ->get();
+
+            $viewRender = view('admin.includes.search-animal-pega', compact('animals'))->render();
+
+            return response()->json([get_defined_vars()]);
+        }
+
+        // Considerar retornar uma resposta adequada caso não seja uma requisição ajax ou o parâmetro 'animal' não esteja presente
+        return response()->json(['error' => 'Requisição inválida'], 400);
+    }
 }

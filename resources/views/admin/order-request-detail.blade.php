@@ -117,6 +117,9 @@
                                             -
                                         @endif
                                     </span></li>
+                                <li>
+                                    <button data-id="{{ $item->id }}" class="btn btn-danger delete">EXCLUIR</button>
+                                </li>
                             </ul>
                         @endforeach
 
@@ -133,4 +136,54 @@
             </div>
         </div>
     </div>
+@endsection
+@section('js')
+    <script>
+        $(document).on('click', '.delete', function() {
+            var id = $(this).data('id');
+            Swal.fire({
+                title: 'Você tem certeza?',
+                text: "Você não poderá reverter isso!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sim, deletar!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: "{{ route('order.payment.delete') }}",
+                        type: "POST",
+                        data: {
+                            id: id,
+                            _token: "{{ csrf_token() }}"
+                        },
+                        success: function(data) {
+                            // console.log(data)
+
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Sucesso',
+                                text: 'deletado com sucesso',
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    window.location.reload();
+                                }
+                            });
+
+
+                        },
+                        error: function(data) {
+                            console.log(data)
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: 'Algo deu errado!',
+                            });
+                        }
+                    });
+                }
+            })
+        });
+    </script>
 @endsection

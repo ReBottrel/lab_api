@@ -57,7 +57,7 @@
                                         Pedidos</a>
                                 </li>
                             @endif
-                            @if (auth()->user()->permission == 8)
+                            @if (auth()->user()->permission == 8 || auth()->user()->association_id != 2)
                                 <li><a class="dropdown-item" href="{{ route('buscar.pedido.parceiro') }}">Buscar
                                         Pedido</a>
                                 </li>
@@ -113,7 +113,7 @@
                     @endif
                     @if (auth()->user()->permission == 10)
                         <li class="nav-item">
-                            <a class="nav-link " href="#"><i class="fas fa-user"
+                            <a class="nav-link " href="{{ route('users') }}"><i class="fas fa-user"
                                     style="color: var(--bs-dark);"></i><span>Usuários</span></a>
                         </li>
                     @endif
