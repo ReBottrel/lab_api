@@ -19,20 +19,8 @@
             <a href="/" class="d-flex align-items-center justify-content-sm-around col-md-3 mb-2 mb-md-0">
                 <img src="{{ asset('loja/assets/img/logo.svg') }}" alt="">
             </a>
-            <form class="d-flex justify-content-center col-12 col-lg-5 mb-3 mb-lg-0 me-lg-3 " role="search">
-                <div class="input-group submit-line">
-                    <input class="form-control " type="search" placeholder="Busque aqui" />
-
-                    <button class="submit-lente  btn-lg " type="submit">
-                        <i class="bi bi-search"></i>
-                    </button>
-
-                </div>
-            </form>
-            <div class="col-md-3 text-end">
-                <a href="{{ route('login') }}" type="button" class="btn btn-primary">Entrar</a>
-                <a href="/cadastro.html" type="button" class="btn btn-secondary">Cadastar-se</a>
-            </div>
+       
+         
         </header>
     </div>
     <div class="d-flex flex-column wrapper mb-4">
@@ -63,10 +51,6 @@
                         </div>
 
                         <button type="submit" class="btn btn-lg btn-primary">Entrar</button>
-
-                        <p class="mt-3">
-                            Ainda não é cadastrado? <a href="/cadastro.html">Clique aqui</a> para se cadastrar.
-                        </p>
 
                         <p class="mt-3">
                             Esqueceu sua senha? <a href="/recuperarsenha.html">Clique aqui</a> para recuperá-la.

@@ -67,7 +67,7 @@ Auth::routes();
 Route::get('cep-get', [AddressController::class, 'getCep'])->name('cep.get');
 Route::post('login-post', [LoginController::class, 'login'])->name('login.custom');
 
-Route::get('/', [HomeController::class, 'index'])->name('loja');
+
 Route::get('privacy-and-policies', [HomeController::class, 'privacy'])->name('privacy');
 Route::get('validacao/{code}', [LaudoController::class, 'verLaudoQrCode']);
 Route::get('teste-zap-api', [TesteController::class, 'testeZapApi']);
@@ -76,6 +76,7 @@ Route::get('admin-login', [AdminAuthController::class, 'index'])->name('admin.lo
 Route::post('admin-login-entrar', [AdminAuthController::class, 'login'])->name('admin.entrar');
 
 Route::middleware(['auth:web'])->group(function () {
+    Route::get('/', [HomeController::class, 'index'])->name('loja');
     Route::get('user-orders/{id}', [UserDashboardController::class, 'orders'])->name('user.orders');
     Route::get('user-dashboard', [UserDashboardController::class, 'index'])->name('user.dashboard');
     Route::get('order-done', [UserDashboardController::class, 'ordersDone'])->name('orders.done');

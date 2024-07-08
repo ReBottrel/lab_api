@@ -3,6 +3,7 @@
         <td>{{ $user->id }}</td>
         <td>{{ $user->name }}</td>
         <td>{{ strtolower($user->email) }}</td>
+        <td>{{ $user->info->document }}</td>
  
         <td>
             <div class="dropdown">
