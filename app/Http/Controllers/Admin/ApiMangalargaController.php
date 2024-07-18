@@ -26,6 +26,7 @@ class ApiMangalargaController extends Controller
 
 
 
+
     public function getApi()
     {
 
@@ -347,11 +348,13 @@ class ApiMangalargaController extends Controller
 
         return response()->json('ok');
     }
-    public function getResenhaRequest($row)
+    public function getResenhaRequest(Request $request)
     {
 
+
+
         // $coletas = $this->fetchDataFromApi('coletas', 18, 2, ['dataEnvioInicio' => date('Y-m-d\TH:i:s', strtotime('-1 day'))]);
-        $coletas = $this->fetchDataFromApi('coletas', 18, 2, ['rowidColeta' => $row]);
+        $coletas = $this->fetchDataFromApi('coletas', 18, 2, ['rowidColeta' => $request->rowidcoleta]);
         //  $coletas = $this->fetchDataFromApi('coletas', 18, 2, ['dataEnvioInicio' => '2023-10-09T00:00:00']);
         foreach ($coletas as $coleta) {
             // find owner, user, and tecnico by email or create them if they don't exist
@@ -507,13 +510,13 @@ class ApiMangalargaController extends Controller
             'order_id' => $order->id ?? 'deu erro',
             'animal' => $animal->nome ?? 'deu erro',
         ]);
-        return response()->json('ok');
+        return redirect()->back()->with('success', 'Pedido de exame criado com sucesso');
     }
-    public function getColetaRequest($row)
+    public function getColetaRequest(Request $request)
     {
 
         // $coletas = $this->fetchDataFromApi('coletas', 18, 2, ['dataEnvioInicio' => date('Y-m-d\TH:i:s', strtotime('-1 day'))]);
-        $coletas = $this->fetchDataFromApi('coletas', 18, 1, ['rowidColeta' => $row]);
+        $coletas = $this->fetchDataFromApi('coletas', 18, 1, ['rowidColeta' => $request->rowidcoleta]);
         //  $coletas = $this->fetchDataFromApi('coletas', 18, 2, ['dataEnvioInicio' => '2023-10-09T00:00:00']);
         foreach ($coletas as $coleta) {
             // find owner, user, and tecnico by email or create them if they don't exist
@@ -669,7 +672,7 @@ class ApiMangalargaController extends Controller
             'order_id' => $order->id ?? 'deu erro',
             'animal' => $animal->nome ?? 'deu erro',
         ]);
-        return response()->json('ok');
+        return redirect()->back()->with('success', 'Pedido de exame criado com sucesso');
     }
     public function getRowId()
     {

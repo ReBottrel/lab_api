@@ -60,6 +60,11 @@ class OrderController extends Controller
         return view('admin.orders.orders-pega', get_defined_vars());
     }
 
+    public function getAbccmm()
+    {
+        return view('admin.orders.abccmm');
+    }
+
     public function orderVet()
     {
         $orders = OrderRequest::where('origin', 'app')->where('status', '!=', 0)->where('status', '!=', 5)->where('status', '!=', 7)->orderBy('id', 'desc')->paginate(10);
