@@ -29,651 +29,558 @@ class ApiMangalargaController extends Controller
 
     public function getApi()
     {
+        try {
+            // Fetch data from API
+            $coletas = $this->fetchDataFromApi('coletas', 18, 1, ['dataEnvioInicio' => date('Y-m-d\TH:i:s', strtotime('-1 day'))]);
 
-        $coletas = $this->fetchDataFromApi('coletas', 18, 1, ['dataEnvioInicio' => date('Y-m-d\TH:i:s', strtotime('-1 day'))]);
-        // dd($coletas);
-        // $coletas = $this->fetchDataFromApi('coletas', 18, 1, ['dataEnvioInicio' => '2023-07-21T00:00:00']);
-        foreach ($coletas as $coleta) {
-            $user = User::where('email', $coleta->cliente->email)->first();
-            $tecnico = Tecnico::where('professional_name', $coleta->tecnico->nome)->first();
-            $owner = Owner::where('email', $coleta->cliente->email)->first();
-            $ownerid = $owner->id ?? null;
-            if (!$tecnico) {
-                $tecnicoc = Tecnico::create([
-                    'name' => $coleta->tecnico->nome,
-                    'matricula' => $coleta->matricula->matricula,
-                ]);
+            foreach ($coletas as $coleta) {
+                // Find or create entities
+                $user = User::firstOrCreate(
+                    ['email' => $coleta->cliente->email],
+                    [
+                        'name' => $coleta->cliente->nome,
+                        'email' => $coleta->cliente->email,
+                        'password' => Hash::make($coleta->cliente->cpf_Cnpj),
+                        'permission' => 1,
+                    ]
+                );
+
+                $tecnico = Tecnico::firstOrCreate(
+                    ['professional_name' => $coleta->tecnico->nome],
+                    ['name' => $coleta->tecnico->nome, 'matricula' => $coleta->tecnico->matricula]
+                );
+
+                $owner = Owner::updateOrCreate(
+                    ['email' => $coleta->cliente->email],
+                    [
+                        'user_id' => $user->id,
+                        'document' => $coleta->cliente->cpf_Cnpj,
+                        'owner_name' => $coleta->cliente->nome,
+                        'fone' => $coleta->cliente->telefones[0]->telefone,
+                        'cell' => $coleta->cliente->telefones[1]->telefone ?? null,
+                        'whatsapp' => $coleta->cliente->telefones[1]->telefone ?? null,
+                        'zip_code' => $coleta->cliente->enderecos[0]->cep,
+                        'address' => $coleta->cliente->enderecos[0]->logradouro,
+                        'number' => $coleta->cliente->enderecos[0]->numero,
+                        'complement' => $coleta->cliente->enderecos[0]->complemento,
+                        'district' => $coleta->cliente->enderecos[0]->bairro,
+                        'city' => $coleta->cliente->enderecos[0]->cidade,
+                        'state' => $coleta->cliente->enderecos[0]->uf,
+                        'status' => 1,
+                        'propriety' =>  $coleta->cliente->fazendas[0]->nome ?? null,
+                    ]
+                );
+
+                $order = OrderRequest::updateOrCreate(
+                    ['collection_number' => $coleta->rowidColeta],
+                    [
+                        'origin' => 'API',
+                        'user_id' => $user->id,
+                        'creator' => $coleta->cliente->nome,
+                        'creator_number' => $coleta->cliente->matricula,
+                        'technical_manager' => $coleta->tecnico->nome,
+                        'collection_date' => $coleta->dataColeta,
+                        'id_tecnico' => $tecnico->id,
+                        'status' => 1,
+                        'owner_id' => $owner->id,
+                        'parceiro' => 'ABCCMM',
+                    ]
+                );
+
+                foreach ($coleta->animais as $animal) {
+                    $existingAnimal = Animal::updateOrCreate(
+                        ['register_number_brand' => $animal->rowidAnimal],
+                        [
+                            'order_id' => $order->id,
+                            'animal_name' => $animal->nome,
+                            'sex' => $animal->sexo,
+                            'birth_date' => $animal->dataNascimento,
+                            'description' => $animal->obs,
+                            'status' => 1,
+                            'codlab' => $this->generateUniqueCodlab('EQU'),
+                            'especies' => 'EQUINA',
+                            'breed' => 'MANGALARGA MARCHADOR',
+                            'registro_pai' => $animal->registroPai,
+                            'pai' => $animal->nomePai,
+                            'registro_mae' => $animal->registroMae,
+                            'mae' => $animal->nomeMae,
+                            'row_id' => $animal->rowidAnimal,
+                        ]
+                    );
+
+                    // Find or create parent animals
+                    $pai = Animal::firstOrCreate(
+                        ['number_definitive' => $animal->registroPai],
+                        [
+                            'animal_name' => $animal->nomePai,
+                            'especies' => 'EQUINA',
+                            'breed' => 'MANGALARGA MARCHADOR',
+                            'codlab' => $this->generateUniqueCodlab('EQU'),
+                        ]
+                    );
+
+                    $mae = Animal::firstOrCreate(
+                        ['number_definitive' => $animal->registroMae],
+                        [
+                            'animal_name' => $animal->nomeMae,
+                            'especies' => 'EQUINA',
+                            'breed' => 'MANGALARGA MARCHADOR',
+                            'codlab' => $this->generateUniqueCodlab('EQU'),
+                        ]
+                    );
+
+                    // Create DNA verification record
+                    DnaVerify::firstOrCreate(
+                        ['animal_id' => $existingAnimal->id, 'order_id' => $order->id],
+                        ['verify_code' => 'EQUTR']
+                    );
+
+                    // Update or create the AnimalToParent relationship
+                    AnimalToParent::updateOrCreate(
+                        [
+                            'animal_id' => $existingAnimal->id,
+                            'register_pai' => $pai->number_definitive,
+                            'register_mae' => $mae->number_definitive,
+                        ],
+                        [
+                            'animal_name' => $animal->nome,
+                            'especies' => 'EQUINA',
+                            'animal_register' => null,
+                        ]
+                    );
+                }
             }
-            if (!$user) {
-                $userc = User::create([
-                    'name' => $coleta->cliente->nome,
-                    'email' => $coleta->cliente->email,
-                    'password' => Hash::make($coleta->cliente->cpf_Cnpj),
-                    'permission' => 1,
-                ]);
 
-                $userc->info()->create([
-                    'user_id' => $userc->id,
-                    'document' => $coleta->cliente->cpf_Cnpj,
-                    'phone' => $coleta->cliente->telefones[0]->telefone,
-                    'cellphone' => $coleta->cliente->telefones[1]->telefone,
-                    'number' => $coleta->cliente->enderecos[0]->numero,
-                    'address' => $coleta->cliente->enderecos[0]->logradouro,
-                    'complement' => $coleta->cliente->enderecos[0]->complemento,
-                    'district' => $coleta->cliente->enderecos[0]->bairro,
-                    'city' => $coleta->cliente->enderecos[0]->cidade,
-                    'state' => $coleta->cliente->enderecos[0]->uf,
-                    'zip_code' => $coleta->cliente->enderecos[0]->cep,
-                ]);
-                $owner->update([
-                    'user_id' => $user->id ?? $userc->id,
-                ]);
-                $ownerc = Owner::firstOrCreate([
-                    'email' => $coleta->cliente->email,
-                ], [
-                    'user_id' => $userc->id,
-                    'document' => $coleta->cliente->cpf_Cnpj,
-                    'owner_name' => $coleta->cliente->nome,
-                    'fone' => $coleta->cliente->telefones[0]->telefone,
-                    'cell' => $coleta->cliente->telefones[1]->telefone,
-                    'whatsapp' => $coleta->cliente->telefones[1]->telefone,
-                    'zip_code' => $coleta->cliente->enderecos[0]->cep,
-                    'address' => $coleta->cliente->enderecos[0]->logradouro,
-                    'number' => $coleta->cliente->enderecos[0]->numero,
-                    'complement' => $coleta->cliente->enderecos[0]->complemento,
-                    'district' => $coleta->cliente->enderecos[0]->bairro,
-                    'city' => $coleta->cliente->enderecos[0]->cidade,
-                    'state' => $coleta->cliente->enderecos[0]->uf,
-                    'status' => 1,
-                    'propriety' =>  $coleta->cliente->fazendas[0]->nome ?? null,
-                ]);
-                $ownerid = $ownerc->id;
-            }
-
-
-            $order = OrderRequest::firstOrCreate([
-                'collection_number' => $coleta->rowidColeta
-            ], [
-                'origin' => 'API',
-                'user_id' => $user->id ?? $userc->id,
-                'creator' => $coleta->cliente->nome,
-                'creator_number' => $coleta->cliente->matricula,
-                'technical_manager' => $coleta->tecnico->nome,
-                'collection_date' => $coleta->dataColeta,
-                'id_tecnico' => $tecnico->id ?? $tecnicoc->id,
-                'status' => 1,
-                'owner_id' => $ownerid,
-                'parceiro' => 'ABCCMM'
+            // Log the action
+            Log::create([
+                'user' => 'Sistema API',
+                'action' => 'Criou pedido de exame',
+                'order_id' => $order->id ?? 'deu erro',
+                'animal' => $animal->nome ?? 'deu erro',
             ]);
 
-            foreach ($coleta->animais as $animal) {
-                $existingAnimal = Animal::where('register_number_brand', $animal->rowidAnimal)->first();
-                $currentAnimal = null;  // Inicializa a variável que irá armazenar o animal atual
-
-                if ($existingAnimal) {
-                    $codlab = $this->generateUniqueCodlab('EQU');
-                    // $existingAnimal->status = 1;
-
-                    $existingAnimal->order_id = $order->id; // atualize o status como necessário
-                    $existingAnimal->save();
-                    $currentAnimal = $existingAnimal;
-                } else {
-                    $codlab = $this->generateUniqueCodlab('EQU');
-                    $newAnimal = Animal::create([
-                        'register_number_brand' => $animal->rowidAnimal,
-                        'order_id' => $order->id,
-                        'animal_name' => $animal->nome,
-                        'sex' => $animal->sexo,
-                        'birth_date' => $animal->dataNascimento,
-                        'description' => $animal->obs,
-                        'especies' => 'EQUINA',
-                        'breed' => 'MANGALARGA MARCHADOR',
-                        'status' => 1,
-                        'registro_pai' => $animal->registroPai,
-                        'pai' => $animal->nomePai,
-                        'registro_mae' => $animal->registroMae,
-                        'mae' => $animal->nomeMae,
-                        'codlab' => $codlab,
-                        'row_id' => $animal->rowidAnimal,
-                    ]);
-                    $pai = Animal::create([
-                        'animal_name' => $animal->nomePai,
-                        'especies' => 'EQUINA',
-                        'breed' => 'MANGALARGA MARCHADOR',
-                        'number_definitive' => $animal->registroPai,
-                        'codlab' => $this->generateUniqueCodlab('EQU'),
-                    ]);
-
-                    $mae = Animal::create([
-                        'animal_name' => $animal->nomeMae,
-                        'especies' => 'EQUINA',
-                        'breed' => 'MANGALARGA MARCHADOR',
-                        'number_definitive' => $animal->registroMae,
-                        'codlab' => $this->generateUniqueCodlab('EQU'),
-                    ]);
-
-                    $currentAnimal = $newAnimal;
-                    $verify = DnaVerify::create([
-                        'animal_id' => $currentAnimal->id,
-                        'order_id' => $order->id,
-                        'verify_code' => 'EQUTR',
-                    ]);
-                }
-                $animalToParent = AnimalToParent::updateOrCreate(
-                    ['animal_id' => $currentAnimal->id],  // Condições para encontrar um registro existente
-                    [
-                        'animal_name' => $animal->nome,
-                        'especies' => 'EQUINA',
-                        'animal_register' => null,
-                        'register_pai' => $animal->registroPai ?? null,
-                        'register_mae' => $animal->registroMae ?? null,
-                    ]  // Valores para atualizar ou criar
-                );
-            }
+            return response()->json('ok');
+        } catch (\Exception $e) {
+            // Log the error
+            \Log::info($e->getMessage());
+            // return response()->json('Erro ao criar pedido de exame', 500);
         }
-
-        $log = Log::create([
-            'user' => 'Sistema API',
-            'action' => 'Criou pedido de exame',
-            'order_id' => $order->id ?? 'deu erro',
-            'animal' => $animal->nome ?? 'deu erro',
-        ]);
-        return response()->json('ok');
     }
 
 
 
     public function getResenha()
     {
+        try {
+            // Fetch data from API
+            $coletas = $this->fetchDataFromApi('coletas', 18, 2, ['dataEnvioInicio' => date('Y-m-d\TH:i:s', strtotime('-1 day'))]);
 
-        $coletas = $this->fetchDataFromApi('coletas', 18, 2, ['dataEnvioInicio' => date('Y-m-d\TH:i:s', strtotime('-1 day'))]);
+            foreach ($coletas as $coleta) {
+                // Find or create entities
+                $user = User::firstOrCreate(
+                    ['email' => $coleta->cliente->email],
+                    [
+                        'name' => $coleta->cliente->nome,
+                        'email' => $coleta->cliente->email,
+                        'password' => Hash::make($coleta->cliente->cpf_Cnpj),
+                        'permission' => 1,
+                    ]
+                );
 
+                $tecnico = Tecnico::firstOrCreate(
+                    ['professional_name' => $coleta->tecnico->nome],
+                    ['name' => $coleta->tecnico->nome, 'matricula' => $coleta->tecnico->matricula]
+                );
 
-        // $coletas = $this->fetchDataFromApi('coletas', 18, 2, ['rowidColeta' => '756744']);
-        //  $coletas = $this->fetchDataFromApi('coletas', 18, 2, ['dataEnvioInicio' => '2023-09-25T00:00:00']);
-        foreach ($coletas as $coleta) {
-            // find owner, user, and tecnico by email or create them if they don't exist
+                $owner = Owner::updateOrCreate(
+                    ['email' => $coleta->cliente->email],
+                    [
+                        'user_id' => $user->id,
+                        'document' => $coleta->cliente->cpf_Cnpj,
+                        'owner_name' => $coleta->cliente->nome,
+                        'fone' => $coleta->cliente->telefones[0]->telefone,
+                        'cell' => $coleta->cliente->telefones[1]->telefone ?? null,
+                        'whatsapp' => $coleta->cliente->telefones[1]->telefone ?? null,
+                        'zip_code' => $coleta->cliente->enderecos[0]->cep,
+                        'address' => $coleta->cliente->enderecos[0]->logradouro,
+                        'number' => $coleta->cliente->enderecos[0]->numero,
+                        'complement' => $coleta->cliente->enderecos[0]->complemento,
+                        'district' => $coleta->cliente->enderecos[0]->bairro,
+                        'city' => $coleta->cliente->enderecos[0]->cidade,
+                        'state' => $coleta->cliente->enderecos[0]->uf,
+                        'status' => 1,
+                        'propriety' =>  $coleta->cliente->fazendas[0]->nome ?? null,
+                    ]
+                );
 
+                $order = OrderRequest::updateOrCreate(
+                    ['collection_number' => $coleta->rowidColeta],
+                    [
+                        'origin' => 'API',
+                        'user_id' => $user->id,
+                        'creator' => $coleta->cliente->nome,
+                        'creator_number' => $coleta->cliente->matricula,
+                        'technical_manager' => $coleta->tecnico->nome,
+                        'collection_date' => $coleta->dataColeta,
+                        'id_tecnico' => $tecnico->id,
+                        'status' => 1,
+                        'owner_id' => $owner->id,
+                        'parceiro' => 'ABCCMM',
+                    ]
+                );
 
-            $user = User::where('email', $coleta->cliente->email)->first();
-            $tecnico = Tecnico::where('professional_name', $coleta->tecnico->nome)->first();
-            $owner = Owner::where('email', $coleta->cliente->email)->first();
-            $ownerid = $owner->id ?? null;
-            if (!$tecnico) {
+                foreach ($coleta->animais as $animal) {
+                    $existingAnimal = Animal::updateOrCreate(
+                        ['register_number_brand' => $animal->rowidAnimal],
+                        [
+                            'order_id' => $order->id,
+                            'animal_name' => $animal->nome,
+                            'sex' => $animal->sexo,
+                            'birth_date' => $animal->dataNascimento,
+                            'description' => $animal->obs,
+                            'status' => 1,
+                            'codlab' => $this->generateUniqueCodlab('EQU'),
+                            'especies' => 'EQUINA',
+                            'breed' => 'MANGALARGA MARCHADOR',
+                            'registro_pai' => $animal->registroPai,
+                            'pai' => $animal->nomePai,
+                            'registro_mae' => $animal->registroMae,
+                            'mae' => $animal->nomeMae,
+                            'row_id' => $animal->rowidAnimal,
+                        ]
+                    );
 
-                $tecnicoc = Tecnico::create([
-                    'name' => $coleta->tecnico->nome,
-                    'matricula' => $coleta->matricula->matricula,
-                ]);
-            }
-            if (!$user) {
+                    // Find or create parent animals
+                    $pai = Animal::firstOrCreate(
+                        ['number_definitive' => $animal->registroPai],
+                        [
+                            'animal_name' => $animal->nomePai,
+                            'especies' => 'EQUINA',
+                            'breed' => 'MANGALARGA MARCHADOR',
+                            'codlab' => $this->generateUniqueCodlab('EQU'),
+                        ]
+                    );
 
-                $userc = User::create([
-                    'name' => $coleta->cliente->nome,
-                    'email' => $coleta->cliente->email,
-                    'password' => Hash::make($coleta->cliente->cpf_Cnpj),
-                    'permission' => 1,
-                ]);
+                    $mae = Animal::firstOrCreate(
+                        ['number_definitive' => $animal->registroMae],
+                        [
+                            'animal_name' => $animal->nomeMae,
+                            'especies' => 'EQUINA',
+                            'breed' => 'MANGALARGA MARCHADOR',
+                            'codlab' => $this->generateUniqueCodlab('EQU'),
+                        ]
+                    );
 
-                $userc->info()->create([
-                    'user_id' => $userc->id,
-                    'document' => $coleta->cliente->cpf_Cnpj,
-                    'phone' => $coleta->cliente->telefones[0]->telefone,
-                    'number' => $coleta->cliente->enderecos[0]->numero,
-                    'address' => $coleta->cliente->enderecos[0]->logradouro,
-                    'complement' => $coleta->cliente->enderecos[0]->complemento,
-                    'district' => $coleta->cliente->enderecos[0]->bairro,
-                    'city' => $coleta->cliente->enderecos[0]->cidade,
-                    'state' => $coleta->cliente->enderecos[0]->uf,
-                    'zip_code' => $coleta->cliente->enderecos[0]->cep,
-                ]);
-                if ($owner) {
+                    // Create DNA verification record
+                    DnaVerify::firstOrCreate(
+                        ['animal_id' => $existingAnimal->id, 'order_id' => $order->id],
+                        ['verify_code' => 'EQUTR']
+                    );
 
-                    $owner->update([
-                        'user_id' => $userc->id ? $userc->id : $user->id,
-                    ]);
+                    // Update or create the AnimalToParent relationship
+                    AnimalToParent::updateOrCreate(
+                        [
+                            'animal_id' => $existingAnimal->id,
+                            'register_pai' => $pai->number_definitive,
+                            'register_mae' => $mae->number_definitive,
+                        ],
+                        [
+                            'animal_name' => $animal->nome,
+                            'especies' => 'EQUINA',
+                            'animal_register' => null,
+                        ]
+                    );
                 }
-                $ownerc = Owner::firstOrCreate([
-                    'email' => $coleta->cliente->email,
-                ], [
-                    'user_id' => $userc->id,
-                    'document' => $coleta->cliente->cpf_Cnpj,
-                    'owner_name' => $coleta->cliente->nome,
-                    'fone' => $coleta->cliente->telefones[0]->telefone,
-                    'cell' => $coleta->cliente->telefones[1]->telefone ?? null,
-                    'whatsapp' => $coleta->cliente->telefones[1]->telefone ?? null,
-                    'zip_code' => $coleta->cliente->enderecos[0]->cep,
-                    'address' => $coleta->cliente->enderecos[0]->logradouro,
-                    'number' => $coleta->cliente->enderecos[0]->numero,
-                    'complement' => $coleta->cliente->enderecos[0]->complemento,
-                    'district' => $coleta->cliente->enderecos[0]->bairro,
-                    'city' => $coleta->cliente->enderecos[0]->cidade,
-                    'state' => $coleta->cliente->enderecos[0]->uf,
-                    'status' => 1,
-                    'propriety' =>  $coleta->cliente->fazendas[0]->nome ?? null,
-                ]);
-                $ownerid = $ownerc->id;
             }
 
-
-            $order = OrderRequest::firstOrCreate([
-                'collection_number' => $coleta->rowidColeta,
-            ], [
-                'origin' => 'API',
-                'user_id' => $user->id ?? $userc->id,
-                'creator' => $coleta->cliente->nome,
-                'creator_number' => $coleta->cliente->matricula,
-                'technical_manager' => $coleta->tecnico->nome,
-                'collection_date' => $coleta->dataColeta,
-                'id_tecnico' => $tecnico->id ?? $tecnicoc->id,
-                'status' => 1,
-                'owner_id' => $ownerid,
-                'parceiro' => 'ABCCMM',
+            // Log the action
+            Log::create([
+                'user' => 'Sistema API',
+                'action' => 'Criou pedido de exame',
+                'order_id' => $order->id ?? 'deu erro',
+                'animal' => $animal->nome ?? 'deu erro',
             ]);
 
-            foreach ($coleta->animais as $animal) {
-
-                $codlab = $this->generateUniqueCodlab('EQU');
-                $existingAnimal = Animal::where('register_number_brand', $animal->rowidAnimal)->first();
-                $currentAnimal = null;
-                if ($existingAnimal) {
-                    // $existingAnimal->status = 1;
-
-                    $existingAnimal->order_id = $order->id; // atualize o status como necessário
-                    $existingAnimal->save();
-                    $currentAnimal = $existingAnimal;
-                } else {
-                    $codlab = $this->generateUniqueCodlab('EQU');
-
-                    $newAnimal = Animal::create([
-                        'register_number_brand' => $animal->rowidAnimal,
-                        'order_id' => $order->id,
-                        'animal_name' => $animal->nome,
-                        'sex' => $animal->sexo,
-                        'birth_date' => $animal->dataNascimento,
-                        'description' => $animal->obs,
-                        'status' => 1,
-                        'codlab' => $codlab,
-                        'especies' => 'EQUINA',
-                        'breed' => 'MANGALARGA MARCHADOR',
-                        'registro_pai' => $animal->registroPai,
-                        'pai' => $animal->nomePai,
-                        'registro_mae' => $animal->registroMae,
-                        'mae' => $animal->nomeMae,
-                        'row_id' => $animal->rowidAnimal,
-                    ]);
-
-                    $pai = Animal::create([
-                        'animal_name' => $animal->nomePai,
-                        'especies' => 'EQUINA',
-                        'breed' => 'MANGALARGA MARCHADOR',
-                        'number_definitive' => $animal->registroPai,
-                        'codlab' => $this->generateUniqueCodlab('EQU'),
-                    ]);
-
-                    $mae = Animal::create([
-                        'animal_name' => $animal->nomeMae,
-                        'especies' => 'EQUINA',
-                        'breed' => 'MANGALARGA MARCHADOR',
-                        'number_definitive' => $animal->registroMae,
-                        'codlab' => $this->generateUniqueCodlab('EQU'),
-                    ]);
-
-                    $currentAnimal = $newAnimal;
-
-                    $verify = DnaVerify::create([
-                        'animal_id' => $currentAnimal->id,
-                        'order_id' => $order->id,
-                        'verify_code' => 'EQUTR',
-                    ]);
-                }
-                $animalToParent = AnimalToParent::updateOrCreate(
-                    ['animal_id' => $currentAnimal->id],  // Condições para encontrar um registro existente
-                    [
-                        'animal_name' => $animal->nome,
-                        'especies' => 'EQUINA',
-                        'animal_register' => null,
-                        'register_pai' => $animal->registroPai ?? null,
-                        'register_mae' => $animal->registroMae ?? null,
-                    ]  // Valores para atualizar ou criar
-                );
-            }
+            return response()->json('ok');
+        } catch (\Exception $e) {
+            // Log the error
+            \Log::info($e->getMessage());
+            // return response()->json('Erro ao criar pedido de exame', 500);
         }
-        $log = Log::create([
-            'user' => 'Sistema API',
-            'action' => 'Criou pedido de exame',
-            'order_id' => $order->id ?? 'deu erro',
-            'animal' => $animal->nome ?? 'deu erro',
-        ]);
-
-        return response()->json('ok');
     }
+
     public function getResenhaRequest(Request $request)
     {
+        try {
+            // Fetch data from API
+            $coletas = $this->fetchDataFromApi('coletas', 18, 2, ['rowidColeta' => $request->rowidcoleta]);
 
+            foreach ($coletas as $coleta) {
+                // Find or create entities
+                $user = User::firstOrCreate(
+                    ['email' => $coleta->cliente->email],
+                    [
+                        'name' => $coleta->cliente->nome,
+                        'email' => $coleta->cliente->email,
+                        'password' => Hash::make($coleta->cliente->cpf_Cnpj),
+                        'permission' => 1,
+                    ]
+                );
 
+                $tecnico = Tecnico::firstOrCreate(
+                    ['professional_name' => $coleta->tecnico->nome],
+                    ['name' => $coleta->tecnico->nome, 'matricula' => $coleta->tecnico->matricula]
+                );
 
-        // $coletas = $this->fetchDataFromApi('coletas', 18, 2, ['dataEnvioInicio' => date('Y-m-d\TH:i:s', strtotime('-1 day'))]);
-        $coletas = $this->fetchDataFromApi('coletas', 18, 2, ['rowidColeta' => $request->rowidcoleta]);
-        //  $coletas = $this->fetchDataFromApi('coletas', 18, 2, ['dataEnvioInicio' => '2023-10-09T00:00:00']);
-        foreach ($coletas as $coleta) {
-            // find owner, user, and tecnico by email or create them if they don't exist
+                $owner = Owner::updateOrCreate(
+                    ['email' => $coleta->cliente->email],
+                    [
+                        'user_id' => $user->id,
+                        'document' => $coleta->cliente->cpf_Cnpj,
+                        'owner_name' => $coleta->cliente->nome,
+                        'fone' => $coleta->cliente->telefones[0]->telefone,
+                        'cell' => $coleta->cliente->telefones[1]->telefone ?? null,
+                        'whatsapp' => $coleta->cliente->telefones[1]->telefone ?? null,
+                        'zip_code' => $coleta->cliente->enderecos[0]->cep,
+                        'address' => $coleta->cliente->enderecos[0]->logradouro,
+                        'number' => $coleta->cliente->enderecos[0]->numero,
+                        'complement' => $coleta->cliente->enderecos[0]->complemento,
+                        'district' => $coleta->cliente->enderecos[0]->bairro,
+                        'city' => $coleta->cliente->enderecos[0]->cidade,
+                        'state' => $coleta->cliente->enderecos[0]->uf,
+                        'status' => 1,
+                        'propriety' =>  $coleta->cliente->fazendas[0]->nome ?? null,
+                    ]
+                );
 
+                $order = OrderRequest::updateOrCreate(
+                    ['collection_number' => $coleta->rowidColeta],
+                    [
+                        'origin' => 'API',
+                        'user_id' => $user->id,
+                        'creator' => $coleta->cliente->nome,
+                        'creator_number' => $coleta->cliente->matricula,
+                        'technical_manager' => $coleta->tecnico->nome,
+                        'collection_date' => $coleta->dataColeta,
+                        'id_tecnico' => $tecnico->id,
+                        'status' => 1,
+                        'owner_id' => $owner->id,
+                        'parceiro' => 'ABCCMM',
+                    ]
+                );
 
-            $user = User::where('email', $coleta->cliente->email)->first();
-            $tecnico = Tecnico::where('professional_name', $coleta->tecnico->nome)->first();
-            $owner = Owner::where('email', $coleta->cliente->email)->first();
-            $ownerid = $owner->id ?? null;
-            if (!$tecnico) {
+                foreach ($coleta->animais as $animal) {
+                    $existingAnimal = Animal::updateOrCreate(
+                        ['register_number_brand' => $animal->rowidAnimal],
+                        [
+                            'order_id' => $order->id,
+                            'animal_name' => $animal->nome,
+                            'sex' => $animal->sexo,
+                            'birth_date' => $animal->dataNascimento,
+                            'description' => $animal->obs,
+                            'status' => 1,
+                            'codlab' => $this->generateUniqueCodlab('EQU'),
+                            'especies' => 'EQUINA',
+                            'breed' => 'MANGALARGA MARCHADOR',
+                            'registro_pai' => $animal->registroPai,
+                            'pai' => $animal->nomePai,
+                            'registro_mae' => $animal->registroMae,
+                            'mae' => $animal->nomeMae,
+                            'row_id' => $animal->rowidAnimal,
+                        ]
+                    );
 
-                $tecnicoc = Tecnico::create([
-                    'name' => $coleta->tecnico->nome,
-                    'matricula' => $coleta->matricula->matricula,
-                ]);
-            }
-            if (!$user) {
+                    $pai = Animal::firstOrCreate(
+                        ['number_definitive' => $animal->registroPai],
+                        [
+                            'animal_name' => $animal->nomePai,
+                            'especies' => 'EQUINA',
+                            'breed' => 'MANGALARGA MARCHADOR',
+                            'codlab' => $this->generateUniqueCodlab('EQU'),
+                        ]
+                    );
 
-                $userc = User::create([
-                    'name' => $coleta->cliente->nome,
-                    'email' => $coleta->cliente->email,
-                    'password' => Hash::make($coleta->cliente->cpf_Cnpj),
-                    'permission' => 1,
-                ]);
+                    $mae = Animal::firstOrCreate(
+                        ['number_definitive' => $animal->registroMae],
+                        [
+                            'animal_name' => $animal->nomeMae,
+                            'especies' => 'EQUINA',
+                            'breed' => 'MANGALARGA MARCHADOR',
+                            'codlab' => $this->generateUniqueCodlab('EQU'),
+                        ]
+                    );
 
-                $userc->info()->create([
-                    'user_id' => $userc->id,
-                    'document' => $coleta->cliente->cpf_Cnpj,
-                    'phone' => $coleta->cliente->telefones[0]->telefone,
-                    'number' => $coleta->cliente->enderecos[0]->numero,
-                    'address' => $coleta->cliente->enderecos[0]->logradouro,
-                    'complement' => $coleta->cliente->enderecos[0]->complemento,
-                    'district' => $coleta->cliente->enderecos[0]->bairro,
-                    'city' => $coleta->cliente->enderecos[0]->cidade,
-                    'state' => $coleta->cliente->enderecos[0]->uf,
-                    'zip_code' => $coleta->cliente->enderecos[0]->cep,
-                ]);
-                if ($owner) {
+                    DnaVerify::firstOrCreate(
+                        ['animal_id' => $existingAnimal->id, 'order_id' => $order->id],
+                        ['verify_code' => 'EQUTR']
+                    );
 
-                    $owner->update([
-                        'user_id' => $userc->id ? $userc->id : $user->id,
-                    ]);
+                    AnimalToParent::updateOrCreate(
+                        ['animal_id' => $existingAnimal->id, 'register_pai' => $pai->number_definitive, 'register_mae' => $mae->number_definitive],
+                        [
+                            'animal_name' => $animal->nome,
+                            'especies' => 'EQUINA',
+                            'animal_register' => null,
+                        ]
+                    );
                 }
-                $ownerc = Owner::firstOrCreate([
-                    'email' => $coleta->cliente->email,
-                ], [
-                    'user_id' => $userc->id,
-                    'document' => $coleta->cliente->cpf_Cnpj,
-                    'owner_name' => $coleta->cliente->nome,
-                    'fone' => $coleta->cliente->telefones[0]->telefone,
-                    'cell' => $coleta->cliente->telefones[1]->telefone ?? null,
-                    'whatsapp' => $coleta->cliente->telefones[1]->telefone ?? null,
-                    'zip_code' => $coleta->cliente->enderecos[0]->cep,
-                    'address' => $coleta->cliente->enderecos[0]->logradouro,
-                    'number' => $coleta->cliente->enderecos[0]->numero,
-                    'complement' => $coleta->cliente->enderecos[0]->complemento,
-                    'district' => $coleta->cliente->enderecos[0]->bairro,
-                    'city' => $coleta->cliente->enderecos[0]->cidade,
-                    'state' => $coleta->cliente->enderecos[0]->uf,
-                    'status' => 1,
-                    'propriety' =>  $coleta->cliente->fazendas[0]->nome ?? null,
-                ]);
-                $ownerid = $ownerc->id;
             }
 
-
-            $order = OrderRequest::firstOrCreate([
-                'collection_number' => $coleta->rowidColeta,
-            ], [
-                'origin' => 'API',
-                'user_id' => $user->id ?? $userc->id,
-                'creator' => $coleta->cliente->nome,
-                'creator_number' => $coleta->cliente->matricula,
-                'technical_manager' => $coleta->tecnico->nome,
-                'collection_date' => $coleta->dataColeta,
-                'id_tecnico' => $tecnico->id ?? $tecnicoc->id,
-                'status' => 1,
-                'owner_id' => $ownerid,
-                'parceiro' => 'ABCCMM',
+            Log::create([
+                'user' => 'Sistema API',
+                'action' => 'Criou pedido de exame',
+                'order_id' => $order->id ?? 'deu erro',
+                'animal' => $animal->nome ?? 'deu erro',
             ]);
 
-            foreach ($coleta->animais as $animal) {
-
-                $codlab = $this->generateUniqueCodlab('EQU');
-                $existingAnimal = Animal::where('register_number_brand', $animal->rowidAnimal)->first();
-                $currentAnimal = null;
-                if ($existingAnimal) {
-                    // $existingAnimal->status = 1;
-
-                    $existingAnimal->order_id = $order->id; // atualize o status como necessário
-                    $existingAnimal->save();
-                    $currentAnimal = $existingAnimal;
-                } else {
-                    $codlab = $this->generateUniqueCodlab('EQU');
-
-                    $newAnimal = Animal::create([
-                        'register_number_brand' => $animal->rowidAnimal,
-                        'order_id' => $order->id,
-                        'animal_name' => $animal->nome,
-                        'sex' => $animal->sexo,
-                        'birth_date' => $animal->dataNascimento,
-                        'description' => $animal->obs,
-                        'status' => 1,
-                        'codlab' => $codlab,
-                        'especies' => 'EQUINA',
-                        'breed' => 'MANGALARGA MARCHADOR',
-                        'registro_pai' => $animal->registroPai,
-                        'pai' => $animal->nomePai,
-                        'registro_mae' => $animal->registroMae,
-                        'mae' => $animal->nomeMae,
-                        'row_id' => $animal->rowidAnimal,
-                    ]);
-
-                    $pai = Animal::create([
-                        'animal_name' => $animal->nomePai,
-                        'especies' => 'EQUINA',
-                        'breed' => 'MANGALARGA MARCHADOR',
-                        'number_definitive' => $animal->registroPai,
-                        'codlab' => $this->generateUniqueCodlab('EQU'),
-                    ]);
-
-                    $mae = Animal::create([
-                        'animal_name' => $animal->nomeMae,
-                        'especies' => 'EQUINA',
-                        'breed' => 'MANGALARGA MARCHADOR',
-                        'number_definitive' => $animal->registroMae,
-                        'codlab' => $this->generateUniqueCodlab('EQU'),
-                    ]);
-
-                    $currentAnimal = $newAnimal;
-
-                    $verify = DnaVerify::create([
-                        'animal_id' => $currentAnimal->id,
-                        'order_id' => $order->id,
-                        'verify_code' => 'EQUTR',
-                    ]);
-                }
-                $animalToParent = AnimalToParent::updateOrCreate(
-                    ['animal_id' => $currentAnimal->id],  // Condições para encontrar um registro existente
-                    [
-                        'animal_name' => $animal->nome,
-                        'especies' => 'EQUINA',
-                        'animal_register' => null,
-                        'register_pai' => $animal->registroPai ?? null,
-                        'register_mae' => $animal->registroMae ?? null,
-                    ]  // Valores para atualizar ou criar
-                );
-            }
+            return redirect()->back()->with('success', 'Pedido de exame criado com sucesso');
+        } catch (\Exception $e) {
+            // Log error
+            \Log::info($e->getMessage());
+            return redirect()->back()->with('error', 'Erro ao criar pedido de exame');
         }
-        $log = Log::create([
-            'user' => 'Sistema API',
-            'action' => 'Criou pedido de exame',
-            'order_id' => $order->id ?? 'deu erro',
-            'animal' => $animal->nome ?? 'deu erro',
-        ]);
-        return redirect()->back()->with('success', 'Pedido de exame criado com sucesso');
     }
+
     public function getColetaRequest(Request $request)
     {
+        try {
+            // Fetch data from API
+            $coletas = $this->fetchDataFromApi('coletas', 18, 1, ['rowidColeta' => $request->rowidcoleta]);
 
-        // $coletas = $this->fetchDataFromApi('coletas', 18, 2, ['dataEnvioInicio' => date('Y-m-d\TH:i:s', strtotime('-1 day'))]);
-        $coletas = $this->fetchDataFromApi('coletas', 18, 1, ['rowidColeta' => $request->rowidcoleta]);
-        //  $coletas = $this->fetchDataFromApi('coletas', 18, 2, ['dataEnvioInicio' => '2023-10-09T00:00:00']);
-        foreach ($coletas as $coleta) {
-            // find owner, user, and tecnico by email or create them if they don't exist
+            foreach ($coletas as $coleta) {
+                // Find or create entities
+                $user = User::firstOrCreate(
+                    ['email' => $coleta->cliente->email],
+                    [
+                        'name' => $coleta->cliente->nome,
+                        'email' => $coleta->cliente->email,
+                        'password' => Hash::make($coleta->cliente->cpf_Cnpj),
+                        'permission' => 1,
+                    ]
+                );
 
+                $tecnico = Tecnico::firstOrCreate(
+                    ['professional_name' => $coleta->tecnico->nome],
+                    ['name' => $coleta->tecnico->nome, 'matricula' => $coleta->tecnico->matricula]
+                );
 
-            $user = User::where('email', $coleta->cliente->email)->first();
-            $tecnico = Tecnico::where('professional_name', $coleta->tecnico->nome)->first();
-            $owner = Owner::where('email', $coleta->cliente->email)->first();
-            $ownerid = $owner->id ?? null;
-            if (!$tecnico) {
+                $owner = Owner::updateOrCreate(
+                    ['email' => $coleta->cliente->email],
+                    [
+                        'user_id' => $user->id,
+                        'document' => $coleta->cliente->cpf_Cnpj,
+                        'owner_name' => $coleta->cliente->nome,
+                        'fone' => $coleta->cliente->telefones[0]->telefone,
+                        'cell' => $coleta->cliente->telefones[1]->telefone ?? null,
+                        'whatsapp' => $coleta->cliente->telefones[1]->telefone ?? null,
+                        'zip_code' => $coleta->cliente->enderecos[0]->cep,
+                        'address' => $coleta->cliente->enderecos[0]->logradouro,
+                        'number' => $coleta->cliente->enderecos[0]->numero,
+                        'complement' => $coleta->cliente->enderecos[0]->complemento,
+                        'district' => $coleta->cliente->enderecos[0]->bairro,
+                        'city' => $coleta->cliente->enderecos[0]->cidade,
+                        'state' => $coleta->cliente->enderecos[0]->uf,
+                        'status' => 1,
+                        'propriety' =>  $coleta->cliente->fazendas[0]->nome ?? null,
+                    ]
+                );
 
-                $tecnicoc = Tecnico::create([
-                    'name' => $coleta->tecnico->nome,
-                    'matricula' => $coleta->matricula->matricula,
-                ]);
-            }
-            if (!$user) {
+                $order = OrderRequest::updateOrCreate(
+                    ['collection_number' => $coleta->rowidColeta],
+                    [
+                        'origin' => 'API',
+                        'user_id' => $user->id,
+                        'creator' => $coleta->cliente->nome,
+                        'creator_number' => $coleta->cliente->matricula,
+                        'technical_manager' => $coleta->tecnico->nome,
+                        'collection_date' => $coleta->dataColeta,
+                        'id_tecnico' => $tecnico->id,
+                        'status' => 1,
+                        'owner_id' => $owner->id,
+                        'parceiro' => 'ABCCMM',
+                    ]
+                );
 
-                $userc = User::create([
-                    'name' => $coleta->cliente->nome,
-                    'email' => $coleta->cliente->email,
-                    'password' => Hash::make($coleta->cliente->cpf_Cnpj),
-                    'permission' => 1,
-                ]);
+                foreach ($coleta->animais as $animal) {
+                    $existingAnimal = Animal::updateOrCreate(
+                        ['register_number_brand' => $animal->rowidAnimal],
+                        [
+                            'order_id' => $order->id,
+                            'animal_name' => $animal->nome,
+                            'sex' => $animal->sexo,
+                            'birth_date' => $animal->dataNascimento,
+                            'description' => $animal->obs,
+                            'status' => 1,
+                            'codlab' => $this->generateUniqueCodlab('EQU'),
+                            'especies' => 'EQUINA',
+                            'breed' => 'MANGALARGA MARCHADOR',
+                            'registro_pai' => $animal->registroPai,
+                            'pai' => $animal->nomePai,
+                            'registro_mae' => $animal->registroMae,
+                            'mae' => $animal->nomeMae,
+                            'row_id' => $animal->rowidAnimal,
+                        ]
+                    );
 
-                $userc->info()->create([
-                    'user_id' => $userc->id,
-                    'document' => $coleta->cliente->cpf_Cnpj,
-                    'phone' => $coleta->cliente->telefones[0]->telefone,
-                    'number' => $coleta->cliente->enderecos[0]->numero,
-                    'address' => $coleta->cliente->enderecos[0]->logradouro,
-                    'complement' => $coleta->cliente->enderecos[0]->complemento,
-                    'district' => $coleta->cliente->enderecos[0]->bairro,
-                    'city' => $coleta->cliente->enderecos[0]->cidade,
-                    'state' => $coleta->cliente->enderecos[0]->uf,
-                    'zip_code' => $coleta->cliente->enderecos[0]->cep,
-                ]);
-                if ($owner) {
+                    // Find or create parent animals
+                    $pai = Animal::firstOrCreate(
+                        ['number_definitive' => $animal->registroPai],
+                        [
+                            'animal_name' => $animal->nomePai,
+                            'especies' => 'EQUINA',
+                            'breed' => 'MANGALARGA MARCHADOR',
+                            'codlab' => $this->generateUniqueCodlab('EQU'),
+                        ]
+                    );
 
-                    $owner->update([
-                        'user_id' => $userc->id ? $userc->id : $user->id,
-                    ]);
+                    $mae = Animal::firstOrCreate(
+                        ['number_definitive' => $animal->registroMae],
+                        [
+                            'animal_name' => $animal->nomeMae,
+                            'especies' => 'EQUINA',
+                            'breed' => 'MANGALARGA MARCHADOR',
+                            'codlab' => $this->generateUniqueCodlab('EQU'),
+                        ]
+                    );
+
+                    // Create DNA verification record
+                    DnaVerify::firstOrCreate(
+                        ['animal_id' => $existingAnimal->id, 'order_id' => $order->id],
+                        ['verify_code' => 'EQUTR']
+                    );
+
+                    // Update or create the AnimalToParent relationship
+                    AnimalToParent::updateOrCreate(
+                        [
+                            'animal_id' => $existingAnimal->id,
+                            'register_pai' => $pai->number_definitive,
+                            'register_mae' => $mae->number_definitive,
+                        ],
+                        [
+                            'animal_name' => $animal->nome,
+                            'especies' => 'EQUINA',
+                            'animal_register' => null,
+                        ]
+                    );
                 }
-                $ownerc = Owner::firstOrCreate([
-                    'email' => $coleta->cliente->email,
-                ], [
-                    'user_id' => $userc->id,
-                    'document' => $coleta->cliente->cpf_Cnpj,
-                    'owner_name' => $coleta->cliente->nome,
-                    'fone' => $coleta->cliente->telefones[0]->telefone,
-                    'cell' => $coleta->cliente->telefones[1]->telefone ?? null,
-                    'whatsapp' => $coleta->cliente->telefones[1]->telefone ?? null,
-                    'zip_code' => $coleta->cliente->enderecos[0]->cep,
-                    'address' => $coleta->cliente->enderecos[0]->logradouro,
-                    'number' => $coleta->cliente->enderecos[0]->numero,
-                    'complement' => $coleta->cliente->enderecos[0]->complemento,
-                    'district' => $coleta->cliente->enderecos[0]->bairro,
-                    'city' => $coleta->cliente->enderecos[0]->cidade,
-                    'state' => $coleta->cliente->enderecos[0]->uf,
-                    'status' => 1,
-                    'propriety' =>  $coleta->cliente->fazendas[0]->nome ?? null,
-                ]);
-                $ownerid = $ownerc->id;
             }
 
-
-            $order = OrderRequest::firstOrCreate([
-                'collection_number' => $coleta->rowidColeta,
-            ], [
-                'origin' => 'API',
-                'user_id' => $user->id ?? $userc->id,
-                'creator' => $coleta->cliente->nome,
-                'creator_number' => $coleta->cliente->matricula,
-                'technical_manager' => $coleta->tecnico->nome,
-                'collection_date' => $coleta->dataColeta,
-                'id_tecnico' => $tecnico->id ?? $tecnicoc->id,
-                'status' => 1,
-                'owner_id' => $ownerid,
-                'parceiro' => 'ABCCMM',
+            // Log the action
+            Log::create([
+                'user' => 'Sistema API',
+                'action' => 'Criou pedido de exame',
+                'order_id' => $order->id ?? 'deu erro',
+                'animal' => $animal->nome ?? 'deu erro',
             ]);
 
-            foreach ($coleta->animais as $animal) {
-
-                $codlab = $this->generateUniqueCodlab('EQU');
-                $existingAnimal = Animal::where('register_number_brand', $animal->rowidAnimal)->first();
-                $currentAnimal = null;
-                if ($existingAnimal) {
-                    // $existingAnimal->status = 1;
-
-                    $existingAnimal->order_id = $order->id; // atualize o status como necessário
-                    $existingAnimal->save();
-                    $currentAnimal = $existingAnimal;
-                } else {
-                    $codlab = $this->generateUniqueCodlab('EQU');
-
-                    $newAnimal = Animal::create([
-                        'register_number_brand' => $animal->rowidAnimal,
-                        'order_id' => $order->id,
-                        'animal_name' => $animal->nome,
-                        'sex' => $animal->sexo,
-                        'birth_date' => $animal->dataNascimento,
-                        'description' => $animal->obs,
-                        'status' => 1,
-                        'codlab' => $codlab,
-                        'especies' => 'EQUINA',
-                        'breed' => 'MANGALARGA MARCHADOR',
-                        'registro_pai' => $animal->registroPai,
-                        'pai' => $animal->nomePai,
-                        'registro_mae' => $animal->registroMae,
-                        'mae' => $animal->nomeMae,
-                        'row_id' => $animal->rowidAnimal,
-                    ]);
-
-                    $pai = Animal::create([
-                        'animal_name' => $animal->nomePai,
-                        'especies' => 'EQUINA',
-                        'breed' => 'MANGALARGA MARCHADOR',
-                        'number_definitive' => $animal->registroPai,
-                        'codlab' => $this->generateUniqueCodlab('EQU'),
-                    ]);
-
-                    $mae = Animal::create([
-                        'animal_name' => $animal->nomeMae,
-                        'especies' => 'EQUINA',
-                        'breed' => 'MANGALARGA MARCHADOR',
-                        'number_definitive' => $animal->registroMae,
-                        'codlab' => $this->generateUniqueCodlab('EQU'),
-                    ]);
-
-                    $currentAnimal = $newAnimal;
-
-                    $verify = DnaVerify::create([
-                        'animal_id' => $currentAnimal->id,
-                        'order_id' => $order->id,
-                        'verify_code' => 'EQUTR',
-                    ]);
-                }
-                $animalToParent = AnimalToParent::updateOrCreate(
-                    ['animal_id' => $currentAnimal->id],  // Condições para encontrar um registro existente
-                    [
-                        'animal_name' => $animal->nome,
-                        'especies' => 'EQUINA',
-                        'animal_register' => null,
-                        'register_pai' => $animal->registroPai ?? null,
-                        'register_mae' => $animal->registroMae ?? null,
-                    ]  // Valores para atualizar ou criar
-                );
-            }
+            return redirect()->back()->with('success', 'Pedido de exame criado com sucesso');
+        } catch (\Exception $e) {
+            // Log the error
+            \Log::info($e->getMessage());
+            return redirect()->back()->with('error', 'Erro ao criar pedido de exame');
         }
-        $log = Log::create([
-            'user' => 'Sistema API',
-            'action' => 'Criou pedido de exame',
-            'order_id' => $order->id ?? 'deu erro',
-            'animal' => $animal->nome ?? 'deu erro',
-        ]);
-        return redirect()->back()->with('success', 'Pedido de exame criado com sucesso');
     }
+
     public function getRowId()
     {
         $coletas = $this->fetchDataFromApi('coletas', 18, 2, ['dataEnvioInicio' => '2023-06-05T00:00:00']);
