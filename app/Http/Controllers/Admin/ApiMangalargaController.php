@@ -12,6 +12,7 @@ use App\Models\OrderRequest;
 use Illuminate\Http\Request;
 use App\Models\AnimalToParent;
 use App\Http\Controllers\Controller;
+use App\Models\UserInfo;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cache;
@@ -36,12 +37,32 @@ class ApiMangalargaController extends Controller
             foreach ($coletas as $coleta) {
                 // Find or create entities
                 $user = User::firstOrCreate(
-                    ['email' => $coleta->cliente->email],
+                    ['name' => $coleta->cliente->nome],
                     [
                         'name' => $coleta->cliente->nome,
                         'email' => $coleta->cliente->email,
                         'password' => Hash::make($coleta->cliente->cpf_Cnpj),
                         'permission' => 1,
+                    ]
+                );
+
+                $userinfo = UserInfo::firstOrCreate(
+                    ['user_id' => $user->id],
+                    [
+                        'user_id' => $user->id,
+                        'document' => $coleta->cliente->cpf_Cnpj,
+                        'fone' => $coleta->cliente->telefones[0]->telefone,
+                        'cell' => $coleta->cliente->telefones[1]->telefone ?? null,
+                        'whatsapp' => $coleta->cliente->telefones[1]->telefone ?? null,
+                        'zip_code' => $coleta->cliente->enderecos[0]->cep,
+                        'address' => $coleta->cliente->enderecos[0]->logradouro,
+                        'number' => $coleta->cliente->enderecos[0]->numero,
+                        'complement' => $coleta->cliente->enderecos[0]->complemento,
+                        'district' => $coleta->cliente->enderecos[0]->bairro,
+                        'city' => $coleta->cliente->enderecos[0]->cidade,
+                        'state' => $coleta->cliente->enderecos[0]->uf,
+                        'status' => 1,
+                        'propriety' =>  $coleta->cliente->fazendas[0]->nome ?? null,
                     ]
                 );
 
@@ -178,12 +199,31 @@ class ApiMangalargaController extends Controller
             foreach ($coletas as $coleta) {
                 // Find or create entities
                 $user = User::firstOrCreate(
-                    ['email' => $coleta->cliente->email],
+                    ['name' => $coleta->cliente->nome],
                     [
                         'name' => $coleta->cliente->nome,
                         'email' => $coleta->cliente->email,
                         'password' => Hash::make($coleta->cliente->cpf_Cnpj),
                         'permission' => 1,
+                    ]
+                );
+                $userinfo = UserInfo::firstOrCreate(
+                    ['user_id' => $user->id],
+                    [
+                        'user_id' => $user->id,
+                        'document' => $coleta->cliente->cpf_Cnpj,
+                        'fone' => $coleta->cliente->telefones[0]->telefone,
+                        'cell' => $coleta->cliente->telefones[1]->telefone ?? null,
+                        'whatsapp' => $coleta->cliente->telefones[1]->telefone ?? null,
+                        'zip_code' => $coleta->cliente->enderecos[0]->cep,
+                        'address' => $coleta->cliente->enderecos[0]->logradouro,
+                        'number' => $coleta->cliente->enderecos[0]->numero,
+                        'complement' => $coleta->cliente->enderecos[0]->complemento,
+                        'district' => $coleta->cliente->enderecos[0]->bairro,
+                        'city' => $coleta->cliente->enderecos[0]->cidade,
+                        'state' => $coleta->cliente->enderecos[0]->uf,
+                        'status' => 1,
+                        'propriety' =>  $coleta->cliente->fazendas[0]->nome ?? null,
                     ]
                 );
 
@@ -318,7 +358,7 @@ class ApiMangalargaController extends Controller
             foreach ($coletas as $coleta) {
                 // Find or create entities
                 $user = User::firstOrCreate(
-                    ['email' => $coleta->cliente->email],
+                    ['name' => $coleta->cliente->nome],
                     [
                         'name' => $coleta->cliente->nome,
                         'email' => $coleta->cliente->email,
@@ -326,6 +366,26 @@ class ApiMangalargaController extends Controller
                         'permission' => 1,
                     ]
                 );
+                $userinfo = UserInfo::firstOrCreate(
+                    ['user_id' => $user->id],
+                    [
+                        'user_id' => $user->id,
+                        'document' => $coleta->cliente->cpf_Cnpj,
+                        'fone' => $coleta->cliente->telefones[0]->telefone,
+                        'cell' => $coleta->cliente->telefones[1]->telefone ?? null,
+                        'whatsapp' => $coleta->cliente->telefones[1]->telefone ?? null,
+                        'zip_code' => $coleta->cliente->enderecos[0]->cep,
+                        'address' => $coleta->cliente->enderecos[0]->logradouro,
+                        'number' => $coleta->cliente->enderecos[0]->numero,
+                        'complement' => $coleta->cliente->enderecos[0]->complemento,
+                        'district' => $coleta->cliente->enderecos[0]->bairro,
+                        'city' => $coleta->cliente->enderecos[0]->cidade,
+                        'state' => $coleta->cliente->enderecos[0]->uf,
+                        'status' => 1,
+                        'propriety' =>  $coleta->cliente->fazendas[0]->nome ?? null,
+                    ]
+                );
+
 
                 $tecnico = Tecnico::firstOrCreate(
                     ['professional_name' => $coleta->tecnico->nome],
@@ -450,7 +510,7 @@ class ApiMangalargaController extends Controller
             foreach ($coletas as $coleta) {
                 // Find or create entities
                 $user = User::firstOrCreate(
-                    ['email' => $coleta->cliente->email],
+                    ['name' => $coleta->cliente->nome],
                     [
                         'name' => $coleta->cliente->nome,
                         'email' => $coleta->cliente->email,
@@ -458,6 +518,26 @@ class ApiMangalargaController extends Controller
                         'permission' => 1,
                     ]
                 );
+                $userinfo = UserInfo::firstOrCreate(
+                    ['user_id' => $user->id],
+                    [
+                        'user_id' => $user->id,
+                        'document' => $coleta->cliente->cpf_Cnpj,
+                        'fone' => $coleta->cliente->telefones[0]->telefone,
+                        'cell' => $coleta->cliente->telefones[1]->telefone ?? null,
+                        'whatsapp' => $coleta->cliente->telefones[1]->telefone ?? null,
+                        'zip_code' => $coleta->cliente->enderecos[0]->cep,
+                        'address' => $coleta->cliente->enderecos[0]->logradouro,
+                        'number' => $coleta->cliente->enderecos[0]->numero,
+                        'complement' => $coleta->cliente->enderecos[0]->complemento,
+                        'district' => $coleta->cliente->enderecos[0]->bairro,
+                        'city' => $coleta->cliente->enderecos[0]->cidade,
+                        'state' => $coleta->cliente->enderecos[0]->uf,
+                        'status' => 1,
+                        'propriety' =>  $coleta->cliente->fazendas[0]->nome ?? null,
+                    ]
+                );
+
 
                 $tecnico = Tecnico::firstOrCreate(
                     ['professional_name' => $coleta->tecnico->nome],
