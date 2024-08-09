@@ -49,11 +49,11 @@
                                 <li><a class="dropdown-item" href="{{ route('pedido.abccmm') }}">Buscar pedido na ABCCMM</a>
                                 
                             @endif
-                            @if (auth()->user()->permission == 10 || auth()->user()->association_id == 2)
+                            @if (auth()->user()->permission == 10 || auth()->user()->association_id == 2 || auth()->user()->association_id == 1)
                                 <li><a class="dropdown-item" href="{{ route('order.create.painel') }}">Criar Pedido</a>
                                 </li>
                             @endif
-                            @if (auth()->user()->association_id == 2)
+                            @if (auth()->user()->association_id == 2 || auth()->user()->association_id == 1)
                                 <li><a class="dropdown-item" href="{{ route('orders.pega') }}">Ver
                                         Pedidos</a>
                                 </li>
@@ -66,7 +66,7 @@
                         </ul>
                     </li>
 
-                    @if (auth()->user()->permission == 10 || auth()->user()->association_id == 2)
+                    @if (auth()->user()->permission == 10 || auth()->user()->association_id == 2 || auth()->user()->association_id == 1)
                         <li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href="#"
                                 style="color: var(--bs-dark);"><i class="fa-solid fa-horse"
                                     style="color: var(--bs-dark);"></i><span>Animais</span></a>

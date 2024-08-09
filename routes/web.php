@@ -243,6 +243,8 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::post('order-tecnico-update/{id}', [OrderController::class, 'editarTecnico'])->name('order.tecnico.update');
     Route::post('order-order-update/{id}', [OrderController::class, 'updateOrderData'])->name('order.order.update');
 
+    Route::get('order-pampa', [OrderController::class, 'orderPampa'])->name('orders.pampa');
+
 
     Route::get('owner/{id}', [OrderController::class, 'owner'])->name('orders.owner');
 

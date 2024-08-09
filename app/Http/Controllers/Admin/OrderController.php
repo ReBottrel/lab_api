@@ -59,6 +59,12 @@ class OrderController extends Controller
 
         return view('admin.orders.orders-pega', get_defined_vars());
     }
+    public function orderPampa()
+    {
+        $orders = OrderRequest::where('status', '!=', 0)->where('status', '!=', 5)->where('status', '!=', 7)->orderBy('id', 'desc')->where('parceiro', 'PAMPA')->paginate(10);
+
+        return view('admin.orders.orders-pampa', get_defined_vars());
+    }
 
     public function getAbccmm()
     {
@@ -1059,13 +1065,14 @@ class OrderController extends Controller
         $order->status = 1;
         $order->creator_number = '' . $code . '00' . $order->id . '';
         $order->save();
-        
-        if(auth()->user()->association_id == 2){
+
+        if (auth()->user()->association_id == 2) {
             return redirect()->route('orders.pega')->with('success', 'Pedido criado com sucesso');
-        }else{
+        } elseif (auth()->user()->association_id == 1) {
+            return redirect()->route('orders.pampa')->with('success', 'Pedido criado com sucesso');
+        } else {
             return redirect()->route('orders.all')->with('success', 'Pedido criado com sucesso');
         }
-        
     }
     public function orderListSistem()
     {
