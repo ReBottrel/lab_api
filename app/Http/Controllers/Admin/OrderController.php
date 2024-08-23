@@ -55,7 +55,14 @@ class OrderController extends Controller
     }
     public function orderPega()
     {
-        $orders = OrderRequest::where('status', '!=', 0)->where('status', '!=', 5)->where('status', '!=', 7)->orderBy('id', 'desc')->where('parceiro', 'ABCJPEGA')->paginate(10);
+        if (auth()->user()->association_id == 2) {
+            $orders = OrderRequest::where('status', '!=', 0)->where('status', '!=', 5)->where('status', '!=', 7)->orderBy('id', 'desc')->where('parceiro', 'ABCJPEGA')->paginate(10);
+        } elseif (auth()->user()->association_id == 1) {
+            $orders = OrderRequest::where('status', '!=', 0)->where('status', '!=', 5)->where('status', '!=', 7)->orderBy('id', 'desc')->where('parceiro', 'PAMPA')->paginate(10);
+        } else {
+            $orders = OrderRequest::where('status', '!=', 0)->where('status', '!=', 5)->where('status', '!=', 7)->orderBy('id', 'desc')->paginate(10);
+        }
+
 
         return view('admin.orders.orders-pega', get_defined_vars());
     }
