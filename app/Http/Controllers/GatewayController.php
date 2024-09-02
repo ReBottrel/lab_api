@@ -24,7 +24,6 @@ class GatewayController extends Controller
         ];
         $response = Http::post(env('IOPAY_URL') . 'auth/login', $data)->object();
         $this->bearer_token = "Bearer $response->access_token";
-     
     }
 
     public function listPayment(Request $request, $id = null)
@@ -60,7 +59,7 @@ class GatewayController extends Controller
         ];
 
 
-    
+
         $total_value = 0;
         foreach ($order->orderRequestPayment as  $or_payment) {
             $or_payment = OrderRequestPayment::find($or_payment->id);
@@ -81,7 +80,7 @@ class GatewayController extends Controller
             $data['token'] = $this->cardToken($request->card);
         }
         $id_customer = $this->buyer($request->info_add ?? null);
-        
+
         $response = Http::withHeaders(['Authorization' => $this->bearer_token])->post(env('IOPAY_URL') . 'v1/transaction/new/' . $id_customer, $data)->object();
 
         \Log::channel('iopay_response_payment')->info(collect($response)->toArray());
@@ -105,38 +104,50 @@ class GatewayController extends Controller
                     } elseif ($or_payment->days == 4) {
                         $days = '24 Horas';
 
-                        $responseOwner = Http::post('https://api.z-api.io/instances/3B30881EC3E99084D3D3B6927F6ADC67/token/66E633717A0DCDD3D4A1BC19/send-text', [
+                        $responseOwner = Http::withHeaders([
+                            'Client-Token' => 'F17a9a1fa1c3943f3adc1dec2f3c4d6a4S'  // Adicionando o token na header
+                        ])->post('https://api.z-api.io/instances/3B30881EC3E99084D3D3B6927F6ADC67/token/66E633717A0DCDD3D4A1BC19/send-text', [
                             "phone" => "5531989911569",
                             "message" => "Esse exame foi pago com sucesso, e o prazo e de 24 horas para o animal: $animal->animal_name"
                         ]);
                     } elseif ($or_payment->days == 3) {
                         $days = '2 Dias';
-                        $responseOwner = Http::post('https://api.z-api.io/instances/3B30881EC3E99084D3D3B6927F6ADC67/token/66E633717A0DCDD3D4A1BC19/send-text', [
+                        $responseOwner = Http::withHeaders([
+                            'Client-Token' => 'F17a9a1fa1c3943f3adc1dec2f3c4d6a4S'  // Adicionando o token na header
+                        ])->post('https://api.z-api.io/instances/3B30881EC3E99084D3D3B6927F6ADC67/token/66E633717A0DCDD3D4A1BC19/send-text', [
                             "phone" => "5531989911569",
                             "message" => "Esse exame foi pago com sucesso, e o prazo e de 2 dias para o animal: $animal->animal_name"
                         ]);
                     } elseif ($or_payment->days == 2) {
                         $days = '5 Dias';
-                        $responseOwner = Http::post('https://api.z-api.io/instances/3B30881EC3E99084D3D3B6927F6ADC67/token/66E633717A0DCDD3D4A1BC19/send-text', [
+                        $responseOwner = Http::withHeaders([
+                            'Client-Token' => 'F17a9a1fa1c3943f3adc1dec2f3c4d6a4S'  // Adicionando o token na header
+                        ])->post('https://api.z-api.io/instances/3B30881EC3E99084D3D3B6927F6ADC67/token/66E633717A0DCDD3D4A1BC19/send-text', [
                             "phone" => "5531989911569",
                             "message" => "Esse exame foi pago com sucesso, e o prazo e de 5 dias para o animal: $animal->animal_name"
                         ]);
                     } elseif ($or_payment->days == 1) {
                         $days = '10 Dias';
-                        $responseOwner = Http::post('https://api.z-api.io/instances/3B30881EC3E99084D3D3B6927F6ADC67/token/66E633717A0DCDD3D4A1BC19/send-text', [
+                        $responseOwner = Http::withHeaders([
+                            'Client-Token' => 'F17a9a1fa1c3943f3adc1dec2f3c4d6a4S'  // Adicionando o token na header
+                        ])->post('https://api.z-api.io/instances/3B30881EC3E99084D3D3B6927F6ADC67/token/66E633717A0DCDD3D4A1BC19/send-text', [
                             "phone" => "5531989911569",
                             "message" => "Esse exame foi pago com sucesso, e o prazo e de 10 dias para o animal: $animal->animal_name"
                         ]);
                     }
                     $telefone = str_replace(['(', ')', '-', ' '], ['', '', '', ''],  $order->tecnico->cell);
-                    $response = Http::post('https://api.z-api.io/instances/3B30881EC3E99084D3D3B6927F6ADC67/token/66E633717A0DCDD3D4A1BC19/send-text', [
+                    $response = Http::withHeaders([
+                        'Client-Token' => 'F17a9a1fa1c3943f3adc1dec2f3c4d6a4S'  // Adicionando o token na header
+                    ])->post('https://api.z-api.io/instances/3B30881EC3E99084D3D3B6927F6ADC67/token/66E633717A0DCDD3D4A1BC19/send-text', [
                         "phone" => "55$telefone",
                         "message" => "Prezado Técnico,
                         Confirmamos o pagamento do exame de DNA do(s) animal(ais) $animal->animal_name e informamos que o exame já se encontra em execução.
                         "
                     ]);
                     $telefoneOwner = str_replace(['(', ')', '-', ' '], ['', '', '', ''],  $order->owner->cell);
-                    $responseOwner = Http::post('https://api.z-api.io/instances/3B30881EC3E99084D3D3B6927F6ADC67/token/66E633717A0DCDD3D4A1BC19/send-text', [
+                    $responseOwner = Http::withHeaders([
+                        'Client-Token' => 'F17a9a1fa1c3943f3adc1dec2f3c4d6a4S'  // Adicionando o token na header
+                    ])->post('https://api.z-api.io/instances/3B30881EC3E99084D3D3B6927F6ADC67/token/66E633717A0DCDD3D4A1BC19/send-text', [
                         "phone" => "55$telefoneOwner",
                         "message" => "Prezado Criador,
                         Confirmamos o pagamento do exame de DNA do(s) animal(ais) $animal->animal_name e informamos que o exame já se encontra em execução.
@@ -246,31 +257,41 @@ class GatewayController extends Controller
                             $days = '20 Dias';
                         } elseif ($item->days == 4) {
                             $days = '24 Horas';
-                            $responseOwner = Http::post('https://api.z-api.io/instances/3B30881EC3E99084D3D3B6927F6ADC67/token/66E633717A0DCDD3D4A1BC19/send-text', [
+                            $responseOwner = Http::withHeaders([
+                                'Client-Token' => 'F17a9a1fa1c3943f3adc1dec2f3c4d6a4S'  // Adicionando o token na header
+                            ])->post('https://api.z-api.io/instances/3B30881EC3E99084D3D3B6927F6ADC67/token/66E633717A0DCDD3D4A1BC19/send-text', [
                                 "phone" => "5531989911569",
                                 "message" => "Esse exame foi pago com sucesso, e o prazo e de 24 horas para o animal: $animal->animal_name"
                             ]);
                         } elseif ($item->days == 3) {
                             $days = '2 Dias';
-                            $responseOwner = Http::post('https://api.z-api.io/instances/3B30881EC3E99084D3D3B6927F6ADC67/token/66E633717A0DCDD3D4A1BC19/send-text', [
+                            $responseOwner = Http::withHeaders([
+                                'Client-Token' => 'F17a9a1fa1c3943f3adc1dec2f3c4d6a4S'  // Adicionando o token na header
+                            ])->post('https://api.z-api.io/instances/3B30881EC3E99084D3D3B6927F6ADC67/token/66E633717A0DCDD3D4A1BC19/send-text', [
                                 "phone" => "5531989911569",
                                 "message" => "Esse exame foi pago com sucesso, e o prazo e de 2 dias para o animal: $animal->animal_name"
                             ]);
                         } elseif ($item->days == 2) {
                             $days = '5 Dias';
-                            $responseOwner = Http::post('https://api.z-api.io/instances/3B30881EC3E99084D3D3B6927F6ADC67/token/66E633717A0DCDD3D4A1BC19/send-text', [
+                            $responseOwner = Http::withHeaders([
+                                'Client-Token' => 'F17a9a1fa1c3943f3adc1dec2f3c4d6a4S'  // Adicionando o token na header
+                            ])->post('https://api.z-api.io/instances/3B30881EC3E99084D3D3B6927F6ADC67/token/66E633717A0DCDD3D4A1BC19/send-text', [
                                 "phone" => "5531989911569",
                                 "message" => "Esse exame foi pago com sucesso, e o prazo e de 5 dias para o animal: $animal->animal_name"
                             ]);
                         } elseif ($item->days == 1) {
                             $days = '10 Dias';
-                            $responseOwner = Http::post('https://api.z-api.io/instances/3B30881EC3E99084D3D3B6927F6ADC67/token/66E633717A0DCDD3D4A1BC19/send-text', [
+                            $responseOwner = Http::withHeaders([
+                                'Client-Token' => 'F17a9a1fa1c3943f3adc1dec2f3c4d6a4S'  // Adicionando o token na header
+                            ])->post('https://api.z-api.io/instances/3B30881EC3E99084D3D3B6927F6ADC67/token/66E633717A0DCDD3D4A1BC19/send-text', [
                                 "phone" => "5531989911569",
                                 "message" => "Esse exame foi pago com sucesso, e o prazo e de 10 dias para o animal: $animal->animal_name"
                             ]);
                         }
                         $telefone = str_replace(['(', ')', '-', ' '], ['', '', '', ''],  $order->tecnico->cell);
-                        $response = Http::post('https://api.z-api.io/instances/3B30881EC3E99084D3D3B6927F6ADC67/token/66E633717A0DCDD3D4A1BC19/send-text', [
+                        $response = Http::withHeaders([
+                            'Client-Token' => 'F17a9a1fa1c3943f3adc1dec2f3c4d6a4S'  // Adicionando o token na header
+                        ])->post('https://api.z-api.io/instances/3B30881EC3E99084D3D3B6927F6ADC67/token/66E633717A0DCDD3D4A1BC19/send-text', [
                             "phone" => "55$telefone",
                             "message" => "Prezado Técnico,
                             Confirmamos o pagamento do exame de DNA do(s) animal(ais) $animal->animal_name e informamos que o exame já se encontra em execução.
@@ -284,7 +305,7 @@ class GatewayController extends Controller
                             "message" => "Prezado Criador,
                             Confirmamos o pagamento do exame de DNA do(s) animal(ais) $animal->animal_name e informamos que o exame já se encontra em execução."
                         ]);
-                        
+
 
                         $order->update([
                             'requests' => 1

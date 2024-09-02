@@ -324,14 +324,16 @@ class OrderController extends Controller
                 $response = Http::withHeaders([
                     'Client-Token' => 'F17a9a1fa1c3943f3adc1dec2f3c4d6a4S'  // Adicionando o token na header
                 ])->post('https://api.z-api.io/instances/3B30881EC3E99084D3D3B6927F6ADC67/token/66E633717A0DCDD3D4A1BC19/send-text', [
-                    "phone" => "5541985214474",
+                    "phone" => "55$telefoneTecnico",
                     "message" => "Prezado Técnico,
                     A amostra do animal $animal->animal_name foi recebida e APROVADA para realização do exame de DNA no Laboratório Loci.
                     "
                 ]);
             }
             if ($request->value == 6) {
-                $response = Http::post('https://api.z-api.io/instances/3B30881EC3E99084D3D3B6927F6ADC67/token/66E633717A0DCDD3D4A1BC19/send-text', [
+                $response = Http::withHeaders([
+                    'Client-Token' => 'F17a9a1fa1c3943f3adc1dec2f3c4d6a4S'  // Adicionando o token na header
+                ])->post('https://api.z-api.io/instances/3B30881EC3E99084D3D3B6927F6ADC67/token/66E633717A0DCDD3D4A1BC19/send-text', [
                     "phone" => "55$telefoneTecnico",
                     "message" => "Prezado Técnico,
                     A amostra do animal $animal->animal_name  foi REPROVADA para a execução do exame de DNA no laboratório Loci.
@@ -341,7 +343,9 @@ class OrderController extends Controller
             }
 
             if ($request->value == 7) {
-                $response = Http::post('https://api.z-api.io/instances/3B30881EC3E99084D3D3B6927F6ADC67/token/66E633717A0DCDD3D4A1BC19/send-text', [
+                $response = Http::withHeaders([
+                    'Client-Token' => 'F17a9a1fa1c3943f3adc1dec2f3c4d6a4S'  // Adicionando o token na header
+                ])->post('https://api.z-api.io/instances/3B30881EC3E99084D3D3B6927F6ADC67/token/66E633717A0DCDD3D4A1BC19/send-text', [
                     "phone" => "55$telefoneOwner",
                     "message" => "Prezado Criador, a amostra do animal $animal->animal_name foi recebida e APROVADA para
                     realização do exame de DNA no laboratório Loci.
@@ -352,7 +356,9 @@ class OrderController extends Controller
                 ]);
             }
             if ($request->value == 6) {
-                $response = Http::post('https://api.z-api.io/instances/3B30881EC3E99084D3D3B6927F6ADC67/token/66E633717A0DCDD3D4A1BC19/send-text', [
+                $response = Http::withHeaders([
+                    'Client-Token' => 'F17a9a1fa1c3943f3adc1dec2f3c4d6a4S'  // Adicionando o token na header
+                ])->post('https://api.z-api.io/instances/3B30881EC3E99084D3D3B6927F6ADC67/token/66E633717A0DCDD3D4A1BC19/send-text', [
                     "phone" => "55$telefoneOwner",
                     "message" => "Prezado Técnico,
                     A amostra do animal $animal->animal_name foi REPROVADA para a execução do exame de DNA no laboratório Loci.
@@ -510,7 +516,9 @@ class OrderController extends Controller
             $senha = str_replace(['.', '-', '/'], ['', '', ''], $owner->document);
             $telefone = str_replace(['(', ')', '-', ' '], ['', '', '', ''],  $order_request->owner->cell);
             $url = route('user.dashboard');
-            $response = Http::post('https://api.z-api.io/instances/3B30881EC3E99084D3D3B6927F6ADC67/token/66E633717A0DCDD3D4A1BC19/send-text', [
+            $response = Http::withHeaders([
+                'Client-Token' => 'F17a9a1fa1c3943f3adc1dec2f3c4d6a4S'  // Adicionando o token na header
+            ])->post('https://api.z-api.io/instances/3B30881EC3E99084D3D3B6927F6ADC67/token/66E633717A0DCDD3D4A1BC19/send-text', [
                 "phone" => "55$telefone",
                 "message" => "Prezado, Criador!
             Segue abaixo o Link de acesso para clicar, efetuar o pagamento e liberar o(s) exame(s) para execução.
@@ -590,7 +598,9 @@ class OrderController extends Controller
             $email = $veterinario->email;
 
             $url = route('user.dashboard');
-            $response = Http::post('https://api.z-api.io/instances/3B30881EC3E99084D3D3B6927F6ADC67/token/66E633717A0DCDD3D4A1BC19/send-text', [
+            $response = Http::withHeaders([
+                'Client-Token' => 'F17a9a1fa1c3943f3adc1dec2f3c4d6a4S'  // Adicionando o token na header
+            ])->post('https://api.z-api.io/instances/3B30881EC3E99084D3D3B6927F6ADC67/token/66E633717A0DCDD3D4A1BC19/send-text', [
                 "phone" => "55$telefone",
                 "message" => "Prezado, Veterinário!
             Segue abaixo o Link de acesso para clicar, efetuar o pagamento e liberar o(s) exame(s) para execução.
