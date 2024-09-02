@@ -277,12 +277,14 @@ class GatewayController extends Controller
                             "
                         ]);
                         $telefoneOwner = str_replace(['(', ')', '-', ' '], ['', '', '', ''],  $order->owner->cell);
-                        $responseOwner = Http::post('https://api.z-api.io/instances/3B30881EC3E99084D3D3B6927F6ADC67/token/66E633717A0DCDD3D4A1BC19/send-text', [
+                        $responseOwner = Http::withHeaders([
+                            'Client-Token' => 'F17a9a1fa1c3943f3adc1dec2f3c4d6a4S'  // Adicionando o token na header
+                        ])->post('https://api.z-api.io/instances/3B30881EC3E99084D3D3B6927F6ADC67/send-text', [
                             "phone" => "55$telefoneOwner",
                             "message" => "Prezado Criador,
-                            Confirmamos o pagamento do exame de DNA do(s) animal(ais) $animal->animal_name e informamos que o exame já se encontra em execução.
-                            "
+                            Confirmamos o pagamento do exame de DNA do(s) animal(ais) $animal->animal_name e informamos que o exame já se encontra em execução."
                         ]);
+                        
 
                         $order->update([
                             'requests' => 1

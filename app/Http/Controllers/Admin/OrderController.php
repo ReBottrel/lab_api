@@ -321,8 +321,10 @@ class OrderController extends Controller
             $telefoneOwner = str_replace(['(', ')', '-', ' '], ['', '', '', ''],  $order->owner->cell);
 
             if ($request->value == 7) {
-                $response = Http::post('https://api.z-api.io/instances/3B30881EC3E99084D3D3B6927F6ADC67/token/66E633717A0DCDD3D4A1BC19/send-text', [
-                    "phone" => "55$telefoneTecnico",
+                $response = Http::withHeaders([
+                    'Client-Token' => 'F17a9a1fa1c3943f3adc1dec2f3c4d6a4S'  // Adicionando o token na header
+                ])->post('https://api.z-api.io/instances/3B30881EC3E99084D3D3B6927F6ADC67/token/66E633717A0DCDD3D4A1BC19/send-text', [
+                    "phone" => "5541985214474",
                     "message" => "Prezado Técnico,
                     A amostra do animal $animal->animal_name foi recebida e APROVADA para realização do exame de DNA no Laboratório Loci.
                     "
