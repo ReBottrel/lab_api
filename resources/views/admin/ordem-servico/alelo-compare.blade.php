@@ -245,6 +245,12 @@
 
 </div>
 <div class="mb-3 px-5 pt-2">
+    <label for="exampleFormControlTextarea1" class="form-label">Nome do laudo retificação</label>
+    <input class="form-control" id="ret-name"
+        value="@if ($laudo) {{ $laudo->nome_ret }} @endif">
+
+</div>
+<div class="mb-3 px-5 pt-2">
     <label for="exampleFormControlTextarea1" class="form-label">DATA FIXADA PARA VERIFICACAO</label>
     <input class="form-control" id="data_ret" type="date"
         value="@if ($laudo && $laudo->data_retificacao) {{ $laudo->data_retificacao }} @endif">
@@ -697,6 +703,7 @@
             let ret = $('#ret').val();
             let data_ret = $('#data_ret').val();
             let data_ret_new = $('#data_ret_new').val();
+            let ret_name = $('#ret-name').val();
             $.ajax({
                 url: "{{ route('gerar.laudo') }}",
                 type: 'POST',
@@ -709,6 +716,7 @@
                     ret: ret,
                     data_ret: data_ret,
                     data_ret_new: data_ret_new,
+                    ret_name: ret_name,
 
                 },
                 success: function(response) {

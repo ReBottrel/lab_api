@@ -31,6 +31,7 @@ class Laudo extends Model
         'status',
         'data_retificacao',
         'data_ret_new',
+        'nome_ret'
     ];
 
     public function animal()

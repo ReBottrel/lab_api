@@ -89,6 +89,7 @@ class LaudoController extends Controller
             'ret' => $request->ret,
             'data_retificacao' => $request->data_ret,
             'data_ret_new' => $request->data_ret_new,
+            'nome_ret' => $request->ret_name,
         ];
 
 
@@ -548,7 +549,12 @@ class LaudoController extends Controller
 
         $animalId = substr($animal->codlab, 3);
         $xml = str_replace('﻿', '', $xml);
-        $name = 'LOVP24-' . $animalId . '.xml';
+        if ($laudo->nome_ret != null) {
+            $name = $laudo->nome_ret . $laudo->ret. '.xml';
+        } else {
+            $name = 'LOVP24-' . $animalId . '.xml';
+        }
+
         $saveXml = public_path('xml/' . $name);
         file_put_contents($saveXml, $xml);
         $pemContent = file_get_contents(public_path('certificado/certw.pem'));
@@ -560,8 +566,8 @@ class LaudoController extends Controller
         // dd($pdf);
         try {
 
-            $client = new \SoapClient('http://weblab.abccmm.org.br:8087/service.asmx?wsdl'); //produção
-            // $client = new \SoapClient('http://webserviceteste.abccmm.org.br:8083/service.asmx?wsdl'); //teste
+            // $client = new \SoapClient('http://weblab.abccmm.org.br:8087/service.asmx?wsdl'); //produção
+            $client = new \SoapClient('http://webserviceteste.abccmm.org.br:8083/service.asmx?wsdl'); //teste
 
 
             $params = array(
