@@ -316,11 +316,20 @@ class LaudoController extends Controller
         $retValue = $laudo->ret ? $laudo->ret . '-' : '';
 
         if ($siglaPais == 'AP') {
-            $codlabMae = str_replace('N_A', '', $codlabMae);
-            $codlabPai = str_replace('N_A', '', $codlabPai);
-            $filename = "LO24-{$retValue}{$codlabAnimal}" . '.pdf';
+            if($laudo->nome_ret != null){
+                $codlabMae = str_replace('N_A', '', $codlabMae);
+                $codlabPai = str_replace('N_A', '', $codlabPai);
+                $filename = "LO24-{$retValue}{$codlabAnimal}" . '.pdf';
+            }else{
+                $filename = $laudo->ret_nome . '.pdf';
+            }
+        
         } else {
-            $filename = "LO{$siglaPais}24-{$retValue}{$codlabMae}.{$codlabAnimal}.{$codlabPai}" . '.pdf';
+            if ($laudo->nome_ret != null) {
+                $filename = $laudo->ret_nome . '.pdf';
+            } else {
+                $filename = "LO{$siglaPais}24-{$retValue}{$codlabMae}.{$codlabAnimal}.{$codlabPai}" . '.pdf';
+            }
         }
 
         // Salva o PDF assinado no diretório público
@@ -550,7 +559,7 @@ class LaudoController extends Controller
         $animalId = substr($animal->codlab, 3);
         $xml = str_replace('﻿', '', $xml);
         if ($laudo->nome_ret != null) {
-            $name = $laudo->nome_ret . $laudo->ret. '.xml';
+            $name = $laudo->nome_ret . $laudo->ret . '.xml';
         } else {
             $name = 'LOVP24-' . $animalId . '.xml';
         }
