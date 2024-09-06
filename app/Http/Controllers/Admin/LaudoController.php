@@ -321,12 +321,12 @@ class LaudoController extends Controller
                 $codlabPai = str_replace('N_A', '', $codlabPai);
                 $filename = "LO24-{$retValue}{$codlabAnimal}" . '.pdf';
             }else{
-                $filename = $laudo->ret_nome . '.pdf';
+                $filename = $laudo->nome_ret . '.pdf';
             }
         
         } else {
             if ($laudo->nome_ret != null) {
-                $filename = $laudo->ret_nome . '.pdf';
+                $filename = $laudo->nome_ret . '.pdf';
             } else {
                 $filename = "LO{$siglaPais}24-{$retValue}{$codlabMae}.{$codlabAnimal}.{$codlabPai}" . '.pdf';
             }
