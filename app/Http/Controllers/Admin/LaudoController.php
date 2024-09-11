@@ -559,7 +559,7 @@ class LaudoController extends Controller
         $animalId = substr($animal->codlab, 3);
         $xml = str_replace('﻿', '', $xml);
         if ($laudo->nome_ret != null) {
-            $name = $laudo->nome_ret . $laudo->ret . '.xml';
+            $name = $laudo->nome_ret . '.xml';
         } else {
             $name = 'LOVP24-' . $animalId . '.xml';
         }
