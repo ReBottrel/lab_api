@@ -316,18 +316,18 @@ class LaudoController extends Controller
         $retValue = $laudo->ret ? $laudo->ret . '-' : '';
 
         if ($siglaPais == 'AP') {
-            if($laudo->nome_ret != null){
-                $codlabMae = str_replace('N_A', '', $codlabMae);
-                $codlabPai = str_replace('N_A', '', $codlabPai);
-                $filename = "LO24-{$retValue}{$codlabAnimal}" . '.pdf';
-            }else{
+            if ($laudo->nome_ret != null) {
+
                 $filename = $laudo->nome_ret . '.pdf';
+            } else {
+                $filename = "LO24-{$codlabAnimal}" . '.pdf';
             }
-        
         } else {
             if ($laudo->nome_ret != null) {
                 $filename = $laudo->nome_ret . '.pdf';
             } else {
+                $codlabMae = str_replace('N_A', '', $codlabMae);
+                $codlabPai = str_replace('N_A', '', $codlabPai);
                 $filename = "LO{$siglaPais}24-{$retValue}{$codlabMae}.{$codlabAnimal}.{$codlabPai}" . '.pdf';
             }
         }
