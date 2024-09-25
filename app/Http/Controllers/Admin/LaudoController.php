@@ -463,6 +463,13 @@ class LaudoController extends Controller
         $incluidos = str_split($results->incluido);
         $paiId = '';
         $maeId = '';
+        $pdf = '';
+
+        if($laudo->nome_ret != null){
+            $pdf = $laudo->nome_ret;
+        }else{
+            $pdf = $laudo->pdf;
+        }
         $animalId = $this->removePrefix($animal->codlab);
         if ($pai) {
             $paiId = $this->removePrefix($pai->codlab);
@@ -541,7 +548,7 @@ class LaudoController extends Controller
             <TECNICO><![CDATA[' . $tecnico->matricula . ']]></TECNICO> 		
             <DATACOLETA><![CDATA[' . $laudo->data_coleta . ']]></DATACOLETA> 	
             <TIPOMATERIAL><![CDATA[2]]></TIPOMATERIAL> 	
-            <NOMEIMAGEM><![CDATA[' . $laudo->pdf . ']]></NOMEIMAGEM> 
+            <NOMEIMAGEM><![CDATA[' . $pdf . ']]></NOMEIMAGEM> 
             <OBSERVACOES><![CDATA[' . $laudo->observacao . ']]></OBSERVACOES> 
             <DATAENVIO><![CDATA[' . date('d/m/Y') . ']]></DATAENVIO>	
             <HORAENVIO><![CDATA[' . date('H:i') . ']]></HORAENVIO>
