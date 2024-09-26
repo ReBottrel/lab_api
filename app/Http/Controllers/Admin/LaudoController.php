@@ -465,9 +465,9 @@ class LaudoController extends Controller
         $maeId = '';
         $pdf = '';
 
-        if($laudo->nome_ret != null){
+        if ($laudo->nome_ret != null) {
             $pdf = $laudo->nome_ret;
-        }else{
+        } else {
             $pdf = $laudo->pdf;
         }
         $animalId = $this->removePrefix($animal->codlab);
@@ -534,10 +534,17 @@ class LaudoController extends Controller
             }
         }
 
+        $nomeExame = '';
+        if ($laudo->nome_ret != null) {
+            $nomeExame = $laudo->nome_ret;
+        } else {
+            $nomeExame = "LOVP24-' . $maeId . '.' . $animalId . '.' . $paiId . ";
+        }
+
         $xml = '<?xml version="1.0" encoding="iso-8859-1" ?>
         <document>
           <CASO>
-            <NUMERO><![CDATA[LOVP24-' . $maeId . '.' . $animalId . '.' . $paiId . ']]></NUMERO> 		
+            <NUMERO><![CDATA['.$nomeExame.']]></NUMERO> 		
             <ANIMAL><![CDATA[' . $animal->animal_name . ']]></ANIMAL> 	
             <REGISTRO><![CDATA[0]]></REGISTRO> 		
             <DATACONCLUSAO><![CDATA[' . date('d/m/Y', strtotime($laudo->created_at)) . ']]></DATACONCLUSAO> 
