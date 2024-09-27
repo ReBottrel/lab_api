@@ -538,8 +538,10 @@ class LaudoController extends Controller
         if ($laudo->nome_ret != null) {
             $nomeExame = $laudo->nome_ret;
         } else {
-            $nomeExame = "LOVP24-' . $maeId . '.' . $animalId . '.' . $paiId . ";
+            $nomeExame = "LOVP24-$maeId.$animalId.$paiId";
         }
+
+   
 
         $xml = '<?xml version="1.0" encoding="iso-8859-1" ?>
         <document>
