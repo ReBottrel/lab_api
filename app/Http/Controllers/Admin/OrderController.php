@@ -460,6 +460,7 @@ class OrderController extends Controller
 
         $order_request = OrderRequest::with('user', 'tecnico', 'owner')->find($request->order);
 
+        $user = User::where('id', $order_request->user_id)->first();
 
 
         if ($order_request->origin == 'sistema' || $order_request->origin == 'API' || $order_request->origin == 'email') {
@@ -511,7 +512,7 @@ class OrderController extends Controller
             ]);
             $ordernew = OrderRequest::with('user', 'tecnico')->find($request->id);
             $data = [];
-            $email = $order_request->owner->email;
+            $email = $user->email;
 
             $senha = str_replace(['.', '-', '/'], ['', '', ''], $owner->document);
             $telefone = str_replace(['(', ')', '-', ' '], ['', '', '', ''],  $order_request->owner->cell);
