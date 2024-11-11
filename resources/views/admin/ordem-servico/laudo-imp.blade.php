@@ -502,17 +502,27 @@
                                 Não informado
                             @else
                                 @php
-                                    // Verifica se está no formato 'Y-m-d' (0000-00-00)
-                                    $isYmd = date_create_from_format('Y-m-d', $animal->birth_date) !== false;
+                                    // Verifica se a data contém um "T" indicando o formato ISO8601 (Y-m-d\TH:i:s)
+                                    $isISO8601 = strpos($animal->birth_date, 'T') !== false;
 
-                                    // Verifica se está no formato 'd/m/Y' (00/00/0000)
-                                    $isDmy = date_create_from_format('d/m/Y', $animal->birth_date) !== false;
+                                    // Converte para d/m/Y se for formato ISO8601
+                                    if ($isISO8601) {
+                                        $formattedDate = date('d/m/Y', strtotime($animal->birth_date));
+                                    } else {
+                                        // Se não for ISO8601, assume que é Y-m-d ou d/m/Y
+                                        $isYmd = date_create_from_format('Y-m-d', $animal->birth_date) !== false;
+                                        $isDmy = date_create_from_format('d/m/Y', $animal->birth_date) !== false;
+
+                                        if ($isYmd) {
+                                            $formattedDate = date('d/m/Y', strtotime($animal->birth_date));
+                                        } elseif ($isDmy) {
+                                            $formattedDate = $animal->birth_date;
+                                        } else {
+                                            $formattedDate = 'Formato desconhecido';
+                                        }
+                                    }
                                 @endphp
-                                @if ($isYmd)
-                                    {{ date('d/m/Y', strtotime($animal->birth_date)) }}
-                                @elseif($isDmy)
-                                    {{ $animal->birth_date }}
-                                @endif
+                                {{ $formattedDate }}
                             @endif
                         </span>
                         <br>
