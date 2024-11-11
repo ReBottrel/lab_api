@@ -495,58 +495,68 @@
                         <span>{{ $animal->animal_name }}</span>
                         <br>
                         <strong>Número do Registro:</strong>
-                        <h3>{{ $animal->birth_date }}</h3>
-                        <span>{{ $animal->number_definitive ?? 'Não informado' }}</span>
-                        <strong style="margin-left: 123px;">Data de Nascimento:</strong>
-                        <span>
-                            @if ($animal->birth_date == null)
-                                Não informado
-                            @elseif(date('d/m/Y', strtotime($animal->birth_date)) == '31/12/1969')
-                                Não informado
-                            @else
-                                @php
-                                    // Verifica se está no formato 'Y-m-d' (0000-00-00)
+                    <h3>{{ $animal->birth_date }}</h3>
+                    <span>{{ $animal->number_definitive ?? 'Não informado' }}</span>
+                    <strong style="margin-left: 123px;">Data de Nascimento:</strong>
+                    <span>
+                        @if ($animal->birth_date == null)
+                            Não informado
+                        @elseif(date('d/m/Y', strtotime($animal->birth_date)) == '31/12/1969')
+                            Não informado
+                        @else
+                            @php
+                                // Verifica se a data contém um "T" indicando o formato ISO8601 (Y-m-d\TH:i:s)
+                                $isISO8601 = strpos($animal->birth_date, 'T') !== false;
+
+                                // Converte para d/m/Y se for formato ISO8601
+                                if ($isISO8601) {
+                                    $formattedDate = date('d/m/Y', strtotime($animal->birth_date));
+                                } else {
+                                    // Se não for ISO8601, assume que é Y-m-d ou d/m/Y
                                     $isYmd = date_create_from_format('Y-m-d', $animal->birth_date) !== false;
-
-                                    // Verifica se está no formato 'd/m/Y' (00/00/0000)
                                     $isDmy = date_create_from_format('d/m/Y', $animal->birth_date) !== false;
-                                @endphp
-                                @if ($isYmd)
-                                    {{ date('d/m/Y', strtotime($animal->birth_date)) }}
-                                @elseif($isDmy)
-                                    {{ $animal->birth_date }}
-                                @endif
-                            @endif
 
-                        </span>
-                        <br>
-                        <strong>Código Interno:</strong>
-                        <span>{{ $animal->codlab ?? 'Não informado' }}</span>
-                        <br>
-                        <strong>Proprietário:</strong>
-                        <span>{{ $owner->owner_name ?? 'Não informado' }}</span><br>
-                        <strong>Endereço:</strong>
-                        <span>{{ $owner->address ?? 'Não informado' }}, {{ $owner->number ?? '' }}
-                            {{ $owner->complement ?? '' }} -
-                            {{ $owner->city ?? '' }} -
-                            {{ $owner->state ?? '' }}
-                        </span><br>
-                        <strong>Tipo Amostra:</strong>
-                        <span>
-                            @if ($datas->tipo == 1)
-                                Pelo
-                            @else
-                                {{ $datas->tipo ?? 'Não informado' }}
-                            @endif
-                        </span>
-                        <strong style="margin-left: 197px;">Data da Coleta:</strong>
-                        <span>
-                            @if ($datas->data_coleta == null || $datas->data_coleta == '31/12/1969')
-                                Não informado
-                            @else
-                                {{ $datas->data_coleta ?? 'Não informado' }}
-                            @endif
-                        </span>
+                                    if ($isYmd) {
+                                        $formattedDate = date('d/m/Y', strtotime($animal->birth_date));
+                                    } elseif ($isDmy) {
+                                        $formattedDate = $animal->birth_date;
+                                    } else {
+                                        $formattedDate = 'Formato desconhecido';
+                                    }
+                                }
+                            @endphp
+                            {{ $formattedDate }}
+                        @endif
+                    </span>
+
+                    <br>
+                    <strong>Código Interno:</strong>
+                    <span>{{ $animal->codlab ?? 'Não informado' }}</span>
+                    <br>
+                    <strong>Proprietário:</strong>
+                    <span>{{ $owner->owner_name ?? 'Não informado' }}</span><br>
+                    <strong>Endereço:</strong>
+                    <span>{{ $owner->address ?? 'Não informado' }}, {{ $owner->number ?? '' }}
+                        {{ $owner->complement ?? '' }} -
+                        {{ $owner->city ?? '' }} -
+                        {{ $owner->state ?? '' }}
+                    </span><br>
+                    <strong>Tipo Amostra:</strong>
+                    <span>
+                        @if ($datas->tipo == 1)
+                            Pelo
+                        @else
+                            {{ $datas->tipo ?? 'Não informado' }}
+                        @endif
+                    </span>
+                    <strong style="margin-left: 197px;">Data da Coleta:</strong>
+                    <span>
+                        @if ($datas->data_coleta == null || $datas->data_coleta == '31/12/1969')
+                            Não informado
+                        @else
+                            {{ $datas->data_coleta ?? 'Não informado' }}
+                        @endif
+                    </span>
                     <div class="amostra">
 
                     </div>
@@ -858,7 +868,7 @@
             @else
                 <div id="animalinfo">
                     <p>
-                    
+
                         {{ $laudo->conclusao }}
                     </p>
                 </div>
