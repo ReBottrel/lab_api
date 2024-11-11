@@ -495,7 +495,7 @@
                         <span>{{ $animal->animal_name }}</span>
                         <br>
                         <strong>Número do Registro:</strong>
-                
+                        <h3>{{ $animal->birth_date }}</h3>
                         <span>{{ $animal->number_definitive ?? 'Não informado' }}</span>
                         <strong style="margin-left: 123px;">Data de Nascimento:</strong>
                         <span>
