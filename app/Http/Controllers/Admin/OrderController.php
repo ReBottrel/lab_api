@@ -461,7 +461,7 @@ class OrderController extends Controller
         $order_request = OrderRequest::with('user', 'tecnico', 'owner')->find($request->order);
 
         $user = User::where('id', $order_request->user_id)->first();
-
+        $user_info = UserInfo::where('user_id', $order_request->user_id)->first();
 
         if ($order_request->origin == 'sistema' || $order_request->origin == 'API' || $order_request->origin == 'email') {
 
@@ -514,8 +514,10 @@ class OrderController extends Controller
             $data = [];
             $email = $user->email;
 
+            
+
             $senha = str_replace(['.', '-', '/'], ['', '', ''], $owner->document);
-            $telefone = str_replace(['(', ')', '-', ' '], ['', '', '', ''],  $order_request->owner->cell);
+            $telefone = str_replace(['(', ')', '-', ' '], ['', '', '', ''],  $user_info->phone);
             $url = route('user.dashboard');
             $response = Http::withHeaders([
                 'Client-Token' => 'F17a9a1fa1c3943f3adc1dec2f3c4d6a4S'  // Adicionando o token na header
