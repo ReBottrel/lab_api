@@ -46,8 +46,8 @@
                                             </a>
 
                                             <ul class="dropdown-menu">
-                                                {{-- <a href="{{ route('owner.edit', $user->id) }}"
-                                                    class="dropdown-item">Editar</a> --}}
+                                                <a href="{{ route('owner.user', $user->id) }}"
+                                                    class="dropdown-item">Editar</a>
 
                                                 <a data-id="{{ $user->id }}" class="dropdown-item delete">Excluir</a>
                                             </ul>

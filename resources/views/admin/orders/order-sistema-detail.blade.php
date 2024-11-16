@@ -1,332 +1,274 @@
 @extends('layouts.admin')
 
 @section('content')
-    <div class="container" style="margin-bottom: 25px;">
-        <div class="card">
+    <div class="container my-4">
+        <div class="card shadow-sm">
             <div class="card-body">
-                <div class="row">
-                    <div class="col-6">
-                        <h4 class="card-title">Detalhe do pedido #{{ $order->id }}</h4>
+                <div class="row justify-content-between align-items-center">
+                    <div class="col-md-6">
+                        <h4 class="card-title text-primary">Detalhe do Pedido #{{ $order->id }}</h4>
                     </div>
-                    <div class="col-6">
-                        <a href="{{ route('admin.order-create-animal', $order->id) }}"> <button
-                                class="btn btn-secondary">Adicionar Produto</button></a>
+                    <div class="col-md-6 text-end">
+                        <a href="{{ route('admin.order-create-animal', $order->id) }}" class="btn btn-secondary">
+                            Adicionar Produto
+                        </a>
                     </div>
                 </div>
-
             </div>
         </div>
         @if ($lote)
-            <div class="card bg-success text-white">
-                <div class="card-body">
-                    <h4 class="card-title">Este pedido já possuí uma ordem de serviço</h4>
-                </div>
+            <div class="alert alert-success mt-3" role="alert">
+                Este pedido já possui uma ordem de serviço.
             </div>
         @endif
     </div>
-    <section></section>
+
     <div class="container">
-        <div class="card card-alt">
-            <div class="card-header">
+        <div class="card shadow">
+            <div class="card-header bg-light">
+                <h5 class="mb-0 text-primary">Informações do Pedido</h5>
+            </div>
+            <div class="card-body">
                 <div class="row">
                     <div class="col-md-6">
-                        <h5 class="mb-0">CRIADOR: {{ $order->creator }} -
-                            {{ $order->creator_number }}</h5>
+                        <p><strong>Criador:</strong> {{ $order->creator }} - {{ $order->creator_number }}</p>
                     </div>
                     <div class="col-md-6">
-                        <h5 class="mb-0">Parceiro: {{ $order->parceiro ?? 'Sem parceiro' }}</h5>
+                        <p><strong>Técnico:</strong> {{ $order->technical_manager ?? 'Não encontrado' }}</p>
+                    </div>
+                    <div class="col-md-6 mt-3">
+                        <p><strong>Usuário:</strong> {{ $user->name ?? 'Não encontrado' }}
+                            <br><strong>Email:</strong> {{ $user->email ?? 'Não encontrado' }}
+                        </p>
+                    </div>
+                    <div class="col-md-6 mt-3">
+                        <p><strong>Parceiro:</strong> {{ $order->parceiro ?? 'Sem parceiro' }}</p>
                         <form action="{{ route('order.parceiro.update') }}" method="post">
                             @csrf
                             <input type="hidden" name="order_id" value="{{ $order->id }}">
-                            <div class="row">
-                                <div class="col-8">
-                                    <select class="form-select" name="parceiro" aria-label="Default select example">
-                                        <option selected>Selecione o parceiro</option>
-                                        @foreach ($parceiros as $parceiro)
-                                            <option value="{{ $parceiro->nome }}"
-                                                @if ($order->parceiro == $parceiro->nome) selected @endif>{{ $parceiro->nome }}
-                                            </option>
-                                        @endforeach
-
-                                    </select>
-                                </div>
-                                <div class="col-4">
-                                    <button type="submit" class="btn btn-primary">SALVAR</button>
-                                </div>
+                            <div class="input-group">
+                                <select class="form-select" name="parceiro">
+                                    <option selected>Selecione o parceiro</option>
+                                    @foreach ($parceiros as $parceiro)
+                                        <option value="{{ $parceiro->nome }}"
+                                            @if ($order->parceiro == $parceiro->nome) selected @endif>
+                                            {{ $parceiro->nome }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                <button type="submit" class="btn btn-primary">Salvar</button>
                             </div>
                         </form>
                     </div>
                 </div>
             </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col">
-                        @foreach ($animals as $animal)
-                            @php
-                                $datas = App\Models\DataColeta::where('id_animal', $animal->id)->first();
-
-                            @endphp
-                            @if ($animal)
-                                @if ($animal->status == 1)
-                                    @php
-                                        $status = 'Aguardando amostra';
-                                    @endphp
-                                @elseif($animal->status == 2)
-                                    @php
-                                        $status = 'Amostra recebida';
-                                    @endphp
-                                @elseif($animal->status == 3)
-                                    @php
-                                        $status = 'Amostra em análise/execução';
-                                    @endphp
-                                @elseif($animal->status == 4)
-                                    @php
-                                        $status = 'Análise concluída';
-                                    @endphp
-                                @elseif($animal->status == 5)
-                                    @php
-                                        $status = 'Resultado disponível';
-                                    @endphp
-                                @elseif($animal->status == 6)
-                                    @php
-                                        $status = 'Análise reprovada';
-                                    @endphp
-                                @elseif($animal->status == 7)
-                                    @php
-                                        $status = 'Análise Aprovada';
-                                    @endphp
-                                @elseif($animal->status == 8)
-                                    @php
-                                        $status = 'Recoleta solicitada';
-                                    @endphp
-                                @elseif($animal->status == 9)
-                                    @php
-                                        $status = 'Amostra paga';
-                                    @endphp
-                                @elseif($animal->status == 10)
-                                    @php
-                                        $status = 'Pedido Concluído';
-                                    @endphp
-                                @elseif($animal->status == 11)
-                                    @php
-                                        $status = 'Aguardando Pagamento';
-                                    @endphp
-                                @elseif($animal->status == 12)
-                                    @php
-                                        $status = 'Morto';
-                                    @endphp
-                                @endif
-                            @endif
-                            <div class="card my-5">
-                                <ul class="list-group m-3">
-                                    <li class="list-group-item"><span>ID SISTEMA INTERNO: {{ $animal->id }}</span></li>
-                                    <li class="list-group-item"><span>ID: {{ $animal->register_number_brand }}</span></li>
-                                    <li class="list-group-item"><span>CODLAB: {{ $animal->codlab }}</span></li>
-                                    <li class="list-group-item"><span>PRODUTO: {{ $animal->animal_name }}</span></li>
-                                    <li class="list-group-item"><span>SEXO: {{ $animal->sex }}</span></li>
-                                    <li class="list-group-item"><span>NASCIMENTO: {{ $animal->birth_date }}</span></li>
-                                    <li class="list-group-item"><span>PAI: {{ $animal->pai }}</span></li>
-                                    <li class="list-group-item"><span>REGISTRO DO PAI: {{ $animal->registro_pai }}</span>
-                                    </li>
-                                    <li class="list-group-item"><span>MÃE: {{ $animal->mae }}</span></li>
-                                    <li class="list-group-item"><span>REGISTRO DA MÃE: {{ $animal->registro_mae }}</span>
-                                    </li>
-                                    <li class="list-group-item"><span>Obs: {{ $animal->description ?? '' }}</span></li>
-
-                                    <li
-                                        class="list-group-item text-uppercase  @if ($status == 'Análise Aprovada') bg-success  @elseif($status == 'Morto') bg-warning @elseif($status == 'Pedido Concluído') bg-success @elseif($status == 'Amostra paga') bg-success @elseif($status == 'Análise reprovada') bg-danger @elseif($status == 'Recoleta solicitada') bg-warning @else bg-primary @endif  text-white">
-                                        <span>STATUS:
-                                            {{ $status }}</span>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <div class="row">
-                                            <div class="col-4">
-                                                <label for="exampleFormControlInput1" class="form-label">Data de
-                                                    recebimento</label>
-                                                <input type="text" class="form-control datas data-1"
-                                                    data-id="{{ $animal->id }}" data-type="data_recebimento"
-                                                    id="data-rece-{{ $animal->id }}"
-                                                    value="{{ $datas->data_recebimento ?? '' }}" placeholder="">
-                                            </div>
-                                            <div class="col-4">
-                                                <label for="exampleFormControlInput1" class="form-label">Data de
-                                                    coleta</label>
-                                                <input type="text" class="form-control datas data-2"
-                                                    id="data-coleta-{{ $animal->id }}" data-type="data_coleta"
-                                                    data-id="{{ $animal->id }}" value="{{ $datas->data_coleta ?? '' }}"
-                                                    placeholder="">
-                                            </div>
-                                            <div class="col-4">
-                                                <label for="exampleFormControlInput1" class="form-label">Data de
-                                                    chamado</label>
-                                                <input type="text" class="form-control datas data-3"
-                                                    data-id="{{ $animal->id }}" data-type="data_laboratorio"
-                                                    id="data-chamado-{{ $animal->id }}"
-                                                    value="{{ $datas->data_laboratorio ?? '' }}" placeholder="">
-                                            </div>
-
-                                        </div>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <div class="row">
-                                            <div class="col-md-4">
-                                                <label for="exampleFormControlInput1" class="form-label">Tipo de
-                                                    coleta</label>
-                                                <select class="form-select sample-select" data-order="{{ $order->id }}"
-                                                    data-id="{{ $animal->id ?? '' }}" aria-label="Default select example">
-                                                    @if ($animal)
-                                                        @foreach ($samples as $sample)
-                                                            <option value="{{ $sample->name }}"
-                                                                @if ($datas) @if ($datas->tipo == $sample->name) selected @endif
-                                                                @endif>
-                                                                {{ $sample->name }}
-                                                            </option>
-                                                        @endforeach
-                                                    @endif
-                                                </select>
-                                            </div>
-                                            <div class="col-md-4 mt-4">
-                                                <button class="btn btn-danger excluir-animal"
-                                                    data-id="{{ $animal->id }}">EXCLUIR ANIMAL</button>
-                                            </div>
-                                            <div class="col-md-4 mt-4">
-                                                <a href="{{ route('animais.show', $animal->id) }}"> <button
-                                                        class="btn btn-primary">EDITAR ANIMAL</button></a>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <label for="exampleFormControlInput1" class="form-label">Status do pedido</label>
-                                        <select class="form-select status-select" data-order="{{ $order->id }}"
-                                            data-od="{{ $order->id }}" data-id="{{ $animal->id ?? '' }}"
-                                            aria-label="Default select example">
-                                            @if ($animal)
-                                                @foreach ($stats as $key => $stat)
-                                                    <option value="{{ $key }}"
-                                                        @if ($animal->status == $key) selected @endif>
-                                                        {{ $stat }}
-                                                    </option>
-                                                @endforeach
-                                            @endif
-                                        </select>
-                                    </li>
-
-                                    @if ($status != 'Aguardando amostra' && $status != 'Aguardando cadastro')
-                                        <li class="list-group-item">
-                                            <div class="row">
-                                                <div class="col-4">
-                                                    <input type="text" class="form-control chip"
-                                                        value="{{ $animal->chip_number ?? '' }}"
-                                                        data-id="{{ $animal->id ?? '' }}" placeholder="Numero do chip">
-                                                </div>
-                                                <div class="col-4">
-                                                    <span>Insira o numero do chip do animal</span>
-                                                </div>
-                                            </div>
-                                        </li>
-                                    @endif
-
-                                </ul>
-                            </div>
-                        @endforeach
-                    </div>
-                </div>
-            </div>
         </div>
-    </div>
 
-    <div class="container" style="margin-top: 20px;">
-        <div class="card">
-            <div class="card-header">
-                <h5 class="mb-0">RESPONSAVEL TÉCNICO: {{ $order->technical_manager ?? 'Não encontrado' }}</h5>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col">
-                        <ul class="list-group">
-                            <li class="list-group-item"><span>Data:
-                                    {{ date('d/m/Y', strtotime($order->created_at)) }}</span></li>
-                            <li class="list-group-item"><span>Origem do pedido: {{ $order->origin }}</span></li>
+        <!-- Lista de Animais -->
+        <div class="mt-4">
+            <h5 class="text-primary">Animais do Pedido</h5>
+            @foreach ($animals as $animal)
+                @php
+                    $datas = App\Models\DataColeta::where('id_animal', $animal->id)->first();
 
+                    $status = 'Status desconhecido';
+                    if ($animal) {
+                        switch ($animal->status) {
+                            case 1:
+                                $status = 'Aguardando amostra';
+                                break;
+                            case 2:
+                                $status = 'Amostra recebida';
+                                break;
+                            case 3:
+                                $status = 'Amostra em análise/execução';
+                                break;
+                            case 4:
+                                $status = 'Análise concluída';
+                                break;
+                            case 5:
+                                $status = 'Resultado disponível';
+                                break;
+                            case 6:
+                                $status = 'Análise reprovada';
+                                break;
+                            case 7:
+                                $status = 'Análise Aprovada';
+                                break;
+                            case 8:
+                                $status = 'Recoleta solicitada';
+                                break;
+                            case 9:
+                                $status = 'Amostra paga';
+                                break;
+                            case 10:
+                                $status = 'Pedido Concluído';
+                                break;
+                            case 11:
+                                $status = 'Aguardando Pagamento';
+                                break;
+                            case 12:
+                                $status = 'Morto';
+                                break;
+                        }
+                    }
+                @endphp
+
+                <div class="card shadow-sm mb-4">
+                    <div class="card-body">
+                        <h6 class="text-secondary">Animal ID: {{ $animal->id }}</h6>
+                        <ul class="list-group mb-3">
+                            <li class="list-group-item"><strong>Nome do Animal:</strong>
+                                {{ $animal->animal_name ?? 'Não informado' }}</li>
+                            <li class="list-group-item"><strong>Espécie:</strong>
+                                {{ $animal->especies ?? 'Não informado' }}</li>
+                            <li class="list-group-item"><strong>Raça:</strong> {{ $animal->breed ?? 'Não informado' }}</li>
+                            <li class="list-group-item"><strong>Registro do Pai:</strong>
+                                {{ $animal->registro_pai ?? 'Não informado' }}</li>
+                            <li class="list-group-item"><strong>Nome do Pai:</strong> {{ $animal->pai ?? 'Não informado' }}
+                            </li>
+                            <li class="list-group-item"><strong>Registro da Mãe:</strong>
+                                {{ $animal->registro_mae ?? 'Não informado' }}</li>
+                            <li class="list-group-item"><strong>Nome da Mãe:</strong> {{ $animal->mae ?? 'Não informado' }}
+                            </li>
+                            <li class="list-group-item"><strong>Data de Nascimento:</strong>
+                                {{ $animal->birth_date ? date('d/m/Y', strtotime($animal->birth_date)) : 'Não informado' }}
+                            </li>
+                            <li class="list-group-item">
+                                <strong>Status:</strong>
+                                <span
+                                    class="badge 
+                                    @if ($status == 'Análise Aprovada' || $status == 'Pedido Concluído' || $status == 'Amostra paga') bg-success 
+                                    @elseif($status == 'Morto' || $status == 'Recoleta solicitada') bg-warning 
+                                    @elseif($status == 'Análise reprovada') bg-danger 
+                                    @else bg-primary @endif">
+                                    {{ $status }}
+                                </span>
+                            </li>
                         </ul>
+
+                        <!-- Inputs para as Datas -->
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label for="data-recebimento-{{ $animal->id }}" class="form-label">Data de
+                                    Recebimento</label>
+                                <input type="date" class="form-control data-1" id="data-rece-{{ $animal->id }}"
+                                    value="{{ isset($datas->data_recebimento) ? date('Y-m-d', strtotime($datas->data_recebimento)) : '' }}"
+                                    data-id="{{ $animal->id }}" data-type="data_recebimento">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="data-coleta-{{ $animal->id }}" class="form-label">Data de Coleta</label>
+                                <input type="date" class="form-control data-2" id="data-coleta-{{ $animal->id }}"
+                                    value="{{ isset($datas->data_coleta) ? date('Y-m-d', strtotime($datas->data_coleta)) : '' }}"
+                                    data-id="{{ $animal->id }}" data-type="data_coleta">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="data-chamado-{{ $animal->id }}" class="form-label">Data de Chamado</label>
+                                <input type="date" class="form-control data-3" id="data-chamado-{{ $animal->id }}"
+                                    value="{{ isset($datas->data_laboratorio) ? date('Y-m-d', strtotime($datas->data_laboratorio)) : '' }}"
+                                    data-id="{{ $animal->id }}" data-type="data_laboratorio">
+                            </div>
+                        </div>
+
+                        <!-- Select para alterar o Status -->
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="status-select-{{ $animal->id }}" class="form-label">Alterar Status</label>
+                                <select class="form-select status-select" id="status-select-{{ $animal->id }}"
+                                    data-id="{{ $animal->id }}" data-order="{{ $order->id }}"
+                                    data-od="{{ $order->id }}">
+                                    @foreach ($stats as $key => $stat)
+                                        <option value="{{ $key }}"
+                                            @if ($animal->status == $key) selected @endif>
+                                            {{ $stat }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Ações -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <button class="btn btn-danger w-100 excluir-animal" data-order="{{ $order->id }}"
+                                    data-id="{{ $animal->id }}">
+                                    Remover Animal do Pedido
+                                </button>
+                            </div>
+                            <div class="col-md-6">
+                                <a href="{{ route('animais.show', $animal->id) }}" class="btn btn-primary w-100">Editar
+                                    Animal</a>
+                            </div>
+                        </div>
                     </div>
 
                 </div>
-            </div>
+            @endforeach
         </div>
     </div>
-    <div class="container" style="margin-top: 20px;">
-        <div class="card">
+    <div class="container my-4">
+        <div class="card shadow-sm">
             <div class="card-body">
-                <div class="row align-items-baseline">
-                    <div class="col align-self-center me-auto"></div>
-                    <div class="col text-center align-self-center">
-                        @if (isset($animal))
-                            @if ($order->status == 4)
-                                <button class="btn fw-bold link-light gerar" type="button"
-                                    data-order="{{ $order->id }}" style="background: var(--bs-info);">GERAR
-                                    PAGAMENTO</button>
-                            @elseif($order->status == 2)
-                                <div class="row">
-                                    <div class="col-6">
-                                        <button class="btn fw-bold link-light" type="button" disabled
-                                            style="background: var(--bs-info);">PAGAMENTO GERADO</button>
-                                    </div>
-                                    <div class="col-6">
-                                        <a href="{{ route('order.request.detail', $order->id) }}"> <button
-                                                class="btn fw-bold link-light" type="button"
-                                                style="background: var(--bs-success);">VER RELATÓRIO DE PEDIDO</button></a>
-                                    </div>
+                <div class="row text-center">
+                    <!-- Botão: Gerar Pagamento -->
+                    @if (isset($animal) && $order->status == 4)
+                        <div class="col-md-12 mb-3">
+                            <button class="btn btn-info fw-bold gerar" type="button" data-order="{{ $order->id }}">
+                                GERAR PAGAMENTO
+                            </button>
+                        </div>
+                    @endif
 
-                                    <div class="text-center my-4" data-order="{{ $order->id }}" id="criar-ordem">
-                                        <button class="btn btn-alt-2">GERAR ORDEM DE SERVIÇO</button>
-                                    </div>
+                    <!-- Botões: Pagamento Gerado e Ver Relatório -->
+                    @if (isset($animal) && $order->status == 2)
+                        <div class="col-md-6 mb-3">
+                            <button class="btn btn-secondary fw-bold w-100" type="button" disabled>
+                                PAGAMENTO GERADO
+                            </button>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <a href="{{ route('order.request.detail', $order->id) }}"
+                                class="btn btn-success fw-bold w-100">
+                                VER RELATÓRIO DE PEDIDO
+                            </a>
+                        </div>
+                    @endif
 
-                                </div>
-                            @endif
-                        @endif
-                    </div>
-                    <div class="col"></div>
+                    <!-- Botão: Gerar Ordem de Serviço -->
+                    @if (isset($animal) && $order->status == 2)
+                        <div class="col-md-12 text-center">
+                            <button class="btn btn-primary fw-bold gerar-ordem" id="criar-ordem"
+                                data-order="{{ $order->id }}">
+                                GERAR ORDEM DE SERVIÇO
+                            </button>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>
     </div>
+
     <!-- Modal -->
     <div class="modal fade" id="modalOrdem" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Gerar Ordem</h1>
+                    <h5 class="modal-title" id="exampleModalLabel">Gerar Ordem</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="inputs">
-                        <div class="row">
-                            {{-- <div class="col-md-12">
-                                <div class="mb-3">
-                                    <label for="exampleFormControlInput1" class="form-label">CODLAB</label>
-                                    <input type="text" class="form-control" id="codlab">
-                                </div>
-                            </div> --}}
-                            <div class="col-md-12">
-                                <div class="mb-3">
-                                    <label for="exampleFormControlInput1" class="form-label">OBSERVAÇÃO</label>
-                                    <textarea class="form-control" rows="3" id="observacao"></textarea>
-                                </div>
-                            </div>
-                            <input type="hidden" id="animal">
-                            <input type="hidden" id="order-id" value="{{ $order->id }}">
-                        </div>
-                    </div>
+                    <textarea class="form-control" rows="3" id="observacao" placeholder="Insira uma observação"></textarea>
+                    <input type="hidden" id="order-id" value="{{ $order->id }}">
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-                    <button type="button" id="criar-ordem" class="btn btn-primary">Salvar e gerar</button>
+                    <button type="button" id="criar-ordem" class="btn btn-primary">Salvar e Gerar</button>
                 </div>
             </div>
         </div>
     </div>
 @endsection
+
 
 @section('js')
     <script>
@@ -403,6 +345,7 @@
         });
         $(document).on('click', '.excluir-animal', function() {
             var id = $(this).data('id');
+            var order = $(this).data('order');
             Swal.fire({
                 title: 'Você tem certeza?',
                 text: "Esse processo pode ser irreversível!",
@@ -414,16 +357,17 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
-                        url: `/animal-delete/`,
+                        url: `/animal-remove-order/`,
                         type: 'POST',
                         data: {
-                            id: id
+                            id: id,
+                            order: order
                         },
                         success: function(data) {
                             console.log(data);
                             Swal.fire(
                                 'Deletado!',
-                                'Animal deletado com sucesso.',
+                                'Animal removido com sucesso.',
                                 'success'
                             )
                             location.reload();

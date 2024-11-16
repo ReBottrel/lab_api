@@ -114,6 +114,7 @@ class OrderController extends Controller
         $samples = Sample::get();
         $parceiros = Parceiro::get();
         $lote = OrderLote::where('order_id', $id)->first();
+        $user = User::find($order->user_id);
         $stats = [
             1 => 'Aguardando amostra',
             2 => 'Amostra recebida',
@@ -215,11 +216,22 @@ class OrderController extends Controller
         return view('admin.orders.edit-order', get_defined_vars());
     }
 
+    public function removeAnimalOrder(Request $request)
+    {
+        $animal = Animal::find($request->id);
+        $animal->update([
+            'order_id' => null,
+        ]);
+
+        return response()->json(['success' => 'Animal removido com sucesso']);
+    }
+
     public function editarProprietario(Request $request, $id)
     {
         $order = OrderRequest::find($id);
         $order->update([
             'owner_id' => $request->owner,
+            'creator' => $request->owner_name,
             'user_id' => $request->owner,
         ]);
         return redirect()->back()->with('success', 'Proprietário vinculado com sucesso');
@@ -285,7 +297,8 @@ class OrderController extends Controller
 
             $order->update([
                 'user_id' => $user->user_id,
-                'owner_id' => $request->owner
+                'owner_id' => $request->owner,
+                'creator' => $user->owner_name,
             ]);
 
 
@@ -514,7 +527,7 @@ class OrderController extends Controller
             $data = [];
             $email = $user->email;
 
-            
+
 
             $senha = str_replace(['.', '-', '/'], ['', '', ''], $owner->document);
             $telefone = str_replace(['(', ')', '-', ' '], ['', '', '', ''],  $user_info->phone);

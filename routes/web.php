@@ -319,6 +319,7 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::get('order-admin-end/{id}', [OrderController::class, 'orderEnd'])->name('order.end.painel');
     Route::post('order-edit-animal/{id}', [OrderController::class, 'orderAddAnimalEdit'])->name('order.edit.animal');
     Route::post('busca-animal-codlab', [OrderController::class, 'buscaCodlab'])->name('busca.codlab.animal');
+    Route::post('animal-remove-order', [OrderController::class, 'removeAnimalOrder'])->name('animal.remove.order');
 
     Route::get('orders-pega', [OrderController::class, 'orderPega'])->name('orders.pega');
     Route::get('orders-pega-detail/{id}', [OrderController::class, 'orderPegaDetail'])->name('orders.pega.detail');
