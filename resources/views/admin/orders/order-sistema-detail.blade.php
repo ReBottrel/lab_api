@@ -70,7 +70,9 @@
             @foreach ($animals as $animal)
                 @php
                     $datas = App\Models\DataColeta::where('id_animal', $animal->id)->first();
-
+                    $dataColeta = isset($datas->data_coleta) ? parseDate($datas->data_coleta) : '';
+                    $dataLaboratorio = isset($datas->data_laboratorio) ? parseDate($datas->data_laboratorio) : '';
+                    $dataRecebimento = isset($datas->data_recebimento) ? parseDate($datas->data_recebimento) : '';
                     $status = 'Status desconhecido';
                     if ($animal) {
                         switch ($animal->status) {
@@ -153,20 +155,20 @@
                                 <label for="data-recebimento-{{ $animal->id }}" class="form-label">Data de
                                     Recebimento</label>
                                 <input type="date" class="form-control data-1" id="data-rece-{{ $animal->id }}"
-                                    value="{{ isset($datas->data_recebimento) ? date('Y-m-d', strtotime($datas->data_recebimento)) : '' }}"
-                                    data-id="{{ $animal->id }}" data-type="data_recebimento">
+                                    value="{{ $dataRecebimento }}" data-id="{{ $animal->id }}"
+                                    data-type="data_recebimento">
+
                             </div>
                             <div class="col-md-4">
                                 <label for="data-coleta-{{ $animal->id }}" class="form-label">Data de Coleta</label>
                                 <input type="date" class="form-control data-2" id="data-coleta-{{ $animal->id }}"
-                                    value="{{ isset($datas->data_coleta) ? date('Y-m-d', strtotime($datas->data_coleta)) : '' }}"
-                                    data-id="{{ $animal->id }}" data-type="data_coleta">
+                                    value="{{ $dataColeta }}" data-id="{{ $animal->id }}" data-type="data_coleta">
                             </div>
                             <div class="col-md-4">
                                 <label for="data-chamado-{{ $animal->id }}" class="form-label">Data de Chamado</label>
                                 <input type="date" class="form-control data-3" id="data-chamado-{{ $animal->id }}"
-                                    value="{{ isset($datas->data_laboratorio) ? date('Y-m-d', strtotime($datas->data_laboratorio)) : '' }}"
-                                    data-id="{{ $animal->id }}" data-type="data_laboratorio">
+                                    value="{{ $dataLaboratorio }}" data-id="{{ $animal->id }}"
+                                    data-type="data_laboratorio">
                             </div>
                         </div>
 

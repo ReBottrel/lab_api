@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use Carbon\Carbon;
 use App\Models\Fur;
 use App\Models\Log;
 use App\Models\Exam;
@@ -14,6 +15,7 @@ use App\Models\Tecnico;
 use App\Models\Parceiro;
 use App\Models\UserInfo;
 use App\Models\DnaVerify;
+use App\Models\OrderLote;
 use App\Models\DataColeta;
 use App\Models\Veterinario;
 use App\Models\ExamToAnimal;
@@ -23,7 +25,6 @@ use Illuminate\Http\Request;
 use App\Models\AnimalToParent;
 use App\Models\OrderRequestPayment;
 use App\Http\Controllers\Controller;
-use App\Models\OrderLote;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 use Rap2hpoutre\FastExcel\FastExcel;
@@ -191,6 +192,28 @@ class OrderController extends Controller
         // $animals = Animal::where('order_id', $id)->get();
         return view('admin.order-detail', get_defined_vars());
     }
+
+
+
+    function parseDate($date)
+    {
+        if (!$date) {
+            return null; // Retorna nulo se a data for vazia
+        }
+
+        // Tenta no formato 'Y-m-d'
+        try {
+            return Carbon::createFromFormat('Y-m-d', $date)->format('Y-m-d');
+        } catch (\Exception $e) {
+            // Se falhar, tenta no formato 'd/m/Y'
+            try {
+                return Carbon::createFromFormat('d/m/Y', $date)->format('Y-m-d');
+            } catch (\Exception $e) {
+                return null; // Retorna nulo se todos os formatos falharem
+            }
+        }
+    }
+
 
     public function editOrder($id)
     {
