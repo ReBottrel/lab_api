@@ -554,7 +554,7 @@
                         @if ($datas->data_coleta == null || $datas->data_coleta == '31/12/1969')
                             Não informado
                         @else
-                            {{ $datas->data_coleta ?? 'Não informado' }}
+                        {{ \Carbon\Carbon::parse($datas->data_coleta)->format('d/m/Y') }}
                         @endif
                     </span>
                     <div class="amostra">
@@ -606,7 +606,7 @@
                         {{ $tecnico->document ?? 'Não informado' }}</span>
                     <br>
                     <strong>Data do Recebimento</strong>
-                    <span>{{ $datas->data_recebimento }}</span>
+                    <span>{{ \Carbon\Carbon::parse($datas->data_recebimento)->format('d/m/Y') }}</span>
                     <strong style="margin-left: 136px;">Data de Entrada na Área Técnica:</strong>
                     <span>{{ date('d/m/Y', strtotime($ordem->data_bar)) }}</span>
                     <br>
