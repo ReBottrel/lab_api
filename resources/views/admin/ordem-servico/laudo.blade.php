@@ -495,68 +495,85 @@
                         <span>{{ $animal->animal_name }}</span>
                         <br>
                         <strong>Número do Registro:</strong>
-           
-                    <span>{{ $animal->number_definitive ?? 'Não informado' }}</span>
-                    <strong style="margin-left: 123px;">Data de Nascimento:</strong>
-                    <span>
-                        @if ($animal->birth_date == null)
-                            Não informado
-                        @elseif(date('d/m/Y', strtotime($animal->birth_date)) == '31/12/1969')
-                            Não informado
-                        @else
-                            @php
-                                // Verifica se a data contém um "T" indicando o formato ISO8601 (Y-m-d\TH:i:s)
-                                $isISO8601 = strpos($animal->birth_date, 'T') !== false;
 
-                                // Converte para d/m/Y se for formato ISO8601
-                                if ($isISO8601) {
-                                    $formattedDate = date('d/m/Y', strtotime($animal->birth_date));
-                                } else {
-                                    // Se não for ISO8601, assume que é Y-m-d ou d/m/Y
-                                    $isYmd = date_create_from_format('Y-m-d', $animal->birth_date) !== false;
-                                    $isDmy = date_create_from_format('d/m/Y', $animal->birth_date) !== false;
+                        <span>{{ $animal->number_definitive ?? 'Não informado' }}</span>
+                        <strong style="margin-left: 123px;">Data de Nascimento:</strong>
+                        <span>
+                            @if ($animal->birth_date == null)
+                                Não informado
+                            @elseif(date('d/m/Y', strtotime($animal->birth_date)) == '31/12/1969')
+                                Não informado
+                            @else
+                                @php
+                                    // Verifica se a data contém um "T" indicando o formato ISO8601 (Y-m-d\TH:i:s)
+                                    $isISO8601 = strpos($animal->birth_date, 'T') !== false;
 
-                                    if ($isYmd) {
+                                    // Converte para d/m/Y se for formato ISO8601
+                                    if ($isISO8601) {
                                         $formattedDate = date('d/m/Y', strtotime($animal->birth_date));
-                                    } elseif ($isDmy) {
-                                        $formattedDate = $animal->birth_date;
                                     } else {
-                                        $formattedDate = 'Formato desconhecido';
-                                    }
-                                }
-                            @endphp
-                            {{ $formattedDate }}
-                        @endif
-                    </span>
+                                        // Se não for ISO8601, assume que é Y-m-d ou d/m/Y
+                                        $isYmd = date_create_from_format('Y-m-d', $animal->birth_date) !== false;
+                                        $isDmy = date_create_from_format('d/m/Y', $animal->birth_date) !== false;
 
-                    <br>
-                    <strong>Código Interno:</strong>
-                    <span>{{ $animal->codlab ?? 'Não informado' }}</span>
-                    <br>
-                    <strong>Proprietário:</strong>
-                    <span>{{ $owner->owner_name ?? 'Não informado' }}</span><br>
-                    <strong>Endereço:</strong>
-                    <span>{{ $owner->address ?? 'Não informado' }}, {{ $owner->number ?? '' }}
-                        {{ $owner->complement ?? '' }} -
-                        {{ $owner->city ?? '' }} -
-                        {{ $owner->state ?? '' }}
-                    </span><br>
-                    <strong>Tipo Amostra:</strong>
-                    <span>
-                        @if ($datas->tipo == 1)
-                            Pelo
-                        @else
-                            {{ $datas->tipo ?? 'Não informado' }}
-                        @endif
-                    </span>
-                    <strong style="margin-left: 197px;">Data da Coleta:</strong>
-                    <span>
-                        @if ($datas->data_coleta == null || $datas->data_coleta == '31/12/1969')
-                            Não informado
-                        @else
-                        {{ \Carbon\Carbon::parse($datas->data_coleta)->format('d/m/Y') }}
-                        @endif
-                    </span>
+                                        if ($isYmd) {
+                                            $formattedDate = date('d/m/Y', strtotime($animal->birth_date));
+                                        } elseif ($isDmy) {
+                                            $formattedDate = $animal->birth_date;
+                                        } else {
+                                            $formattedDate = 'Formato desconhecido';
+                                        }
+                                    }
+                                @endphp
+                                {{ $formattedDate }}
+                            @endif
+                        </span>
+
+                        <br>
+                        <strong>Código Interno:</strong>
+                        <span>{{ $animal->codlab ?? 'Não informado' }}</span>
+                        <br>
+                        <strong>Proprietário:</strong>
+                        <span>{{ $owner->owner_name ?? 'Não informado' }}</span><br>
+                        <strong>Endereço:</strong>
+                        <span>{{ $owner->address ?? 'Não informado' }}, {{ $owner->number ?? '' }}
+                            {{ $owner->complement ?? '' }} -
+                            {{ $owner->city ?? '' }} -
+                            {{ $owner->state ?? '' }}
+                        </span><br>
+                        <strong>Tipo Amostra:</strong>
+                        <span>
+                            @if ($datas->tipo == 1)
+                                Pelo
+                            @else
+                                {{ $datas->tipo ?? 'Não informado' }}
+                            @endif
+                        </span>
+                        <strong style="margin-left: 197px;">Data da Coleta:</strong>
+                        <span>
+                            @if ($datas->data_coleta == null || $datas->data_coleta == '31/12/1969' || $datas->data_coleta == '1969-12-31')
+                                Não informado
+                            @else
+                                @php
+                                    $dataColeta = $datas->data_coleta;
+                                    try {
+                                        if (strpos($dataColeta, '/') !== false) {
+                                            // Formato dd/mm/yyyy
+                                            $formattedDate = \Carbon\Carbon::createFromFormat(
+                                                'd/m/Y',
+                                                $dataColeta,
+                                            )->format('d/m/Y');
+                                        } else {
+                                            // Formato yyyy-mm-dd
+                                            $formattedDate = \Carbon\Carbon::parse($dataColeta)->format('d/m/Y');
+                                        }
+                                    } catch (\Exception $e) {
+                                        $formattedDate = 'Data inválida';
+                                    }
+                                @endphp
+                                {{ $formattedDate }}
+                            @endif
+                        </span>
                     <div class="amostra">
 
                     </div>
@@ -599,6 +616,7 @@
                     </p>
                 </div>
             </div>
+
             <div class="content_3">
                 <p style="padding: 11px 0;">
                     <strong>Responsável pela Coleta/Registro Profissional ou CPF:</strong>
@@ -606,7 +624,27 @@
                         {{ $tecnico->document ?? 'Não informado' }}</span>
                     <br>
                     <strong>Data do Recebimento</strong>
-                    <span>{{ \Carbon\Carbon::parse($datas->data_recebimento)->format('d/m/Y') }}</span>
+                    <span>
+                        @php
+                            $dataRecebimento = $datas->data_recebimento;
+                            try {
+                                if (strpos($dataRecebimento, '/') !== false) {
+                                    // Formato dd/mm/yyyy
+                                    $formattedDate = \Carbon\Carbon::createFromFormat(
+                                        'd/m/Y',
+                                        $dataRecebimento,
+                                    )->format('d/m/Y');
+                                } else {
+                                    // Formato yyyy-mm-dd
+                                    $formattedDate = \Carbon\Carbon::parse($dataRecebimento)->format('d/m/Y');
+                                }
+                            } catch (\Exception $e) {
+                                // Data inválida ou erro
+                                $formattedDate = 'Data inválida';
+                            }
+                        @endphp
+                        {{ $formattedDate }}
+                    </span>
                     <strong style="margin-left: 136px;">Data de Entrada na Área Técnica:</strong>
                     <span>{{ date('d/m/Y', strtotime($ordem->data_bar)) }}</span>
                     <br>
