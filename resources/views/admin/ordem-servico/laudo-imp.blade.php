@@ -547,10 +547,27 @@
                         </span>
                         <strong style="margin-left: 197px;">Data da Coleta:</strong>
                         <span>
-                            @if ($datas->data_coleta == null || $datas->data_coleta == '31/12/1969')
+                            @if ($datas->data_coleta == null || $datas->data_coleta == '31/12/1969' || $datas->data_coleta == '1969-12-31')
                                 Não informado
                             @else
-                                {{ $datas->data_coleta ?? 'Não informado' }}
+                                @php
+                                    $dataColeta = $datas->data_coleta;
+                                    try {
+                                        if (strpos($dataColeta, '/') !== false) {
+                                            // Formato dd/mm/yyyy
+                                            $formattedDate = \Carbon\Carbon::createFromFormat(
+                                                'd/m/Y',
+                                                $dataColeta,
+                                            )->format('d/m/Y');
+                                        } else {
+                                            // Formato yyyy-mm-dd
+                                            $formattedDate = \Carbon\Carbon::parse($dataColeta)->format('d/m/Y');
+                                        }
+                                    } catch (\Exception $e) {
+                                        $formattedDate = 'Data inválida';
+                                    }
+                                @endphp
+                                {{ $formattedDate }}
                             @endif
                         </span>
                     <div class="amostra">
@@ -602,7 +619,24 @@
                         {{ $tecnico->document ?? 'Não informado' }}</span>
                     <br>
                     <strong>Data do Recebimento</strong>
-                    <span>{{ $datas->data_recebimento }}</span>
+                    <span> @php
+                        $dataRecebimento = $datas->data_recebimento;
+                        try {
+                            if (strpos($dataRecebimento, '/') !== false) {
+                                // Formato dd/mm/yyyy
+                                $formattedDate = \Carbon\Carbon::createFromFormat('d/m/Y', $dataRecebimento)->format(
+                                    'd/m/Y',
+                                );
+                            } else {
+                                // Formato yyyy-mm-dd
+                                $formattedDate = \Carbon\Carbon::parse($dataRecebimento)->format('d/m/Y');
+                            }
+                        } catch (\Exception $e) {
+                            // Data inválida ou erro
+                            $formattedDate = 'Data inválida';
+                        }
+                    @endphp
+                        {{ $formattedDate }}</span>
                     <strong style="margin-left: 136px;">Data de Entrada na Área Técnica:</strong>
                     <span>{{ date('d/m/Y', strtotime($ordem->data_bar)) }}</span>
                     <br>
