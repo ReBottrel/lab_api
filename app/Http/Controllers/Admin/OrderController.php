@@ -350,11 +350,13 @@ class OrderController extends Controller
         }
         if ($request->order) {
             $order = OrderRequest::with('tecnico', 'owner')->find($request->order);
+            $user = User::with('info')->where('id', $order->user_id)->first();
+           
             $order->update([
                 'status' => 4,
             ]);
             $telefoneTecnico = str_replace(['(', ')', '-', ' '], ['', '', '', ''],  $order->tecnico->cell);
-            $telefoneOwner = str_replace(['(', ')', '-', ' '], ['', '', '', ''],  $order->owner->cell);
+            $telefoneOwner = str_replace(['(', ')', '-', ' '], ['', '', '', ''],  $user->info->phone);
 
             if ($request->value == 7) {
                 $response = Http::withHeaders([
