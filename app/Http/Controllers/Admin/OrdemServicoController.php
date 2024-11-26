@@ -46,7 +46,7 @@ class OrdemServicoController extends Controller
             'owner' => $order->creator,
         ]);
 
-       
+
 
 
         $animalIds = $orderRequests->pluck('animal_id')->unique()->toArray();
@@ -54,11 +54,19 @@ class OrdemServicoController extends Controller
 
         foreach ($orderRequests as $item) {
             $exame = Exam::find($item->exam_id);
-            \Log::info([$exame]);
+
             $animal = $animals[$item->animal_id] ?? Animal::where('animal_name', $item->animal)->first();
 
+            // Atualizar o identificador apenas se estiver vazio
+            if (empty($animal->identificador) && !empty($animal->codlab)) {
+                // Extrair apenas os números do codlab
+                $codlabNumber = preg_replace('/[^\d]/', '', $animal->codlab);
 
-            
+                // Atualizar o identificador com o formato desejado
+                $animal->update([
+                    'identificador' => 'LO-' . $codlabNumber,
+                ]);
+            }
 
             $data = Carbon::parse($item->updated_at)->addWeekdays($exame->days);
 
