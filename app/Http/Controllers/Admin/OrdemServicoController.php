@@ -62,9 +62,13 @@ class OrdemServicoController extends Controller
                 // Extrair apenas os números do codlab
                 $codlabNumber = preg_replace('/[^\d]/', '', $animal->codlab);
 
+                //pegar o ano atual com 2 digitos
+                $ano = date('y');
+
+
                 // Atualizar o identificador com o formato desejado
                 $animal->update([
-                    'identificador' => 'LO-' . $codlabNumber,
+                    'identificador' => 'LO'.$ano.'-' . $codlabNumber,
                 ]);
             }
 
