@@ -655,20 +655,24 @@
                         existeM);
                     if (mptrue == true && mpfalse == false && naoExisteP == false &&
                         naoExisteM == false) {
-
+                        console.log('entrou 3');
                         $('.resultadoAnalise').val(msg[3]);
 
                     } else if (mptrue == true && mpfalse == true) {
+                        console.log('entrou 0');
                         $('.resultadoAnalise').val(msg[0]);
                     } else if (mptrue == false && mpfalse == true) {
+                        console.log('entrou 0');
                         $('.resultadoAnalise').val(msg[0]);
                     } else if (mptrue == true && naoExisteP == true) {
+                        console.log('entrou 2');
                         $('.resultadoAnalise').val(msg[2]);
                     } else if (mptrue == true && naoExisteM == true) {
                         $('.resultadoAnalise').val(msg[1]);
                     } else if (mptrue == false && naoExisteM == true && existeP ==
                         false &&
                         existeM == true) {
+                        console.log('entrou 4');
                         $('.resultadoAnalise').val(msg[4]);
                     } else if (mptrue == false && naoExisteM == false && existeP ==
                         false &&
@@ -683,8 +687,8 @@
                         existeP == true) {
                         $('.resultadoAnalise').val(msg[6]);
                     } else if (mptrue == false && mpfalse == false) {
-                        $('.resultadoAnalise').val();
-                    }
+                        $('.resultadoAnalise').val(msg[1]);
+                    } 
 
 
                 }
