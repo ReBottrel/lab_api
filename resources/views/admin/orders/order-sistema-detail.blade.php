@@ -122,6 +122,8 @@
                         <ul class="list-group mb-3">
                             <li class="list-group-item"><strong>Nome do Animal:</strong>
                                 {{ $animal->animal_name ?? 'Não informado' }}</li>
+                            <li class="list-group-item"><strong>CODLAB:</strong>
+                                {{ $animal->codlab ?? 'Não informado' }}</li>
                             <li class="list-group-item"><strong>Espécie:</strong>
                                 {{ $animal->especies ?? 'Não informado' }}</li>
                             <li class="list-group-item"><strong>Raça:</strong> {{ $animal->breed ?? 'Não informado' }}</li>
