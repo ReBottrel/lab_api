@@ -138,6 +138,9 @@
                             <li class="list-group-item"><strong>Data de Nascimento:</strong>
                                 {{ $animal->birth_date ? date('d/m/Y', strtotime($animal->birth_date)) : 'Não informado' }}
                             </li>
+                            <li class="list-group-item"><strong>Obs:</strong>
+                                {{ $animal->description ?? 'Não informado' }}</li>
+                            </li>
                             <li class="list-group-item">
                                 <strong>Status:</strong>
                                 <span
