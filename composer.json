@@ -20,6 +20,7 @@
         "php-imap/php-imap": "^2.0",
         "phpseclib/phpseclib": "^2.0",
         "picqer/php-barcode-generator": "^2.2",
+        "predis/predis": "^2.3",
         "rap2hpoutre/fast-excel": "^4.1",
         "realrashid/sweet-alert": "^7.0",
         "robrichards/xmlseclibs": "^3.1",
