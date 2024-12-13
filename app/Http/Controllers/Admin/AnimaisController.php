@@ -107,20 +107,11 @@ class AnimaisController extends Controller
             $lastNumber = (int) substr($lastAnimal->codlab, 3);
             $nextNumber = $lastNumber + 1;
             
-            \Log::info('Gerando novo codlab', [
-                'sigla' => $sigla,
-                'ultimo_animal' => $lastAnimal->codlab,
-                'ultimo_numero' => $lastNumber,
-                'proximo_numero' => $nextNumber
-            ]);
+     
         } else {
             // Se não existir nenhum animal com esta sigla, começar do 200000
             $nextNumber = 200000;
             
-            \Log::info('Primeiro animal desta sigla', [
-                'sigla' => $sigla,
-                'numero_inicial' => $nextNumber
-            ]);
         }
 
         // Verificar se o próximo número já existe (por segurança)

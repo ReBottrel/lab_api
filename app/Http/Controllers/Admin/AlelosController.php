@@ -150,20 +150,26 @@ class AlelosController extends Controller
     }
     private function generateUniqueCodlab($sigla)
     {
-        // Recuperar o último número usado do cache ou de uma configuração (opcional)
-        $lastUsedNumber = Cache::get('lastUsedNumber', 200000);
+        // Buscar o último animal criado com esta sigla, ordenado pela data de criação
+        $lastAnimal = Animal::latest('created_at')
+            ->first();
 
-        $startValue = max(200000, $lastUsedNumber + 1);
+        if ($lastAnimal) {
+            // Extrair o número do codlab do último animal
+            $lastNumber = (int) substr($lastAnimal->codlab, 3);
+            $nextNumber = $lastNumber + 1;
+        } else {
+            // Se não existir nenhum animal com esta sigla, começar do 200000
+            $nextNumber = 200000;
 
-        // Verificar se o valor inicial já existe
-        while (Animal::where('codlab', $sigla . strval($startValue))->exists()) {
-            $startValue++;
         }
 
-        // Armazenar o último número usado no cache ou em uma configuração (opcional)
-        Cache::forever('lastUsedNumber', $startValue);
+        // Verificar se o próximo número já existe (por segurança)
+        while (Animal::where('codlab', $sigla . strval($nextNumber))->exists()) {
+            $nextNumber++;
+        }
 
-        return $sigla . strval($startValue);
+        return $sigla . strval($nextNumber);
     }
 
     public function getAnimal(Request $request)
