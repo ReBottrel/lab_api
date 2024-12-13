@@ -95,11 +95,11 @@ class AnimaisController extends Controller
         ]);
         return response()->json(['success' => 'Animal cadastrado com sucesso!']);
     }
+
     private function generateUniqueCodlab($sigla)
     {
         // Buscar o último animal criado com esta sigla, ordenado pela data de criação
-        $lastAnimal = Animal::where('codlab', 'LIKE', $sigla . '%')
-            ->latest('created_at')
+        $lastAnimal = Animal::latest('created_at')
             ->first();
 
         if ($lastAnimal) {
