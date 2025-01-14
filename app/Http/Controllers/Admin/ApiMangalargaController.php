@@ -46,14 +46,19 @@ class ApiMangalargaController extends Controller
                     ]
                 );
 
+                // Encontrar os diferentes tipos de telefone
+                $telefones = collect($coleta->cliente->telefones)->mapWithKeys(function ($telefone) {
+                    return [$telefone->tipo => $telefone->telefone];
+                });
+
                 $userinfo = UserInfo::firstOrCreate(
                     ['user_id' => $user->id],
                     [
                         'user_id' => $user->id,
                         'document' => $coleta->cliente->cpf_Cnpj,
-                        'fone' => $coleta->cliente->telefones[0]->telefone,
-                        'cell' => $coleta->cliente->telefones[1]->telefone ?? null,
-                        'whatsapp' => $coleta->cliente->telefones[1]->telefone ?? null,
+                        'fone' => $telefones['Residencial'] ?? $telefones['Comercial'] ?? $telefones->first(),
+                        'cell' => $telefones['Celular'] ?? null,
+                        'whatsapp' => $telefones['Celular'] ?? null,
                         'zip_code' => $coleta->cliente->enderecos[0]->cep,
                         'address' => $coleta->cliente->enderecos[0]->logradouro,
                         'number' => $coleta->cliente->enderecos[0]->numero,
@@ -77,9 +82,9 @@ class ApiMangalargaController extends Controller
                         'user_id' => $user->id,
                         'document' => $coleta->cliente->cpf_Cnpj,
                         'owner_name' => $coleta->cliente->nome,
-                        'fone' => $coleta->cliente->telefones[0]->telefone,
-                        'cell' => $coleta->cliente->telefones[1]->telefone ?? null,
-                        'whatsapp' => $coleta->cliente->telefones[1]->telefone ?? null,
+                        'fone' => $telefones['Residencial'] ?? $telefones['Comercial'] ?? $telefones->first(),
+                        'cell' => $telefones['Celular'] ?? null,
+                        'whatsapp' => $telefones['Celular'] ?? null,
                         'zip_code' => $coleta->cliente->enderecos[0]->cep,
                         'address' => $coleta->cliente->enderecos[0]->logradouro,
                         'number' => $coleta->cliente->enderecos[0]->numero,
@@ -196,6 +201,9 @@ class ApiMangalargaController extends Controller
             // Fetch data from API
             $coletas = $this->fetchDataFromApi('coletas', 18, 2, ['dataEnvioInicio' => date('Y-m-d\TH:i:s', strtotime('-1 day'))]);
 
+ 
+
+
             foreach ($coletas as $coleta) {
                 // Find or create entities
                 $user = User::firstOrCreate(
@@ -207,14 +215,20 @@ class ApiMangalargaController extends Controller
                         'permission' => 1,
                     ]
                 );
+
+                // Encontrar os diferentes tipos de telefone
+                $telefones = collect($coleta->cliente->telefones)->mapWithKeys(function ($telefone) {
+                    return [$telefone->tipo => $telefone->telefone];
+                });
+
                 $userinfo = UserInfo::firstOrCreate(
                     ['user_id' => $user->id],
                     [
                         'user_id' => $user->id,
                         'document' => $coleta->cliente->cpf_Cnpj,
-                        'fone' => $coleta->cliente->telefones[0]->telefone,
-                        'cell' => $coleta->cliente->telefones[1]->telefone ?? null,
-                        'whatsapp' => $coleta->cliente->telefones[1]->telefone ?? null,
+                        'fone' => $telefones['Residencial'] ?? $telefones['Comercial'] ?? $telefones->first(),
+                        'cell' => $telefones['Celular'] ?? null,
+                        'whatsapp' => $telefones['Celular'] ?? null,
                         'zip_code' => $coleta->cliente->enderecos[0]->cep,
                         'address' => $coleta->cliente->enderecos[0]->logradouro,
                         'number' => $coleta->cliente->enderecos[0]->numero,
@@ -238,9 +252,9 @@ class ApiMangalargaController extends Controller
                         'user_id' => $user->id,
                         'document' => $coleta->cliente->cpf_Cnpj,
                         'owner_name' => $coleta->cliente->nome,
-                        'fone' => $coleta->cliente->telefones[0]->telefone,
-                        'cell' => $coleta->cliente->telefones[1]->telefone ?? null,
-                        'whatsapp' => $coleta->cliente->telefones[1]->telefone ?? null,
+                        'fone' => $telefones['Residencial'] ?? $telefones['Comercial'] ?? $telefones->first(),
+                        'cell' => $telefones['Celular'] ?? null,
+                        'whatsapp' => $telefones['Celular'] ?? null,
                         'zip_code' => $coleta->cliente->enderecos[0]->cep,
                         'address' => $coleta->cliente->enderecos[0]->logradouro,
                         'number' => $coleta->cliente->enderecos[0]->numero,
@@ -366,14 +380,20 @@ class ApiMangalargaController extends Controller
                         'permission' => 1,
                     ]
                 );
+
+                // Encontrar os diferentes tipos de telefone
+                $telefones = collect($coleta->cliente->telefones)->mapWithKeys(function ($telefone) {
+                    return [$telefone->tipo => $telefone->telefone];
+                });
+
                 $userinfo = UserInfo::firstOrCreate(
                     ['user_id' => $user->id],
                     [
                         'user_id' => $user->id,
                         'document' => $coleta->cliente->cpf_Cnpj,
-                        'fone' => $coleta->cliente->telefones[0]->telefone,
-                        'cell' => $coleta->cliente->telefones[1]->telefone ?? null,
-                        'whatsapp' => $coleta->cliente->telefones[1]->telefone ?? null,
+                        'fone' => $telefones['Residencial'] ?? $telefones['Comercial'] ?? $telefones->first(),
+                        'cell' => $telefones['Celular'] ?? null,
+                        'whatsapp' => $telefones['Celular'] ?? null,
                         'zip_code' => $coleta->cliente->enderecos[0]->cep,
                         'address' => $coleta->cliente->enderecos[0]->logradouro,
                         'number' => $coleta->cliente->enderecos[0]->numero,
@@ -398,9 +418,9 @@ class ApiMangalargaController extends Controller
                         'user_id' => $user->id,
                         'document' => $coleta->cliente->cpf_Cnpj,
                         'owner_name' => $coleta->cliente->nome,
-                        'fone' => $coleta->cliente->telefones[0]->telefone,
-                        'cell' => $coleta->cliente->telefones[1]->telefone ?? null,
-                        'whatsapp' => $coleta->cliente->telefones[1]->telefone ?? null,
+                        'fone' => $telefones['Residencial'] ?? $telefones['Comercial'] ?? $telefones->first(),
+                        'cell' => $telefones['Celular'] ?? null,
+                        'whatsapp' => $telefones['Celular'] ?? null,
                         'zip_code' => $coleta->cliente->enderecos[0]->cep,
                         'address' => $coleta->cliente->enderecos[0]->logradouro,
                         'number' => $coleta->cliente->enderecos[0]->numero,
@@ -690,7 +710,6 @@ class ApiMangalargaController extends Controller
             // Extrair o número do codlab do último animal
             $lastNumber = (int) substr($lastAnimal->codlab, 3);
             $nextNumber = $lastNumber + 1;
-
         } else {
             // Se não existir nenhum animal com esta sigla, começar do 200000
             $nextNumber = 200000;
