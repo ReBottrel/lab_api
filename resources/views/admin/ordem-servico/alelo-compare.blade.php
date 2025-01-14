@@ -677,18 +677,23 @@
                     } else if (mptrue == false && naoExisteM == false && existeP ==
                         false &&
                         existeM == true) {
+                        console.log('entrou 7');
                         $('.resultadoAnalise').val(msg[7]);
                     } else if (mptrue == false && naoExisteP == true && existeM ==
                         false &&
                         existeP == true) {
-                        $('.resultadoAnalise').val(msg[5]);
+                        console.log('entrou 5');
+                            $('.resultadoAnalise').val(msg[5]);
                     } else if (mptrue == false && naoExisteP == false && existeM ==
                         false &&
                         existeP == true) {
+                        console.log('entrou 6');
                         $('.resultadoAnalise').val(msg[6]);
                     } else if (mptrue == false && mpfalse == false) {
-                        $('.resultadoAnalise').val(msg[1]);
+                        console.log('entrou 8');
+                        $('.resultadoAnalise').val(msg[8]);
                     } else if (mptrue == false && mpfalse == false && naoExisteP == false && naoExisteM == false) {
+                        console.log('entrou 8');
                         $('.resultadoAnalise').val();
                     }
 
