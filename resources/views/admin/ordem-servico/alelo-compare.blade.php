@@ -689,11 +689,11 @@
                         existeP == true) {
                         console.log('entrou 6');
                         $('.resultadoAnalise').val(msg[6]);
-                    } else if (mptrue == false && mpfalse == false) {
+                    } else if (mptrue == false && mpfalse == false )  {
                         console.log('entrou 8');
                         $('.resultadoAnalise').val(msg[8]);
                     } else if (mptrue == false && mpfalse == false && naoExisteP == false && naoExisteM == false) {
-                        console.log('entrou 8');
+                        console.log('entrou 89');
                         $('.resultadoAnalise').val();
                     }
 
