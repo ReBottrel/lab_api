@@ -688,7 +688,7 @@
                         $('.resultadoAnalise').val(msg[6]);
                     } else if (mptrue == false && mpfalse == false) {
                         $('.resultadoAnalise').val(msg[1]);
-                    } else {
+                    } else if (mptrue == false && mpfalse == false && naoExisteP == false && naoExisteM == false) {
                         $('.resultadoAnalise').val();
                     }
 
