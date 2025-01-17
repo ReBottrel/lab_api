@@ -538,7 +538,7 @@ class LaudoController extends Controller
         if ($laudo->nome_ret != null) {
             $nomeExame = $laudo->nome_ret;
         } else {
-            $nomeExame = "LOVP24-$maeId.$animalId.$paiId";
+            $nomeExame = "LOVP25-$maeId.$animalId.$paiId";
         }
 
    
@@ -577,7 +577,7 @@ class LaudoController extends Controller
         if ($laudo->nome_ret != null) {
             $name = $laudo->nome_ret . '.xml';
         } else {
-            $name = 'LOVP24-' . $animalId . '.xml';
+            $name = 'LOVP25-' . $animalId . '.xml';
         }
 
         $saveXml = public_path('xml/' . $name);
