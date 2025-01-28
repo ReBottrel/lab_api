@@ -737,44 +737,27 @@ class LaudoController extends Controller
         
         foreach ($laudos as $laudo) {
             if ($laudo->pdf) {
-                // Handle different filename patterns
-                $newPdfName = $laudo->pdf;
+                // Replace LOVP24 with LOVP25 in the filename
+                $newPdfName = str_replace('LOVP24', 'LOVP25', $laudo->pdf);
                 
-                // Replace patterns in order of specificity
-                if (strpos($laudo->pdf, 'LOVP24-RET') === 0) {
-                    $newPdfName = str_replace('LOVP24-RET', 'LOVP25-RET', $laudo->pdf);
-                }
-                elseif (strpos($laudo->pdf, 'LO24-RET') === 0) {
-                    $newPdfName = str_replace('LO24-RET', 'LO25-RET', $laudo->pdf);
-                }
-                elseif (strpos($laudo->pdf, 'LOVP24-') === 0) {
-                    $newPdfName = str_replace('LOVP24-', 'LOVP25-', $laudo->pdf);
-                }
-                elseif (strpos($laudo->pdf, 'LO24-') === 0) {
-                    $newPdfName = str_replace('LO24-', 'LO25-', $laudo->pdf);
+                // Update the file name in storage if it exists
+                if (Storage::disk('public')->exists($laudo->pdf)) {
+                    Storage::disk('public')->move($laudo->pdf, $newPdfName);
                 }
                 
-                // Only proceed if the name actually changed
-                if ($newPdfName !== $laudo->pdf) {
-                    // Update the file name in storage if it exists
-                    if (Storage::disk('public')->exists($laudo->pdf)) {
-                        Storage::disk('public')->move($laudo->pdf, $newPdfName);
-                    }
-                    
-                    // Update the database record
-                    $laudo->update([
-                        'pdf' => $newPdfName
-                    ]);
-                    
-                    // Create log entry
-                    Log::create([
-                        'user' => Auth::user()->name,
-                        'action' => 'Alterou nome do laudo de ' . $laudo->pdf . ' para ' . $newPdfName,
-                        'animal' => $laudo->animal->animal_name,
-                        'ordem_id' => $laudo->ordem_id ?? null,
-                        'order_id' => $laudo->order_id ?? null,
-                    ]);
-                }
+                // Update the database record
+                $laudo->update([
+                    'pdf' => $newPdfName
+                ]);
+                
+                // Create log entry
+                Log::create([
+                    'user' => Auth::user()->name,
+                    'action' => 'Alterou nome do laudo de ' . $laudo->pdf . ' para ' . $newPdfName,
+                    'animal' => $laudo->animal->animal_name,
+                    'ordem_id' => $laudo->ordem_id ?? null,
+                    'order_id' => $laudo->order_id ?? null,
+                ]);
             }
         }
         
