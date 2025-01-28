@@ -320,7 +320,7 @@ class LaudoController extends Controller
 
                 $filename = $laudo->nome_ret . '.pdf';
             } else {
-                $filename = "LO24-{$codlabAnimal}" . '.pdf';
+                $filename = "LO25-{$codlabAnimal}" . '.pdf';
             }
         } else {
             if ($laudo->nome_ret != null) {
@@ -728,5 +728,39 @@ class LaudoController extends Controller
 
             return response()->json(['viewRender' => $viewRender]);
         }
+    }
+
+    public function alterarNomeLaudo(Request $request)
+    {
+        // Get all laudos from 2025
+        $laudos = Laudo::whereYear('created_at', '2025')->get();
+        
+        foreach ($laudos as $laudo) {
+            if ($laudo->pdf) {
+                // Replace LOVP24 with LOVP25 in the filename
+                $newPdfName = str_replace('LOVP24', 'LOVP25', $laudo->pdf);
+                
+                // Update the file name in storage if it exists
+                if (Storage::disk('public')->exists($laudo->pdf)) {
+                    Storage::disk('public')->move($laudo->pdf, $newPdfName);
+                }
+                
+                // Update the database record
+                $laudo->update([
+                    'pdf' => $newPdfName
+                ]);
+                
+                // Create log entry
+                Log::create([
+                    'user' => Auth::user()->name,
+                    'action' => 'Alterou nome do laudo de ' . $laudo->pdf . ' para ' . $newPdfName,
+                    'animal' => $laudo->animal->animal_name,
+                    'ordem_id' => $laudo->ordem_id ?? null,
+                    'order_id' => $laudo->order_id ?? null,
+                ]);
+            }
+        }
+        
+        return response()->json(['message' => 'Nomes dos laudos atualizados com sucesso'], 200);
     }
 }

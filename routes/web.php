@@ -109,6 +109,7 @@ Route::middleware(['auth:web'])->group(function () {
 
 Route::middleware(['auth:admin'])->group(function () {
 
+    Route::get('alterar-nome-laudo', [LaudoController::class, 'alterarNomeLaudo'])->name('alterar.nome.laudo');
     Route::get('pedido-abccmm', [OrderController::class, 'getAbccmm'])->name('pedido.abccmm');
 
     Route::get('users', [UserController::class, 'index'])->name('users');
