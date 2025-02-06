@@ -65,7 +65,7 @@ class LaudoController extends Controller
         $pai = Animal::where('animal_name', $animal->pai)->first();
         $mae = Animal::where('animal_name', $animal->mae)->first();
         $datas = DataColeta::where('id_animal', $ordem->animal_id)->first();
-        $laudo = Laudo::where('animal_id', $ordem->animal_id)->first();
+        $laudo = Laudo::where('animal_id', $ordem->animal_id)->where('order_id', $order->id)->where('ordem_id', $ordem->id)->first();
         $codigo = rand(100000000, 999999999);
 
 

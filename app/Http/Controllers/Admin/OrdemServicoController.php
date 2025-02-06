@@ -290,7 +290,10 @@ class OrdemServicoController extends Controller
 
     public function compareAlelo($id)
     {
+
         $ordem = OrdemServico::find($id);
+        $order = OrderRequest::find($ordem->order);
+
         $animal = Animal::with('alelos')->find($ordem->animal_id);
         $dna_verify = DnaVerify::where('animal_id', $ordem->animal_id)->orderBy('id', 'desc')
             ->first();
@@ -300,9 +303,11 @@ class OrdemServicoController extends Controller
                 'especies' => "EQUINA",
             ]);
         }
-        $laudo = Laudo::where('ordem_id', $id)
+        $laudo = Laudo::where('ordem_id', $id)->where('order_id', $order->id)->where('animal_id', $animal->id)
             ->orderBy('id', 'desc')
             ->first();
+     
+        \Log::info([$laudo]);
         $result = Result::where('ordem_servico', $id)
             ->orderBy('id', 'desc')
             ->first();
