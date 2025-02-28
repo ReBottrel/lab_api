@@ -477,10 +477,12 @@
                 <span><strong>Relat. n</strong>
                     @if ($laudo->ret)
                         {{ $laudo->ret }}
+                    @else
+                        {{ $mae != null ? substr($mae->codlab, 3) . '.' : '' }}
+                        {{ substr($animal->codlab, 3) }}
+                        {{ $pai != null ? '.' . substr($pai->codlab, 3) : '' }}
                     @endif
-                    {{ $mae != null ? substr($mae->codlab, 3) . '.' : '' }}
-                    {{ substr($animal->codlab, 3) }}
-                    {{ $pai != null ? '.' . substr($pai->codlab, 3) : '' }}
+
                 </span>
             </div>
             <div class="text-center my-1 text-decoration-underline">
