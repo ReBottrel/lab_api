@@ -3,16 +3,13 @@
 @section('content')
     <div class="container alelos-compare">
         <input type="hidden" name="" id="ordem_id" value="{{ $ordem->id }}">
-        <div class="row justify-content-center align-items-center">
+        
+        <!-- Cabeçalho -->
+        <div class="row justify-content-center align-items-center mb-3">
             <div class="col-2 bg-light border rounded text-center">
                 <h5>Compare alelos</h5>
             </div>
-
-            @php
-                $marcadores = [];
-            @endphp
-
-            <div class="col-2 b g-light border rounded text-center">
+            <div class="col-2 bg-light border rounded text-center">
                 <h5>{{ $mae->codlab ?? 'Sem verificação' }}</h5>
             </div>
             <div class="col-3 bg-light border rounded text-center">
@@ -22,11 +19,12 @@
                 <h5>{{ $pai->codlab ?? 'Sem verificação' }}</h5>
             </div>
             <div class="col-3 bg-light border rounded text-center">
-                <button type="button" data-ordem="{{ $ordem->id }}" id="analisar"
-                    class="btn btn-primary">ANALISAR</button>
+                <button type="button" data-ordem="{{ $ordem->id }}" id="analisar" class="btn btn-primary">ANALISAR</button>
             </div>
         </div>
-        <div class="row">
+
+        <!-- Títulos das colunas -->
+        <div class="row mb-3">
             <div class="col-2 bg-light border rounded">
                 <h5 class="text-center">Marcador</h5>
             </div>
@@ -35,12 +33,8 @@
             </div>
             <div class="col-3 bg-light border rounded">
                 <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <h5 class="text-center">Alelo A</h5>
-                    </div>
-                    <div>
-                        <h5 class="text-center">Alelo B</h5>
-                    </div>
+                    <div><h5 class="text-center">Alelo A</h5></div>
+                    <div><h5 class="text-center">Alelo B</h5></div>
                 </div>
             </div>
             <div class="col-2 bg-light border rounded">
@@ -48,25 +42,47 @@
             </div>
             <div class="col-3 bg-light border rounded">
                 <div class="d-flex justify-content-around align-items-center">
-                    <div>
-                        <h5 class="text-center">Inclui</h5>
-                    </div>
-                    <div>
-                        <h5 class="text-center">Exclui</h5>
-                    </div>
+                    <div><h5 class="text-center">Inclui</h5></div>
+                    <div><h5 class="text-center">Exclui</h5></div>
                 </div>
             </div>
         </div>
+
+        <!-- Conteúdo principal -->
         <div class="row">
+            <!-- Coluna de Marcadores -->
             <div class="col-2 bg-light border rounded">
                 <div class="d-flex flex-column text-center mt-2">
                     @php
                         $marcadores = [];
+                        
+                        // Verifica se ASB17 e HMS1 estão preenchidos no animal
+                        $asb17Preenchido = false;
+                        $hms1Preenchido = false;
+                        
+                        foreach ($animal->alelos as $alelo) {
+                            if ($alelo->marcador == 'ASB17' && !empty($alelo->alelo1) && !empty($alelo->alelo2)) {
+                                $asb17Preenchido = true;
+                            }
+                            if ($alelo->marcador == 'HMS1' && !empty($alelo->alelo1) && !empty($alelo->alelo2)) {
+                                $hms1Preenchido = true;
+                            }
+                        }
                     @endphp
 
                     @foreach ($marks as $marcador)
                         @php
-                            $marcadores[] = $marcador->gene;
+                            // Só adiciona o marcador se:
+                            // - Não for ASB17/HMS1, ou
+                            // - For ASB17 e estiver preenchido, ou
+                            // - For HMS1 e estiver preenchido
+                            if (
+                                ($marcador->gene != 'ASB17' && $marcador->gene != 'HMS1') || 
+                                ($marcador->gene == 'ASB17' && $asb17Preenchido) ||
+                                ($marcador->gene == 'HMS1' && $hms1Preenchido)
+                            ) {
+                                $marcadores[] = $marcador->gene;
+                            }
                         @endphp
                     @endforeach
 
@@ -75,237 +91,206 @@
                     @endphp
 
                     @foreach ($marcadores as $marcador)
-                        @if ($marcador != 'ASB17')
-                            {{-- Verifique se o marcador não é ASB17 --}}
-                            <div>
-                                <p>
-                                    {{ $marcador }}
-                                </p>
-                            </div>
-                        @endif
+                        <div><p>{{ $marcador }}</p></div>
                     @endforeach
                 </div>
             </div>
+
+            <!-- Coluna da Mãe -->
             <div class="col-2 bg-light border rounded">
                 <div class="d-flex flex-column text-center mae">
                     <div class="row mt-2">
                         @if ($mae != null)
                             @foreach ($marcadores as $marcador)
-                                @php
-                                    $encontrado = false;
-                                @endphp
-                                @if ($marcador != 'ASB17')
-                                    @foreach ($mae->alelos as $item)
-                                        @if (strtolower(trim($item->marcador)) == strtolower(trim($marcador)))
-                                            @php
-                                                $encontrado = true;
-                                            @endphp
-                                            <div class="col-6 @if ($item->alelo1 == '') py-2 @endif">
-                                                @if ($item->alelo1 == '')
-                                                    *
-                                                @else
-                                                    <p>{{ $item->alelo1 }}</p>
-                                                @endif
-                                            </div>
-                                            <div class="col-6 @if ($item->alelo2 == '') py-2 @endif">
-                                                @if ($item->alelo2 == '')
-                                                    *
-                                                @else
-                                                    <p>{{ $item->alelo2 }}</p>
-                                                @endif
-                                            </div>
+                                @foreach ($mae->alelos as $item)
+                                    @if (strtolower(trim($item->marcador)) == strtolower(trim($marcador)))
+                                        <div class="col-6 @if ($item->alelo1 == '') py-2 @endif">
+                                            @if ($item->alelo1 == '')
+                                                *
+                                            @else
+                                                <p>{{ $item->alelo1 }}</p>
+                                            @endif
+                                        </div>
+                                        <div class="col-6 @if ($item->alelo2 == '') py-2 @endif">
+                                            @if ($item->alelo2 == '')
+                                                *
+                                            @else
+                                                <p>{{ $item->alelo2 }}</p>
+                                            @endif
+                                        </div>
                                         @break
                                     @endif
                                 @endforeach
-                                @if (!$encontrado)
-                                @endif
-                            @endif
-                        @endforeach
-                    @endif
-
+                            @endforeach
+                        @endif
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="col-3 bg-light border rounded">
-            <div class="row">
-                @foreach ($marcadores as $marcador)
-                    @php
-                        $encontrado = false;
-                    @endphp
-
-                    @if ($marcador != 'ASB17') {{-- Verifique se o marcador não é ASB17 --}}
+            <!-- Coluna do Animal -->
+            <div class="col-3 bg-light border rounded">
+                <div class="row">
+                    @foreach ($marcadores as $marcador)
                         @foreach ($animal->alelos as $item)
                             @if (strtolower(trim($item->marcador)) == strtolower(trim($marcador)))
-                                @php
-                                    $encontrado = true;
-                                @endphp
                                 <div class="col-6">
                                     @if ($item->alelo1 == '')
-                                        <input class="form-control alelo1" data-id="{{ $item->id }}" type="text"
-                                            value="*">
+                                        <input class="form-control alelo1" data-id="{{ $item->id }}" type="text" value="*">
                                     @else
-                                        <input class="form-control alelo1" data-id="{{ $item->id }}" type="text"
-                                            value="{{ $item->alelo1 }}">
+                                        <input class="form-control alelo1" data-id="{{ $item->id }}" type="text" value="{{ $item->alelo1 }}">
                                     @endif
                                 </div>
                                 <div class="col-6">
                                     @if ($item->alelo2 == '')
-                                        <input class="form-control alelo2" data-id="{{ $item->id }}" type="text"
-                                            value="*">
+                                        <input class="form-control alelo2" data-id="{{ $item->id }}" type="text" value="*">
                                     @else
-                                        <input class="form-control alelo2" data-id="{{ $item->id }}" type="text"
-                                            value="{{ $item->alelo2 }}">
+                                        <input class="form-control alelo2" data-id="{{ $item->id }}" type="text" value="{{ $item->alelo2 }}">
                                     @endif
                                 </div>
-                            @break
-                        @endif
-                    @endforeach
-                @endif
-            @endforeach
-        </div>
-    </div>
-
-    <div class="col-2 bg-light border rounded">
-        <div class="d-flex flex-column text-center pai">
-            <div class="row mt-2">
-                @if ($pai != null)
-                    @foreach ($marcadores as $marcador)
-                        @php
-                            $encontrado = false;
-                        @endphp
-                        @if ($marcador != 'ASB17')
-                            @foreach ($pai->alelos as $item)
-                                @if ($item->marcador == $marcador)
-                                    @php
-                                        $encontrado = true;
-                                    @endphp
-                                    <div class="col-6 @if ($item->alelo1 == '') py-2 @endif">
-                                        @if ($item->alelo1 == '')
-                                            *
-                                        @else
-                                            <p>{{ $item->alelo1 }}</p>
-                                        @endif
-                                    </div>
-                                    <div class="col-6 @if ($item->alelo2 == '') py-2 @endif">
-                                        @if ($item->alelo2 == '')
-                                            *
-                                        @else
-                                            <p>{{ $item->alelo2 }}</p>
-                                        @endif
-                                    </div>
                                 @break
                             @endif
                         @endforeach
-                        @if (!$encontrado)
-                            <!-- Lógica para o caso de o marcador não ser encontrado na mãe -->
-                        @endif
-                    @endif
-                @endforeach
-            @endif
-        </div>
-    </div>
-</div>
-<div class="@if (empty($marcadores)) @else d-none @endif">
-    <p>O produto não possuí alelos cadastrado <a href="{{ route('alelos.create') }}">Clique aqui para
-            cadastrar</a></p>
-</div>
-<div class="col-3 bg-light border rounded">
-    <div class="row" id="valores">
+                    @endforeach
+                </div>
+            </div>
 
-    </div>
-    <div class="mt-2" id="salvar-btn">
-        <button class="btn btn-primary" type="button" id="salvar">SALVAR VALORES</button>
-    </div>
-</div>
-</div>
-<div class="@if (!$result) d-none @endif" id="resultado">
-<div class="mensagem px-5 pt-2">
-    <textarea class="form-control resultadoAnalise" rows="3">
+            <!-- Coluna do Pai -->
+            <div class="col-2 bg-light border rounded">
+                <div class="d-flex flex-column text-center pai">
+                    <div class="row mt-2">
+                        @if ($pai != null)
+                            @foreach ($marcadores as $marcador)
+                                @foreach ($pai->alelos as $item)
+                                    @if (strtolower(trim($item->marcador)) == strtolower(trim($marcador)))
+                                        <div class="col-6 @if ($item->alelo1 == '') py-2 @endif">
+                                            @if ($item->alelo1 == '')
+                                                *
+                                            @else
+                                                <p>{{ $item->alelo1 }}</p>
+                                            @endif
+                                        </div>
+                                        <div class="col-6 @if ($item->alelo2 == '') py-2 @endif">
+                                            @if ($item->alelo2 == '')
+                                                *
+                                            @else
+                                                <p>{{ $item->alelo2 }}</p>
+                                            @endif
+                                        </div>
+                                        @break
+                                    @endif
+                                @endforeach
+                            @endforeach
+                        @endif
+                    </div>
+                </div>
+            </div>
+
+            <!-- Coluna de Valores -->
+            <div class="col-3 bg-light border rounded">
+                <div class="row" id="valores">
+                    <!-- Valores serão inseridos aqui via JavaScript -->
+                </div>
+                <div class="mt-2 mb-3 text-center" id="salvar-btn">
+                    <button class="btn btn-primary w-100" type="button" id="salvar">SALVAR VALORES</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mensagem de alelos não cadastrados -->
+        <div class="@if (empty($marcadores)) mt-3 alert alert-warning @else d-none @endif">
+            <p>O produto não possuí alelos cadastrado <a href="{{ route('alelos.create') }}">Clique aqui para cadastrar</a></p>
+        </div>
+
+        <!-- Seção de Resultado -->
+        <div class="@if (!$result) d-none @endif mt-4" id="resultado">
+            <div class="mensagem px-5 pt-2">
+                <textarea class="form-control resultadoAnalise" rows="3">
 @if ($laudo)
 {{ $laudo->conclusao }}
 @endif
 </textarea>
-</div>
-<div class="mb-3 px-5 pt-2">
-    <label for="exampleFormControlTextarea1" class="form-label">Observação</label>
-    <textarea class="form-control" id="obs" rows="3">
-        @if ($laudo)
+            </div>
+            <div class="mb-3 px-5 pt-2">
+                <label for="exampleFormControlTextarea1" class="form-label">Observação</label>
+                <textarea class="form-control" id="obs" rows="3">
+                    @if ($laudo)
 {{ $laudo->observacao }}
 @endif
-    </textarea>
-</div>
-<div class="mb-3 px-5 pt-2">
-    <p>{{ $animal->description }}</p>
-</div>
-<div class="mb-3 px-5 pt-2">
-    <label for="exampleFormControlTextarea1" class="form-label">Retificação</label>
-    <input class="form-control" id="ret"
-        value="@if ($laudo) {{ $laudo->ret }} @endif">
+                </textarea>
+            </div>
+            <div class="mb-3 px-5 pt-2">
+                <p>{{ $animal->description }}</p>
+            </div>
+            <div class="mb-3 px-5 pt-2">
+                <label for="exampleFormControlTextarea1" class="form-label">Retificação</label>
+                <input class="form-control" id="ret"
+                    value="@if ($laudo) {{ $laudo->ret }} @endif">
 
-</div>
-<div class="mb-3 px-5 pt-2">
-    <label for="exampleFormControlTextarea1" class="form-label">Nome do laudo retificação</label>
-    <input class="form-control" id="ret-name"
-        value="@if ($laudo) {{ $laudo->nome_ret }} @endif">
+            </div>
+            <div class="mb-3 px-5 pt-2">
+                <label for="exampleFormControlTextarea1" class="form-label">Nome do laudo retificação</label>
+                <input class="form-control" id="ret-name"
+                    value="@if ($laudo) {{ $laudo->nome_ret }} @endif">
 
-</div>
-<div class="mb-3 px-5 pt-2">
-    <label for="exampleFormControlTextarea1" class="form-label">DATA FIXADA PARA VERIFICACAO</label>
-    <input class="form-control" id="data_ret" type="date"
-        value="@if ($laudo && $laudo->data_retificacao) {{ $laudo->data_retificacao }} @endif">
+            </div>
+            <div class="mb-3 px-5 pt-2">
+                <label for="exampleFormControlTextarea1" class="form-label">DATA FIXADA PARA VERIFICACAO</label>
+                <input class="form-control" id="data_ret" type="date"
+                    value="@if ($laudo && $laudo->data_retificacao) {{ $laudo->data_retificacao }} @endif">
 
-</div>
-<div class="mb-3 px-5 pt-2">
-    <label for="exampleFormControlTextarea1" class="form-label">DATA DA REALIZAÇÃO DA RETIFICAÇÃO</label>
-    <input class="form-control" id="data_ret_new" type="date"
-        value="@if ($laudo && $laudo->data_ret_new) {{ $laudo->data_ret_new }} @endif">
+            </div>
+            <div class="mb-3 px-5 pt-2">
+                <label for="exampleFormControlTextarea1" class="form-label">DATA DA REALIZAÇÃO DA RETIFICAÇÃO</label>
+                <input class="form-control" id="data_ret_new" type="date"
+                    value="@if ($laudo && $laudo->data_ret_new) {{ $laudo->data_ret_new }} @endif">
 
-</div>
-<div class="d-flex">
-    <div>
-        <button class="btn btn-primary" id="gerar-laudo">GERAR LAUDO</button>
+            </div>
+            <div class="d-flex">
+                <div>
+                    <button class="btn btn-primary" id="gerar-laudo">GERAR LAUDO</button>
+                </div>
+            </div>
+            <input type="hidden" name="" id="laudo">
+        </div>
+
+        <!-- Botões de ação -->
+        <div id="buttons" class="d-none mt-4 mb-3">
+            @php
+                $status = 0;
+                if ($laudo) {
+                    if ($laudo->status == 1) {
+                        $status = 1;
+                    } else {
+                        $status = 0;
+                    }
+                }
+            @endphp
+
+            <div class="d-flex">
+                <div>
+                    <button class="btn btn-primary" id="ver-laudo">
+                        VER LAUDO
+                    </button>
+                    <button class="btn btn-primary" id="pdf">
+                        GERAR PDF E ASSINAR
+                    </button>
+                    <button class="btn text-white @if ($status == 1) btn-success @else btn-primary @endif"
+                        id="finalizar">
+                        @if ($status == 1)
+                            FINALIZADO <i class="fa-solid fa-check"></i>
+                        @else
+                            FINALIZAR
+                        @endif
+
+                    </button>
+                    @if ($laudo)
+                        <button class="btn btn-primary" id="download-pdf" data-laudo="{{ $laudo->id }}">BAIXAR
+                            PDF</button>
+                    @endif
+                </div>
+            </div>
+        </div>
     </div>
-</div>
-<input type="hidden" name="" id="laudo">
-</div>
-<div id="buttons" class="d-none my-3">
-@php
-    $status = 0;
-    if ($laudo) {
-        if ($laudo->status == 1) {
-            $status = 1;
-        } else {
-            $status = 0;
-        }
-    }
-@endphp
-
-<div class="d-flex">
-    <div>
-        <button class="btn btn-primary" id="ver-laudo">
-            VER LAUDO
-        </button>
-        <button class="btn btn-primary" id="pdf">
-            GERAR PDF E ASSINAR
-        </button>
-        <button class="btn text-white @if ($status == 1) btn-success @else btn-primary @endif"
-            id="finalizar">
-            @if ($status == 1)
-                FINALIZADO <i class="fa-solid fa-check"></i>
-            @else
-                FINALIZAR
-            @endif
-
-        </button>
-        @if ($laudo)
-            <button class="btn btn-primary" id="download-pdf" data-laudo="{{ $laudo->id }}">BAIXAR
-                PDF</button>
-        @endif
-    </div>
-</div>
-</div>
-</div>
 @endsection
 @section('js')
 <script>
