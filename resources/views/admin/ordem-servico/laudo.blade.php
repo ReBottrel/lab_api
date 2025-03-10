@@ -478,7 +478,7 @@
             <div class="text-end">
                 <span><strong>Relat. n</strong>
                     @if ($laudo->ret)
-                       RET1-{{ $mae != null ? substr($mae->codlab, 3) . '.' : '' }}
+                       {{ $laudo->ret }}-{{ $mae != null ? substr($mae->codlab, 3) . '.' : '' }}
                         {{ substr($animal->codlab, 3) }}
                         {{ $pai != null ? '.' . substr($pai->codlab, 3) : '' }}
                     @else
