@@ -11,12 +11,12 @@
                     <input type="hidden" name="id" value="{{ $order->id }}">
                     <div class="row">
                         <div class="col-md-8">
-                            <select class="js-example-basic-single" name="tecnico">
+                            <select class="js-example-basic-single" name="tecnico" id="tecnico_select">
                                 @foreach ($tecnicos as $tecnico)
-                                    <option value="{{ $tecnico->id }}">{{ $tecnico->professional_name }}</option>
+                                    <option value="{{ $tecnico->id }}" data-name="{{ $tecnico->professional_name }}">{{ $tecnico->professional_name }}</option>
                                 @endforeach
-
                             </select>
+                            <input type="hidden" name="professional_name" id="professional_name_input">
                         </div>
                         <div class="col-md-4">
                             <button type="submit" class="btn btn-primary">Continuar</button>
@@ -174,6 +174,18 @@
 @endsection
 @section('js')
     <script>
+        $(document).ready(function() {
+            // Atualiza o campo hidden quando a página carrega
+            var selectedOption = $('#tecnico_select option:selected');
+            $('#professional_name_input').val(selectedOption.data('name'));
+
+            // Atualiza o campo hidden quando o select muda
+            $('#tecnico_select').change(function() {
+                var selectedOption = $(this).find('option:selected');
+                $('#professional_name_input').val(selectedOption.data('name'));
+            });
+        });
+        
         $(document).on('click', '#technical-save', function() {
             console.log('cliec');
             var btn = $(this);

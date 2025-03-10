@@ -485,8 +485,10 @@ class OrderController extends Controller
 
     public function technicalStore(Request $request)
     {
+        \Log::info($request->all());
         $order = OrderRequest::find($request->id);
         $order->update([
+            'technical_manager' => $request->professional_name,
             'id_tecnico' => $request->tecnico,
         ]);
 
