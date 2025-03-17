@@ -641,7 +641,8 @@
                             $formattedDate = 'Data inválida';
                         }
                     @endphp
-                        {{ $formattedDate }}</span>
+                        {{ $formattedDate }} - {{ $datas->hora_coleta }}
+                    </span>
                     <strong style="margin-left: 136px;">Data de Entrada na Área Técnica:</strong>
                     <span>{{ date('d/m/Y', strtotime($ordem->data_bar)) }}</span>
                     <br>
@@ -970,7 +971,8 @@
                 <p>Responsável Técnica <br> CR-Bio 37845/04-D</p>
             </div>
             <div class="my-1">
-                <p>Este relatório de ensaio não pode ser reproduzido sem a aprovação do laboratório, exceto se for reproduzido na íntegra.</p>
+                <p>Este relatório de ensaio não pode ser reproduzido sem a aprovação do laboratório, exceto se for
+                    reproduzido na íntegra.</p>
                 <p>
                     Laboratório credenciado ao MAPA (Ministério da Agricultura, Pecuária e
                     Abastecimento), portaria Nº 112, de 20 de outubro de 2016.

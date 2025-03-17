@@ -355,6 +355,8 @@ class OrderController extends Controller
             $order->update([
                 'status' => 4,
             ]);
+
+
             $telefoneTecnico = str_replace(['(', ')', '-', ' '], ['', '', '', ''],  $order->tecnico->cell);
             $telefoneOwner = str_replace(['(', ')', '-', ' '], ['', '', '', ''],  $user->info->phone);
 
@@ -366,6 +368,10 @@ class OrderController extends Controller
                     "message" => "Prezado Técnico,
                     A amostra do animal $animal->animal_name foi recebida e APROVADA para realização do exame de DNA no Laboratório Loci.
                     "
+                ]);
+                $dataColeta = DataColeta::where('id_animal', $animal->id)->first();
+                $dataColeta->update([
+                    'hora_coleta' => now()->format('H:i:s'),
                 ]);
             }
             if ($request->value == 6) {
