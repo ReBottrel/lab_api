@@ -30,17 +30,19 @@
                 <hr class="sidebar-divider my-0">
                 <ul class="navbar-nav text-light m-side" id="accordionSidebar">
                     @if (auth()->user()->permission == 10)
-                        <li class="nav-item"><a class="nav-link active" href="{{ route('admin') }}"><i
-                                    class="fas fa-tachometer-alt"
-                                    style="color: var(--bs-dark);"></i><span>Home</span></a>
+                        <li class="nav-item">
+                            <a class="nav-link {{ request()->routeIs('admin') ? 'active' : '' }}" href="{{ route('admin') }}">
+                                <i class="fas fa-tachometer-alt"></i>
+                                <span>Home</span>
+                            </a>
                         </li>
                     @endif
-                    <li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href="#"
+                    <li class="nav-item dropdown"><a class="nav-link dropdown-toggle {{ request()->routeIs('orders.*') ? 'active' : '' }}" href="#"
                             style="color: var(--bs-dark);"><i class="fas fa-table"
                                 style="color: var(--bs-dark);"></i><span>Pedidos</span></a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                             @if (auth()->user()->permission == 10)
-                                <li><a class="dropdown-item" href="{{ route('orders.all') }}">Todos os pedidos</a></li>
+                                <li><a class="dropdown-item {{ request()->routeIs('orders.all') ? 'active' : '' }}" href="{{ route('orders.all') }}">Todos os pedidos</a></li>
                                 <li><a class="dropdown-item" href="{{ route('orders.vet') }}">Pedidos do veterinario</a>
                                 </li>
                                 <li><a class="dropdown-item" href="{{ route('orders.sistema') }}">Pedidos do
@@ -114,7 +116,8 @@
                     @endif
                     @if (auth()->user()->permission == 10)
                         <li class="nav-item">
-                            <a class="nav-link " href="{{ route('users') }}"><i class="fas fa-user"
+                            <a class="nav-link {{ request()->routeIs('users') ? 'active' : '' }}" href="{{ route('users') }}">
+                                <i class="fas fa-user"
                                     style="color: var(--bs-dark);"></i><span>Usuários</span></a>
                         </li>
                     @endif

@@ -24,38 +24,43 @@
         </header>
     </div>
     <div class="d-flex flex-column wrapper mb-4">
-
         <main class="flex-fill">
             <div class="container">
                 <div class="row justify-content-center">
-                    <form class="col-sm-10 col-md-8 col-lg-6" id="loginForm">
-                        @csrf
-                        <h3 class="text-primary">Identifique-se, por favor</h3>
+                    <div class="col-sm-10 col-md-8 col-lg-6">
+                        <div class="login-card">
+                            <div class="login-header text-center mb-4">
+                                <img src="{{ asset('loja/assets/img/logo.svg') }}" alt="Logo" class="login-logo mb-3">
+                                <h3 class="text-primary">Bem-vindo de volta!</h3>
+                                <p class="text-muted">Por favor, faça login para continuar</p>
+                            </div>
+                            
+                            <form id="loginForm">
+                                @csrf
+                                <div class="form-floating mb-3">
+                                    <input type="email" name="email" id="email" class="form-control" placeholder=" " autofocus>
+                                    <label for="txtEmail">E-mail</label>
+                                    <span id="emailError" class="error"></span>
+                                </div>
 
-                        <div class="form-floating mb-3">
-                            <input type="email" name="email" id="email" class="form-control" placeholder=" "
-                                autofocus>
-                            <label for="txtEmail">E-mail</label>
-                            <span id="emailError" class="error"></span>
+                                <div class="form-floating mb-3">
+                                    <input type="password" name="password" id="password" class="form-control" placeholder=" ">
+                                    <label for="txtSenha">Senha</label>
+                                    <span id="passwordError" class="error"></span>
+                                </div>
+
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input" value="" id="chkLembrar">
+                                        <label for="chkLembrar" class="form-check-label">Lembrar de mim</label>
+                                    </div>
+                                    <a href="/recuperarsenha.html" class="text-primary text-decoration-none">Esqueceu a senha?</a>
+                                </div>
+
+                                <button type="submit" class="btn btn-primary w-100 btn-lg mb-3">Entrar</button>
+                            </form>
                         </div>
-
-                        <div class="form-floating mb-3">
-                            <input type="password" name="password" id="password" class="form-control" placeholder=" ">
-                            <label for="txtSenha">Senha</label>
-                            <span id="passwordError" class="error"></span>
-                        </div>
-
-                        <div class="form-check mb-3">
-                            <input type="checkbox" class="form-check-input" value="" id="chkLembrar">
-                            <label for="chkLembrar" class="form-check-label">Lembrar de mim</label>
-                        </div>
-
-                        <button type="submit" class="btn btn-lg btn-primary">Entrar</button>
-
-                        <p class="mt-3">
-                            Esqueceu sua senha? <a href="/recuperarsenha.html">Clique aqui</a> para recuperá-la.
-                        </p>
-                    </form>
+                    </div>
                 </div>
             </div>
         </main>

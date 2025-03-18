@@ -79,7 +79,7 @@
 
     page[size="A4"] {
         width: 21cm;
-
+        
     }
 
     @page {
@@ -99,7 +99,7 @@
         width: 200px;
         position: absolute;
         top: 0;
-        left: 70px;
+        left: 0;
 
     }
 

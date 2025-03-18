@@ -1,64 +1,112 @@
 @extends('layouts.admin')
 @section('content')
-    <div class="container">
-        <div>
-            <h3>Todas a ordens de serviço</h3>
+<div class="ordem-servico-container">
+    <div class="page-header">
+        <h3>Todas as Ordens de Serviço</h3>
+    </div>
+
+    <div class="search-filters">
+        <div class="search-row">
+            <div class="search-group">
+                <label for="busca">Buscar por proprietário ou número</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" id="busca" placeholder="Digite sua busca...">
+                    <span class="input-icon">
+                        <i class="fas fa-user"></i>
+                    </span>
+                </div>
+            </div>
+
+            <div class="search-group">
+                <label for="codlab">Buscar por codlab</label>
+                <div class="input-with-button">
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="codlab" placeholder="Digite o codlab...">
+                        <span class="input-icon">
+                            <i class="fas fa-barcode"></i>
+                        </span>
+                    </div>
+                    <button class="btn btn-search" id="buscar-codlab">
+                        <i class="fas fa-search"></i>
+                        Buscar
+                    </button>
+                </div>
+            </div>
         </div>
-        <div class="row">
-            <div class="mb-3 col-6">
-                <label for="exampleFormControlInput1" class="form-label">Buscar por proprietário ou por numero</label>
-                <input type="text" class="form-control" id="busca">
-            </div>
-            <div class="mb-3 col-4">
-                <label for="exampleFormControlInput1" class="form-label">Buscar por codlab</label>
-                <input type="text" class="form-control" id="codlab">
-            </div>
-            <div class="col-2 mt-4">
-                <button class="btn btn-primary" id="buscar-codlab" style="margin-top: 6px;">BUSCAR CODLAB</button>
-            </div>
-            <div class="mb-3 col-8">
-                <label for="exampleFormControlInput1" class="form-label">Buscar por animal</label>
-                <input type="text" class="form-control" id="animal">
-            </div>
-            <div class="col-2 mt-4">
-                <button class="btn btn-primary" id="buscar-animal" style="margin-top: 6px;">BUSCAR ANIMAL</button>
+
+        <div class="search-row">
+            <div class="search-group">
+                <label for="animal">Buscar por animal</label>
+                <div class="input-with-button">
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="animal" placeholder="Digite o nome do animal...">
+                        <span class="input-icon">
+                            <i class="fas fa-horse"></i>
+                        </span>
+                    </div>
+                    <button class="btn btn-search" id="buscar-animal">
+                        <i class="fas fa-search"></i>
+                        Buscar
+                    </button>
+                </div>
             </div>
         </div>
+    </div>
+
+    <div class="table-container">
         <table class="table">
             <thead>
                 <tr>
-                    <th scope="col">Numero/Pedido</th>
-                    <th scope="col">Proprietario</th>
-                    <th>Data de criação</th>
+                    <th>Número/Pedido</th>
+                    <th>Proprietário</th>
+                    <th>Data de Criação</th>
                     <th>Ação</th>
                 </tr>
             </thead>
             <tbody class="table-busca">
                 @foreach ($ordemServicos as $item)
-                    <tr>
-                        <th scope="row">{{ $item->order_id }}</th>
-
-                        <td>{{ $item->owner }}</td>
-                        <th>{{ date('d/m/Y', strtotime($item->created_at)) }}</th>
-                        <td>
-                            <div class="row">
-                                <div class="col-4"><a href="{{ route('ordem.servico.show', $item->id) }}"><button
-                                            class="btn btn-primary"><i class="fa-solid fa-eye"></i>
-                                        </button></a>
-                                </div>
-                                <div class="col-4"><button type="button" class="btn btn-danger delete"
-                                        data-id="{{ $item->id }}"><i class="fa-solid fa-trash"></i>
-                                    </button>
-                                </div>
-
+                <tr>
+                    <td>
+                        <span class="order-id" title="Número do Pedido">
+                            {{ str_pad($item->order_id, 6, '0', STR_PAD_LEFT) }}
+                        </span>
+                    </td>
+                    <td>
+                        <div class="owner-name">
+                            <div class="owner-avatar">
+                                <i class="fas fa-user"></i>
                             </div>
-                        </td>
-                    </tr>
+                            <span>{{ $item->owner }}</span>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="date">{{ date('d/m/Y', strtotime($item->created_at)) }}</span>
+                    </td>
+                    <td>
+                        <div class="actions">
+                            <a href="{{ route('ordem.servico.show', $item->id) }}" 
+                               class="btn btn-primary" 
+                               title="Visualizar Ordem">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                            <button type="button" 
+                                    class="btn btn-danger delete" 
+                                    data-id="{{ $item->id }}" 
+                                    title="Excluir Ordem">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
                 @endforeach
             </tbody>
         </table>
+    </div>
+
+    <div class="d-flex justify-content-center">
         {{ $ordemServicos->links() }}
     </div>
+</div>
 @endsection
 @section('js')
     <script>

@@ -79,7 +79,7 @@
 
     page[size="A4"] {
         width: 21cm;
-
+        height: 29.7cm;
     }
 
     @page {
@@ -99,7 +99,7 @@
         width: 200px;
         position: absolute;
         top: 0;
-        left: 70px;
+        left: 0;
 
     }
 
@@ -379,6 +379,11 @@
         position: relative;
         top: 10px;
         left: 0;
+    }
+
+    .float-end {
+        float: right;
+        margin-right: 30px;
     }
 
     @media (max-width: 575.98px) {
@@ -1000,7 +1005,7 @@
                 </span>
                 <span style="float: none; margin: 0 auto; text-align:center;">Documento assinado eletronicamente por
                     LOCI BIOTECNOLOGIA LTDA, em {{ date('d/m/Y H:i:s') }}</span>
-                <span style="float: right;">Página 1 de 1</span>
+                <span class="float-end" style="float: right;">Página 1 de 1</span>
             </div>
         </div>
     </page>

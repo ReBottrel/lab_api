@@ -1,42 +1,64 @@
 @extends('layouts.admin')
 
 @section('content')
-    <div class="container">
-        <div>
-            <h3>Relatórios</h3>
+<div class="relatorios-container">
+    <div class="page-header">
+        <h3>Relatórios</h3>
+    </div>
+
+    <div class="stats-cards">
+        <div class="stat-card">
+            <div class="stat-label">Total de Laudos Concluídos</div>
+            <div class="stat-value">{{ $totalLaudos }}</div>
         </div>
-        <div>
-            <p><strong>Total de Laudos Concluídos:</strong> {{ $totalLaudos }}</p>
-            <p><strong>Total de Laudos com Exclusão:</strong> {{ $totalLaudosExclusao }}</p>
-            <p><strong>Total de Laudos com Exclusão Genitor:</strong> {{ $totalLaudosExclusaoGenitor }}</p>
-            <p><strong>Total de Laudos com Exclusão Genitora:</strong> {{ $totalLaudosExclusaoGenitora }}</p>
+        <div class="stat-card">
+            <div class="stat-label">Laudos com Exclusão</div>
+            <div class="stat-value">{{ $totalLaudosExclusao }}</div>
         </div>
-        <div>
-            <a href="{{ route('get.laudo.total') }}" class="btn btn-primary">Baixar Laudos Concluídos</a>
-            <a href="{{ route('get.laudo.total.exclusao') }}" class="btn btn-danger">Baixar Laudos com Exclusão</a>
-            <a href="{{ route('get.laudo.total.exclusao.genitor') }}" class="btn btn-danger">Baixar Laudos com Exclusão
-                genitor</a>
-            <a href="{{ route('get.laudo.total.exclusao.genitora') }}" class="btn btn-danger">Baixar Laudos com Exclusão
-                genitora</a>
+        <div class="stat-card">
+            <div class="stat-label">Exclusão Genitor</div>
+            <div class="stat-value">{{ $totalLaudosExclusaoGenitor }}</div>
         </div>
-        <div class="mt-5">
-            <h3>Relatórios por Codlab</h3>
-        </div>
-        <div>
-            <div class="row">
-                <div class="col-8">
-                    <label for="exampleFormControlInput1" class="form-label">Buscar codlab</label>
-                    <input type="search" class="form-control" id="codlab">
-                </div>
-                <div class="col-4 mt-4">
-                    <button class="btn btn-primary" id="enviar">BUSCAR</button>
-                </div>
-            </div>
-            <div class="mt-4" id="genealogyTree">
-                <!-- Aqui você vai inserir a representação da árvore genealógica -->
-            </div>
+        <div class="stat-card">
+            <div class="stat-label">Exclusão Genitora</div>
+            <div class="stat-value">{{ $totalLaudosExclusaoGenitora }}</div>
         </div>
     </div>
+
+    <div class="action-buttons">
+        <a href="{{ route('get.laudo.total') }}" class="btn btn-primary">
+            <i class="fas fa-download"></i>
+            Baixar Laudos Concluídos
+        </a>
+        <a href="{{ route('get.laudo.total.exclusao') }}" class="btn btn-danger">
+            <i class="fas fa-file-alt"></i>
+            Baixar Laudos com Exclusão
+        </a>
+        <a href="{{ route('get.laudo.total.exclusao.genitor') }}" class="btn btn-danger">
+            <i class="fas fa-male"></i>
+            Baixar Laudos com Exclusão Genitor
+        </a>
+        <a href="{{ route('get.laudo.total.exclusao.genitora') }}" class="btn btn-danger">
+            <i class="fas fa-female"></i>
+            Baixar Laudos com Exclusão Genitora
+        </a>
+    </div>
+
+    <div class="search-section">
+        <h3>Relatórios por Codlab</h3>
+        <div class="search-form">
+            <div class="form-group">
+                <label for="codlab">Buscar codlab</label>
+                <input type="search" class="form-control" id="codlab" placeholder="Digite o código...">
+            </div>
+            <button class="btn btn-search" id="enviar">
+                <i class="fas fa-search"></i>
+                Buscar
+            </button>
+        </div>
+        <div id="genealogyTree"></div>
+    </div>
+</div>
 @endsection
 @section('js')
     <script>
