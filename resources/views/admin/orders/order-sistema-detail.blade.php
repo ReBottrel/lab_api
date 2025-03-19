@@ -73,7 +73,7 @@
                     $dataColeta = isset($datas->data_coleta) ? parseDate($datas->data_coleta) : '';
                     $dataLaboratorio = isset($datas->data_laboratorio) ? parseDate($datas->data_laboratorio) : '';
                     $dataRecebimento = isset($datas->data_recebimento) ? parseDate($datas->data_recebimento) : '';
-                    $horaRecebimento = $datas->hora_coleta;
+                    $horaRecebimento = isset($datas->hora_coleta) ? $datas->hora_coleta : '';
                     $status = 'Status desconhecido';
                     if ($animal) {
                         switch ($animal->status) {
