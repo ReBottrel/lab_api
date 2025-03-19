@@ -654,7 +654,7 @@
                                 $formattedDate = 'Data inválida';
                             }
                         @endphp
-                        {{ $formattedDate }} - {{ $datas->hora_coleta ?? 'Não informado' }}
+                        {{ $formattedDate }} - {{ $datas->hora_coleta ?? '' }}
                     </span>
                     <strong style="margin-left: 136px;">Data de Entrada na Área Técnica:</strong>
                     <span>{{ date('d/m/Y', strtotime($ordem->data_bar)) }}</span>
