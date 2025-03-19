@@ -47,7 +47,7 @@ class DataColetaController extends Controller
             $data['data_coleta'] = $request->data_coleta;
         }
         if ($request->has('data_laboratorio')) {
-            $data['data_laboratorio'] = $request->data_laboratorio;
+            $data['hora_coleta'] = $request->data_laboratorio;
         }
 
         $datas = DataColeta::updateOrCreate(

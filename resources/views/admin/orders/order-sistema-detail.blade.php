@@ -73,6 +73,7 @@
                     $dataColeta = isset($datas->data_coleta) ? parseDate($datas->data_coleta) : '';
                     $dataLaboratorio = isset($datas->data_laboratorio) ? parseDate($datas->data_laboratorio) : '';
                     $dataRecebimento = isset($datas->data_recebimento) ? parseDate($datas->data_recebimento) : '';
+                    $horaRecebimento = $datas->hora_coleta;
                     $status = 'Status desconhecido';
                     if ($animal) {
                         switch ($animal->status) {
@@ -170,10 +171,10 @@
                                     value="{{ $dataColeta }}" data-id="{{ $animal->id }}" data-type="data_coleta">
                             </div>
                             <div class="col-md-4">
-                                <label for="data-chamado-{{ $animal->id }}" class="form-label">Data de Chamado</label>
-                                <input type="date" class="form-control data-3" id="data-chamado-{{ $animal->id }}"
-                                    value="{{ $dataLaboratorio }}" data-id="{{ $animal->id }}"
-                                    data-type="data_laboratorio">
+                                <label for="data-chamado-{{ $animal->id }}" class="form-label">Hora do Recebimento</label>
+                                <input type="time" class="form-control data-3" id="data-chamado-{{ $animal->id }}"
+                                    value="{{ $horaRecebimento }}" data-id="{{ $animal->id }}"
+                                    data-type="hora_coleta">
                             </div>
                         </div>
 

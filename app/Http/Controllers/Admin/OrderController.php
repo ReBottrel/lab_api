@@ -371,7 +371,7 @@ class OrderController extends Controller
                 ]);
                 $dataColeta = DataColeta::where('id_animal', $animal->id)->first();
                 $dataColeta->update([
-                    'hora_coleta' => now()->format('H:i:s'),
+                    'hora_coleta' => now()->format('H:i'),
                 ]);
             }
             if ($request->value == 6) {
