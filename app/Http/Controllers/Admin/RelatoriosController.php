@@ -303,7 +303,7 @@ class RelatoriosController extends Controller
             ];
         }
 
-        $filename = 'relatorio-pagamentos-' . $data_inicial . '-ate-' . $data_final . '.xlsx';
+        $filename = 'relatorio-ordens-servico-' . $data_inicial . '-ate-' . $data_final . '.xlsx';
         return Excel::download(new OrdersExport(collect($dados)), $filename);
     }
 }
