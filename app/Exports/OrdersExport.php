@@ -22,7 +22,7 @@ class OrdersExport implements FromCollection, WithHeadings
     public function headings(): array
     {
         return [
-            'Ordem',
+            'Pedido',
             'Animal',
             'Código Lab',
             'ID ABCCMM',

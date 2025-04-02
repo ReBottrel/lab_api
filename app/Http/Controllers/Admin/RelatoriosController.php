@@ -258,6 +258,7 @@ class RelatoriosController extends Controller
         }
         
         $orders = $orders->select(
+                'id',
                 'order',
                 'animal',
                 'codlab',
@@ -277,7 +278,7 @@ class RelatoriosController extends Controller
         
         $dados = [];
         foreach ($orders as $order) {
-            $laudo = Laudo::where('animal_id', $order->animal_id)
+            $laudo = Laudo::where('animal_id', $order->animal_id)->where('ordem_id', $order->id)
                 ->latest()
                 ->first();
 
