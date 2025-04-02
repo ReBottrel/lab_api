@@ -58,6 +58,32 @@
         </div>
         <div id="genealogyTree"></div>
     </div>
+
+    <div class="search-section">
+        <h3>Relatório de Ordens de Serviço por Data</h3>
+        <form action="{{ route('admin.relatorios.ordens.servico') }}" method="GET">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="data_inicial">Data Inicial</label>
+                        <input type="date" class="form-control" id="data_inicial" name="data_inicial" required>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="data_final">Data Final</label>
+                        <input type="date" class="form-control" id="data_final" name="data_final" required>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <button type="submit" class="btn btn-primary" style="margin-top: 32px;">
+                        <i class="fas fa-download"></i>
+                        Baixar Relatório
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
 </div>
 @endsection
 @section('js')

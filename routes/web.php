@@ -23,7 +23,6 @@ use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\OwnerController;
 use App\Http\Controllers\Admin\AlelosController;
 use App\Http\Controllers\Admin\ConfigController;
-use App\Http\Controllers\Admin\AddressController;
 use App\Http\Controllers\Admin\AnimaisController;
 use App\Http\Controllers\Admin\TecnicoController;
 use App\Http\Controllers\Admin\AppOrderController;
@@ -108,6 +107,7 @@ Route::middleware(['auth:web'])->group(function () {
 
 
 Route::middleware(['auth:admin'])->group(function () {
+
 
     Route::get('alterar-nome-laudo', [LaudoController::class, 'alterarNomeLaudo'])->name('alterar.nome.laudo');
     Route::get('pedido-abccmm', [OrderController::class, 'getAbccmm'])->name('pedido.abccmm');
@@ -418,6 +418,12 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::post('buscar-pedido-parceiro-store', [ParceiroController::class, 'searchOrders'])->name('buscar.pedido.parceiro.store');
 
     Route::get('adm-exames-especies', [ExameController::class, 'getByEspecies'])->name('admin.exames.especies');
+
+    Route::get('/admin/relatorios/pagamentos', [RelatoriosController::class, 'getRelatorioPorDataPagamento'])
+        ->name('admin.relatorios.pagamentos');
+
+    Route::get('/admin/relatorios/ordens-servico', [RelatoriosController::class, 'getRelatorioPorDataPagamento'])
+        ->name('admin.relatorios.ordens.servico');
 
 });
 
