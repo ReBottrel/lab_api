@@ -482,20 +482,38 @@
                     @endif
                 </strong>
             </div>
-            <div class="text-end">
-                <span><strong>Relat. n</strong>
-                    @if ($laudo->ret)
-                        {{ $laudo->ret }}-{{ $mae != null ? substr($mae->codlab, 3) . '.' : '' }}
-                        {{ substr($animal->codlab, 3) }}
-                        {{ $pai != null ? '.' . substr($pai->codlab, 3) : '' }}
-                    @else
-                        {{ $mae != null ? substr($mae->codlab, 3) . '.' : '' }}
-                        {{ substr($animal->codlab, 3) }}
-                        {{ $pai != null ? '.' . substr($pai->codlab, 3) : '' }}
-                    @endif
+            @if (auth()->user()->email == 'renatabottrel@locilab.com.br')
+                <div class="text-end" style="position: relative; top: 21px; left: 13px;">
+                    <span><strong>Relat. n</strong>
+                        @if ($laudo->ret)
+                            {{ $laudo->ret }}-{{ $mae != null ? substr($mae->codlab, 3) . '.' : '' }}
+                            {{ substr($animal->codlab, 3) }}
+                            {{ $pai != null ? '.' . substr($pai->codlab, 3) : '' }}
+                        @else
+                            {{ $mae != null ? substr($mae->codlab, 3) . '.' : '' }}
+                            {{ substr($animal->codlab, 3) }}
+                            {{ $pai != null ? '.' . substr($pai->codlab, 3) : '' }}
+                        @endif
 
-                </span>
-            </div>
+                    </span>
+                </div>
+            @else
+                <div class="text-end">
+                    <span><strong>Relat. n</strong>
+                        @if ($laudo->ret)
+                            {{ $laudo->ret }}-{{ $mae != null ? substr($mae->codlab, 3) . '.' : '' }}
+                            {{ substr($animal->codlab, 3) }}
+                            {{ $pai != null ? '.' . substr($pai->codlab, 3) : '' }}
+                        @else
+                            {{ $mae != null ? substr($mae->codlab, 3) . '.' : '' }}
+                            {{ substr($animal->codlab, 3) }}
+                            {{ $pai != null ? '.' . substr($pai->codlab, 3) : '' }}
+                        @endif
+
+                    </span>
+                </div>
+            @endif
+
             <div class="text-center my-1 text-decoration-underline">
                 <strong>Dados Relativos à Amostra</strong>
             </div>
@@ -582,7 +600,7 @@
                                         $formattedDate = 'Data inválida';
                                     }
                                 @endphp
-                                {{ $formattedDate }} 
+                                {{ $formattedDate }}
                             @endif
                         </span>
                     <div class="amostra">
@@ -985,7 +1003,8 @@
                 <p>Responsável Técnica <br> CR-Bio 37845/04-D</p>
             </div>
             <div class="my-1">
-                <p>Este relatório de ensaio não pode ser reproduzido sem a aprovação do laboratório, exceto se for reproduzido na íntegra.</p>
+                <p>Este relatório de ensaio não pode ser reproduzido sem a aprovação do laboratório, exceto se for
+                    reproduzido na íntegra.</p>
                 <p>
                     Laboratório credenciado ao MAPA (Ministério da Agricultura, Pecuária e
                     Abastecimento), portaria Nº 112, de 20 de outubro de 2016.

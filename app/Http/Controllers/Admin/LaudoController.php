@@ -541,25 +541,25 @@ class LaudoController extends Controller
             $nomeExame = "LOVP25-$maeId.$animalId.$paiId";
         }
 
-   
+
 
         $xml = '<?xml version="1.0" encoding="iso-8859-1" ?>
         <document>
           <CASO>
-            <NUMERO><![CDATA['.$nomeExame.']]></NUMERO> 		
-            <ANIMAL><![CDATA[' . $animal->animal_name . ']]></ANIMAL> 	
-            <REGISTRO><![CDATA[0]]></REGISTRO> 		
-            <DATACONCLUSAO><![CDATA[' . date('d/m/Y', strtotime($laudo->created_at)) . ']]></DATACONCLUSAO> 
-            <LABORATORIO><![CDATA[18]]></LABORATORIO> 		
+            <NUMERO><![CDATA['.$nomeExame.']]></NUMERO>
+            <ANIMAL><![CDATA[' . $animal->animal_name . ']]></ANIMAL>
+            <REGISTRO><![CDATA[0]]></REGISTRO>
+            <DATACONCLUSAO><![CDATA[' . date('d/m/Y', strtotime($laudo->created_at)) . ']]></DATACONCLUSAO>
+            <LABORATORIO><![CDATA[18]]></LABORATORIO>
             <PROPRIETARIO><![CDATA[' . $order->creator_number . ']]></PROPRIETARIO>
-            <TIPOEXAME><![CDATA[2]]></TIPOEXAME> 		
-            <SUBTIPOEXAME><![CDATA[' . $subtipo . ']]></SUBTIPOEXAME> 		
-            <TECNICO><![CDATA[' . $tecnico->matricula . ']]></TECNICO> 		
-            <DATACOLETA><![CDATA[' . $laudo->data_coleta . ']]></DATACOLETA> 	
-            <TIPOMATERIAL><![CDATA[2]]></TIPOMATERIAL> 	
-            <NOMEIMAGEM><![CDATA[' . $pdf . ']]></NOMEIMAGEM> 
-            <OBSERVACOES><![CDATA[' . $laudo->observacao . ']]></OBSERVACOES> 
-            <DATAENVIO><![CDATA[' . date('d/m/Y') . ']]></DATAENVIO>	
+            <TIPOEXAME><![CDATA[2]]></TIPOEXAME>
+            <SUBTIPOEXAME><![CDATA[' . $subtipo . ']]></SUBTIPOEXAME>
+            <TECNICO><![CDATA[' . $tecnico->matricula . ']]></TECNICO>
+            <DATACOLETA><![CDATA[' . $laudo->data_coleta . ']]></DATACOLETA>
+            <TIPOMATERIAL><![CDATA[2]]></TIPOMATERIAL>
+            <NOMEIMAGEM><![CDATA[' . $pdf . ']]></NOMEIMAGEM>
+            <OBSERVACOES><![CDATA[' . $laudo->observacao . ']]></OBSERVACOES>
+            <DATAENVIO><![CDATA[' . date('d/m/Y') . ']]></DATAENVIO>
             <HORAENVIO><![CDATA[' . date('H:i') . ']]></HORAENVIO>
             <ROWIDANIMAL><![CDATA[' . $animal->register_number_brand . ']]></ROWIDANIMAL>
           </CASO>
@@ -734,12 +734,12 @@ class LaudoController extends Controller
     {
         // Get all laudos from 2025
         $laudos = Laudo::whereYear('created_at', '2025')->get();
-        
+
         foreach ($laudos as $laudo) {
             if ($laudo->pdf) {
                 // Handle different filename patterns
                 $newPdfName = $laudo->pdf;
-                
+
                 // Replace LOVP24 pattern with numbers following it
                 if (preg_match('/^LOVP24-\d+\.\d+\.\d+\.pdf$/', $laudo->pdf)) {
                     $newPdfName = str_replace('LOVP24-', 'LOVP25-', $laudo->pdf);
@@ -748,19 +748,19 @@ class LaudoController extends Controller
                 elseif (strpos($laudo->pdf, 'LOVP24-') === 0) {
                     $newPdfName = str_replace('LOVP24-', 'LOVP25-', $laudo->pdf);
                 }
-                
+
                 // Only proceed if the name actually changed
                 if ($newPdfName !== $laudo->pdf) {
                     // Update the file name in storage if it exists
                     if (Storage::disk('public')->exists($laudo->pdf)) {
                         Storage::disk('public')->move($laudo->pdf, $newPdfName);
                     }
-                    
+
                     // Update the database record
                     $laudo->update([
                         'pdf' => $newPdfName
                     ]);
-                    
+
                     // Create log entry
                     Log::create([
                         'user' => Auth::user()->name,
@@ -772,7 +772,7 @@ class LaudoController extends Controller
                 }
             }
         }
-        
+
         return response()->json(['message' => 'Nomes dos laudos atualizados com sucesso'], 200);
     }
 }
