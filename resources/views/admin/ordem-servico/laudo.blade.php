@@ -608,7 +608,7 @@
                     </div>
                     </p>
                 </div>
-                <div class="content_2">
+                <div class="content_2" @if (auth()->user()->email == 'renatabottrel@locilab.com.br') style="top: 0 !important;" @endif>
                     <p>
 
                         <br>
