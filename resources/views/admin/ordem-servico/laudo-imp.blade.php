@@ -79,7 +79,7 @@
 
     page[size="A4"] {
         width: 21cm;
-        
+
     }
 
     @page {
@@ -590,6 +590,8 @@
                                 EQUINA
                             @elseif($animal->especies == 'MUARES')
                                 MUAR
+                            @elseif($animal->especies == 'EQUINA_TKY')
+                                EQUINA
                             @elseif($animal->especies == 'QUARTO DE MILHO')
                                 QUARTO DE MILHA
                             @else
