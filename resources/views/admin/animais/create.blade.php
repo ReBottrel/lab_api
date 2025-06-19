@@ -49,6 +49,7 @@
                                         <option value="ASININO">ASININOS</option>
                                         <option value="MUARES">MUARES</option>
                                         <option value="EQUINO_PEGA">EQUINO PÊGA</option>
+                                        <option value="EQUINA_TKY">EQUINA TKY</option>
                                     </select>
                                 </div>
                             </div>
@@ -247,7 +248,7 @@
                         })
                     },
                     error: function(response) {
-                        
+
                     }
                 });
             });
