@@ -63,7 +63,7 @@ Auth::routes();
 
 
 
-Route::get('cep-get', [AddressController::class, 'getCep'])->name('cep.get');
+// Route::get('cep-get', [AddressController::class, 'getCep'])->name('cep.get');
 Route::post('login-post', [LoginController::class, 'login'])->name('login.custom');
 
 
@@ -115,7 +115,7 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::get('users', [UserController::class, 'index'])->name('users');
     Route::post('users-search', [UserController::class, 'search'])->name('users.search');
     Route::post('users-delete', [UserController::class, 'destroy'])->name('users.delete');
-    
+
     Route::post('order-payment-delete', [OrderController::class, 'deletePayment'])->name('order.payment.delete');
 
     Route::post('animal-search-pega', [OrderController::class, 'searchAnimalPega'])->name('animal.search.pega');
@@ -129,7 +129,7 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::get('gerar-xml', [LaudoController::class, 'gerarXML'])->name('gerar.xml');
     Route::get('envia-xml', [LaudoController::class, 'enviaXML'])->name('envia.xml');
     Route::post('atualiza-laudo-status', [LaudoController::class, 'alteraStatus'])->name('atualiza.laudo.status');
-   
+
     Route::get('update-status-animal-mass', [TesteController::class, 'updateStatus'])->name('update.status.animal.mass');
     Route::get('get-all-order-not-create', [TesteController::class, 'getOrderNotCreate'])->name('get.all.order.not.create');
     Route::get('get-all-codlab', [TesteController::class, 'selectCodlabInRange'])->name('get.all.codlab');
@@ -149,7 +149,7 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::get('get-laudo-total-exclusao', [TesteController::class, 'getLaudoTotal'])->name('get.laudo.total.exclusao');
     Route::get('get-laudo-total', [TesteController::class, 'getLaudosTotal'])->name('get.laudo.total');
 
-    Route::get('relatorios', [RelatoriosController::class, 'index'])->name('relatorios');  
+    Route::get('relatorios', [RelatoriosController::class, 'index'])->name('relatorios');
     Route::get('get-laudo-total-exclusao', [RelatoriosController::class, 'getLaudoTotal'])->name('get.laudo.total.exclusao');
     Route::get('get-laudo-total-exclusao-genitora', [RelatoriosController::class, 'getLaudoTotalGenitora'])->name('get.laudo.total.exclusao.genitora');
     Route::get('get-laudo-total-exclusao-genitor', [RelatoriosController::class, 'getLaudoTotalGenitor'])->name('get.laudo.total.exclusao.genitor');
@@ -346,10 +346,13 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::get('animal-edit/{id}', [AnimaisController::class, 'edit'])->name('animais.edit');
     Route::post('animal-update/{id}', [AnimaisController::class, 'update'])->name('animais.update');
     Route::get('animal-status/{id}', [AnimaisController::class, 'showStatus'])->name('animais.status');
-    Route::get('animal-get-status/{id}', [AnimaisController::class, 'getStatus'])->name('animais.get.status');
-    Route::post('animal-status-update/{id}', [AnimaisController::class, 'statusUpdate'])->name('animais.status.update');
-    Route::get('animais-complete', [AnimaisController::class, 'getAnimal'])->name('animais.get.complete');
-    Route::post('animal-delete', [AnimaisController::class, 'destroy'])->name('animais.delete');
+            Route::get('animal-get-status/{id}', [AnimaisController::class, 'getStatus'])->name('animais.get.status');
+        Route::post('animal-status-update/{id}', [AnimaisController::class, 'statusUpdate'])->name('animais.status.update');
+        Route::get('animais-complete', [AnimaisController::class, 'getAnimal'])->name('animais.get.complete');
+        Route::post('animal-delete', [AnimaisController::class, 'destroy'])->name('animais.delete');
+        Route::get('animal-transfer/{id}', [AnimaisController::class, 'showTransfer'])->name('animais.transfer');
+        Route::post('animal-transfer/{id}', [AnimaisController::class, 'transfer'])->name('animais.transfer.store');
+        Route::get('search-owners', [AnimaisController::class, 'searchOwners'])->name('search.owners');
 
     Route::get('cupons', [CupomController::class, 'index'])->name('cupons');
     Route::post('cupons-store', [CupomController::class, 'store'])->name('cupons.store');
@@ -488,9 +491,9 @@ Route::middleware(['auth:veterinario'])->prefix('vet')->group(function () {
 
     Route::any('logout', [AuthVetController::class, 'sair'])->name('vet.logout');
 
- 
 
-  
+
+
 });
 
 Route::get('duplicados-e-filhos-daputa', [TesteController::class, 'duplicate']);
@@ -502,8 +505,8 @@ Route::post('get-resenha-row', [ApiMangalargaController::class, 'getResenhaReque
 Route::post('get-coleta-row', [ApiMangalargaController::class, 'getResenhaRequest'])->name('api.coleta.request');
 Route::get('get-row-id', [ApiMangalargaController::class, 'getRowId'])->name('get.row.id');
 
-Route::get('get-states', [AddressController::class, 'estados'])->name('get.states');
-Route::get('get-cities', [AddressController::class, 'cidades'])->name('get.cities');
+    // Route::get('get-states', [AddressController::class, 'estados'])->name('get.states');
+    // Route::get('get-cities', [AddressController::class, 'cidades'])->name('get.cities');
 
 Route::get('view-resenha/{id}', [ResenhaController::class, 'viewResenha'])->name('view.resenha');
 Route::get('resenha-pdf/{id}', [ResenhaController::class, 'gerarPDF'])->name('resenha.pdf');

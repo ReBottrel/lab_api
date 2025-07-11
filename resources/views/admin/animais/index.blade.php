@@ -107,6 +107,7 @@
 
                                                 <a href="{{ route('animais.show', $animal->id) }}"
                                                     class="dropdown-item"><i class="fa-solid fa-pen-to-square"></i> Editar</a>
+                                                <a data-id="{{ $animal->id }}" class="dropdown-item transferir-animal text-primary" role="button"><i class="fa-solid fa-exchange-alt"></i> Transferir Animal</a>
                                                 <a data-id="{{ $animal->id }}" class="dropdown-item excluir-animal text-danger" role="button"><i class="fa-solid fa-trash"></i> Excluir animal</a>
                                             </ul>
                                         </div>
@@ -183,6 +184,11 @@
                     }
                 })
 
+            });
+
+            $(document).on('click', '.transferir-animal', function() {
+                var id = $(this).data('id');
+                window.location.href = `/animal-transfer/${id}`;
             });
             $(document).on('click', '#buscar-codlab', function() {
                 var query = $('#codlab').val();

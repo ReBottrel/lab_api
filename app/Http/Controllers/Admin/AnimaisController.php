@@ -6,6 +6,7 @@ use App\Models\Fur;
 use App\Models\Log;
 use App\Models\Laudo;
 use App\Models\Animal;
+use App\Models\Owner;
 use App\Models\OrdemServico;
 use App\Models\OrderRequest;
 use Illuminate\Http\Request;
@@ -106,12 +107,12 @@ class AnimaisController extends Controller
             // Extrair o número do codlab do último animal
             $lastNumber = (int) substr($lastAnimal->codlab, 3);
             $nextNumber = $lastNumber + 1;
-            
-     
+
+
         } else {
             // Se não existir nenhum animal com esta sigla, começar do 200000
             $nextNumber = 200000;
-            
+
         }
 
         // Verificar se o próximo número já existe (por segurança)
@@ -132,7 +133,7 @@ class AnimaisController extends Controller
     {
         $animal = Animal::find($id);
         $laudo = Laudo::where('animal_id', $id)->first();
-        
+
         $breeds = Breed::all();
 
         return view('admin.animais.edit', get_defined_vars());
@@ -352,5 +353,125 @@ class AnimaisController extends Controller
                 return response()->json(['error' => 'Animal não encontrado.']);
             }
         }
+    }
+
+    /**
+     * Show the form for transferring an animal to a new owner.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function showTransfer($id)
+    {
+        $animal = Animal::find($id);
+        if (!$animal) {
+            return redirect()->route('animais')->with('error', 'Animal não encontrado!');
+        }
+
+        $owners = Owner::all();
+        $currentOwner = Owner::find($animal->owner_id);
+
+        return view('admin.animais.transfer', compact('animal', 'owners', 'currentOwner'));
+    }
+
+    /**
+     * Transfer the animal to a new owner.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function transfer(Request $request, $id)
+    {
+        $request->validate([
+            'new_owner_id' => 'required|exists:owners,id'
+        ]);
+
+        $animal = Animal::find($id);
+        if (!$animal) {
+            return redirect()->route('animais')->with('error', 'Animal não encontrado!');
+        }
+
+        $oldOwner = Owner::find($animal->owner_id);
+        $newOwner = Owner::find($request->new_owner_id);
+
+        if ($animal->owner_id == $request->new_owner_id) {
+            return redirect()->route('animais')->with('error', 'O animal já pertence a este proprietário!');
+        }
+
+        // Atualizar o owner_id do animal
+        $animal->update(['owner_id' => $request->new_owner_id]);
+
+        // Atualizar registros relacionados
+        $this->updateRelatedRecords($animal, $request->new_owner_id);
+
+                // Criar log da transferência
+        $logAction = 'Transferiu o animal ' . $animal->animal_name . ' de ' .
+                     ($oldOwner ? $oldOwner->owner_name : 'Proprietário desconhecido') .
+                     ' para ' . $newOwner->owner_name;
+
+        if ($request->observacoes) {
+            $logAction .= ' - Observações: ' . $request->observacoes;
+        }
+
+        $log = Log::create([
+            'user' => Auth::user()->name,
+            'action' => $logAction,
+            'animal' => $animal->animal_name,
+            'order_id' => $animal->order_id ?? null,
+        ]);
+
+        return redirect()->route('animais')->with('success', 'Animal transferido com sucesso para ' . $newOwner->owner_name . '!');
+    }
+
+    /**
+     * Update related records when transferring an animal.
+     *
+     * @param  Animal  $animal
+     * @param  int  $newOwnerId
+     * @return void
+     */
+    private function updateRelatedRecords(Animal $animal, $newOwnerId)
+    {
+        // Atualizar Ordem de Serviço
+        $ordemServico = OrdemServico::where('animal_id', $animal->id)->first();
+        if ($ordemServico) {
+            $ordemServico->update(['owner_id' => $newOwnerId]);
+        }
+
+        // Atualizar Laudos
+        $laudos = Laudo::where('animal_id', $animal->id)->get();
+        foreach ($laudos as $laudo) {
+            $laudo->update(['owner_id' => $newOwnerId]);
+        }
+
+        // Atualizar Order Request se necessário
+        if ($animal->order_id) {
+            $orderRequest = OrderRequest::find($animal->order_id);
+            if ($orderRequest && $orderRequest->owner_id != $newOwnerId) {
+                // Só atualizar se for o único animal do pedido
+                $animalsInOrder = Animal::where('order_id', $animal->order_id)->count();
+                if ($animalsInOrder == 1) {
+                    $orderRequest->update(['owner_id' => $newOwnerId]);
+                }
+            }
+        }
+    }
+
+    /**
+     * Search owners for transfer modal.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function searchOwners(Request $request)
+    {
+        $query = $request->get('q');
+        $owners = Owner::where('owner_name', 'like', "%{$query}%")
+                      ->orWhere('document', 'like', "%{$query}%")
+                      ->limit(10)
+                      ->get();
+
+        return response()->json($owners);
     }
 }
