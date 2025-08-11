@@ -10,13 +10,13 @@
                 <h5>Compare alelos</h5>
             </div>
             <div class="col-2 bg-light border rounded text-center">
-                <h5>{{ $mae->codlab ?? 'Sem verificação' }} {{ $mae->id }}</h5>
+                <h5>{{ $mae->codlab ?? 'Sem verificação' }}</h5>
             </div>
             <div class="col-3 bg-light border rounded text-center">
-                <h5>{{ $animal->codlab ?? 'Nao encontrado' }} {{ $animal->id }}</h5>
+                <h5>{{ $animal->codlab ?? 'Nao encontrado' }}</h5>
             </div>
             <div class="col-2 bg-light border rounded text-center">
-                <h5>{{ $pai->codlab ?? 'Sem verificação' }} {{ $pai->id }}</h5>
+                <h5>{{ $pai->codlab ?? 'Sem verificação' }}</h5>
             </div>
             <div class="col-3 bg-light border rounded text-center">
                 <button type="button" data-ordem="{{ $ordem->id }}" id="analisar" class="btn btn-primary">ANALISAR</button>
