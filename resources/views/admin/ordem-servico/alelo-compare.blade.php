@@ -3,20 +3,20 @@
 @section('content')
     <div class="container alelos-compare">
         <input type="hidden" name="" id="ordem_id" value="{{ $ordem->id }}">
-        
+
         <!-- Cabeçalho -->
         <div class="row justify-content-center align-items-center mb-3">
             <div class="col-2 bg-light border rounded text-center">
                 <h5>Compare alelos</h5>
             </div>
             <div class="col-2 bg-light border rounded text-center">
-                <h5>{{ $mae->codlab ?? 'Sem verificação' }}</h5>
+                <h5>{{ $mae->codlab ?? 'Sem verificação' }} {{ $mae->id }}</h5>
             </div>
             <div class="col-3 bg-light border rounded text-center">
-                <h5>{{ $animal->codlab ?? 'Nao encontrado' }}</h5>
+                <h5>{{ $animal->codlab ?? 'Nao encontrado' }} {{ $animal->id }}</h5>
             </div>
             <div class="col-2 bg-light border rounded text-center">
-                <h5>{{ $pai->codlab ?? 'Sem verificação' }}</h5>
+                <h5>{{ $pai->codlab ?? 'Sem verificação' }} {{ $pai->id }}</h5>
             </div>
             <div class="col-3 bg-light border rounded text-center">
                 <button type="button" data-ordem="{{ $ordem->id }}" id="analisar" class="btn btn-primary">ANALISAR</button>
@@ -55,11 +55,11 @@
                 <div class="d-flex flex-column text-center mt-2">
                     @php
                         $marcadores = [];
-                        
+
                         // Verifica se ASB17 e HMS1 estão preenchidos no animal
                         $asb17Preenchido = false;
                         $hms1Preenchido = false;
-                        
+
                         foreach ($animal->alelos as $alelo) {
                             if ($alelo->marcador == 'ASB17' && !empty($alelo->alelo1) && !empty($alelo->alelo2)) {
                                 $asb17Preenchido = true;
@@ -77,7 +77,7 @@
                             // - For ASB17 e estiver preenchido, ou
                             // - For HMS1 e estiver preenchido
                             if (
-                                ($marcador->gene != 'ASB17' && $marcador->gene != 'HMS1') || 
+                                ($marcador->gene != 'ASB17' && $marcador->gene != 'HMS1') ||
                                 ($marcador->gene == 'ASB17' && $asb17Preenchido) ||
                                 ($marcador->gene == 'HMS1' && $hms1Preenchido)
                             ) {
