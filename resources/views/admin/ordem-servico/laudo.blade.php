@@ -482,7 +482,7 @@
                     @endif
                 </strong>
             </div>
-            @if (auth()->user()->email == 'renatabottrel@locilab.com.br')
+            @if (auth()->user()->email != 'felipephplow@gmail.com')
                 <div class="text-end" style="position: relative; top: 21px; left: 13px;">
                     <span><strong>Relat. n</strong>
                         @if ($laudo->ret)
@@ -608,7 +608,7 @@
                     </div>
                     </p>
                 </div>
-                <div class="content_2" @if (auth()->user()->email == 'renatabottrel@locilab.com.br') style="top: 0 !important;" @endif>
+                <div class="content_2" @if (auth()->user()->email != 'felipephplow@gmail.com') style="top: 0 !important;" @endif>
                     <p>
 
                         <br>
