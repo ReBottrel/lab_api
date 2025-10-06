@@ -787,6 +787,11 @@
                             @foreach ($dados as $item)
                                 @php
                                     $excludeMarkers = ['CSRM60', 'CSSM66', 'ILSTS006', 'MGTG4B', 'RM067', 'SPS113'];
+
+                                    // Exclui ASB23 especificamente para ordem ID 16840
+                                    if ($ordem->id == 16840 && $item['marcador'] == 'ASB23') {
+                                        continue;
+                                    }
                                 @endphp
 
                                 @if (

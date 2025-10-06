@@ -76,11 +76,16 @@
                             // - Não for ASB17/HMS1, ou
                             // - For ASB17 e estiver preenchido, ou
                             // - For HMS1 e estiver preenchido
+                            // - Não for ASB23 para ordem ID 16840
                             if (
                                 ($marcador->gene != 'ASB17' && $marcador->gene != 'HMS1') ||
                                 ($marcador->gene == 'ASB17' && $asb17Preenchido) ||
                                 ($marcador->gene == 'HMS1' && $hms1Preenchido)
                             ) {
+                                // Exclui ASB23 especificamente para ordem ID 16840
+                                if ($ordem->id == 16840 && $marcador->gene == 'ASB23') {
+                                    continue;
+                                }
                                 $marcadores[] = $marcador->gene;
                             }
                         @endphp
@@ -526,6 +531,11 @@
                         for (let i = 0; i < incluidos.length; i++) {
                             // Verifica se o marcador atual é 'ASB17'
                             if (response.animal.alelos[i].marcador === 'ASB17') {
+                                continue; // Pula para a próxima iteração do loop
+                            }
+
+                            // Exclui ASB23 especificamente para ordem ID 16840
+                            if ({{ $ordem->id }} == 16840 && response.animal.alelos[i].marcador === 'ASB23') {
                                 continue; // Pula para a próxima iteração do loop
                             }
 
