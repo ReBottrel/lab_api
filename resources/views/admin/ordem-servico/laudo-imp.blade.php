@@ -882,7 +882,7 @@
                                 @else
                                     @if ($animal->alelos[0]->lab == 'LOCI GENÉTICA LABORATORIAL' || $animal->alelos[0]->lab == 'Loci Genética Laboratorial')
                                         @if ($animal->id == 91528)
-                                            {{ date('d/m/Y', strtotime($animal->alelos[0]->updated_at)) }}
+                                             31/10/2023
                                         @else
                                             {{ date('d/m/Y') }}
                                         @endif
