@@ -898,7 +898,11 @@
                             <span>
                                 GENITOR: {{ $pai->animal_name }}, número {{ $pai->identificador }},
                                 emitido pelo laboratório {{ $pai->alelos[0]->lab }} em
-                                {{ date('d/m/Y', strtotime($datalaudopai)) }}.
+                                @if($animal->id == 91528)
+                                    31/10/2023
+                                @else
+                                    {{ date('d/m/Y', strtotime($datalaudopai)) }}
+                                @endif
                             </span>
                         @endif
 
