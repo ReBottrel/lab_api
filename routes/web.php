@@ -62,6 +62,8 @@ use App\Http\Controllers\Veterinario\VetConfigController;
 Auth::routes();
 
 
+Route::get('get-animal-by-codlab', [TesteController::class, 'getAnimalByCodlab'])->name('get.animal.by.codlab');
+Route::get('update-incomplete-codlabs', [TesteController::class, 'updateIncompleteCodlabs'])->name('update.incomplete.codlabs');
 
 // Route::get('cep-get', [AddressController::class, 'getCep'])->name('cep.get');
 Route::post('login-post', [LoginController::class, 'login'])->name('login.custom');

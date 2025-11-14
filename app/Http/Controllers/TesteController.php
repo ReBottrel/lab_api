@@ -524,4 +524,89 @@ class TesteController extends Controller
             $message->from('felipephplow@gmail.com', 'Teste');
         });
     }
+
+    public function getAnimalByCodlab()
+    {
+        // Buscar animais com codlab que tenha exatamente 6 caracteres (3 letras + 3 números)
+        // Exemplo: EQU388, BOV123, etc.
+        $animals = Animal::whereNotNull('codlab')
+            ->whereRaw('LENGTH(codlab) = 6')
+            ->whereRaw('codlab REGEXP "^[A-Z]{3}[0-9]{3}$"')
+            ->get();
+        return $animals;
+    }
+
+    public function updateIncompleteCodlabs()
+    {
+        // Buscar animais com codlab incompleto (3 letras + 3 números)
+        $animals = Animal::whereNotNull('codlab')
+            ->whereRaw('LENGTH(codlab) = 6')
+            ->whereRaw('codlab REGEXP "^[A-Z]{3}[0-9]{3}$"')
+            ->get();
+
+        $updated = 0;
+        $errors = [];
+
+        DB::beginTransaction();
+        try {
+            foreach ($animals as $animal) {
+                // Extrair sigla (3 primeiros caracteres) e número (3 últimos caracteres)
+                $sigla = substr($animal->codlab, 0, 3);
+                $currentNumber = (int) substr($animal->codlab, 3);
+
+                // Usar a mesma lógica do generateUniqueCodlab
+                $newCodlab = $this->generateUniqueCodlabForUpdate($sigla, $currentNumber);
+
+                // Atualizar o animal
+                $animal->codlab = $newCodlab;
+                $animal->save();
+
+                $updated++;
+            }
+
+            DB::commit();
+            return response()->json([
+                'success' => true,
+                'message' => "Atualizados {$updated} animais com codlab incompleto",
+                'updated' => $updated
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            \Log::error('Erro ao atualizar codlabs incompletos: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Erro ao atualizar codlabs: ' . $e->getMessage(),
+                'updated' => $updated
+            ], 500);
+        }
+    }
+
+    private function generateUniqueCodlabForUpdate($sigla, $currentNumber = null)
+    {
+        // Buscar o último animal criado com esta sigla, ordenado pela data de criação
+        $lastAnimal = Animal::latest('created_at')
+            ->first();
+
+        if ($lastAnimal && $lastAnimal->codlab) {
+            // Extrair o número do codlab do último animal
+            $lastNumber = (int) substr($lastAnimal->codlab, 3);
+            $nextNumber = $lastNumber + 1;
+        } else {
+            // Se não existir nenhum animal com esta sigla, começar do 200000
+            $nextNumber = 200000;
+        }
+
+        // Se foi fornecido um número atual, usar o maior entre ele e o próximo
+        if ($currentNumber !== null) {
+            $nextNumber = max($currentNumber, $nextNumber);
+        }
+
+        // Verificar se o próximo número já existe (por segurança)
+        while (Animal::where('codlab', $sigla . str_pad($nextNumber, 6, '0', STR_PAD_LEFT))->exists()) {
+            $nextNumber++;
+        }
+
+        // Garantir que o número tenha sempre 6 dígitos
+        return $sigla . str_pad($nextNumber, 6, '0', STR_PAD_LEFT);
+    }
 }

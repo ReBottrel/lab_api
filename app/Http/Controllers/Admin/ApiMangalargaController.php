@@ -200,7 +200,7 @@ class ApiMangalargaController extends Controller
             // Fetch data from API
             $coletas = $this->fetchDataFromApi('coletas', 18, 2, ['dataEnvioInicio' => date('Y-m-d\TH:i:s', strtotime('-1 day'))]);
 
- 
+
 
 
             foreach ($coletas as $coleta) {
