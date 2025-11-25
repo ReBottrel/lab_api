@@ -46,13 +46,14 @@ class AlelosController extends Controller
         $data = $response->body();
         $data = json_decode($data, true);
         $data = collect($data);
+        \Log::info([$data]);
         return $data;
     }
     public function store(Request $request)
     {
         // Obtém a resposta da API
         $response = Http::timeout(60)->get('http://laboratorios.abccmm.org.br/api/Exames', ['registro' => $request->registro]);
-
+        \Log::info([$response]);
         // Verifica se a resposta é bem-sucedida
         if ($response->successful()) {
             $data = $response->json();
