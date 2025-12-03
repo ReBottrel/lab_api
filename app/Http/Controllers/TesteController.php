@@ -527,21 +527,30 @@ class TesteController extends Controller
 
     public function getAnimalByCodlab()
     {
-        // Buscar animais com codlab que tenha exatamente 6 caracteres (3 letras + 3 números)
-        // Exemplo: EQU388, BOV123, etc.
+        // Buscar animais com codlab que tenha exatamente 5 caracteres (3 letras + 2 números)
+        // Exemplo: EQU24, BOV12, etc.
         $animals = Animal::whereNotNull('codlab')
-            ->whereRaw('LENGTH(codlab) = 6')
-            ->whereRaw('codlab REGEXP "^[A-Z]{3}[0-9]{3}$"')
+            ->whereRaw('LENGTH(codlab) = 5')
+            ->whereRaw('codlab REGEXP "^[A-Z]{3}[0-9]{2}$"')
             ->get();
         return $animals;
     }
 
     public function updateIncompleteCodlabs()
     {
-        // Buscar animais com codlab incompleto (3 letras + 3 números)
+        // Buscar animais com codlab incompleto (3 letras + 2 números OU 3 letras + 3 números)
         $animals = Animal::whereNotNull('codlab')
-            ->whereRaw('LENGTH(codlab) = 6')
-            ->whereRaw('codlab REGEXP "^[A-Z]{3}[0-9]{3}$"')
+            ->where(function($query) {
+                $query->where(function($q) {
+                    // Codlabs com 2 números (5 caracteres): EQU24
+                    $q->whereRaw('LENGTH(codlab) = 5')
+                      ->whereRaw('codlab REGEXP "^[A-Z]{3}[0-9]{2}$"');
+                })->orWhere(function($q) {
+                    // Codlabs com 3 números (6 caracteres): EQU388
+                    $q->whereRaw('LENGTH(codlab) = 6')
+                      ->whereRaw('codlab REGEXP "^[A-Z]{3}[0-9]{3}$"');
+                });
+            })
             ->get();
 
         $updated = 0;
@@ -550,7 +559,7 @@ class TesteController extends Controller
         DB::beginTransaction();
         try {
             foreach ($animals as $animal) {
-                // Extrair sigla (3 primeiros caracteres) e número (3 últimos caracteres)
+                // Extrair sigla (3 primeiros caracteres) e número (restante)
                 $sigla = substr($animal->codlab, 0, 3);
                 $currentNumber = (int) substr($animal->codlab, 3);
 
