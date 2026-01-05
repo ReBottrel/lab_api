@@ -320,7 +320,7 @@ class LaudoController extends Controller
 
                 $filename = $laudo->nome_ret . '.pdf';
             } else {
-                $filename = "LO25-{$codlabAnimal}" . '.pdf';
+                $filename = "LO26-{$codlabAnimal}" . '.pdf';
             }
         } else {
             if ($laudo->nome_ret != null) {
@@ -328,7 +328,7 @@ class LaudoController extends Controller
             } else {
                 $codlabMae = str_replace('N_A', '', $codlabMae);
                 $codlabPai = str_replace('N_A', '', $codlabPai);
-                $filename = "LO{$siglaPais}25-{$retValue}{$codlabMae}.{$codlabAnimal}.{$codlabPai}" . '.pdf';
+                $filename = "LO{$siglaPais}26-{$retValue}{$codlabMae}.{$codlabAnimal}.{$codlabPai}" . '.pdf';
             }
         }
 
@@ -538,7 +538,7 @@ class LaudoController extends Controller
         if ($laudo->nome_ret != null) {
             $nomeExame = $laudo->nome_ret;
         } else {
-            $nomeExame = "LOVP25-$maeId.$animalId.$paiId";
+            $nomeExame = "LOVP26-$maeId.$animalId.$paiId";
         }
 
 
