@@ -538,15 +538,13 @@ class TesteController extends Controller
 
     public function updateIncompleteCodlabs()
     {
-        // Buscar animais com codlab incompleto:
-        // - 3 letras + 2 a 5 números (ex: EQU24, EQU388, EQU1362)
-        // - somente 5/6 números (dados legados, ex: 53840, 776388)
+        // Buscar apenas o formato original informado pelo usuario:
+        // - 3 letras + 4 numeros (ex: EQU1351)
+        // Nao reprocessar codlabs ja convertidos (parte numerica iniciando com "5").
         $animals = Animal::whereNotNull('codlab')
-            ->whereDate('created_at', '>=', '2026-04-20')
-            ->where(function ($query) {
-                $query->whereRaw('UPPER(TRIM(codlab)) REGEXP "^[A-Z]{3}[0-9]{2,5}$"')
-                    ->orWhereRaw('TRIM(codlab) REGEXP "^[0-9]{5,6}$"');
-            })
+            ->whereDate('created_at', '>=', '2026-04-18')
+            ->whereRaw('UPPER(TRIM(codlab)) REGEXP "^[A-Z]{3}[0-9]{4}$"')
+            ->whereRaw('SUBSTRING(TRIM(codlab), 4, 1) <> "5"')
             ->orderBy('id')
             ->limit(20)
             ->get();
@@ -554,19 +552,18 @@ class TesteController extends Controller
         $updated = 0;
         $errors = [];
         $found = $animals->count();
+        $changes = [];
 
         try {
             foreach ($animals as $animal) {
                 $normalizedCodlab = strtoupper(trim($animal->codlab));
 
-                // Extrair sigla e número conforme o formato encontrado.
-                if (preg_match('/^([A-Z]{3})([0-9]{2,5})$/', $normalizedCodlab, $matches)) {
-                    $baseCodlab = $matches[1] . $matches[2];
-                    $newCodlab = $this->generateCodlabFromBase($baseCodlab, $animal->id);
-                } elseif (preg_match('/^[0-9]{5,6}$/', $normalizedCodlab)) {
-                    // Codlab legada sem sigla: usar EQU como padrão.
-                    $baseCodlab = 'EQU' . $normalizedCodlab;
-                    $newCodlab = $this->generateCodlabFromBase($baseCodlab, $animal->id);
+                // Regra solicitada: inserir "5" entre a sigla e o número.
+                // Ex.: EQU1351 -> EQU51351
+                if (preg_match('/^([A-Z]{3})([0-9]{4})$/', $normalizedCodlab, $matches)) {
+                    $sigla = $matches[1];
+                    $baseNumber = (int) ('5' . $matches[2]);
+                    $newCodlab = $this->generateNextAvailableCodlab($sigla, $baseNumber, $animal->id);
                 } else {
                     continue;
                 }
@@ -575,11 +572,25 @@ class TesteController extends Controller
                     continue;
                 }
 
-                // Atualizar o animal
-                $animal->codlab = $newCodlab;
-                $animal->save();
+                $affected = Animal::where('id', $animal->id)
+                    ->where('codlab', $animal->codlab)
+                    ->update([
+                        'codlab' => $newCodlab,
+                        'updated_at' => now(),
+                    ]);
 
-                $updated++;
+                if ($affected === 1) {
+                    $updated++;
+                    if (count($changes) < 20) {
+                        $changes[] = [
+                            'id' => $animal->id,
+                            'old' => $normalizedCodlab,
+                            'new' => $newCodlab,
+                        ];
+                    }
+                } else {
+                    $errors[] = "Falha ao atualizar id {$animal->id} de {$normalizedCodlab} para {$newCodlab}";
+                }
             }
 
             return response()->json([
@@ -588,6 +599,7 @@ class TesteController extends Controller
                 'found' => $found,
                 'batch_limit' => 20,
                 'updated' => $updated,
+                'changes' => $changes,
                 'errors' => array_slice($errors, 0, 10)
             ]);
         } catch (\Exception $e) {
@@ -598,17 +610,16 @@ class TesteController extends Controller
                 'found' => $found,
                 'batch_limit' => 20,
                 'updated' => $updated,
+                'changes' => $changes,
                 'errors' => array_slice($errors, 0, 10)
             ], 500);
         }
     }
 
-    private function generateUniqueCodlabForUpdate($sigla, $currentNumber = null, $currentAnimalId = null)
+    private function generateNextAvailableCodlab($sigla, $baseNumber, $currentAnimalId = null)
     {
         $normalizedSigla = strtoupper(trim($sigla));
-
-        // Gerar próximo número a partir do atual (sem zero à esquerda).
-        $nextNumber = $currentNumber !== null ? ((int) $currentNumber + 1) : 1;
+        $nextNumber = (int) $baseNumber;
 
         // Verificar se o próximo número já existe (por segurança), com limite para evitar loop infinito.
         $maxAttempts = 5000;
@@ -632,22 +643,5 @@ class TesteController extends Controller
                 throw new \RuntimeException("Nao foi possivel gerar codlab unico para a sigla {$normalizedSigla}");
             }
         }
-    }
-
-    private function generateCodlabFromBase($baseCodlab, $currentAnimalId = null)
-    {
-        $escapedBase = preg_quote($baseCodlab, '/');
-
-        // Descobrir o maior sufixo já usado para a base informada (ex: EQU1148 => EQU11481, EQU11482...).
-        $maxSuffix = Animal::whereRaw('UPPER(TRIM(codlab)) REGEXP ?', ['^' . $escapedBase . '[0-9]+$'])
-            ->when($currentAnimalId, function ($query) use ($currentAnimalId) {
-                $query->where('id', '!=', $currentAnimalId);
-            })
-            ->selectRaw('MAX(CAST(SUBSTRING(TRIM(codlab), ?) AS UNSIGNED)) as max_suffix', [strlen($baseCodlab) + 1])
-            ->value('max_suffix');
-
-        $nextSuffix = $maxSuffix ? ((int) $maxSuffix + 1) : 1;
-
-        return $baseCodlab . $nextSuffix;
     }
 }
