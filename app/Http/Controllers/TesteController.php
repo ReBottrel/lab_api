@@ -542,7 +542,7 @@ class TesteController extends Controller
         // - 3 letras + 2 a 5 números (ex: EQU24, EQU388, EQU1362)
         // - somente 5/6 números (dados legados, ex: 53840, 776388)
         $animals = Animal::whereNotNull('codlab')
-            ->whereDate('created_at', '>=', '2026-04-15')
+            ->whereDate('created_at', '>=', '2026-04-20')
             ->where(function ($query) {
                 $query->whereRaw('UPPER(TRIM(codlab)) REGEXP "^[A-Z]{3}[0-9]{2,5}$"')
                     ->orWhereRaw('TRIM(codlab) REGEXP "^[0-9]{5,6}$"');
