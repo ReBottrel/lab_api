@@ -15,6 +15,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Breed;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log as LogFacade;
 
 class AnimaisController extends Controller
 {
@@ -203,6 +204,9 @@ class AnimaisController extends Controller
 
         $request->validate($rules, $messages);
 
+        $codlabAnterior = $animal->codlab;
+        $codlabNovo = $request->input('codlab');
+        $codlabAlterado = trim((string) ($codlabAnterior ?? '')) !== trim((string) ($codlabNovo ?? ''));
 
         $animal->update([
 
@@ -239,12 +243,32 @@ class AnimaisController extends Controller
             ]);
         }
 
+        $action = 'Editou o animal ' . $animal->animal_name;
+        if ($codlabAlterado) {
+            $action .= sprintf(
+                ' | Codlab alterado manualmente: "%s" → "%s"',
+                $codlabAnterior !== null && $codlabAnterior !== '' ? $codlabAnterior : '(vazio)',
+                $codlabNovo !== null && $codlabNovo !== '' ? $codlabNovo : '(vazio)'
+            );
+
+            LogFacade::info('Troca manual de codlab (edição de animal)', [
+                'animal_id' => (int) $id,
+                'animal_name' => $animal->animal_name,
+                'codlab_anterior' => $codlabAnterior,
+                'codlab_novo' => $codlabNovo,
+                'user_id' => Auth::id(),
+                'user_name' => Auth::user()->name,
+                'order_id' => $animal->order_id,
+                'ordem_servico_id' => $ordem?->id,
+            ]);
+        }
+
         $log = Log::create([
             'user' => Auth::user()->name,
-            'action' => 'Editou o animal ' . $animal->animal_name,
+            'action' => $action,
             'animal' => $animal->animal_name,
             'order_id' => $animal->order_id ?? null,
-            'ordem_id' => $ordem->id ?? null,
+            'ordem_id' => $ordem?->id,
         ]);
 
 

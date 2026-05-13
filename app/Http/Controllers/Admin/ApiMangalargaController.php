@@ -122,7 +122,6 @@ class ApiMangalargaController extends Controller
                             'birth_date' => $animal->dataNascimento,
                             'description' => $animal->obs,
                             'status' => 1,
-                            'codlab' => $this->generateUniqueCodlab('EQU'),
                             'especies' => 'EQUINA',
                             'breed' => 'MANGALARGA MARCHADOR',
                             'registro_pai' => $animal->registroPai,
@@ -132,6 +131,10 @@ class ApiMangalargaController extends Controller
                             'row_id' => $animal->rowidAnimal,
                         ]
                     );
+
+                    if (blank($existingAnimal->codlab)) {
+                        $existingAnimal->update(['codlab' => $this->generateUniqueCodlab('EQU')]);
+                    }
 
                     // Find or create parent animals
                     $pai = Animal::firstOrCreate(
@@ -291,7 +294,6 @@ class ApiMangalargaController extends Controller
                             'birth_date' => $animal->dataNascimento,
                             'description' => $animal->obs,
                             'status' => 1,
-                            'codlab' => $this->generateUniqueCodlab('EQU'),
                             'especies' => 'EQUINA',
                             'breed' => 'MANGALARGA MARCHADOR',
                             'registro_pai' => $animal->registroPai,
@@ -301,6 +303,10 @@ class ApiMangalargaController extends Controller
                             'row_id' => $animal->rowidAnimal,
                         ]
                     );
+
+                    if (blank($existingAnimal->codlab)) {
+                        $existingAnimal->update(['codlab' => $this->generateUniqueCodlab('EQU')]);
+                    }
 
                     // Find or create parent animals
                     $pai = Animal::firstOrCreate(
@@ -456,7 +462,6 @@ class ApiMangalargaController extends Controller
                             'birth_date' => $animal->dataNascimento,
                             'description' => $animal->obs,
                             'status' => 1,
-                            'codlab' => $this->generateUniqueCodlab('EQU'),
                             'especies' => 'EQUINA',
                             'breed' => 'MANGALARGA MARCHADOR',
                             'registro_pai' => $animal->registroPai,
@@ -466,6 +471,10 @@ class ApiMangalargaController extends Controller
                             'row_id' => $animal->rowidAnimal,
                         ]
                     );
+
+                    if (blank($existingAnimal->codlab)) {
+                        $existingAnimal->update(['codlab' => $this->generateUniqueCodlab('EQU')]);
+                    }
 
                     $pai = Animal::firstOrCreate(
                         ['number_definitive' => $animal->registroPai],
@@ -607,7 +616,6 @@ class ApiMangalargaController extends Controller
                             'birth_date' => $animal->dataNascimento,
                             'description' => $animal->obs,
                             'status' => 1,
-                            'codlab' => $this->generateUniqueCodlab('EQU'),
                             'especies' => 'EQUINA',
                             'breed' => 'MANGALARGA MARCHADOR',
                             'registro_pai' => $animal->registroPai,
@@ -617,6 +625,10 @@ class ApiMangalargaController extends Controller
                             'row_id' => $animal->rowidAnimal,
                         ]
                     );
+
+                    if (blank($existingAnimal->codlab)) {
+                        $existingAnimal->update(['codlab' => $this->generateUniqueCodlab('EQU')]);
+                    }
 
                     // Find or create parent animals
                     $pai = Animal::firstOrCreate(
