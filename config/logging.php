@@ -75,6 +75,12 @@ return [
             'level' => env('LOG_LEVEL', 'debug'),
         ],
 
+        'animais_edit' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/animais_edit.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+        ],
+
         'single' => [
             'driver' => 'single',
             'path' => storage_path('logs/laravel.log'),

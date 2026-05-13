@@ -251,7 +251,7 @@ class AnimaisController extends Controller
                 $codlabNovo !== null && $codlabNovo !== '' ? $codlabNovo : '(vazio)'
             );
 
-            LogFacade::info('Troca manual de codlab (edição de animal)', [
+            LogFacade::channel('animais_edit')->info('Troca manual de codlab (edição de animal)', [
                 'animal_id' => (int) $id,
                 'animal_name' => $animal->animal_name,
                 'codlab_anterior' => $codlabAnterior,
