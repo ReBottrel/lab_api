@@ -6,6 +6,7 @@ use App\Models\Alelo;
 use App\Models\Animal;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Services\CodlabGenerator;
 use App\Models\Marcador;
 use Illuminate\Support\Facades\Http;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -68,7 +69,7 @@ class AlelosController extends Controller
             $marcadores = Marcador::where('especie', 'EQUINA')->get();
             if ($animal) {
                 if (!$animal->codlab) {
-                    $animal->codlab = $this->generateUniqueCodlab('EQU');
+                    $animal->codlab = CodlabGenerator::generate('EQU');
                 }
 
                 // Atualiza o identificador do animal
@@ -77,7 +78,7 @@ class AlelosController extends Controller
                 $animal->save();
             } else {
                 $sigla = 'EQU';
-                $codlab = $this->generateUniqueCodlab($sigla);
+                $codlab = CodlabGenerator::generate($sigla);
                 // Cria um novo animal no banco de dados
                 $animal = Animal::create([
                     'animal_name' => $animalData['nomeAnimal'],
@@ -149,30 +150,6 @@ class AlelosController extends Controller
 
         return response()->json(['error' => 'erro']);
     }
-    private function generateUniqueCodlab($sigla)
-    {
-        // Buscar o último animal criado com esta sigla, ordenado pela data de criação
-        $lastAnimal = Animal::latest('created_at')
-            ->first();
-
-        if ($lastAnimal) {
-            // Extrair o número do codlab do último animal
-            $lastNumber = (int) substr($lastAnimal->codlab, 3);
-            $nextNumber = $lastNumber + 1;
-        } else {
-            // Se não existir nenhum animal com esta sigla, começar do 200000
-            $nextNumber = 200000;
-
-        }
-
-        // Verificar se o próximo número já existe (por segurança)
-        while (Animal::where('codlab', $sigla . strval($nextNumber))->exists()) {
-            $nextNumber++;
-        }
-
-        return $sigla . strval($nextNumber);
-    }
-
     public function getAnimal(Request $request)
     {
         $animal = Animal::with('alelos')->where('animal_name', $request->name)->first();

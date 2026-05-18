@@ -12,6 +12,7 @@ use App\Models\OrderRequest;
 use Illuminate\Http\Request;
 use App\Models\AnimalToParent;
 use App\Http\Controllers\Controller;
+use App\Services\CodlabGenerator;
 use App\Models\Breed;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
@@ -76,7 +77,7 @@ class AnimaisController extends Controller
 
         ];
 
-        $codlab = $this->generateUniqueCodlab($sigla);
+        $codlab = CodlabGenerator::generate($sigla);
         $data['codlab'] = $request->codlab ? $request->codlab : $codlab;
         // dd($data);
         $animal = Animal::create($data);
@@ -96,32 +97,6 @@ class AnimaisController extends Controller
             'order_id' => $animal->order_id ?? null,
         ]);
         return response()->json(['success' => 'Animal cadastrado com sucesso!']);
-    }
-
-    private function generateUniqueCodlab($sigla)
-    {
-        // Buscar o último animal criado com esta sigla, ordenado pela data de criação
-        $lastAnimal = Animal::latest('created_at')
-            ->first();
-
-        if ($lastAnimal) {
-            // Extrair o número do codlab do último animal
-            $lastNumber = (int) substr($lastAnimal->codlab, 3);
-            $nextNumber = $lastNumber + 1;
-
-
-        } else {
-            // Se não existir nenhum animal com esta sigla, começar do 200000
-            $nextNumber = 200000;
-
-        }
-
-        // Verificar se o próximo número já existe (por segurança)
-        while (Animal::where('codlab', $sigla . strval($nextNumber))->exists()) {
-            $nextNumber++;
-        }
-
-        return $sigla . strval($nextNumber);
     }
 
     /**

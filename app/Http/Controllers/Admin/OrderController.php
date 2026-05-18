@@ -25,6 +25,7 @@ use Illuminate\Http\Request;
 use App\Models\AnimalToParent;
 use App\Models\OrderRequestPayment;
 use App\Http\Controllers\Controller;
+use App\Services\CodlabGenerator;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 use Rap2hpoutre\FastExcel\FastExcel;
@@ -905,7 +906,7 @@ class OrderController extends Controller
         if ($request->extra == 1) {
             $codlab = $request->codlab;
         } else {
-            $codlab = $this->generateUniqueCodlab($sigla);
+            $codlab = CodlabGenerator::generate($sigla);
         }
 
         $data['codlab'] = $codlab;
@@ -1002,28 +1003,6 @@ class OrderController extends Controller
             'animal' => $animal,
             'species' => $species
         ]);
-    }
-    private function generateUniqueCodlab($sigla)
-    {
-        // Buscar o último animal criado com esta sigla, ordenado pela data de criação
-        $lastAnimal = Animal::latest('created_at')
-            ->first();
-
-        if ($lastAnimal) {
-            // Extrair o número do codlab do último animal
-            $lastNumber = (int) substr($lastAnimal->codlab, 3);
-            $nextNumber = $lastNumber + 1;
-        } else {
-            // Se não existir nenhum animal com esta sigla, começar do 200000
-            $nextNumber = 200000;
-
-        }
-        // Verificar se o próximo número já existe (por segurança)
-        while (Animal::where('codlab', $sigla . strval($nextNumber))->exists()) {
-            $nextNumber++;
-        }
-
-        return $sigla . strval($nextNumber);
     }
     public function updateAnimalOrder(Request $request)
     {

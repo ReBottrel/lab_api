@@ -18,6 +18,7 @@ use Illuminate\Http\Request;
 use App\Models\AnimalToParent;
 use App\Models\OrderRequestPayment;
 use App\Http\Controllers\Controller;
+use App\Services\CodlabGenerator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Picqer\Barcode\BarcodeGeneratorPNG;
@@ -98,7 +99,7 @@ class OrdemServicoController extends Controller
             $sigla = $this->determineSigla($animal->especies);
 
             if ($animal->codlab === null) {
-                $animal->update(['codlab' => $this->generateUniqueCodlab($sigla)]);
+                $animal->update(['codlab' => CodlabGenerator::generate($sigla)]);
             }
 
             $ordem =  OrdemServico::create([
@@ -151,28 +152,6 @@ class OrdemServicoController extends Controller
     private function determineSigla($especies)
     {
         return substr($especies, 0, 3) ?: 'EQU';
-    }
-
-    private function generateUniqueCodlab($sigla)
-    {
-        // Buscar o último animal criado com esta sigla, ordenado pela data de criação
-        $lastAnimal = Animal::latest('created_at')
-            ->first();
-
-        if ($lastAnimal) {
-            // Extrair o número do codlab do último animal
-            $lastNumber = (int) substr($lastAnimal->codlab, 3);
-            $nextNumber = $lastNumber + 1;
-        } else {
-            // Se não existir nenhum animal com esta sigla, começar do 200000
-            $nextNumber = 200000;
-        }
-        // Verificar se o próximo número já existe (por segurança)
-        while (Animal::where('codlab', $sigla . strval($nextNumber))->exists()) {
-            $nextNumber++;
-        }
-
-        return $sigla . strval($nextNumber);
     }
 
     public function index()

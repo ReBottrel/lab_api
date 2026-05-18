@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Cache;
+use App\Services\CodlabGenerator;
 
 class TesteController extends Controller
 {
@@ -153,24 +154,6 @@ class TesteController extends Controller
         return response()->download($fileName)->deleteFileAfterSend(true);
     }
 
-    private function generateUniqueCodlab($sigla)
-    {
-        // Recuperar o último número usado do cache ou de uma configuração (opcional)
-        $lastUsedNumber = Cache::get('lastUsedNumber', 200000);
-
-        $startValue = max(200000, $lastUsedNumber + 1);
-
-        // Verificar se o valor inicial já existe
-        while (Animal::where('codlab', $sigla . strval($startValue))->exists()) {
-            $startValue++;
-        }
-
-        // Armazenar o último número usado no cache ou em uma configuração (opcional)
-        Cache::forever('lastUsedNumber', $startValue);
-
-        return $sigla . strval($startValue);
-    }
-
     public function updateAndExportDuplicatedCodlabToTxt()
     {
         $animalsByCodlab = Animal::select('id', 'codlab', 'animal_name', 'order_id')
@@ -203,7 +186,7 @@ class TesteController extends Controller
                         }
 
                         if ($isNameUnique) {
-                            $newCodlab = $this->generateUniqueCodlab('EQU'); // Substitua 'SIGLA' conforme necessário
+                            $newCodlab = CodlabGenerator::generate('EQU');
                             $animalsToUpdate[] = [
                                 'id' => $animal->id,
                                 'newCodlab' => $newCodlab
@@ -255,7 +238,7 @@ class TesteController extends Controller
             }
 
             $prefix = substr($animal->codlab, 0, 3);
-            $newCodlab = $prefix . strval($startValue);
+            $newCodlab = CodlabGenerator::format($prefix, $startValue);
 
             $updates[$animal->id] = ['codlab' => $newCodlab];
             $startValue++;
@@ -558,12 +541,12 @@ class TesteController extends Controller
             foreach ($animals as $animal) {
                 $normalizedCodlab = strtoupper(trim($animal->codlab));
 
-                // Regra solicitada: inserir "5" entre a sigla e o número.
-                // Ex.: EQU1351 -> EQU51351
+                // Regra solicitada: prefixo 5 na parte numérica de 6 dígitos (faixa 500000–599999).
+                // Ex.: EQU1351 -> EQU501351
                 if (preg_match('/^([A-Z]{3})([0-9]{4})$/', $normalizedCodlab, $matches)) {
                     $sigla = $matches[1];
-                    $baseNumber = (int) ('5' . $matches[2]);
-                    $newCodlab = $this->generateNextAvailableCodlab($sigla, $baseNumber, $animal->id);
+                    $baseNumber = CodlabGenerator::CONVERTED_RANGE_MIN + (int) $matches[2];
+                    $newCodlab = CodlabGenerator::generateFromBase($sigla, $baseNumber, $animal->id);
                 } else {
                     continue;
                 }
@@ -616,32 +599,4 @@ class TesteController extends Controller
         }
     }
 
-    private function generateNextAvailableCodlab($sigla, $baseNumber, $currentAnimalId = null)
-    {
-        $normalizedSigla = strtoupper(trim($sigla));
-        $nextNumber = (int) $baseNumber;
-
-        // Verificar se o próximo número já existe (por segurança), com limite para evitar loop infinito.
-        $maxAttempts = 5000;
-        $attempts = 0;
-        while (true) {
-            $candidate = $normalizedSigla . $nextNumber;
-            $exists = Animal::where('codlab', $candidate)
-                ->when($currentAnimalId, function ($query) use ($currentAnimalId) {
-                    $query->where('id', '!=', $currentAnimalId);
-                })
-                ->exists();
-
-            if (! $exists) {
-                return $candidate;
-            }
-
-            $nextNumber++;
-            $attempts++;
-
-            if ($attempts >= $maxAttempts) {
-                throw new \RuntimeException("Nao foi possivel gerar codlab unico para a sigla {$normalizedSigla}");
-            }
-        }
-    }
 }

@@ -12,6 +12,7 @@ use App\Models\OrderRequest;
 use Illuminate\Http\Request;
 use App\Models\AnimalToParent;
 use App\Http\Controllers\Controller;
+use App\Services\CodlabGenerator;
 use App\Models\UserInfo;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
@@ -133,7 +134,7 @@ class ApiMangalargaController extends Controller
                     );
 
                     if (blank($existingAnimal->codlab)) {
-                        $existingAnimal->update(['codlab' => $this->generateUniqueCodlab('EQU')]);
+                        $existingAnimal->update(['codlab' => CodlabGenerator::generate('EQU')]);
                     }
 
                     // Find or create parent animals
@@ -143,7 +144,7 @@ class ApiMangalargaController extends Controller
                             'animal_name' => $animal->nomePai,
                             'especies' => 'EQUINA',
                             'breed' => 'MANGALARGA MARCHADOR',
-                            'codlab' => $this->generateUniqueCodlab('EQU'),
+                            'codlab' => CodlabGenerator::generate('EQU'),
                         ]
                     );
 
@@ -153,7 +154,7 @@ class ApiMangalargaController extends Controller
                             'animal_name' => $animal->nomeMae,
                             'especies' => 'EQUINA',
                             'breed' => 'MANGALARGA MARCHADOR',
-                            'codlab' => $this->generateUniqueCodlab('EQU'),
+                            'codlab' => CodlabGenerator::generate('EQU'),
                         ]
                     );
 
@@ -305,7 +306,7 @@ class ApiMangalargaController extends Controller
                     );
 
                     if (blank($existingAnimal->codlab)) {
-                        $existingAnimal->update(['codlab' => $this->generateUniqueCodlab('EQU')]);
+                        $existingAnimal->update(['codlab' => CodlabGenerator::generate('EQU')]);
                     }
 
                     // Find or create parent animals
@@ -315,7 +316,7 @@ class ApiMangalargaController extends Controller
                             'animal_name' => $animal->nomePai,
                             'especies' => 'EQUINA',
                             'breed' => 'MANGALARGA MARCHADOR',
-                            'codlab' => $this->generateUniqueCodlab('EQU'),
+                            'codlab' => CodlabGenerator::generate('EQU'),
                         ]
                     );
 
@@ -325,7 +326,7 @@ class ApiMangalargaController extends Controller
                             'animal_name' => $animal->nomeMae,
                             'especies' => 'EQUINA',
                             'breed' => 'MANGALARGA MARCHADOR',
-                            'codlab' => $this->generateUniqueCodlab('EQU'),
+                            'codlab' => CodlabGenerator::generate('EQU'),
                         ]
                     );
 
@@ -473,7 +474,7 @@ class ApiMangalargaController extends Controller
                     );
 
                     if (blank($existingAnimal->codlab)) {
-                        $existingAnimal->update(['codlab' => $this->generateUniqueCodlab('EQU')]);
+                        $existingAnimal->update(['codlab' => CodlabGenerator::generate('EQU')]);
                     }
 
                     $pai = Animal::firstOrCreate(
@@ -482,7 +483,7 @@ class ApiMangalargaController extends Controller
                             'animal_name' => $animal->nomePai,
                             'especies' => 'EQUINA',
                             'breed' => 'MANGALARGA MARCHADOR',
-                            'codlab' => $this->generateUniqueCodlab('EQU'),
+                            'codlab' => CodlabGenerator::generate('EQU'),
                         ]
                     );
 
@@ -492,7 +493,7 @@ class ApiMangalargaController extends Controller
                             'animal_name' => $animal->nomeMae,
                             'especies' => 'EQUINA',
                             'breed' => 'MANGALARGA MARCHADOR',
-                            'codlab' => $this->generateUniqueCodlab('EQU'),
+                            'codlab' => CodlabGenerator::generate('EQU'),
                         ]
                     );
 
@@ -627,7 +628,7 @@ class ApiMangalargaController extends Controller
                     );
 
                     if (blank($existingAnimal->codlab)) {
-                        $existingAnimal->update(['codlab' => $this->generateUniqueCodlab('EQU')]);
+                        $existingAnimal->update(['codlab' => CodlabGenerator::generate('EQU')]);
                     }
 
                     // Find or create parent animals
@@ -637,7 +638,7 @@ class ApiMangalargaController extends Controller
                             'animal_name' => $animal->nomePai,
                             'especies' => 'EQUINA',
                             'breed' => 'MANGALARGA MARCHADOR',
-                            'codlab' => $this->generateUniqueCodlab('EQU'),
+                            'codlab' => CodlabGenerator::generate('EQU'),
                         ]
                     );
 
@@ -647,7 +648,7 @@ class ApiMangalargaController extends Controller
                             'animal_name' => $animal->nomeMae,
                             'especies' => 'EQUINA',
                             'breed' => 'MANGALARGA MARCHADOR',
-                            'codlab' => $this->generateUniqueCodlab('EQU'),
+                            'codlab' => CodlabGenerator::generate('EQU'),
                         ]
                     );
 
@@ -706,29 +707,6 @@ class ApiMangalargaController extends Controller
             }
         }
         return response()->json('ok');
-    }
-
-    private function generateUniqueCodlab($sigla)
-    {
-        // Buscar o último animal criado com esta sigla, ordenado pela data de criação
-        $lastAnimal = Animal::latest('created_at')
-            ->first();
-
-        if ($lastAnimal) {
-            // Extrair o número do codlab do último animal
-            $lastNumber = (int) substr($lastAnimal->codlab, 3);
-            $nextNumber = $lastNumber + 1;
-        } else {
-            // Se não existir nenhum animal com esta sigla, começar do 200000
-            $nextNumber = 200000;
-        }
-
-        // Verificar se o próximo número já existe (por segurança)
-        while (Animal::where('codlab', $sigla . strval($nextNumber))->exists()) {
-            $nextNumber++;
-        }
-
-        return $sigla . strval($nextNumber);
     }
 
     public function fetchDataFromApi($resource, $id, $tipo, $query = [])
