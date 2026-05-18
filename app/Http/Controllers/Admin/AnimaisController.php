@@ -30,9 +30,21 @@ class AnimaisController extends Controller
         ini_set('memory_limit', '-1');
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $animais = Animal::paginate();
+        $filters = $this->extractAnimalFilters($request);
+        $animais = $this->filterAnimaisQuery($request)->paginate(20)->withQueryString();
+        $especiesList = $this->distinctAnimalValues('especies');
+        $breedsList = $this->distinctAnimalValues('breed');
+        $statusOptions = self::animalStatusOptions();
+
+        if ($request->ajax()) {
+            return response()->json([
+                'viewRender' => view('admin.animais.includes.table-rows', compact('animais', 'statusOptions'))->render(),
+                'pagination' => $animais->links()->toHtml(),
+                'total' => $animais->total(),
+            ]);
+        }
 
         return view('admin.animais.index', get_defined_vars());
     }
@@ -272,11 +284,24 @@ class AnimaisController extends Controller
     }
     public function search(Request $request)
     {
-        if ($request->ajax()) {
-            $animais = Animal::where('animal_name', 'LIKE', '%' . $request->search . "%")->get();
-            $viewRender = view('admin.animais.includes.render', get_defined_vars())->render();
-            return response()->json([get_defined_vars()]);
+        if (! $request->ajax()) {
+            return redirect()->route('animais', $this->extractAnimalFilters($request));
         }
+
+        $filters = $this->extractAnimalFilters($request);
+        if ($request->filled('search') && ! $request->filled('nome')) {
+            $request->merge(['nome' => $request->search]);
+            $filters['nome'] = $request->search;
+        }
+
+        $animais = $this->filterAnimaisQuery($request)->paginate(20)->withQueryString();
+        $statusOptions = self::animalStatusOptions();
+
+        return response()->json([
+            'viewRender' => view('admin.animais.includes.table-rows', compact('animais', 'statusOptions'))->render(),
+            'pagination' => $animais->links()->toHtml(),
+            'total' => $animais->total(),
+        ]);
     }
     public function showStatus($id)
     {
@@ -338,20 +363,115 @@ class AnimaisController extends Controller
 
     public function searchCodLab(Request $request)
     {
-        if ($request->ajax()) {
-            $codlab = $request->codlab;
-
-            $animals = Animal::where('codlab', 'LIKE', '%' . $codlab . '%')
-                ->get();
-
-            if ($animals) {
-                $viewRender = view('admin.animais.includes.codlab-search', compact('animals'))->render();
-
-                return response()->json(['viewRender' => $viewRender]);
-            } else {
-                return response()->json(['error' => 'Animal não encontrado.']);
-            }
+        if (! $request->ajax()) {
+            return redirect()->route('animais', array_merge(
+                $this->extractAnimalFilters($request),
+                ['codlab' => $request->codlab]
+            ));
         }
+
+        $animais = $this->filterAnimaisQuery($request)->paginate(20)->withQueryString();
+        $statusOptions = self::animalStatusOptions();
+
+        if ($animais->isEmpty()) {
+            return response()->json(['error' => 'Nenhum animal encontrado com os filtros informados.']);
+        }
+
+        return response()->json([
+            'viewRender' => view('admin.animais.includes.table-rows', compact('animais', 'statusOptions'))->render(),
+            'pagination' => $animais->links()->toHtml(),
+            'total' => $animais->total(),
+        ]);
+    }
+
+    private function extractAnimalFilters(Request $request): array
+    {
+        return $request->only([
+            'nome',
+            'codlab',
+            'especies',
+            'breed',
+            'status',
+            'sex',
+            'sem_codlab',
+            'registro',
+            'identificador',
+        ]);
+    }
+
+    private function filterAnimaisQuery(Request $request)
+    {
+        $query = Animal::query()->orderByDesc('id');
+
+        if ($request->filled('nome')) {
+            $query->where('animal_name', 'LIKE', '%' . trim($request->nome) . '%');
+        }
+
+        if ($request->filled('codlab')) {
+            $query->where('codlab', 'LIKE', '%' . trim($request->codlab) . '%');
+        }
+
+        if ($request->filled('especies')) {
+            $query->where('especies', $request->especies);
+        }
+
+        if ($request->filled('breed')) {
+            $query->where('breed', trim($request->breed));
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        if ($request->filled('sex')) {
+            $query->where('sex', $request->sex);
+        }
+
+        if ($request->filled('registro')) {
+            $term = trim($request->registro);
+            $query->where(function ($q) use ($term) {
+                $q->where('number_definitive', 'LIKE', "%{$term}%")
+                    ->orWhere('register_number_brand', 'LIKE', "%{$term}%");
+            });
+        }
+
+        if ($request->filled('identificador')) {
+            $query->where('identificador', 'LIKE', '%' . trim($request->identificador) . '%');
+        }
+
+        if ($request->boolean('sem_codlab')) {
+            $query->where(function ($q) {
+                $q->whereNull('codlab')->orWhere('codlab', '');
+            });
+        }
+
+        return $query;
+    }
+
+    private function distinctAnimalValues(string $column)
+    {
+        return Animal::query()
+            ->whereNotNull($column)
+            ->where($column, '!=', '')
+            ->distinct()
+            ->orderBy($column)
+            ->pluck($column);
+    }
+
+    public static function animalStatusOptions(): array
+    {
+        return [
+            1 => ['label' => 'Aguardando amostra', 'class' => 'secondary'],
+            2 => ['label' => 'Amostra recebida', 'class' => 'info'],
+            3 => ['label' => 'Em análise', 'class' => 'warning'],
+            4 => ['label' => 'Análise concluída', 'class' => 'primary'],
+            5 => ['label' => 'Resultado disponível', 'class' => 'success'],
+            6 => ['label' => 'Análise reprovada', 'class' => 'danger'],
+            7 => ['label' => 'Análise aprovada', 'class' => 'success'],
+            8 => ['label' => 'Recoleta solicitada', 'class' => 'warning'],
+            9 => ['label' => 'Amostra paga', 'class' => 'info'],
+            10 => ['label' => 'Pedido concluído', 'class' => 'dark'],
+        ];
     }
 
     /**
