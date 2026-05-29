@@ -81,6 +81,12 @@ return [
             'level' => env('LOG_LEVEL', 'debug'),
         ],
 
+        'alelos_import' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/alelos_import.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+        ],
+
         'single' => [
             'driver' => 'single',
             'path' => storage_path('logs/laravel.log'),

@@ -8,7 +8,9 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Services\CodlabGenerator;
 use App\Models\Marcador;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log as LogFacade;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Support\Facades\Cache;
 
@@ -52,103 +54,178 @@ class AlelosController extends Controller
     }
     public function store(Request $request)
     {
-        // Obtém a resposta da API
-        $response = Http::timeout(60)->get('http://laboratorios.abccmm.org.br/api/Exames', ['registro' => $request->registro]);
-        \Log::info([$response]);
-        // Verifica se a resposta é bem-sucedida
-        if ($response->successful()) {
-            $data = $response->json();
+        $registro = trim((string) $request->registro);
 
-            // Extrai os dados relevantes
-            $animalData = $data['animal'];
-            $exameData = $data['exame'];
+        $this->logAlelosImport('Início da importação de alelos via API ABCCMM', [
+            'registro' => $registro,
+            'user_id' => Auth::id(),
+            'user_name' => Auth::user()?->name,
+        ]);
 
-            // Verifica se o animal já existe no banco de dados
-            $animal = Animal::where('animal_name', $animalData['nomeAnimal'])->first();
-            // \Log::info($animalData);
-            $marcadores = Marcador::where('especie', 'EQUINA')->get();
-            if ($animal) {
-                if (!$animal->codlab) {
-                    $animal->codlab = CodlabGenerator::generate('EQU');
-                }
+        $response = Http::timeout(60)->get('http://laboratorios.abccmm.org.br/api/Exames', ['registro' => $registro]);
 
-                // Atualiza o identificador do animal
-                $animal->identificador = $exameData['codigo'] ?? null;
+        if (! $response->successful()) {
+            $this->logAlelosImport('Falha na requisição à API de exames', [
+                'registro' => $registro,
+                'http_status' => $response->status(),
+                'body' => $response->body(),
+            ], 'error');
 
-                $animal->save();
-            } else {
-                $sigla = 'EQU';
-                $codlab = CodlabGenerator::generate($sigla);
-                // Cria um novo animal no banco de dados
-                $animal = Animal::create([
-                    'animal_name' => $animalData['nomeAnimal'],
-                    'especies' => 'EQUINA',
-                    'breed' => 'MANGALARGA',
-                    'sex' => $animalData['sexo'],
-                    'birth_date' => $animalData['dataNascimento'],
-                    'number_definitive' => $animalData['registro'],
-                    'status' => 1,
-                    'codlab' => $codlab,
-                    'identificador' => $exameData['codigo'] ?? null,
+            return response()->json(['error' => 'erro']);
+        }
+
+        $data = $response->json();
+        $animalData = $data['animal'] ?? null;
+        $exameData = $data['exame'] ?? null;
+
+        if (! $animalData || ! $exameData) {
+            $this->logAlelosImport('Resposta da API sem dados de animal ou exame', [
+                'registro' => $registro,
+                'payload_keys' => array_keys($data ?? []),
+            ], 'warning');
+
+            return response()->json(['error' => 'erro']);
+        }
+
+        $animal = Animal::where('animal_name', $animalData['nomeAnimal'])->first();
+        $marcadores = Marcador::where('especie', 'EQUINA')->get();
+        $animalAcao = 'atualizado';
+
+        if ($animal) {
+            $codlabAnterior = $animal->codlab;
+            $identificadorAnterior = $animal->identificador;
+
+            if (! $animal->codlab) {
+                $animal->codlab = CodlabGenerator::generate('EQU');
+                $this->logAlelosImport('Codlab gerado para animal existente', [
+                    'animal_id' => $animal->id,
+                    'animal_name' => $animal->animal_name,
+                    'codlab_anterior' => $codlabAnterior,
+                    'codlab_novo' => $animal->codlab,
+                    'registro' => $registro,
                 ]);
             }
 
-            if ($exameData['alelos'] != null) {
-                foreach ($marcadores as $marcador) {
-                    $apiAlelos = collect($exameData['alelos'])->where('marcador', $marcador->gene)->first();
-                    $alelo = Alelo::where('animal_id', $animal->id)
-                        ->where('marcador', $marcador->gene)
-                        ->first();
-                    \Log::info([$exameData['dataResultado']]);
+            $animal->identificador = $exameData['codigo'] ?? null;
+            $animal->save();
 
-                    if ($apiAlelos) {
-                        if ($alelo) {
-                            // Atualiza o alelo se já existir
-                            $alelo->alelo1 = $apiAlelos['alelo1'];
-                            $alelo->alelo2 = $apiAlelos['alelo2'];
-                            $alelo->lab = $exameData['laboratorio'];
-                            $alelo->data = $exameData['dataResultado'];
-                            $alelo->save();
-                        } else {
-                            // Cria um novo alelo se não existir
-                            Alelo::create([
-                                'animal_id' => $animal->id,
-                                'marcador' => $marcador->gene,
-                                'alelo1' => $apiAlelos['alelo1'],
-                                'alelo2' =>   $apiAlelos['alelo2'],
-                                'lab' => $exameData['laboratorio'],
-                                'data' => $exameData['dataResultado'],
-                            ]);
-                        }
-                    } else {
-                        if ($alelo) {
-                            // Atualiza o alelo se já existir
-                            $alelo->alelo1 = '';
-                            $alelo->alelo2 = '';
-                            $alelo->lab = $exameData['laboratorio'];
-                            $alelo->data = $exameData['dataResultado'];
-                            $alelo->save();
-                        } else {
-                            // Cria um novo alelo se não existir
-                            Alelo::create([
-                                'animal_id' => $animal->id,
-                                'marcador' => $marcador->gene,
-                                'alelo1' => '',
-                                'alelo2' =>   '',
-                                'lab' => $exameData['laboratorio'],
-                                'data' => $exameData['dataResultado'],
-                            ]);
-                        }
-                    }
-                }
-
-                return response()->json(['success' => 'ok']);
+            if ($identificadorAnterior !== $animal->identificador) {
+                $this->logAlelosImport('Identificador do animal atualizado', [
+                    'animal_id' => $animal->id,
+                    'animal_name' => $animal->animal_name,
+                    'identificador_anterior' => $identificadorAnterior,
+                    'identificador_novo' => $animal->identificador,
+                    'registro' => $registro,
+                ]);
             }
+        } else {
+            $animalAcao = 'criado';
+            $codlab = CodlabGenerator::generate('EQU');
+
+            $animal = Animal::create([
+                'animal_name' => $animalData['nomeAnimal'],
+                'especies' => 'EQUINA',
+                'breed' => 'MANGALARGA',
+                'sex' => $animalData['sexo'],
+                'birth_date' => $animalData['dataNascimento'],
+                'number_definitive' => $animalData['registro'],
+                'status' => 1,
+                'codlab' => $codlab,
+                'identificador' => $exameData['codigo'] ?? null,
+            ]);
+
+            $this->logAlelosImport('Animal criado na importação de alelos', [
+                'animal_id' => $animal->id,
+                'animal_name' => $animal->animal_name,
+                'codlab' => $codlab,
+                'registro_api' => $animalData['registro'] ?? $registro,
+                'identificador' => $animal->identificador,
+            ]);
+        }
+
+        if ($exameData['alelos'] === null) {
+            $this->logAlelosImport('Exame sem alelos na resposta da API', [
+                'animal_id' => $animal->id,
+                'animal_name' => $animal->animal_name,
+                'registro' => $registro,
+                'exame_codigo' => $exameData['codigo'] ?? null,
+                'laboratorio' => $exameData['laboratorio'] ?? null,
+            ], 'warning');
 
             return response()->json(['error' => 'vazio']);
         }
 
-        return response()->json(['error' => 'erro']);
+        $stats = ['criados' => 0, 'atualizados' => 0, 'limpos' => 0];
+
+        foreach ($marcadores as $marcador) {
+            $apiAlelos = collect($exameData['alelos'])->where('marcador', $marcador->gene)->first();
+            $alelo = Alelo::where('animal_id', $animal->id)
+                ->where('marcador', $marcador->gene)
+                ->first();
+
+            if ($apiAlelos) {
+                if ($alelo) {
+                    $alelo->alelo1 = $apiAlelos['alelo1'];
+                    $alelo->alelo2 = $apiAlelos['alelo2'];
+                    $alelo->lab = $exameData['laboratorio'];
+                    $alelo->data = $exameData['dataResultado'];
+                    $alelo->save();
+                    $stats['atualizados']++;
+                } else {
+                    Alelo::create([
+                        'animal_id' => $animal->id,
+                        'marcador' => $marcador->gene,
+                        'alelo1' => $apiAlelos['alelo1'],
+                        'alelo2' => $apiAlelos['alelo2'],
+                        'lab' => $exameData['laboratorio'],
+                        'data' => $exameData['dataResultado'],
+                    ]);
+                    $stats['criados']++;
+                }
+            } else {
+                if ($alelo) {
+                    $alelo->alelo1 = '';
+                    $alelo->alelo2 = '';
+                    $alelo->lab = $exameData['laboratorio'];
+                    $alelo->data = $exameData['dataResultado'];
+                    $alelo->save();
+                    $stats['limpos']++;
+                } else {
+                    Alelo::create([
+                        'animal_id' => $animal->id,
+                        'marcador' => $marcador->gene,
+                        'alelo1' => '',
+                        'alelo2' => '',
+                        'lab' => $exameData['laboratorio'],
+                        'data' => $exameData['dataResultado'],
+                    ]);
+                    $stats['criados']++;
+                }
+            }
+        }
+
+        $this->logAlelosImport('Importação de alelos concluída com sucesso', [
+            'animal_id' => $animal->id,
+            'animal_name' => $animal->animal_name,
+            'animal_acao' => $animalAcao,
+            'codlab' => $animal->codlab,
+            'registro' => $registro,
+            'exame_codigo' => $exameData['codigo'] ?? null,
+            'laboratorio' => $exameData['laboratorio'] ?? null,
+            'data_resultado' => $exameData['dataResultado'] ?? null,
+            'marcadores_processados' => $marcadores->count(),
+            'alelos_na_api' => count($exameData['alelos']),
+            'stats' => $stats,
+            'user_id' => Auth::id(),
+            'user_name' => Auth::user()?->name,
+        ]);
+
+        return response()->json(['success' => 'ok']);
+    }
+
+    private function logAlelosImport(string $message, array $context = [], string $level = 'info'): void
+    {
+        LogFacade::channel('alelos_import')->{$level}($message, $context);
     }
     public function getAnimal(Request $request)
     {
