@@ -1,6 +1,33 @@
 @extends('layouts.admin')
 
 @section('content')
+    <style>
+        .alelos-compare .linha-marcador.is-hidden-marcador {
+            display: none !important;
+        }
+
+        .alelos-compare .verificar-opcoes {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 6px;
+            font-size: 12px;
+        }
+
+        .alelos-compare .verificar-opcoes label {
+            margin: 0 8px 0 0;
+            white-space: nowrap;
+            cursor: pointer;
+        }
+
+        .alelos-compare .verificar-opcoes input {
+            width: auto !important;
+            margin: 0 4px 0 0 !important;
+            vertical-align: middle;
+        }
+    </style>
+
     <div class="container alelos-compare">
         <input type="hidden" name="" id="ordem_id" value="{{ $ordem->id }}">
 
@@ -18,7 +45,15 @@
             <div class="col-2 bg-light border rounded text-center">
                 <h5>{{ $pai->codlab ?? 'Sem verificação' }}</h5>
             </div>
-            <div class="col-3 bg-light border rounded text-center">
+            <div class="col-3 bg-light border rounded text-center py-2">
+                <div class="verificar-opcoes">
+                    <label for="verificar-asb23">
+                        <input type="checkbox" id="verificar-asb23"> ASB23
+                    </label>
+                    <label for="verificar-hms1">
+                        <input type="checkbox" id="verificar-hms1"> HMS1
+                    </label>
+                </div>
                 <button type="button" data-ordem="{{ $ordem->id }}" id="analisar" class="btn btn-primary">ANALISAR</button>
             </div>
         </div>
@@ -96,7 +131,7 @@
                     @endphp
 
                     @foreach ($marcadores as $marcador)
-                        <div><p>{{ $marcador }}</p></div>
+                        <div class="linha-marcador {{ in_array($marcador, ['ASB23', 'HMS1']) ? 'is-hidden-marcador' : '' }}" data-marcador="{{ $marcador }}"><p>{{ $marcador }}</p></div>
                     @endforeach
                 </div>
             </div>
@@ -109,14 +144,14 @@
                             @foreach ($marcadores as $marcador)
                                 @foreach ($mae->alelos as $item)
                                     @if (strtolower(trim($item->marcador)) == strtolower(trim($marcador)))
-                                        <div class="col-6 @if ($item->alelo1 == '') py-2 @endif">
+                                        <div class="col-6 linha-marcador {{ in_array($marcador, ['ASB23', 'HMS1']) ? 'is-hidden-marcador' : '' }} @if ($item->alelo1 == '') py-2 @endif" data-marcador="{{ $marcador }}">
                                             @if ($item->alelo1 == '')
                                                 *
                                             @else
                                                 <p>{{ $item->alelo1 }}</p>
                                             @endif
                                         </div>
-                                        <div class="col-6 @if ($item->alelo2 == '') py-2 @endif">
+                                        <div class="col-6 linha-marcador {{ in_array($marcador, ['ASB23', 'HMS1']) ? 'is-hidden-marcador' : '' }} @if ($item->alelo2 == '') py-2 @endif" data-marcador="{{ $marcador }}">
                                             @if ($item->alelo2 == '')
                                                 *
                                             @else
@@ -138,14 +173,14 @@
                     @foreach ($marcadores as $marcador)
                         @foreach ($animal->alelos as $item)
                             @if (strtolower(trim($item->marcador)) == strtolower(trim($marcador)))
-                                <div class="col-6">
+                                <div class="col-6 linha-marcador {{ in_array($marcador, ['ASB23', 'HMS1']) ? 'is-hidden-marcador' : '' }}" data-marcador="{{ $marcador }}">
                                     @if ($item->alelo1 == '')
                                         <input class="form-control alelo1" data-id="{{ $item->id }}" type="text" value="*">
                                     @else
                                         <input class="form-control alelo1" data-id="{{ $item->id }}" type="text" value="{{ $item->alelo1 }}">
                                     @endif
                                 </div>
-                                <div class="col-6">
+                                <div class="col-6 linha-marcador {{ in_array($marcador, ['ASB23', 'HMS1']) ? 'is-hidden-marcador' : '' }}" data-marcador="{{ $marcador }}">
                                     @if ($item->alelo2 == '')
                                         <input class="form-control alelo2" data-id="{{ $item->id }}" type="text" value="*">
                                     @else
@@ -167,14 +202,14 @@
                             @foreach ($marcadores as $marcador)
                                 @foreach ($pai->alelos as $item)
                                     @if (strtolower(trim($item->marcador)) == strtolower(trim($marcador)))
-                                        <div class="col-6 @if ($item->alelo1 == '') py-2 @endif">
+                                        <div class="col-6 linha-marcador {{ in_array($marcador, ['ASB23', 'HMS1']) ? 'is-hidden-marcador' : '' }} @if ($item->alelo1 == '') py-2 @endif" data-marcador="{{ $marcador }}">
                                             @if ($item->alelo1 == '')
                                                 *
                                             @else
                                                 <p>{{ $item->alelo1 }}</p>
                                             @endif
                                         </div>
-                                        <div class="col-6 @if ($item->alelo2 == '') py-2 @endif">
+                                        <div class="col-6 linha-marcador {{ in_array($marcador, ['ASB23', 'HMS1']) ? 'is-hidden-marcador' : '' }} @if ($item->alelo2 == '') py-2 @endif" data-marcador="{{ $marcador }}">
                                             @if ($item->alelo2 == '')
                                                 *
                                             @else
@@ -299,6 +334,13 @@
 @endsection
 @section('js')
 <script>
+    function atualizarVisibilidadeMarcadores() {
+        const asb23 = $('#verificar-asb23').is(':checked');
+        const hms1 = $('#verificar-hms1').is(':checked');
+        $('.linha-marcador[data-marcador="ASB23"]').toggleClass('is-hidden-marcador', !asb23);
+        $('.linha-marcador[data-marcador="HMS1"]').toggleClass('is-hidden-marcador', !hms1);
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
         var status = @json($status); // Obtém o valor de status do Laravel para JavaScript
         var retInput = document.getElementById('ret');
@@ -339,6 +381,9 @@
 
                 // Verificar o tamanho do array mais longo entre incluidos e excluidos
                 const length = Math.max(incluidos.length, excluidos.length);
+                const marcadoresValores = @json(array_values(array_filter($marcadores, function ($m) {
+                    return $m !== 'ASB17';
+                })));
 
                 // Iterar com base no tamanho do array mais longo
                 for (let i = 0; i < length; i++) {
@@ -346,8 +391,9 @@
                         ''; // Definir como string vazia se for null ou undefined
                     const excluido = excluidos[i] ||
                         ''; // Definir como string vazia se for null ou undefined
+                    const marcador = marcadoresValores[i] || '';
 
-                    const html = `<div class="row">
+                    const html = `<div class="row linha-marcador" data-marcador="${marcador}">
                     <div class="col-6">
                         <input class="form-control incluidos" name="incluidos[]" type="text" value="${incluido}">
                     </div>
@@ -357,8 +403,15 @@
                 </div>`;
                     $('#valores').append(html);
                 }
+                atualizarVisibilidadeMarcadores();
             }
         });
+
+        $(document).on('change', '#verificar-asb23, #verificar-hms1', function() {
+            atualizarVisibilidadeMarcadores();
+        });
+
+        atualizarVisibilidadeMarcadores();
     });
 
 
@@ -528,20 +581,34 @@
                         const minLength = Math.min(alelosLength, incluidos.length, excluidos
                             .length); // pega o menor tamanho entre os três arrays
 
+                        const verificarAsb23 = $('#verificar-asb23').is(':checked');
+                        const verificarHms1 = $('#verificar-hms1').is(':checked');
+
                         for (let i = 0; i < incluidos.length; i++) {
+                            const marcadorAtual = response.animal.alelos[i]
+                                ? response.animal.alelos[i].marcador
+                                : null;
+
                             // Verifica se o marcador atual é 'ASB17'
-                            if (response.animal.alelos[i].marcador === 'ASB17') {
+                            if (marcadorAtual === 'ASB17') {
                                 continue; // Pula para a próxima iteração do loop
                             }
 
                             // Exclui ASB23 especificamente para ordem ID 16840
-                            if ({{ $ordem->id }} == 16840 && response.animal.alelos[i].marcador === 'ASB23') {
+                            if ({{ $ordem->id }} == 16840 && marcadorAtual === 'ASB23') {
                                 continue; // Pula para a próxima iteração do loop
                             }
 
+                            // Se ASB23 ou HMS1 não estiverem marcados para verificar, não inclui na análise
+                            if (
+                                (marcadorAtual === 'ASB23' && !verificarAsb23) ||
+                                (marcadorAtual === 'HMS1' && !verificarHms1)
+                            ) {
+                                continue;
+                            }
+
                             markersAndValues.push({
-                                marker: response.animal.alelos[i].marcador ||
-                                    'No Marker',
+                                marker: marcadorAtual || 'No Marker',
                                 included: incluidos[i] || '',
                                 excluded: excluidos[i] || ''
                             });
@@ -551,7 +618,7 @@
 
                         // Usar o array ordenado para gerar seus inputs
                         markersAndValues.forEach(item => {
-                            const html = `<div class="row">
+                            const html = `<div class="row linha-marcador" data-marcador="${item.marker}">
         <div class="col-6">
             <input class="form-control incluidos" name="incluidos[]" type="text"  value="${item.included}">
         </div>
@@ -561,6 +628,7 @@
     </div>`;
                             $('#valores').append(html);
                         });
+                        atualizarVisibilidadeMarcadores();
                     } else {
                         console.error(
                             "Data missing: Check if 'response.animal.alelos' exists in the AJAX response."
