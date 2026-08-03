@@ -95,10 +95,49 @@ class TecnicoController extends Controller
     }
     public function search(Request $request)
     {
-        if ($request->ajax()) {
-            $tecnicos = Tecnico::where('professional_name', 'LIKE', '%' . $request->search . "%")->get();;
+        if (!$request->ajax()) {
+            return response()->json(['error' => 'Requisição inválida'], 400);
+        }
+
+        $search = trim((string) $request->search);
+
+        if ($search === '') {
+            $tecnicos = Tecnico::orderBy('professional_name')->limit(10)->get();
             $viewRender = view('admin.tecnicos.search', get_defined_vars())->render();
+
             return response()->json([get_defined_vars()]);
         }
+
+        $digits = preg_replace('/\D+/', '', $search);
+
+        $tecnicos = Tecnico::query()
+            ->where(function ($query) use ($search, $digits) {
+                $query->where('professional_name', 'LIKE', '%' . $search . '%')
+                    ->orWhere('email', 'LIKE', '%' . $search . '%')
+                    ->orWhere('document', 'LIKE', '%' . $search . '%')
+                    ->orWhere('cell', 'LIKE', '%' . $search . '%')
+                    ->orWhere('fone', 'LIKE', '%' . $search . '%')
+                    ->orWhere('registro_profissional', 'LIKE', '%' . $search . '%');
+
+                if ($digits !== '' && $digits !== $search) {
+                    $query->orWhereRaw(
+                        "REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(COALESCE(cell, ''), '(', ''), ')', ''), '-', ''), ' ', ''), '.', '') LIKE ?",
+                        ['%' . $digits . '%']
+                    )->orWhereRaw(
+                        "REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(COALESCE(fone, ''), '(', ''), ')', ''), '-', ''), ' ', ''), '.', '') LIKE ?",
+                        ['%' . $digits . '%']
+                    )->orWhereRaw(
+                        "REPLACE(REPLACE(REPLACE(COALESCE(document, ''), '.', ''), '-', ''), '/', '') LIKE ?",
+                        ['%' . $digits . '%']
+                    );
+                }
+            })
+            ->orderBy('professional_name')
+            ->limit(50)
+            ->get();
+
+        $viewRender = view('admin.tecnicos.search', get_defined_vars())->render();
+
+        return response()->json([get_defined_vars()]);
     }
 }
