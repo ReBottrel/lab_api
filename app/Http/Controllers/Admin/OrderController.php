@@ -772,6 +772,74 @@ class OrderController extends Controller
         return response()->json([get_defined_vars()]);
     }
 
+    public function suggestOwner(Request $request)
+    {
+        $search = trim((string) $request->get('q', ''));
+
+        if (mb_strlen($search) < 2) {
+            return response()->json(['suggestions' => []]);
+        }
+
+        $fromOrders = OrderRequest::query()
+            ->where('status', '!=', 0)
+            ->where('creator', 'LIKE', '%' . $search . '%')
+            ->whereNotNull('creator')
+            ->where('creator', '!=', '')
+            ->select('creator')
+            ->distinct()
+            ->orderBy('creator')
+            ->limit(10)
+            ->pluck('creator');
+
+        $fromOwners = Owner::query()
+            ->where('owner_name', 'LIKE', '%' . $search . '%')
+            ->orderBy('owner_name')
+            ->limit(10)
+            ->pluck('owner_name');
+
+        $suggestions = $fromOrders
+            ->merge($fromOwners)
+            ->filter()
+            ->unique(function ($name) {
+                return mb_strtoupper(trim($name));
+            })
+            ->take(10)
+            ->values()
+            ->map(function ($name) {
+                return [
+                    'label' => $name,
+                    'value' => $name,
+                ];
+            });
+
+        return response()->json(['suggestions' => $suggestions]);
+    }
+
+    public function suggestAnimal(Request $request)
+    {
+        $search = trim((string) $request->get('q', ''));
+
+        if (mb_strlen($search) < 2) {
+            return response()->json(['suggestions' => []]);
+        }
+
+        $animals = $this->searchAnimalsByName($search)->take(10);
+
+        $suggestions = $animals->map(function ($animal) {
+            $label = $animal->animal_name;
+            if ($animal->codlab) {
+                $label .= ' (' . $animal->codlab . ')';
+            }
+
+            return [
+                'label' => $label,
+                'value' => $animal->animal_name,
+            ];
+        })->values();
+
+        return response()->json(['suggestions' => $suggestions]);
+    }
+
     /**
      * Busca animais por nome com FULLTEXT (quando disponível) e fallback LIKE.
      */

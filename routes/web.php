@@ -274,6 +274,8 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::post('filter-search-number', [OrderController::class, 'searchNumber'])->name('filter.search.number');
     Route::post('filter-search-animal', [OrderController::class, 'searchAnimal'])->name('filter.search.animal');
     Route::post('filter-search-codlab', [OrderController::class, 'searchCodlab'])->name('filter.search.codlab');
+    Route::get('filter-suggest-owner', [OrderController::class, 'suggestOwner'])->name('filter.suggest.owner');
+    Route::get('filter-suggest-animal', [OrderController::class, 'suggestAnimal'])->name('filter.suggest.animal');
     Route::post('filter-payment', [OrderController::class, 'filterPayment'])->name('filter.payment');
     Route::get('filter-date', [OrderController::class, 'dateFilter'])->name('filter.date');
 

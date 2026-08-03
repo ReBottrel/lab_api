@@ -55,6 +55,54 @@
         .orders-page .order-item p {
             margin-bottom: 0.25rem;
         }
+
+        .orders-page .suggest-wrap {
+            position: relative;
+        }
+
+        .orders-page .suggest-list {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            z-index: 30;
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            box-shadow: 0 10px 24px rgba(15, 23, 42, 0.12);
+            max-height: 240px;
+            overflow-y: auto;
+            display: none;
+            margin-top: 4px;
+        }
+
+        .orders-page .suggest-list.show {
+            display: block;
+        }
+
+        .orders-page .suggest-item {
+            display: block;
+            width: 100%;
+            text-align: left;
+            border: 0;
+            background: #fff;
+            padding: 0.55rem 0.75rem;
+            font-size: 0.88rem;
+            color: #334155;
+            cursor: pointer;
+        }
+
+        .orders-page .suggest-item:hover,
+        .orders-page .suggest-item.active {
+            background: #f4f0f7;
+            color: #6A4486;
+        }
+
+        .orders-page .suggest-empty {
+            padding: 0.65rem 0.75rem;
+            font-size: 0.85rem;
+            color: #94a3b8;
+        }
     </style>
 
     <div class="container-fluid orders-page px-3">
@@ -78,8 +126,11 @@
                     <div class="row g-2">
                         <div class="col-md-3">
                             <label class="form-label" for="search-owner">Proprietário</label>
-                            <input class="form-control search" id="search-owner" type="search"
-                                placeholder="Nome do proprietário">
+                            <div class="suggest-wrap">
+                                <input class="form-control search" id="search-owner" type="search"
+                                    placeholder="Nome do proprietário" autocomplete="off">
+                                <div class="suggest-list" id="suggest-owner"></div>
+                            </div>
                         </div>
                         <div class="col-md-2">
                             <label class="form-label" for="search-number">Nº do pedido</label>
@@ -88,8 +139,11 @@
                         </div>
                         <div class="col-md-3">
                             <label class="form-label" for="search-animal">Animal</label>
-                            <input class="form-control animal-search" id="search-animal" type="search"
-                                placeholder="Nome do animal">
+                            <div class="suggest-wrap">
+                                <input class="form-control animal-search" id="search-animal" type="search"
+                                    placeholder="Nome do animal" autocomplete="off">
+                                <div class="suggest-list" id="suggest-animal"></div>
+                            </div>
                         </div>
                         <div class="col-md-4">
                             <label class="form-label" for="status-filter">Status da amostra</label>
@@ -373,9 +427,154 @@
 
             $('#btn-buscar').on('click', buscarPedidos);
 
+            function hideSuggest($list) {
+                $list.removeClass('show').empty();
+            }
+
+            function renderSuggest($list, items) {
+                if (!items.length) {
+                    $list.html('<div class="suggest-empty">Nenhuma sugestão</div>').addClass('show');
+                    return;
+                }
+
+                var html = items.map(function(item) {
+                    return '<button type="button" class="suggest-item" data-value="' +
+                        $('<div>').text(item.value).html() + '">' +
+                        $('<div>').text(item.label).html() +
+                        '</button>';
+                }).join('');
+
+                $list.html(html).addClass('show');
+            }
+
+            function setupSuggest(inputSelector, listSelector, url, onSelect) {
+                var $input = $(inputSelector);
+                var $list = $(listSelector);
+                var timer = null;
+                var lastQ = '';
+
+                $input.on('input', function() {
+                    var q = $.trim($input.val());
+                    clearTimeout(timer);
+
+                    if (q.length < 2) {
+                        hideSuggest($list);
+                        return;
+                    }
+
+                    timer = setTimeout(function() {
+                        if (q === lastQ) {
+                            return;
+                        }
+                        lastQ = q;
+
+                        $.ajax({
+                            url: url,
+                            type: 'GET',
+                            data: {
+                                q: q
+                            },
+                            success: function(data) {
+                                if ($.trim($input.val()) !== q) {
+                                    return;
+                                }
+                                renderSuggest($list, data.suggestions || []);
+                            }
+                        });
+                    }, 250);
+                });
+
+                $list.on('mousedown', '.suggest-item', function(e) {
+                    e.preventDefault();
+                    var value = $(this).data('value');
+                    $input.val(value);
+                    hideSuggest($list);
+                    lastQ = value;
+                    if (typeof onSelect === 'function') {
+                        onSelect(value);
+                    }
+                });
+
+                $input.on('keydown', function(e) {
+                    if (e.which === 27) {
+                        hideSuggest($list);
+                    }
+                });
+
+                $input.on('blur', function() {
+                    setTimeout(function() {
+                        hideSuggest($list);
+                    }, 150);
+                });
+            }
+
+            setupSuggest('#search-owner', '#suggest-owner', "{{ route('filter.suggest.owner') }}", function() {
+                clearTimeout(liveOwnerTimer);
+                clearTimeout(liveAnimalTimer);
+                $('.number-search, .codlab-search, .animal-search').val('');
+                buscarPedidos();
+            });
+
+            setupSuggest('#search-animal', '#suggest-animal', "{{ route('filter.suggest.animal') }}", function() {
+                clearTimeout(liveOwnerTimer);
+                clearTimeout(liveAnimalTimer);
+                $('.number-search, .codlab-search, .search').val('');
+                buscarPedidos();
+            });
+
+            // Digitar e parar já busca, sem clicar
+            var liveOwnerTimer = null;
+            var liveAnimalTimer = null;
+
+            $('#search-owner').on('input', function() {
+                clearTimeout(liveOwnerTimer);
+                var q = $.trim($(this).val());
+                if (q.length < 3) {
+                    return;
+                }
+                liveOwnerTimer = setTimeout(function() {
+                    $('.number-search, .codlab-search, .animal-search').val('');
+                    buscarPedidos();
+                }, 600);
+            });
+
+            $('#search-animal').on('input', function() {
+                clearTimeout(liveAnimalTimer);
+                var q = $.trim($(this).val());
+                if (q.length < 3) {
+                    return;
+                }
+                liveAnimalTimer = setTimeout(function() {
+                    $('.number-search, .codlab-search, .search').val('');
+                    buscarPedidos();
+                }, 600);
+            });
+
+            $('#search-owner, #search-animal').on('keyup', function(e) {
+                if (e.which !== 32) {
+                    return;
+                }
+                var q = $.trim($(this).val());
+                if (q.length < 2) {
+                    return;
+                }
+                clearTimeout(liveOwnerTimer);
+                clearTimeout(liveAnimalTimer);
+                hideSuggest($('#suggest-owner'));
+                hideSuggest($('#suggest-animal'));
+                if ($(this).is('#search-owner')) {
+                    $('.number-search, .codlab-search, .animal-search').val('');
+                } else {
+                    $('.number-search, .codlab-search, .search').val('');
+                }
+                buscarPedidos();
+            });
+
             $('.filter-panel').on('keypress', 'input', function(e) {
                 if (e.which === 13) {
                     e.preventDefault();
+                    hideSuggest($('#suggest-owner'));
+                    hideSuggest($('#suggest-animal'));
                     if ($(this).is('#inicio, #fim')) {
                         $('#btn-pagamento').click();
                     } else {
