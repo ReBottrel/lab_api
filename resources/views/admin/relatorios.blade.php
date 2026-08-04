@@ -42,6 +42,10 @@
             <i class="fas fa-female"></i>
             Baixar Laudos com Exclusão Genitora
         </a>
+        <a href="{{ route('relatorios.mangalarga.concluidos') }}" class="btn btn-success">
+            <i class="fas fa-file-excel"></i>
+            Exportar Mangalarga Concluídos
+        </a>
     </div>
 
     <div class="search-section">

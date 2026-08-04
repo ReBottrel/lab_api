@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Maatwebsite\Excel\Facades\Excel;
 use Carbon\Carbon;
+use Rap2hpoutre\FastExcel\FastExcel;
 
 class RelatoriosController extends Controller
 {
@@ -305,5 +306,104 @@ class RelatoriosController extends Controller
 
         $filename = 'relatorio-ordens-servico-' . $data_inicial . '-ate-' . $data_final . '.xlsx';
         return Excel::download(new OrdersExport(collect($dados)), $filename);
+    }
+
+    /**
+     * Exporta animais Mangalarga Marchador com status 10 (Concluído),
+     * incluindo marcadores e alelos da tabela alelos.
+     */
+    public function exportMangalargaStatus10()
+    {
+        ini_set('memory_limit', '1024M');
+        set_time_limit(0);
+
+        $baseQuery = Animal::query()
+            ->where('status', 10)
+            ->where('breed', 'MANGALARGA MARCHADOR');
+
+        if (! $baseQuery->exists()) {
+            return redirect()
+                ->route('relatorios')
+                ->with('error', 'Nenhum animal encontrado com raça MANGALARGA MARCHADOR e status 10.');
+        }
+
+        $padrao = collect([
+            'AHT4', 'AHT5', 'ASB2', 'ASB23', 'HMS2', 'HMS3',
+            'HMS6', 'HMS7', 'HTG10', 'HTG4', 'HTG7', 'VHL20',
+        ]);
+
+        $extra = \DB::table('alelos')
+            ->join('animals', 'animals.id', '=', 'alelos.animal_id')
+            ->where('animals.status', 10)
+            ->where('animals.breed', 'MANGALARGA MARCHADOR')
+            ->whereNotNull('alelos.marcador')
+            ->distinct()
+            ->pluck('alelos.marcador')
+            ->map(function ($marcador) {
+                return strtoupper(trim((string) $marcador));
+            })
+            ->filter();
+
+        $marcadores = $padrao->merge($extra)->unique()->sort()->values();
+
+        $generator = function () use ($marcadores) {
+            $animals = Animal::with('alelos')
+                ->where('status', 10)
+                ->where('breed', 'MANGALARGA MARCHADOR')
+                ->orderBy('id')
+                ->lazy(200);
+
+            foreach ($animals as $animal) {
+                $row = [
+                    'ID' => $animal->id,
+                    'Nome' => $animal->animal_name,
+                    'Codlab' => $animal->codlab,
+                    'Identificador' => $animal->identificador,
+                    'Raça' => $animal->breed,
+                    'Espécie' => $animal->especies,
+                    'Sexo' => $animal->sex,
+                    'Registro' => $animal->register_number_brand,
+                    'Registro definitivo' => $animal->number_definitive,
+                    'Status' => 'Concluído',
+                    'Pedido' => $animal->order_id,
+                    'Data nascimento' => $animal->birth_date
+                        ? date('d/m/Y', strtotime($animal->birth_date))
+                        : '',
+                    'Criado em' => $animal->created_at
+                        ? date('d/m/Y H:i', strtotime($animal->created_at))
+                        : '',
+                ];
+
+                $alelosPorMarcador = $animal->alelos->keyBy(function ($alelo) {
+                    return strtoupper(trim((string) $alelo->marcador));
+                });
+
+                foreach ($marcadores as $marcador) {
+                    $alelo = $alelosPorMarcador->get($marcador);
+                    if ($alelo) {
+                        $alelo1 = $alelo->alelo1 !== null && $alelo->alelo1 !== '' ? $alelo->alelo1 : '*';
+                        $alelo2 = $alelo->alelo2 !== null && $alelo->alelo2 !== '' ? $alelo->alelo2 : '*';
+                        $row[$marcador] = $alelo1 . '/' . $alelo2;
+                    } else {
+                        $row[$marcador] = '';
+                    }
+                }
+
+                yield $row;
+            }
+        };
+
+        if (! is_dir(public_path('arquivos'))) {
+            mkdir(public_path('arquivos'), 0755, true);
+        }
+
+        $name = 'mangalarga-concluidos-' . date('d-m-Y-His') . '.xlsx';
+        (new FastExcel($generator()))->export(public_path('arquivos/' . $name));
+
+        return response()
+            ->download(public_path('arquivos/' . $name), $name, [
+                'Content-Type' => 'application/vnd.ms-excel',
+            ])
+            ->deleteFileAfterSend(true);
     }
 }

@@ -169,99 +169,94 @@ class OrdemServicoController extends Controller
 
     public function importFile(Request $request)
     {
-        // Verificar se um arquivo foi enviado
-        if ($request->hasFile('file')) {
-            // Obter o arquivo do campo de entrada
-            $file = $request->file('file');
-
-            // Verificar se o arquivo é válido
-            if ($file->isValid()) {
-                // Caminho para salvar o arquivo
-                $filePath = storage_path('app/files/') . $file->getClientOriginalName();
-
-                // Mover o arquivo para o diretório desejado
-                $file->move(storage_path('app/files'), $file->getClientOriginalName());
-
-                // Ler o conteúdo do arquivo
-                $fileContent = file_get_contents($filePath);
-
-                // Quebrar o conteúdo do arquivo em linhas
-                $lines = explode("\n", $fileContent);
-
-                // Iterar pelas linhas do arquivo
-                foreach ($lines as $line) {
-                    // Quebrar a linha em colunas separadas por tabulação
-                    $columns = explode("\t", $line);
-
-                    // Verificar se a coluna com o índice 1 existe
-                    if (isset($columns[1])) {
-                        $sampleName = $columns[1];
-                        $animal = Animal::where('codlab', $sampleName)->first();
-                        if ($animal) {
-                            // Remover espaços e asteriscos dos valores dos alelos
-                            $marcador = trim(str_replace('*', '', $columns[2]));
-                            $alelo1 = trim(str_replace('*', '', $columns[3]));
-                            $alelo2 = trim(str_replace('*', '', $columns[4]));
-
-                            // Se alelo1 e alelo2 estiverem vazios, manter como vazios
-                            if (!empty($alelo1) || !empty($alelo2)) {
-                                // Se alelo1 estiver vazio, copiar valor de alelo2
-                                if (empty($alelo1)) {
-                                    $alelo1 = $alelo2;
-                                }
-
-                                // Se alelo2 estiver vazio, copiar valor de alelo1
-                                if (empty($alelo2)) {
-                                    $alelo2 = $alelo1;
-                                }
-                            }
-
-                            // Verificar se o alelo já existe
-                            $alelo = Alelo::where('animal_id', $animal->id)
-                                ->where('marcador', $marcador)
-                                ->first();
-
-                            if ($alelo) {
-                                // Se o alelo existir, atualizá-lo
-                                $alelo->update([
-                                    'alelo1' => $alelo1,
-                                    'alelo2' => $alelo2,
-                                    'lab' => 'Loci Genética Laboratorial',
-                                    'data' => Carbon::now(),
-                                ]);
-                            } else {
-                                // Se o alelo não existir, criá-lo
-                                $alelo = Alelo::create([
-                                    'animal_id' => $animal->id,
-                                    'marcador' => $marcador,
-                                    'alelo1' => $alelo1,
-                                    'alelo2' => $alelo2,
-                                    'lab' => 'Loci Genética Laboratorial',
-                                    'data' => Carbon::now(),
-                                ]);
-                            }
-
-                            // ...
-
-                        }
-                    } else {
-                        // Tratar o caso em que a colunsa não existe
-                        $sampleName = null; // Ou qualquer outro valor padrão que faça sentido para o seu caso
-                    }
-                }
-
-                $log = Log::create([
-                    'user' => Auth::user()->name,
-                    'action' => 'Importou um arquivo txt de alelos',
-                ]);
-
-                // Retorne uma resposta adequada após a importação
-                return redirect()->back()->with('success', 'Arquivo importado com sucesso');
-            }
+        if (! $request->hasFile('file') || ! $request->file('file')->isValid()) {
+            return response()->json(['message' => 'Nenhum arquivo válido enviado'], 400);
         }
 
-        // Caso nenhum arquivo tenha sido enviado ou o arquivo seja inválido
-        return response()->json(['message' => 'Nenhum arquivo válido enviado'], 400);
+        $file = $request->file('file');
+        $fileName = $file->getClientOriginalName();
+        $file->move(storage_path('app/files'), $fileName);
+        $filePath = storage_path('app/files/') . $fileName;
+
+        $lines = preg_split('/\r\n|\r|\n/', file_get_contents($filePath));
+        $grouped = [];
+
+        foreach ($lines as $index => $line) {
+            $line = trim($line);
+            if ($line === '') {
+                continue;
+            }
+
+            $columns = explode("\t", $line);
+
+            // Pula cabeçalho
+            if (
+                $index === 0
+                && isset($columns[1])
+                && stripos($columns[1], 'Sample Name') !== false
+            ) {
+                continue;
+            }
+
+            if (! isset($columns[1]) || trim($columns[1]) === '') {
+                continue;
+            }
+
+            $sampleName = trim($columns[1]);
+            $marcador = isset($columns[2]) ? trim(str_replace('*', '', $columns[2])) : '';
+            $alelo1 = isset($columns[3]) ? strtoupper(trim(str_replace('*', '', $columns[3]))) : '';
+            $alelo2 = isset($columns[4]) ? strtoupper(trim(str_replace('*', '', $columns[4]))) : '';
+
+            if ($marcador === '' || strcasecmp($marcador, 'Marker') === 0) {
+                continue;
+            }
+
+            $grouped[$sampleName][] = [
+                'marcador' => $marcador,
+                'alelo1' => $alelo1,
+                'alelo2' => $alelo2,
+            ];
+        }
+
+        $importados = 0;
+        $naoEncontrados = [];
+
+        foreach ($grouped as $sampleName => $alelos) {
+            $animal = Animal::where('codlab', $sampleName)->first();
+
+            if (! $animal) {
+                $naoEncontrados[] = $sampleName;
+                continue;
+            }
+
+            // Substitui todos os alelos existentes pelos do TXT
+            Alelo::where('animal_id', $animal->id)->delete();
+
+            foreach ($alelos as $dados) {
+                Alelo::create([
+                    'animal_id' => $animal->id,
+                    'marcador' => $dados['marcador'],
+                    'alelo1' => $dados['alelo1'],
+                    'alelo2' => $dados['alelo2'],
+                    'lab' => 'Loci Genética Laboratorial',
+                    'data' => Carbon::now(),
+                ]);
+            }
+
+            $importados++;
+        }
+
+        Log::create([
+            'user' => Auth::user()->name,
+            'action' => 'Importou um arquivo txt de alelos',
+        ]);
+
+        $msg = "Arquivo importado com sucesso. Animais atualizados: {$importados}";
+        if (count($naoEncontrados) > 0) {
+            $msg .= '. Codlabs não encontrados: ' . implode(', ', $naoEncontrados);
+        }
+
+        return redirect()->back()->with('success', $msg);
     }
 
 

@@ -152,6 +152,8 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::get('get-laudo-total', [TesteController::class, 'getLaudosTotal'])->name('get.laudo.total');
 
     Route::get('relatorios', [RelatoriosController::class, 'index'])->name('relatorios');
+    Route::get('relatorios-mangalarga-concluidos', [RelatoriosController::class, 'exportMangalargaStatus10'])
+        ->name('relatorios.mangalarga.concluidos');
     Route::get('get-laudo-total-exclusao', [RelatoriosController::class, 'getLaudoTotal'])->name('get.laudo.total.exclusao');
     Route::get('get-laudo-total-exclusao-genitora', [RelatoriosController::class, 'getLaudoTotalGenitora'])->name('get.laudo.total.exclusao.genitora');
     Route::get('get-laudo-total-exclusao-genitor', [RelatoriosController::class, 'getLaudoTotalGenitor'])->name('get.laudo.total.exclusao.genitor');
