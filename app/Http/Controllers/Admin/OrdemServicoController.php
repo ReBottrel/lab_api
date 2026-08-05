@@ -222,28 +222,31 @@ class OrdemServicoController extends Controller
         $naoEncontrados = [];
 
         foreach ($grouped as $sampleName => $alelos) {
-            $animal = Animal::where('codlab', $sampleName)->first();
+            // Um mesmo codlab pode estar em mais de um animal: todos são atualizados
+            $animais = Animal::whereRaw('TRIM(codlab) = ?', [$sampleName])->get();
 
-            if (! $animal) {
+            if ($animais->isEmpty()) {
                 $naoEncontrados[] = $sampleName;
                 continue;
             }
 
-            // Substitui todos os alelos existentes pelos do TXT
-            Alelo::where('animal_id', $animal->id)->delete();
+            foreach ($animais as $animal) {
+                // Substitui todos os alelos existentes pelos do TXT
+                Alelo::where('animal_id', $animal->id)->delete();
 
-            foreach ($alelos as $dados) {
-                Alelo::create([
-                    'animal_id' => $animal->id,
-                    'marcador' => $dados['marcador'],
-                    'alelo1' => $dados['alelo1'],
-                    'alelo2' => $dados['alelo2'],
-                    'lab' => 'Loci Genética Laboratorial',
-                    'data' => Carbon::now(),
-                ]);
+                foreach ($alelos as $dados) {
+                    Alelo::create([
+                        'animal_id' => $animal->id,
+                        'marcador' => $dados['marcador'],
+                        'alelo1' => $dados['alelo1'],
+                        'alelo2' => $dados['alelo2'],
+                        'lab' => 'Loci Genética Laboratorial',
+                        'data' => Carbon::now(),
+                    ]);
+                }
+
+                $importados++;
             }
-
-            $importados++;
         }
 
         Log::create([
