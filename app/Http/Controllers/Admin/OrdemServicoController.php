@@ -211,6 +211,13 @@ class OrdemServicoController extends Controller
                 continue;
             }
 
+            // Homozigoto: quando vem só uma letra, os dois alelos recebem a mesma
+            if ($alelo1 !== '' && $alelo2 === '') {
+                $alelo2 = $alelo1;
+            } elseif ($alelo2 !== '' && $alelo1 === '') {
+                $alelo1 = $alelo2;
+            }
+
             $grouped[$sampleName][] = [
                 'marcador' => $marcador,
                 'alelo1' => $alelo1,
