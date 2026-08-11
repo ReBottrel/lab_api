@@ -13,7 +13,7 @@ class CodlabGenerator
     /** Faixa padrão para novos codlabs (ex.: EQU300001). */
     public const RANGE_MIN = 300000;
 
-    public const RANGE_MAX = 399999;
+    public const RANGE_MAX = 499999;
 
     public const DEFAULT_START = self::RANGE_MIN;
 
@@ -23,7 +23,7 @@ class CodlabGenerator
     public const CONVERTED_RANGE_MAX = 599999;
 
     /**
-     * Gera codlab no formato SIGLA + 6 dígitos na faixa 300000–399999.
+     * Gera codlab no formato SIGLA + 6 dígitos na faixa 300000–499999.
      */
     public static function generate(string $sigla = 'EQU'): string
     {
@@ -91,25 +91,44 @@ class CodlabGenerator
     {
         $totalLength = strlen($sigla) + self::DIGITS;
 
-        $maxNumber = Animal::query()
+        $maxNumber = self::codlabNumberQuery($sigla, $totalLength, $rangeMin, $rangeMax)
+            ->max(DB::raw('CAST(SUBSTRING(TRIM(codlab), 4) AS UNSIGNED)'));
+
+        $next = max($rangeMin, ((int) $maxNumber) + 1);
+
+        // Caminho rápido: continua a partir do maior número usado
+        while ($next <= $rangeMax && Animal::where('codlab', self::format($sigla, $next))->exists()) {
+            $next++;
+        }
+
+        if ($next <= $rangeMax) {
+            return $next;
+        }
+
+        // Teto atingido, mas a faixa ainda tem buracos (ex.: max=399983 com só ~900 usados)
+        $used = self::codlabNumberQuery($sigla, $totalLength, $rangeMin, $rangeMax)
+            ->selectRaw('CAST(SUBSTRING(TRIM(codlab), 4) AS UNSIGNED) as num')
+            ->pluck('num')
+            ->map(fn ($n) => (int) $n)
+            ->flip();
+
+        for ($candidate = $rangeMin; $candidate <= $rangeMax; $candidate++) {
+            if (!$used->has($candidate)) {
+                return $candidate;
+            }
+        }
+
+        throw new RuntimeException("Limite de codlab numerico atingido para a sigla {$sigla} na faixa {$rangeMin}-{$rangeMax}");
+    }
+
+    private static function codlabNumberQuery(string $sigla, int $totalLength, int $rangeMin, int $rangeMax)
+    {
+        return Animal::query()
             ->whereNotNull('codlab')
             ->whereRaw('UPPER(TRIM(codlab)) LIKE ?', [$sigla . '%'])
             ->whereRaw('LENGTH(TRIM(codlab)) = ?', [$totalLength])
             ->whereRaw('SUBSTRING(TRIM(codlab), 4) REGEXP ?', ['^[0-9]{' . self::DIGITS . '}$'])
             ->whereRaw('CAST(SUBSTRING(TRIM(codlab), 4) AS UNSIGNED) >= ?', [$rangeMin])
-            ->whereRaw('CAST(SUBSTRING(TRIM(codlab), 4) AS UNSIGNED) <= ?', [$rangeMax])
-            ->max(DB::raw('CAST(SUBSTRING(TRIM(codlab), 4) AS UNSIGNED)'));
-
-        $next = max($rangeMin, ((int) $maxNumber) + 1);
-
-        while ($next <= $rangeMax && Animal::where('codlab', self::format($sigla, $next))->exists()) {
-            $next++;
-        }
-
-        if ($next > $rangeMax) {
-            throw new RuntimeException("Limite de codlab numerico atingido para a sigla {$sigla} na faixa {$rangeMin}-{$rangeMax}");
-        }
-
-        return $next;
+            ->whereRaw('CAST(SUBSTRING(TRIM(codlab), 4) AS UNSIGNED) <= ?', [$rangeMax]);
     }
 }
