@@ -371,13 +371,19 @@ class ApiMangalargaController extends Controller
     public function getResenhaRequest(Request $request)
     {
         try {
-            // Fetch data from API
+            if (blank($request->rowidcoleta)) {
+                return redirect()->back()->with('error', 'Informe o número do pedido (rowidColeta).');
+            }
+
             $coletas = $this->fetchDataFromApi('coletas', 18, 2, ['rowidColeta' => $request->rowidcoleta]);
 
+            if (!is_array($coletas) || count($coletas) === 0) {
+                return redirect()->back()->with('error', 'Nenhuma resenha encontrada na ABCCMM para o pedido ' . $request->rowidcoleta);
+            }
+
             foreach ($coletas as $coleta) {
-                // Find or create entities
                 $user = User::firstOrCreate(
-                    ['name' => $coleta->cliente->nome],
+                    ['email' => $coleta->cliente->email],
                     [
                         'name' => $coleta->cliente->nome,
                         'email' => $coleta->cliente->email,
@@ -386,12 +392,11 @@ class ApiMangalargaController extends Controller
                     ]
                 );
 
-                // Encontrar os diferentes tipos de telefone
                 $telefones = collect($coleta->cliente->telefones)->mapWithKeys(function ($telefone) {
                     return [$telefone->tipo => $telefone->telefone];
                 });
 
-                $userinfo = UserInfo::firstOrCreate(
+                UserInfo::firstOrCreate(
                     ['user_id' => $user->id],
                     [
                         'user_id' => $user->id,
@@ -404,12 +409,11 @@ class ApiMangalargaController extends Controller
                         'complement' => $coleta->cliente->enderecos[0]->complemento,
                         'district' => $coleta->cliente->enderecos[0]->bairro,
                         'city' => $coleta->cliente->enderecos[0]->cidade,
-                        'state' => $coleta->cliente->enderecos[0]->uf,
+                        'state' => trim($coleta->cliente->enderecos[0]->uf),
                         'status' => 1,
-                        'propriety' =>  $coleta->cliente->fazendas[0]->nome ?? null,
+                        'propriety' => $coleta->cliente->fazendas[0]->nome ?? null,
                     ]
                 );
-
 
                 $tecnico = Tecnico::firstOrCreate(
                     ['professional_name' => $coleta->tecnico->nome],
@@ -431,9 +435,9 @@ class ApiMangalargaController extends Controller
                         'complement' => $coleta->cliente->enderecos[0]->complemento,
                         'district' => $coleta->cliente->enderecos[0]->bairro,
                         'city' => $coleta->cliente->enderecos[0]->cidade,
-                        'state' => $coleta->cliente->enderecos[0]->uf,
+                        'state' => trim($coleta->cliente->enderecos[0]->uf),
                         'status' => 1,
-                        'propriety' =>  $coleta->cliente->fazendas[0]->nome ?? null,
+                        'propriety' => $coleta->cliente->fazendas[0]->nome ?? null,
                     ]
                 );
 
@@ -454,6 +458,9 @@ class ApiMangalargaController extends Controller
                 );
 
                 foreach ($coleta->animais as $animal) {
+                    $registroPai = trim($animal->registroPai);
+                    $registroMae = trim($animal->registroMae);
+
                     $existingAnimal = Animal::updateOrCreate(
                         ['register_number_brand' => $animal->rowidAnimal],
                         [
@@ -465,9 +472,9 @@ class ApiMangalargaController extends Controller
                             'status' => 1,
                             'especies' => 'EQUINA',
                             'breed' => 'MANGALARGA MARCHADOR',
-                            'registro_pai' => $animal->registroPai,
+                            'registro_pai' => $registroPai,
                             'pai' => $animal->nomePai,
-                            'registro_mae' => $animal->registroMae,
+                            'registro_mae' => $registroMae,
                             'mae' => $animal->nomeMae,
                             'row_id' => $animal->rowidAnimal,
                         ]
@@ -477,25 +484,9 @@ class ApiMangalargaController extends Controller
                         $existingAnimal->update(['codlab' => CodlabGenerator::generate('EQU')]);
                     }
 
-                    $pai = Animal::firstOrCreate(
-                        ['number_definitive' => $animal->registroPai],
-                        [
-                            'animal_name' => $animal->nomePai,
-                            'especies' => 'EQUINA',
-                            'breed' => 'MANGALARGA MARCHADOR',
-                            'codlab' => CodlabGenerator::generate('EQU'),
-                        ]
-                    );
-
-                    $mae = Animal::firstOrCreate(
-                        ['number_definitive' => $animal->registroMae],
-                        [
-                            'animal_name' => $animal->nomeMae,
-                            'especies' => 'EQUINA',
-                            'breed' => 'MANGALARGA MARCHADOR',
-                            'codlab' => CodlabGenerator::generate('EQU'),
-                        ]
-                    );
+                    // firstOrCreate avalia o 2º array sempre — não gerar codlab aí
+                    $pai = $this->findOrCreateParentAnimal($registroPai, $animal->nomePai);
+                    $mae = $this->findOrCreateParentAnimal($registroMae, $animal->nomeMae);
 
                     DnaVerify::firstOrCreate(
                         ['animal_id' => $existingAnimal->id, 'order_id' => $order->id],
@@ -503,7 +494,11 @@ class ApiMangalargaController extends Controller
                     );
 
                     AnimalToParent::updateOrCreate(
-                        ['animal_id' => $existingAnimal->id, 'register_pai' => $pai->number_definitive, 'register_mae' => $mae->number_definitive],
+                        [
+                            'animal_id' => $existingAnimal->id,
+                            'register_pai' => $pai->number_definitive,
+                            'register_mae' => $mae->number_definitive,
+                        ],
                         [
                             'animal_name' => $animal->nome,
                             'especies' => 'EQUINA',
@@ -516,15 +511,19 @@ class ApiMangalargaController extends Controller
             Log::create([
                 'user' => 'Sistema API',
                 'action' => 'Criou pedido de exame',
-                'order_id' => $order->id ?? 'deu erro',
-                'animal' => $animal->nome ?? 'deu erro',
+                'order_id' => $order->id ?? null,
+                'animal' => $animal->nome ?? null,
             ]);
 
             return redirect()->back()->with('success', 'Pedido de exame criado com sucesso');
-        } catch (\Exception $e) {
-            // Log error
-            \Log::info($e->getMessage());
-            return redirect()->back()->with('error', 'Erro ao criar pedido de exame');
+        } catch (\Throwable $e) {
+            \Log::error('getResenhaRequest: ' . $e->getMessage(), [
+                'rowidcoleta' => $request->rowidcoleta,
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+            ]);
+
+            return redirect()->back()->with('error', 'Erro ao criar pedido de exame: ' . $e->getMessage());
         }
     }
 
@@ -712,7 +711,32 @@ class ApiMangalargaController extends Controller
     public function fetchDataFromApi($resource, $id, $tipo, $query = [])
     {
         $url = "http://laboratorios.abccmm.org.br/api/$resource/$id/$tipo" . '?' . http_build_query($query);
-        $response =  Http::get($url);
+        $response = Http::timeout(60)->get($url);
+
+        if (!$response->successful()) {
+            throw new \RuntimeException('Falha ao consultar API ABCCMM (HTTP ' . $response->status() . ')');
+        }
+
         return json_decode($response->body());
+    }
+
+    /**
+     * Evita chamar CodlabGenerator dentro de firstOrCreate (o 2º array é avaliado sempre).
+     */
+    private function findOrCreateParentAnimal(?string $numberDefinitive, ?string $animalName): Animal
+    {
+        $numberDefinitive = trim((string) $numberDefinitive);
+
+        $parent = Animal::firstOrNew(['number_definitive' => $numberDefinitive]);
+
+        if (!$parent->exists) {
+            $parent->animal_name = $animalName;
+            $parent->especies = 'EQUINA';
+            $parent->breed = 'MANGALARGA MARCHADOR';
+            $parent->codlab = CodlabGenerator::generate('EQU');
+            $parent->save();
+        }
+
+        return $parent;
     }
 }
