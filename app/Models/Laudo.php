@@ -31,7 +31,14 @@ class Laudo extends Model
         'status',
         'data_retificacao',
         'data_ret_new',
-        'nome_ret'
+        'nome_ret',
+        'verificar_asb23',
+        'verificar_hms1',
+    ];
+
+    protected $casts = [
+        'verificar_asb23' => 'boolean',
+        'verificar_hms1' => 'boolean',
     ];
 
     public function animal()

@@ -624,20 +624,31 @@ class OrdemServicoController extends Controller
 
     public function storeResult(Request $request)
     {
-        // The $request->ordem, $request->incluidos and $request->excluidos will contain your data.
         $ordem = $request->ordem;
-        $incluidos = $request->incluidos;
-        $excluidos = $request->excluidos;
+        $incluidos = $request->incluidos ?? [];
+        $excluidos = $request->excluidos ?? [];
+        $marcadores = $request->marcadores ?? [];
+        $verificarAsb23 = filter_var($request->verificar_asb23, FILTER_VALIDATE_BOOLEAN);
+        $verificarHms1 = filter_var($request->verificar_hms1, FILTER_VALIDATE_BOOLEAN);
 
-        // Now, you can do whatever you want with this data.
-        // For instance, you can save them to the database.
-
-        // Assuming you have a 'results' table and a 'Result' model
         $result = new Result;
         $result->ordem_servico = $ordem;
         $result->incluido = json_encode($incluidos);
         $result->excluido = json_encode($excluidos);
+        $result->marcador = json_encode([
+            'verificar_asb23' => $verificarAsb23,
+            'verificar_hms1' => $verificarHms1,
+            'marcadores' => $marcadores,
+        ]);
         $result->save();
+
+        $laudo = Laudo::where('ordem_id', $ordem)->orderBy('id', 'desc')->first();
+        if ($laudo) {
+            $laudo->update([
+                'verificar_asb23' => $verificarAsb23,
+                'verificar_hms1' => $verificarHms1,
+            ]);
+        }
 
         $log = Log::create([
             'ordem_id' => $ordem,
@@ -645,7 +656,6 @@ class OrdemServicoController extends Controller
             'action' => 'Salvou resultado do log',
         ]);
 
-        // Return a response to the AJAX call
         return response()->json(['message' => 'Data saved successfully!']);
     }
     public function getResult($id)
@@ -654,7 +664,27 @@ class OrdemServicoController extends Controller
             ->orderBy('id', 'desc')
             ->first();
 
-        return response()->json($result);
+        if (!$result) {
+            return response()->json(null);
+        }
+
+        $meta = json_decode($result->marcador, true);
+        if (!is_array($meta)) {
+            $meta = [];
+        }
+
+        return response()->json([
+            'incluido' => $result->incluido,
+            'excluido' => $result->excluido,
+            'marcador' => $result->marcador,
+            'verificar_asb23' => array_key_exists('verificar_asb23', $meta)
+                ? (bool) $meta['verificar_asb23']
+                : null,
+            'verificar_hms1' => array_key_exists('verificar_hms1', $meta)
+                ? (bool) $meta['verificar_hms1']
+                : null,
+            'marcadores' => $meta['marcadores'] ?? null,
+        ]);
     }
     public function aleloUpdate(Request $request)
     {

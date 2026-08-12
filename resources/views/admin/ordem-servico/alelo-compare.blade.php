@@ -48,10 +48,10 @@
             <div class="col-3 bg-light border rounded text-center py-2">
                 <div class="verificar-opcoes">
                     <label for="verificar-asb23">
-                        <input type="checkbox" id="verificar-asb23"> ASB23
+                        <input type="checkbox" id="verificar-asb23" {{ isset($laudo) && $laudo && $laudo->verificar_asb23 ? 'checked' : '' }}> ASB23
                     </label>
                     <label for="verificar-hms1">
-                        <input type="checkbox" id="verificar-hms1"> HMS1
+                        <input type="checkbox" id="verificar-hms1" {{ isset($laudo) && $laudo && $laudo->verificar_hms1 ? 'checked' : '' }}> HMS1
                     </label>
                 </div>
                 <button type="button" data-ordem="{{ $ordem->id }}" id="analisar" class="btn btn-primary">ANALISAR</button>
@@ -367,30 +367,50 @@
                 _token: "{{ csrf_token() }}",
             },
             success: function(response) {
+                if (!response || (!response.incluido && !response.excluido)) {
+                    atualizarVisibilidadeMarcadores();
+                    return;
+                }
 
+                const incluidosString = response.incluido || '[]';
+                const excluidosString = response.excluido || '[]';
 
-                const incluidosString = response.incluido ||
-                    '[]'; // Definir como string vazia se for null ou undefined
-                const excluidosString = response.excluido ||
-                    '[]'; // Definir como string vazia se for null ou undefined
+                const incluidos = JSON.parse(incluidosString);
+                const excluidos = JSON.parse(excluidosString);
+                const hasMetaFlags = response.verificar_asb23 !== null && response.verificar_asb23 !== undefined;
 
-                const incluidos = JSON.parse(
-                    incluidosString); // Converter a string em array JavaScript
-                const excluidos = JSON.parse(
-                    excluidosString); // Converter a string em array JavaScript
+                if (hasMetaFlags) {
+                    $('#verificar-asb23').prop('checked', !!response.verificar_asb23);
+                }
+                if (response.verificar_hms1 !== null && response.verificar_hms1 !== undefined) {
+                    $('#verificar-hms1').prop('checked', !!response.verificar_hms1);
+                }
 
-                // Verificar o tamanho do array mais longo entre incluidos e excluidos
+                const verificarAsb23 = $('#verificar-asb23').is(':checked');
+                const verificarHms1 = $('#verificar-hms1').is(':checked');
                 const length = Math.max(incluidos.length, excluidos.length);
-                const marcadoresValores = @json(array_values(array_filter($marcadores, function ($m) {
+                const marcadoresBase = @json(array_values(array_filter($marcadores, function ($m) {
                     return $m !== 'ASB17';
                 })));
 
-                // Iterar com base no tamanho do array mais longo
+                let marcadoresValores;
+                if (Array.isArray(response.marcadores) && response.marcadores.length) {
+                    marcadoresValores = response.marcadores;
+                } else if (hasMetaFlags) {
+                    marcadoresValores = marcadoresBase.filter(function(m) {
+                        if (m === 'ASB23' && !verificarAsb23) return false;
+                        if (m === 'HMS1' && !verificarHms1) return false;
+                        return true;
+                    });
+                } else {
+                    // Resultados antigos: mantém alinhamento original
+                    marcadoresValores = marcadoresBase;
+                }
+
+                $('#valores').html('');
                 for (let i = 0; i < length; i++) {
-                    const incluido = incluidos[i] ||
-                        ''; // Definir como string vazia se for null ou undefined
-                    const excluido = excluidos[i] ||
-                        ''; // Definir como string vazia se for null ou undefined
+                    const incluido = incluidos[i] || '';
+                    const excluido = excluidos[i] || '';
                     const marcador = marcadoresValores[i] || '';
 
                     const html = `<div class="row linha-marcador" data-marcador="${marcador}">
@@ -489,12 +509,23 @@
             const ordem = $('#analisar').data('ordem');
             const incluidos = [];
             const excluidos = [];
-            $('.incluidos').each(function() {
-                incluidos.push($(this).val());
+            const marcadores = [];
+            const verificarAsb23 = $('#verificar-asb23').is(':checked');
+            const verificarHms1 = $('#verificar-hms1').is(':checked');
+
+            $('#valores .linha-marcador').each(function() {
+                const marcador = $(this).data('marcador');
+                if (marcador === 'ASB23' && !verificarAsb23) {
+                    return;
+                }
+                if (marcador === 'HMS1' && !verificarHms1) {
+                    return;
+                }
+                marcadores.push(marcador || '');
+                incluidos.push($(this).find('.incluidos').val() || '');
+                excluidos.push($(this).find('.excluidos').val() || '');
             });
-            $('.excluidos').each(function() {
-                excluidos.push($(this).val());
-            });
+
             $.ajax({
                 url: "{{ route('result.store') }}",
                 type: 'POST',
@@ -503,6 +534,9 @@
                     ordem: ordem,
                     incluidos: incluidos,
                     excluidos: excluidos,
+                    marcadores: marcadores,
+                    verificar_asb23: verificarAsb23 ? 1 : 0,
+                    verificar_hms1: verificarHms1 ? 1 : 0,
                 },
                 success: function(response) {
 
@@ -778,6 +812,8 @@
             let data_ret = $('#data_ret').val();
             let data_ret_new = $('#data_ret_new').val();
             let ret_name = $('#ret-name').val();
+            let verificar_asb23 = $('#verificar-asb23').is(':checked') ? 1 : 0;
+            let verificar_hms1 = $('#verificar-hms1').is(':checked') ? 1 : 0;
             $.ajax({
                 url: "{{ route('gerar.laudo') }}",
                 type: 'POST',
@@ -791,6 +827,8 @@
                     data_ret: data_ret,
                     data_ret_new: data_ret_new,
                     ret_name: ret_name,
+                    verificar_asb23: verificar_asb23,
+                    verificar_hms1: verificar_hms1,
 
                 },
                 success: function(response) {

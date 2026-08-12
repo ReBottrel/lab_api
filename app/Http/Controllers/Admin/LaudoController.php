@@ -90,6 +90,8 @@ class LaudoController extends Controller
             'data_retificacao' => $request->data_ret,
             'data_ret_new' => $request->data_ret_new,
             'nome_ret' => $request->ret_name,
+            'verificar_asb23' => filter_var($request->verificar_asb23, FILTER_VALIDATE_BOOLEAN),
+            'verificar_hms1' => filter_var($request->verificar_hms1, FILTER_VALIDATE_BOOLEAN),
         ];
 
 

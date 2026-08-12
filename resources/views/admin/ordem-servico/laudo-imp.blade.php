@@ -769,6 +769,14 @@
                                     if ($ordem->id == 16840 && $item['marcador'] == 'ASB23') {
                                         continue;
                                     }
+
+                                    // Respeita checkbox de verificação da tela de comparação
+                                    if ($item['marcador'] == 'ASB23' && isset($laudo) && $laudo->verificar_asb23 === false) {
+                                        continue;
+                                    }
+                                    if ($item['marcador'] == 'HMS1' && isset($laudo) && $laudo->verificar_hms1 === false) {
+                                        continue;
+                                    }
                                 @endphp
 
                                 @if (
