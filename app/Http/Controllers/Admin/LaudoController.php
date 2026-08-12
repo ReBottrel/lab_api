@@ -458,17 +458,29 @@ class LaudoController extends Controller
 
     public function gerarXML($animal, $laudo, $order, $results, $pai, $mae, $owner, $tecnico, $ordem)
     {
-
-
         $microssatellites = ["AHT4", "AHT5", "ASB2", "ASB23", "HMS2", "HMS3", "HMS6", "HMS7", "HTG10", "HTG4", "HTG7", "VHL20"];
-        $excluidos = str_split($results->excluido);
-        $incluidos = str_split($results->incluido);
+
+        $excluidosList = $this->parseResultList($results->excluido ?? null);
+        $meta = json_decode($results->marcador ?? '', true);
+        $marcadoresSalvos = is_array($meta) && !empty($meta['marcadores']) ? $meta['marcadores'] : null;
+
+        $exclusaoPorMarcador = [];
+        if (is_array($marcadoresSalvos)) {
+            foreach ($marcadoresSalvos as $i => $marcadorNome) {
+                $exclusaoPorMarcador[$marcadorNome] = $excluidosList[$i] ?? '';
+            }
+        } else {
+            foreach ($microssatellites as $i => $marcadorNome) {
+                $exclusaoPorMarcador[$marcadorNome] = $excluidosList[$i] ?? '';
+            }
+        }
+
         $paiId = '';
         $maeId = '';
         $pdf = '';
 
         if ($laudo->nome_ret != null) {
-            $pdf = $laudo->nome_ret;
+            $pdf = $this->normalizeXmlName($laudo->nome_ret);
         } else {
             $pdf = $laudo->pdf;
         }
@@ -480,51 +492,54 @@ class LaudoController extends Controller
             $maeId = $this->removePrefix($mae->codlab);
         }
 
-
-        // dd($laudo);
-
         if ($pai == null && $mae == null) {
             $subtipo = 1;
         } else {
             $subtipo = 2;
         }
 
-        // Cria sequências de animais
+        $animalAlelos = $animal->alelos->keyBy('marcador');
+        $paiAlelos = $pai ? $pai->alelos->keyBy('marcador') : collect();
+        $maeAlelos = $mae ? $mae->alelos->keyBy('marcador') : collect();
+        $ocultarAsb23 = $laudo->verificar_asb23 === false;
+
+        // Cria sequências do animal (sempre os 12 marcadores exigidos pela ABCCMM)
         $animalSequencesXml = "";
         foreach ($microssatellites as $microsatellite) {
-            foreach ($animal->alelos as $alelo) {
-                if ($alelo->marcador == $microsatellite) {
-                    $marcador = $alelo->alelo1 . '/' . $alelo->alelo2;
-                    $animalSequencesXml .= '<SEQUENCIA Microssatelite="' . $alelo->marcador . '" Marcador="' . $marcador . '" />';
-                    break;
-                }
+            if ($microsatellite === 'ASB23' && $ocultarAsb23) {
+                $marcador = '*/*';
+            } else {
+                $marcador = $this->formatAleloXml($animalAlelos->get($microsatellite));
             }
+            $animalSequencesXml .= '<SEQUENCIA Microssatelite="' . $microsatellite . '" Marcador="' . $marcador . '" />';
         }
 
-        // Cria sequências para pai
+        $seqXmlPai = "";
+        $seqXmlMae = "";
+
+        // Cria sequências para pai/mãe pelo nome do marcador (não por índice)
         if ($ordem->tipo_exame != 'EQUGN') {
             if ($pai) {
-                $seqXmlPai = "";
-                for ($i = 0; $i < count($microssatellites); $i++) {
-                    $marcador = $pai->alelos[$i]->alelo1 . '/' . $pai->alelos[$i]->alelo2;
-                    $exclusao = ($excluidos[$i] == "P" || $excluidos[$i] == "MP") ? 0 : 1;
-                    $seqXmlPai .= '<SEQUENCIA Microssatelite="' . $microssatellites[$i] . '" Marcador="' . $marcador . '" Exclusao="' . $exclusao . '" />';
+                foreach ($microssatellites as $microsatellite) {
+                    $marcador = $this->formatAleloXml($paiAlelos->get($microsatellite));
+                    $flag = $exclusaoPorMarcador[$microsatellite] ?? '';
+                    $exclusao = ($flag === 'P' || $flag === 'MP') ? 0 : 1;
+                    $seqXmlPai .= '<SEQUENCIA Microssatelite="' . $microsatellite . '" Marcador="' . $marcador . '" Exclusao="' . $exclusao . '" />';
                 }
             }
-            // Cria sequências para mãe
             if ($mae) {
-                $seqXmlMae = "";
-                for ($i = 0; $i < count($microssatellites); $i++) {
-                    $marcador = $mae->alelos[$i]->alelo1 . '/' . $mae->alelos[$i]->alelo2;
-                    $exclusao = ($excluidos[$i] == "M" || $excluidos[$i] == "MP") ? 0 : 1;
-                    $seqXmlMae .= '<SEQUENCIA Microssatelite="' . $microssatellites[$i] . '" Marcador="' . $marcador . '" Exclusao="' . $exclusao . '" />';
+                foreach ($microssatellites as $microsatellite) {
+                    $marcador = $this->formatAleloXml($maeAlelos->get($microsatellite));
+                    $flag = $exclusaoPorMarcador[$microsatellite] ?? '';
+                    $exclusao = ($flag === 'M' || $flag === 'MP') ? 0 : 1;
+                    $seqXmlMae .= '<SEQUENCIA Microssatelite="' . $microsatellite . '" Marcador="' . $marcador . '" Exclusao="' . $exclusao . '" />';
                 }
             }
         }
 
-        // Determine se a paternidade e a maternidade são confirmadas
-        $confirmaPaternidade = !in_array("P", $excluidos) && !in_array("MP", $excluidos) ? 1 : 0;
-        $confirmaMaternidade = !in_array("M", $excluidos) && !in_array("MP", $excluidos) ? 1 : 0;
+        $flagsExclusao = array_values($exclusaoPorMarcador);
+        $confirmaPaternidade = !in_array('P', $flagsExclusao, true) && !in_array('MP', $flagsExclusao, true) ? 1 : 0;
+        $confirmaMaternidade = !in_array('M', $flagsExclusao, true) && !in_array('MP', $flagsExclusao, true) ? 1 : 0;
         $paiXml = "";
         $maeXml = "";
         if ($ordem->tipo_exame != 'EQUGN') {
@@ -538,12 +553,10 @@ class LaudoController extends Controller
 
         $nomeExame = '';
         if ($laudo->nome_ret != null) {
-            $nomeExame = $laudo->nome_ret;
+            $nomeExame = $this->normalizeXmlName($laudo->nome_ret);
         } else {
             $nomeExame = "LOVP26-$maeId.$animalId.$paiId";
         }
-
-
 
         $xml = '<?xml version="1.0" encoding="iso-8859-1" ?>
         <document>
@@ -577,7 +590,7 @@ class LaudoController extends Controller
         $animalId = substr($animal->codlab, 3);
         $xml = str_replace('﻿', '', $xml);
         if ($laudo->nome_ret != null) {
-            $name = $laudo->nome_ret . '.xml';
+            $name = $this->normalizeXmlName($laudo->nome_ret) . '.xml';
         } else {
             $name = 'LOVP25-' . $animalId . '.xml';
         }
@@ -601,6 +614,7 @@ class LaudoController extends Controller
                 'objBinaryCertificate' => $pdf,  // Binary data for certificate
                 'strXmlData' => $xml  // XML data as a string
             );
+            \Log::info('params: ' . json_encode($params));
 
             $response = $client->SetCertificate($params);
             return $response;
@@ -608,6 +622,43 @@ class LaudoController extends Controller
             trigger_error("SOAP Fault: (faultcode: {$fault->faultcode}, faultstring: {$fault->faultstring})", E_USER_ERROR);
         }
     }
+
+    private function parseResultList($value): array
+    {
+        if ($value === null || $value === '') {
+            return [];
+        }
+
+        $decoded = json_decode($value, true);
+        if (is_array($decoded)) {
+            return array_values($decoded);
+        }
+
+        return str_split((string) $value);
+    }
+
+    private function formatAleloXml($alelo): string
+    {
+        if (!$alelo) {
+            return '*/*';
+        }
+
+        $alelo1 = ($alelo->alelo1 !== null && $alelo->alelo1 !== '') ? $alelo->alelo1 : '*';
+        $alelo2 = ($alelo->alelo2 !== null && $alelo->alelo2 !== '') ? $alelo->alelo2 : '*';
+
+        return $alelo1 . '/' . $alelo2;
+    }
+
+    private function normalizeXmlName(?string $name): string
+    {
+        if ($name === null) {
+            return '';
+        }
+
+        // Remove espaços em torno dos pontos: "19855. 19853 .19854" -> "19855.19853.19854"
+        return preg_replace('/\s*\.\s*/', '.', trim($name));
+    }
+
     private function removePrefix($identificador)
     {
         $prefix = "EQU";
